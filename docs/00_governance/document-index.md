@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 60 篇。⚠ 表示活跃文档已过 review 日期。
+共 61 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -36,7 +36,7 @@ review: 2026-11-23
 | ARCH-0005 | 信任边界与防作弊 | active | 2026-11-23 | `03_solution/architecture/anti-cheat.md` |
 | ARCH-0001 | 总体架构方案（集大成版） | active | 2026-11-23 | `03_solution/architecture/architecture-overview.md` |
 | ARCH-0003 | 分包与包体预算 | active | 2026-11-23 | `03_solution/architecture/bundle-plan.md` |
-| ARCH-0004 | 离线与同步 | active | 2026-11-23 | `03_solution/architecture/offline-sync.md` |
+| ARCH-0004 | 联网与存档同步 | active | 2026-11-23 | `03_solution/architecture/offline-sync.md` |
 | ARCH-0006 | 性能预算 | active | 2026-11-23 | `03_solution/architecture/performance-budget.md` |
 | ARCH-0002 | 平台适配层 | active | 2026-11-23 | `03_solution/architecture/platform-adapter.md` |
 | DATA-0004 | 接口目录（生成） | active | 2026-11-23 | `03_solution/data/api-catalog.md` |
@@ -50,6 +50,7 @@ review: 2026-11-23
 | ADR-0005 | 数值管线：CSV → 校验 → JSON/类型/版本 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0005-config-pipeline.md` |
 | ADR-0006 | 脚本全部进主包，Asset Bundle 只装资源 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0006-scripts-in-main-package.md` |
 | ADR-0007 | 发行路线：个人主体 + 微信先发 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0007-issue-route-personal-wechat-first.md` |
+| ADR-0008 | 取消断网可玩，改为必须联网 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0008-online-required.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
 | UI-0001 | UI 规范 | active | 2026-11-23 | `03_solution/ui/style-guide.md` |
 | PLAN-0003 | 当前计划（唯一“现在做什么”） | active | 2026-11-23 | `04_planning/current-plan.md` |

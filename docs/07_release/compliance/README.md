@@ -13,7 +13,7 @@ review: 2026-11-23
 |---|---|
 | privacy-policy.md | 隐私政策（含 IP 推断省份说明、第三方 SDK） |
 | user-agreement.md | 用户协议 |
-| anti-addiction.md | 防沉迷接入方案与断网时的控制 |
+| anti-addiction.md | 防沉迷接入方案 |
 | probability-disclosure.md | 概率公示（由 game-data 生成，勿手改） |
 | review-checklist.md | 微信/抖音提审自查 |
 | filings.md | 主体、软著、ICP、小游戏备案进度与回执索引 |
