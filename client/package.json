@@ -1,7 +1,8 @@
 {
-  "name": "client",
+  "name": "wodefa-client",
   "uuid": "470a19dc-4392-4e31-ab9a-75214f62edde",
   "creator": {
     "version": "3.8.8"
-  }
+  },
+  "description": "Cocos Creator 工程。引擎补丁号已锁定 3.8.8（ADR-0001）；此后不升级引擎，除非另开 ADR。"
 }
