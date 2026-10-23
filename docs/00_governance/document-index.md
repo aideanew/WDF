@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 85 篇。⚠ 表示活跃文档已过 review 日期。
+共 87 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -80,12 +80,14 @@ review: 2026-11-23
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active |  | `05_execution/tasks/TASK-0108.md` |
 | TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active |  | `05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active |  | `05_execution/tasks/TASK-0202.md` |
+| TASK-0903 | 排行榜压测（决定是否引入 Redis） | proposed |  | `05_execution/tasks/TASK-0903.md` |
 | TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1601.md` |
 | TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1602.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
 | CMP-anti-addiction | 防沉迷方案 | draft | 2026-11-23 | `07_release/compliance/anti-addiction.md` |
+| CMP-copyright-materials | 软著提交材料清单 | active | 2026-10-30 | `07_release/compliance/copyright-materials.md` |
 | CMP-filings | 资质与备案进度 | draft | 2026-11-23 | `07_release/compliance/filings.md` |
 | CMP-privacy-policy | 隐私政策（草稿） | draft | 2026-11-23 | `07_release/compliance/privacy-policy.md` |
 | CMP-prob | 概率公示（生成） | active | 2026-11-23 | `07_release/compliance/probability-disclosure.md` |

@@ -17,4 +17,5 @@ review: 2026-11-23
 | probability-disclosure.md | 概率公示（由 game-data 生成，勿手改） |
 | review-checklist.md | 微信/抖音提审自查 |
 | filings.md | 主体、软著、ICP、小游戏备案进度与回执索引 |
+| copyright-materials.md | 软著提交材料清单（源码前后各 30 页、操作说明书、申请表、身份证明；≤ 10-30） |
 | asset-licenses → `art-source/licenses.csv` | 素材版权台账（唯一权威） |

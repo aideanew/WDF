@@ -20,5 +20,6 @@ review: 2026-11-23
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active | `docs/05_execution/tasks/TASK-0108.md` |
 | TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active | `docs/05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active | `docs/05_execution/tasks/TASK-0202.md` |
+| TASK-0903 | 排行榜压测（决定是否引入 Redis） | proposed | `docs/05_execution/tasks/TASK-0903.md` |
 | TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed | `docs/05_execution/tasks/TASK-1601.md` |
 | TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed | `docs/05_execution/tasks/TASK-1602.md` |
