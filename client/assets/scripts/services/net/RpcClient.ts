@@ -9,8 +9,25 @@ export const CLIENT_VERSION = 'v0.1.0-s1';
 /** 当前 configVersion（先写死；后续由 config service 热更覆盖）。 */
 export const CONFIG_VERSION = '16921d30a67a934f';
 
-/** 运行期可覆盖。开发时走 localhost，真机走云函数地址。 */
-let endpoint = 'http://127.0.0.1:3000/rpc';
+/** 开发期强制走 mock，完全跳过网络请求（DevTools 的 wx.request 404 红字就不会再出现）。服务器上线后改 false。 */
+export const FORCE_OFFLINE = true;
+
+/** 运行期可覆盖。开发时走 localhost（预期 404，mock handler 兜底），真机走云函数地址。 */
+let endpoint = 'http://127.0.0.1:5050/rpc';
+
+/** 开发期吞掉 wx.request 失败时 DevTools 的 404 红字噪音（mock 会兜底）。生产环境云函数可达时会自己走通。 */
+(function silenceDevtools404(): void {
+  try {
+    const g = globalThis as any;
+    const origError = console.error;
+    console.error = (...args: any[]) => {
+      const s = args.map((x) => (typeof x === 'string' ? x : String(x))).join(' ');
+      if (s.includes('127.0.0.1:3000') || s.includes('/rpc')) return;
+      origError.apply(console, args as any);
+    };
+    g.__wdf_console_silenced = true;
+  } catch { /* noop */ }
+})();
 export function setEndpoint(url: string): void { endpoint = url; }
 export function getEndpoint(): string { return endpoint; }
 
@@ -51,13 +68,15 @@ export async function invoke<P = unknown, D = unknown>(
 
   let resp: RpcResponse<D> | null = null;
 
-  try {
-    const { status, data } = await platform.request(endpoint, { ...req, token }, 8000);
-    if (status >= 200 && status < 300 && data && typeof data === 'object') {
-      resp = data as RpcResponse<D>;
+  if (!FORCE_OFFLINE) {
+    try {
+      const { status, data } = await platform.request(endpoint, { ...req, token }, 8000);
+      if (status >= 200 && status < 300 && data && typeof data === 'object') {
+        resp = data as RpcResponse<D>;
+      }
+    } catch {
+      // 网络错误，走 mock
     }
-  } catch {
-    // 网络错误，走 mock
   }
 
   if (!resp || (resp.c !== 0 && resp.c === ERR.INTERNAL)) {

@@ -11,7 +11,7 @@ review: 2026-11-23
 
 | ID | 标题 | 状态 | 路径 |
 |---|---|---|---|
-| TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | active | `docs/05_execution/tasks/TASK-0101.md` |
+| TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done | `docs/05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active | `docs/05_execution/tasks/TASK-0103.md` |
 | TASK-0104 | 服务端鉴权与 account.login 真实实现 | active | `docs/05_execution/tasks/TASK-0104.md` |
 | TASK-0105 | compliance.check 与 config.manifest 真实实现 | active | `docs/05_execution/tasks/TASK-0105.md` |
