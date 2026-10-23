@@ -45,8 +45,8 @@ review: 2026-11-23
 | DATA-0002 | 本地存档结构 | active | 2026-11-23 | `03_solution/data/save-schema.md` |
 | ADR-0001 | 引擎：Cocos Creator 3.8 LTS | proposed | 2026-11-23 | `03_solution/decisions/ADR-0001-engine-cocos-3-8.md` |
 | ADR-0002 | 前后端共用确定性规则包 game-core | accepted | 2026-11-23 | `03_solution/decisions/ADR-0002-shared-game-core.md` |
-| ADR-0003 | 后端：模块化单体 HTTP 服务 | proposed | 2026-11-23 | `03_solution/decisions/ADR-0003-backend-modular-monolith.md` |
-| ADR-0004 | 数据库：PostgreSQL（Redis 推迟） | proposed | 2026-11-23 | `03_solution/decisions/ADR-0004-database-postgres.md` |
+| ADR-0003 | 后端：模块化单体 HTTP 服务（腾讯云轻量 + Docker Compose） | accepted | 2026-11-23 | `03_solution/decisions/ADR-0003-backend-modular-monolith.md` |
+| ADR-0004 | 数据库：PostgreSQL（Redis 推迟） | accepted | 2026-11-23 | `03_solution/decisions/ADR-0004-database-postgres.md` |
 | ADR-0005 | 数值管线：CSV → 校验 → JSON/类型/版本 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0005-config-pipeline.md` |
 | ADR-0006 | 脚本全部进主包，Asset Bundle 只装资源 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0006-scripts-in-main-package.md` |
 | ADR-0007 | 发行路线：个人主体 + 微信先发 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0007-issue-route-personal-wechat-first.md` |

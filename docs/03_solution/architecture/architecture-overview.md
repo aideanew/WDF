@@ -101,8 +101,9 @@ related: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006]
 
 ## 5. 服务端设计
 
-### 5.1 形态（ADR-0003）
-- **模块化单体**：一个 Node 22 + TypeScript 服务（Fastify），内部按模块划分；无状态，容器化部署，可横向扩容。
+### 5.1 形态（ADR-0003，accepted）
+- **模块化单体**：一个 Node 22 + TypeScript 服务（Fastify），内部按模块划分；无状态，容器化部署。
+- **部署**：腾讯云轻量应用服务器（2 核 4G，广州或上海）+ Docker Compose，单机同时服务微信与抖音；合法域名必须是已备案的国内域名，域名以个人主体立即办 ICP 备案。
 - **为什么不是云函数**：抖音也要调同一后端（微信云开发 callFunction 只服务微信）；几十个函数的冷启动与重复依赖不适合一人维护。
 - **为什么不是多服务**：日活 1 千～1 万阶段没有必要；模块边界清晰即可，将来按模块拆。
 
@@ -121,10 +122,10 @@ related: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006]
 | telemetry | 批量埋点、错误日志 | — |
 | ops（内部） | 开关、配置发布、封禁、回滚 | — |
 
-### 5.3 数据库（ADR-0004，建议 PostgreSQL）
+### 5.3 数据库（ADR-0004，accepted：PostgreSQL 单库，Redis 暂不上）
 - 事务、唯一约束、行锁天然适合“物资流水 + 幂等 + 赛季结算”；`jsonb` 存存档快照；分区表存收益事件。
 - 主要表：`player`、`identity`、`bind_ticket`、`save_snapshot`、`save_fork`、`ledger_entry`、`idempotency`、`income_event`（按日分区）、`income_daily`、`season`、`leaderboard_snapshot`、`title_award`、`event_session`、`event_result`、`daily_quota`、`chat_message`（TTL）、`report`、`ban`、`config_release`、`audit_log`。
-- 排行读快照表（定时生成），不在线排序；日活上来再加 Redis ZSET（不改接口）。
+- 排行读快照表（定时生成），不在线排序；Redis 暂不上（ADR-0004），压测不达标再加 ZSET，不改接口。
 
 ### 5.4 定时任务
 `jobs/`：赛季结算、排行快照（每 5–10 分钟）、赶海开场/关场、每日限量重置、过期数据清理。任务必须幂等（以“任务名+时间窗”为锁）。
