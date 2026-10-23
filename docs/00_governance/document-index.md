@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 61 篇。⚠ 表示活跃文档已过 review 日期。
+共 85 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -51,13 +51,37 @@ review: 2026-11-23
 | ADR-0006 | 脚本全部进主包，Asset Bundle 只装资源 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0006-scripts-in-main-package.md` |
 | ADR-0007 | 发行路线：个人主体 + 微信先发 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0007-issue-route-personal-wechat-first.md` |
 | ADR-0008 | 取消断网可玩，改为必须联网 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0008-online-required.md` |
+| ADR-0009 | 运行时校验采用 zod（前后端同构） | proposed | 2026-10-30 | `03_solution/decisions/ADR-0009-runtime-validation-zod.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
 | UI-0001 | UI 规范 | active | 2026-11-23 | `03_solution/ui/style-guide.md` |
-| PLAN-0003 | 当前计划（唯一“现在做什么”） | active | 2026-11-23 | `04_planning/current-plan.md` |
+| PLAN-0003 | 当前计划（唯一"现在做什么"） | active | 2026-11-23 | `04_planning/current-plan.md` |
 | PLAN-0000 | 项目全生命周期（从立项到完成） | active | 2026-11-23 | `04_planning/lifecycle.md` |
 | PLAN-0002 | 里程碑 | active | 2026-11-23 | `04_planning/milestones.md` |
+| PLAN-V001-00 | 规划快照（plan-v001） | draft | 2026-10-30 | `04_planning/plan-v001/00-snapshot.md` |
+| PLAN-V001-01 | 事实基线（已确认 / 仅文档 / 不一致 / 读取失败） | draft | 2026-10-30 | `04_planning/plan-v001/01-fact-baseline.md` |
+| PLAN-V001-02 | 需求基线复核（分级 / 冲突 / 未知登记册） | draft | 2026-10-30 | `04_planning/plan-v001/02-requirements-baseline.md` |
+| PLAN-V001-03 | 契约冻结（API / Errors / Identity / Resources / Events / UX States） | draft | 2026-10-30 | `04_planning/plan-v001/03-contracts-freeze.md` |
+| PLAN-V001-04 | 数据模型基线（服务端 / 本地存档 / 数值表） | draft | 2026-10-30 | `04_planning/plan-v001/04-data-model.md` |
+| PLAN-V001-05 | 垂直切片（端到端可演示） | draft | 2026-10-30 | `04_planning/plan-v001/05-vertical-slices.md` |
+| PLAN-V001-07 | 依赖图与并行判定（DAG） | draft | 2026-10-30 | `04_planning/plan-v001/07-dag.md` |
+| PLAN-V001-08 | 所有权与档位（Agent 分工 / 模型 / 预算 / 熔断） | draft | 2026-10-30 | `04_planning/plan-v001/08-ownership-and-tiers.md` |
+| PLAN-V001-09 | 基线指标与验收（含防自证与守卫评估） | draft | 2026-10-30 | `04_planning/plan-v001/09-metrics-and-acceptance.md` |
+| PLAN-V001-10 | 风险与待裁决决策 | draft | 2026-10-30 | `04_planning/plan-v001/10-risks-and-decisions.md` |
+| PLAN-V001-11 | 规划自检（任一不过则修正后重检） | draft | 2026-10-30 | `04_planning/plan-v001/11-self-check.md` |
+| PLAN-V001-12 | 第一刀启动顺序（S0 → S1 → S2） | draft | 2026-10-30 | `04_planning/plan-v001/12-first-cut.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
+| TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | active |  | `05_execution/tasks/TASK-0101.md` |
+| TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active |  | `05_execution/tasks/TASK-0103.md` |
+| TASK-0104 | 服务端鉴权与 account.login 真实实现 | active |  | `05_execution/tasks/TASK-0104.md` |
+| TASK-0105 | compliance.check 与 config.manifest 真实实现 | active |  | `05_execution/tasks/TASK-0105.md` |
+| TASK-0106 | 本地存档读写与校验（杀进程可恢复） | active |  | `05_execution/tasks/TASK-0106.md` |
+| TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | active |  | `05_execution/tasks/TASK-0107.md` |
+| TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active |  | `05_execution/tasks/TASK-0108.md` |
+| TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active |  | `05_execution/tasks/TASK-0201.md` |
+| TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active |  | `05_execution/tasks/TASK-0202.md` |
+| TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1601.md` |
+| TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1602.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
