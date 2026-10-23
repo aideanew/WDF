@@ -141,7 +141,7 @@ export function docsFrontMatter() {
 export function everyDirExplained() {
   // 每个目录要么有文件，要么有 README（防止空目录腐烂）
   const bad = [];
-  const scan = (dir) => { const ents = readdirSync(dir, { withFileTypes: true }); if (!ents.length) bad.push(`空目录：${rel(dir)}`); for (const e of ents) if (e.isDirectory() && !['node_modules', '.git', '.local', 'library', 'temp', 'local', 'build', 'profiles'].includes(e.name)) scan(dir + '/' + e.name); };
+  const scan = (dir) => { const ents = readdirSync(dir, { withFileTypes: true }); if (!ents.length) bad.push(`空目录：${rel(dir)}`); for (const e of ents) if (e.isDirectory() && !['node_modules', '.git', '.local', '.creator', 'library', 'temp', 'local', 'build', 'profiles', 'default-profiles'].includes(e.name)) scan(dir + '/' + e.name); };
   scan(p('.'));
   return bad;
 }
