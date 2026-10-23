@@ -1,0 +1,3 @@
+id,group,item,min,max,weight_bp
+d1,chest_iron,item_wood_plank,1,3,6000
+d2,chest_iron,item_rope,1,2,4000

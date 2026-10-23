@@ -1,0 +1,59 @@
+{
+  "table": "items",
+  "module": "inventory",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^item_[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "category": {
+      "type": "enum",
+      "values": [
+        "raw",
+        "material",
+        "tool",
+        "food",
+        "facility",
+        "building",
+        "chest",
+        "lock",
+        "equipment",
+        "misc"
+      ],
+      "required": true
+    },
+    "base_price": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "weight": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "capacity": {
+      "type": "int",
+      "min": 0
+    },
+    "stack": {
+      "type": "int",
+      "min": 1
+    },
+    "craftable": {
+      "type": "bool"
+    },
+    "unlock_level": {
+      "type": "int",
+      "min": 1,
+      "max": 49
+    }
+  }
+}

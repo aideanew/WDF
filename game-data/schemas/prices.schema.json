@@ -1,0 +1,23 @@
+{
+  "table": "prices",
+  "module": "economy",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "ref": "items.id"
+    },
+    "base_price": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "recycle_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "table": "units",
+  "module": "defense",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "hp": {
+      "type": "int",
+      "min": 1,
+      "required": true
+    },
+    "speed": {
+      "type": "int",
+      "min": 1,
+      "required": true
+    },
+    "attack": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "range": {
+      "type": "int",
+      "min": 0
+    }
+  }
+}

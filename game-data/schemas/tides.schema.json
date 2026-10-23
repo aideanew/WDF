@@ -1,0 +1,27 @@
+{
+  "table": "tides",
+  "module": "sea",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "anchor_epoch_ms": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "period_min": {
+      "type": "int",
+      "min": 1,
+      "required": true
+    },
+    "duration_min": {
+      "type": "int",
+      "min": 1,
+      "required": true
+    }
+  }
+}

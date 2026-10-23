@@ -1,0 +1,27 @@
+# —— 本地临时 ——
+.local/
+*.log
+.DS_Store
+Thumbs.db
+
+# —— Node ——
+node_modules/
+dist/
+coverage/
+
+# —— Cocos Creator（官方：只提交 assets、extensions、settings、package.json 及手动添加的文件）——
+client/library/
+client/temp/
+client/local/
+client/build/
+client/profiles/
+client/native/
+
+# —— 生成物（由 npm run gen 产出，不手改；client 的 generated 例外：需要进 Git 才能让 Cocos 直接打开工程）——
+game-data/out/
+server/generated/
+
+# —— 密钥 ——
+.env
+*.pem
+*.key

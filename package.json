@@ -1,0 +1,20 @@
+{
+  "name": "wodefa",
+  "private": true,
+  "version": "0.0.0",
+  "description": "我的筏不可能这么大 — monorepo（client 不是 workspace 成员，由 Cocos 自管）",
+  "engines": { "node": ">=22" },
+  "workspaces": ["packages/*", "server", "tools"],
+  "scripts": {
+    "setup": "node tools/setup.mjs",
+    "gen": "node tools/gen/config.mjs && node tools/sync/to-client.mjs && node tools/gen/catalog.mjs && node tools/gen/docs-index.mjs",
+    "gen:config": "node tools/gen/config.mjs",
+    "gen:catalog": "node tools/gen/catalog.mjs",
+    "gen:docs": "node tools/gen/docs-index.mjs",
+    "sync": "node tools/sync/to-client.mjs",
+    "guard": "node tools/guard/run-all.mjs",
+    "impact": "node tools/guard/impact.mjs",
+    "test": "node --import ./tools/runtime/register.mjs --test \"tests/**/*.test.mjs\"",
+    "verify": "npm run gen && npm run guard && npm run test"
+  }
+}

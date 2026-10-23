@@ -1,0 +1,42 @@
+{
+  "table": "drops",
+  "module": "chest",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "group": {
+      "type": "string",
+      "required": true,
+      "note": "同一 group 的 weight_bp 合计必须 = 10000"
+    },
+    "item": {
+      "type": "string",
+      "required": true,
+      "ref": "items.id"
+    },
+    "min": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "max": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "weight_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "required": true,
+      "sumTo": {
+        "by": "group",
+        "total": 10000
+      }
+    }
+  }
+}

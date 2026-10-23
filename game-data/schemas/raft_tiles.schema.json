@@ -1,0 +1,27 @@
+{
+  "table": "raft_tiles",
+  "module": "raft",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "required": true,
+      "ref": "items.id"
+    },
+    "capacity": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "weight": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    }
+  }
+}

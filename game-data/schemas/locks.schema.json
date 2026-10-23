@@ -1,0 +1,34 @@
+{
+  "table": "locks",
+  "module": "chest",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "enum",
+      "values": [
+        "none",
+        "iron",
+        "copper",
+        "silver",
+        "gold"
+      ],
+      "required": true
+    },
+    "hits_required": {
+      "type": "int",
+      "min": 0,
+      "max": 4,
+      "required": true
+    },
+    "zone_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "required": true
+    },
+    "drop_group": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "table": "lockpick_tools",
+  "module": "chest",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "required": true,
+      "ref": "items.id"
+    },
+    "max_lock": {
+      "type": "enum",
+      "values": [
+        "iron",
+        "copper",
+        "silver",
+        "gold"
+      ],
+      "required": true
+    },
+    "price": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "daily_region_quota": {
+      "type": "int",
+      "min": 0
+    }
+  }
+}

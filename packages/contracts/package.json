@@ -1,0 +1,8 @@
+{
+  "name": "@wodefa/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "description": "前后端接口契约（类型 + 动作目录 + 错误码）。客户端只用类型。"
+}

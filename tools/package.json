@@ -1,0 +1,7 @@
+{
+  "name": "@wodefa/tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "生成器、同步与架构守卫。只用 Node 内置模块，零依赖。"
+}

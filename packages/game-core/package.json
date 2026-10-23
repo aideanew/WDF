@@ -1,0 +1,8 @@
+{
+  "name": "@wodefa/game-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "description": "前后端共用的确定性游戏规则（纯 TS：无 cc、无 IO、无 Math.random/Date.now）"
+}

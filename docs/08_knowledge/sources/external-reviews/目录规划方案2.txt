@@ -1,0 +1,1302 @@
+# 微信小游戏工程结构规范体系
+
+## ——《我的筏不可能这么大》完整目录与架构设计
+
+---
+
+# 总纲：为什么这套结构专门为微信小游戏重新设计
+
+通用 Web 工程规范（如你附件中的体系）解决的是"可持续演进的 Web 工程"问题。微信小游戏有四个本质差异，必须在结构上单独应对：
+
+```text
+差异维度          Web 工程              微信小游戏
+───────────────────────────────────────────────────────
+包体限制          几乎无限制            主包 4MB，总包 ~30MB（硬墙）
+运行时环境        Node.js / 浏览器      微信小游戏运行时（V8，非浏览器）
+渲染引擎          React / Vue DOM       Cocos Creator（Canvas/WebGL）
+后端形态          常驻进程服务器        云函数（Serverless，按量付费）
+开放域            无                    独立 JS 沙箱（好友排行榜专用）
+存档              服务端 Session/DB     本地 wx.setStorage + 云端同步
+平台 SDK          标准浏览器 API        wx.* 专属 API，抖音另一套
+```
+
+因此本规范在附件体系的**核心原则**（生命周期分类、依赖方向、业务边界）基础上，针对游戏引擎结构、包体治理、开放域、离线同步、配置表热更新等维度做了全面重新设计。
+
+---
+
+# 第一部分：全局目录结构（项目根）
+
+```text
+raft-game/                                      # 项目根目录
+│
+├── client/                                     # ★ Cocos Creator 游戏客户端
+│   └── (见第二部分，完整展开)
+│
+├── server/                                     # ★ 云函数后端
+│   └── (见第三部分，完整展开)
+│
+├── shared/                                     # ★ 前后端共享契约层
+│   └── (见第四部分，完整展开)
+│
+├── tools/                                      # 工具脚本（配置表导出、资源处理等）
+│   ├── excel-to-json/                          # Excel 配置表 → JSON 自动转换
+│   ├── sprite-atlas/                           # 图集打包脚本
+│   ├── bundle-analyzer/                        # 包体分析工具
+│   └── mock-server/                            # 本地接口 Mock（开发期用）
+│
+├── database/                                   # 数据库资产（云数据库 Schema + 初始数据）
+│   ├── collections/                            # 云数据库集合定义（JSON Schema）
+│   │   ├── player.schema.json
+│   │   ├── raft.schema.json
+│   │   ├── island.schema.json
+│   │   ├── leaderboard.schema.json
+│   │   └── daily-event.schema.json
+│   ├── indexes/                                # 索引定义
+│   │   └── indexes.json
+│   └── seeds/                                  # 初始化种子数据
+│       ├── items.seed.json                     # 百种物品基础数据
+│       └── recipes.seed.json                   # 制作配方初始数据
+│
+├── docs/                                       # 项目文档（见第六部分）
+│   └── (见第六部分，完整展开)
+│
+├── .local/                                     # 本地临时状态（完整 gitignore）
+│   ├── ai/                                     # AI 工作产物
+│   ├── logs/                                   # 运行日志
+│   ├── screenshots/                            # 截图证据
+│   ├── scratch/                                # 临时草稿
+│   └── playtests/                              # 本地测试录像/截图
+│
+├── .github/
+│   └── workflows/
+│       ├── guard.yml                           # 架构守卫 CI
+│       └── deploy-functions.yml                # 云函数部署 CI
+│
+├── AGENTS.md                                   # AI Agent 规范入口
+├── README.md                                   # 人类阅读入口
+├── CHANGELOG.md                                # 版本变更记录
+├── Makefile                                    # 统一命令入口
+├── .gitignore
+└── .env.example                                # 环境变量示例（无密钥）
+```
+
+---
+
+# 第二部分：客户端完整结构（Cocos Creator 3.x）
+
+## 2.1 包体治理是客户端结构的第一约束
+
+```text
+微信小游戏包体规则（硬限制）：
+┌─────────────────────────────────────────────────────┐
+│  主包（main bundle）        ≤ 4 MB                  │
+│  单个分包                   ≤ 20 MB                  │
+│  所有包总计                 ≤ 30 MB（近期扩展后）     │
+│  开放数据域包               独立计算，≤ 4 MB          │
+└─────────────────────────────────────────────────────┘
+
+主包只放：
+  - 游戏引擎核心
+  - 启动场景 + loading 界面
+  - 浅海前 3 关的最小内容
+  - 平台适配层（PlatformAdapter）
+  - 核心框架代码（事件总线、存档管理）
+
+其余全部放分包，按需加载。
+```
+
+## 2.2 客户端完整目录
+
+```text
+client/                                         # Cocos Creator 3.x 项目根
+│
+├── assets/                                     # ★ Cocos Creator 资源根目录
+│   │
+│   ├── _bundles/                               # ★★ 分包治理核心
+│   │   │
+│   │   ├── main/                               # 主包（≤ 4MB 硬限制）
+│   │   │   ├── scenes/
+│   │   │   │   ├── Boot.scene                  # 启动场景（唯一入口）
+│   │   │   │   └── Loading.scene               # 加载过渡场景
+│   │   │   ├── prefabs/
+│   │   │   │   └── ui/
+│   │   │   │       ├── LoadingBar.prefab
+│   │   │   │       └── ErrorDialog.prefab
+│   │   │   ├── scripts/                        # 主包专属脚本（最小集）
+│   │   │   │   ├── Boot.ts                     # 启动逻辑
+│   │   │   │   └── LoadingController.ts
+│   │   │   └── textures/
+│   │   │       └── logo.png                    # 启动Logo（≤ 200KB）
+│   │   │
+│   │   ├── game-shallow/                       # 分包：浅海玩法
+│   │   │   ├── scenes/
+│   │   │   │   └── ShallowSea.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── gameplay/
+│   │   │   │   │   ├── Hook.prefab             # 鱼钩
+│   │   │   │   │   ├── FloatingItem.prefab     # 漂浮物
+│   │   │   │   │   └── PowerBar.prefab         # 弧形力度条
+│   │   │   │   └── ui/
+│   │   │   │       ├── HUD.prefab              # 游戏内抬头显示
+│   │   │   │       └── ItemPickup.prefab       # 捡到物品弹窗
+│   │   │   └── textures/
+│   │   │       ├── atlas-shallow-sea.png       # 浅海图集
+│   │   │       └── atlas-shallow-sea.plist
+│   │   │
+│   │   ├── game-deep/                          # 分包：深海玩法
+│   │   │   ├── scenes/
+│   │   │   │   └── DeepSea.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── gameplay/
+│   │   │   │   │   ├── Savage.prefab           # 野人
+│   │   │   │   │   ├── Shipwreck.prefab        # 沉船
+│   │   │   │   │   └── OilWell.prefab          # 石油井
+│   │   │   │   └── ui/
+│   │   │   └── textures/
+│   │   │       ├── atlas-deep-sea.png
+│   │   │       └── atlas-deep-sea.plist
+│   │   │
+│   │   ├── game-raft/                          # 分包：筏体建设
+│   │   │   ├── scenes/
+│   │   │   │   └── RaftBuilder.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── raft/
+│   │   │   │   │   ├── RaftBlock.prefab        # 船体地块
+│   │   │   │   │   ├── Room.prefab             # 房间框架
+│   │   │   │   │   └── RaftGrid.prefab         # 建造网格
+│   │   │   │   └── ui/
+│   │   │   │       ├── BuildMenu.prefab        # 建造菜单
+│   │   │   │       ├── BuoyancyBar.prefab      # 浮力/重量显示
+│   │   │   │       └── RoomConfig.prefab       # 房间配置弹窗
+│   │   │   └── textures/
+│   │   │       ├── atlas-raft-blocks.png
+│   │   │       └── atlas-raft-blocks.plist
+│   │   │
+│   │   ├── game-tower-defense/                 # 分包：塔防
+│   │   │   ├── scenes/
+│   │   │   │   └── TowerDefense.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── defense/
+│   │   │   │   │   ├── Tower.prefab
+│   │   │   │   │   ├── Enemy.prefab            # 野人兵种
+│   │   │   │   │   └── Barricade.prefab        # 障碍物
+│   │   │   │   └── ui/
+│   │   │   │       ├── TowerDefenseHUD.prefab
+│   │   │   │       └── BattleResult.prefab     # 战斗结算弹窗
+│   │   │   └── textures/
+│   │   │       ├── atlas-td-enemies.png
+│   │   │       └── atlas-td-towers.png
+│   │   │
+│   │   ├── ui-lobby/                           # 分包：大厅/主界面UI
+│   │   │   ├── scenes/
+│   │   │   │   └── Lobby.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── panels/
+│   │   │   │   │   ├── MainPanel.prefab        # 主界面
+│   │   │   │   │   ├── InventoryPanel.prefab   # 背包
+│   │   │   │   │   ├── CraftPanel.prefab       # 制作界面
+│   │   │   │   │   ├── EmployeePanel.prefab    # 员工管理
+│   │   │   │   │   ├── PowerPanel.prefab       # 电力管理
+│   │   │   │   │   ├── ShopPanel.prefab        # 商人/回收
+│   │   │   │   │   └── SettingsPanel.prefab    # 设置
+│   │   │   │   └── widgets/
+│   │   │   │       ├── ItemSlot.prefab         # 物品格
+│   │   │   │       ├── ItemTooltip.prefab      # 物品详情
+│   │   │   │       └── ResourceBar.prefab      # 资源栏
+│   │   │   └── textures/
+│   │   │       ├── atlas-ui-main.png
+│   │   │       └── atlas-ui-main.plist
+│   │   │
+│   │   ├── ui-social/                          # 分包：社交/排行榜UI
+│   │   │   ├── scenes/
+│   │   │   │   └── Social.scene
+│   │   │   ├── prefabs/
+│   │   │   │   ├── panels/
+│   │   │   │   │   ├── LeaderboardPanel.prefab
+│   │   │   │   │   ├── ChatPanel.prefab
+│   │   │   │   │   └── TitlePanel.prefab       # 称号系统
+│   │   │   │   └── widgets/
+│   │   │   │       ├── RankItem.prefab         # 排行榜条目
+│   │   │   │       └── ChatMessage.prefab      # 聊天消息气泡
+│   │   │   └── textures/
+│   │   │
+│   │   ├── open-data-domain/                   # ★ 开放数据域（好友排行榜）
+│   │   │   ├── index.html                      # 开放域唯一入口
+│   │   │   ├── index.js                        # 开放域逻辑（纯JS，不用Cocos）
+│   │   │   └── textures/
+│   │   │       └── default-avatar.png
+│   │   │
+│   │   └── resources-config/                   # 分包：配置表资源
+│   │       └── configs/
+│   │           ├── items.json                  # 物品配置表
+│   │           ├── recipes.json                # 制作配方
+│   │           ├── enemies.json                # 兵种数据
+│   │           ├── rooms.json                  # 房间配置
+│   │           ├── employees.json              # 员工配置
+│   │           ├── islands.json                # 岛屿配置
+│   │           └── balance.json                # 数值平衡表
+│   │
+│   └── _shared/                                # 跨分包共享资源（主包加载）
+│       ├── scripts/                            # ★ 所有 TypeScript 源码
+│       │   └── (见 2.3 节，脚本目录完整展开)
+│       ├── textures/
+│       │   ├── atlas-common-ui.png             # 通用UI图集（按钮/框/图标）
+│       │   ├── atlas-common-ui.plist
+│       │   ├── atlas-items-icon.png            # 物品图标图集
+│       │   └── atlas-items-icon.plist
+│       ├── audio/
+│       │   ├── bgm/
+│       │   │   ├── bgm-shallow.mp3
+│       │   │   └── bgm-deep.mp3
+│       │   └── sfx/
+│       │       ├── hook-launch.mp3             # 出钩音效
+│       │       ├── hook-hit-blue.mp3           # 蓝色判定音效
+│       │       ├── hook-hit-green.mp3
+│       │       ├── hook-hit-red.mp3
+│       │       ├── item-pickup.mp3
+│       │       ├── build-place.mp3
+│       │       └── coin-gain.mp3
+│       └── fonts/
+│           └── game-font.fnt                   # 免费商用字体（位图字体）
+│
+├── extensions/                                 # Cocos Editor 扩展（开发工具）
+│   ├── config-importer/                        # 配置表导入扩展
+│   └── bundle-size-checker/                    # 包体大小检查扩展
+│
+├── project.json                                # Cocos Creator 项目配置
+├── package.json                                # npm 依赖
+├── tsconfig.json                               # TypeScript 配置
+└── .env.example
+```
+
+## 2.3 脚本目录完整结构（TypeScript 源码）
+
+这是客户端最核心的部分，按**依赖方向**严格分层：
+
+```text
+assets/_shared/scripts/
+│
+├── platform/                                   # ★★★ 平台适配层（最关键的设计）
+│   │
+│   ├── PlatformAdapter.ts                      # 接口定义（只有接口，零实现）
+│   │   # 定义：login() shareGame() showRewardAd()
+│   │   #       getStorage() setStorage() postScore()
+│   │   #       vibrate() getSystemInfo() checkNetwork()
+│   │
+│   ├── adapters/
+│   │   ├── WechatAdapter.ts                    # 微信实现（wx.* API）
+│   │   ├── DouyinAdapter.ts                    # 抖音实现（tt.* API）
+│   │   └── NativeAdapter.ts                    # 原生APP实现（以后用）
+│   │
+│   └── PlatformFactory.ts                      # 根据运行环境自动选择适配器
+│       # if (typeof wx !== 'undefined') return new WechatAdapter()
+│       # if (typeof tt !== 'undefined') return new DouyinAdapter()
+│
+├── core/                                       # ★ 核心框架层（被所有层使用）
+│   │
+│   ├── bootstrap/
+│   │   ├── GameBootstrap.ts                    # 游戏启动器（唯一入口）
+│   │   └── ServiceLocator.ts                   # 服务定位器（轻量DI容器）
+│   │
+│   ├── event/
+│   │   ├── EventBus.ts                         # 全局事件总线
+│   │   └── GameEvents.ts                       # 所有事件名称常量定义
+│   │   # 示例事件：
+│   │   # HOOK_LAUNCHED / HOOK_HIT_BLUE / ITEM_COLLECTED
+│   │   # RAFT_BLOCK_PLACED / BUOYANCY_WARNING
+│   │   # EMPLOYEE_ASSIGNED / FOOD_PRODUCED
+│   │   # WAVE_STARTED / WAVE_DEFEATED / GATE_BREACHED
+│   │
+│   ├── scene/
+│   │   ├── SceneManager.ts                     # 场景切换管理（含分包预加载）
+│   │   └── TransitionEffect.ts                 # 过场动画
+│   │
+│   ├── pool/
+│   │   ├── ObjectPool.ts                       # 通用对象池基类
+│   │   └── PoolManager.ts                      # 池管理器（注册/获取/回收）
+│   │
+│   ├── timer/
+│   │   └── GameTimer.ts                        # 游戏计时器（离线时间计算）
+│   │
+│   ├── config/
+│   │   ├── ConfigManager.ts                    # 配置表管理器（加载/缓存/访问）
+│   │   └── HotUpdateManager.ts                 # 热更新管理（配置表版本检查）
+│   │
+│   ├── audio/
+│   │   └── AudioManager.ts                     # 音效/音乐管理
+│   │
+│   ├── network/
+│   │   ├── HttpClient.ts                       # HTTP 请求封装（含重试/超时）
+│   │   └── NetworkMonitor.ts                   # 网络状态监听
+│   │
+│   └── utils/
+│       ├── MathUtils.ts                        # 抛物线计算、圆形碰撞
+│       ├── TimeUtils.ts                        # 时间格式化、离线时间计算
+│       ├── StorageUtils.ts                     # wx.storage 封装（含容量检查）
+│       └── RandomUtils.ts                      # 随机数（支持种子，可复现）
+│
+├── data/                                       # ★ 数据层（存档、状态、同步）
+│   │
+│   ├── save/
+│   │   ├── SaveManager.ts                      # 存档总管（协调本地+云端）
+│   │   ├── LocalSave.ts                        # 本地存档（wx.setStorageSync）
+│   │   ├── CloudSave.ts                        # 云端同步（上线/下线时触发）
+│   │   ├── SaveMigrator.ts                     # 存档版本迁移（旧版 → 新版）
+│   │   └── SaveSchema.ts                       # 存档数据结构定义（版本化）
+│   │   # 存档分层策略：
+│   │   # 本地存：玩家状态、筏体结构、背包、任务进度（约 500KB）
+│   │   # 云端存：总资产值、等级、榜单分数（防刷关键数据）
+│   │   # 联网时：上传本地diff，服务器校验后回写权威数据
+│   │
+│   ├── store/                                  # 运行时内存状态（不持久化）
+│   │   ├── PlayerStore.ts                      # 玩家运行时状态
+│   │   ├── RaftStore.ts                        # 筏体运行时状态
+│   │   ├── InventoryStore.ts                   # 背包运行时状态
+│   │   └── GameStateStore.ts                   # 游戏全局状态（当前场景等）
+│   │
+│   └── sync/
+│       ├── OfflineCalculator.ts                # 离线期间产出/事件计算
+│       └── ConflictResolver.ts                 # 本地/云端数据冲突解决
+│
+├── modules/                                    # ★★ 游戏功能模块（按玩法域划分）
+│   │
+│   ├── hook/                                   # 出钩玩法域
+│   │   ├── components/
+│   │   │   ├── HookController.ts               # 出钩控制器（长按/松手/蓄力）
+│   │   │   ├── PowerBar.ts                     # 弧形力度条（1.2s往返动画）
+│   │   │   ├── HookProjectile.ts               # 钩子弹道（抛物线公式）
+│   │   │   └── HookLine.ts                     # 钩线绘制
+│   │   ├── systems/
+│   │   │   ├── HookJudgement.ts                # 判定系统（蓝/绿/红/严格）
+│   │   │   └── HookFeedback.ts                 # 反馈系统（震屏/音效/特效）
+│   │   └── HookModule.ts                       # 模块入口（注册到ServiceLocator）
+│   │
+│   ├── world/                                  # 世界/地图域
+│   │   ├── components/
+│   │   │   ├── SeaWorld.ts                     # 海域世界控制器
+│   │   │   ├── FloatingItem.ts                 # 漂浮物实体（含对象池）
+│   │   │   ├── FloatingItemSpawner.ts          # 漂浮物生成器
+│   │   │   └── TidalSystem.ts                  # 潮汐系统（计时/触发）
+│   │   ├── systems/
+│   │   │   └── FloatingItemPool.ts             # 漂浮物专属对象池（≤20个同屏）
+│   │   └── WorldModule.ts
+│   │
+│   ├── raft/                                   # 筏体建设域
+│   │   ├── components/
+│   │   │   ├── RaftGrid.ts                     # 筏体网格（坐标系管理）
+│   │   │   ├── RaftBlock.ts                    # 单个船体地块
+│   │   │   ├── Room.ts                         # 房间实体（框架+用途+设施）
+│   │   │   └── RaftRenderer.ts                 # 筏体渲染（俯视45°）
+│   │   ├── systems/
+│   │   │   ├── BuoyancySystem.ts               # 浮力/重量实时计算
+│   │   │   │   # 核心公式：浮力 = Σ(材料容量)；重量 = Σ(建筑重量+货物重量+员工重量)
+│   │   │   │   # 浮力 < 重量 → 触发超重警告事件
+│   │   │   └── BuildValidator.ts               # 建造合法性校验（规则检查）
+│   │   └── RaftModule.ts
+│   │
+│   ├── inventory/                              # 背包/物品域
+│   │   ├── components/
+│   │   │   ├── InventoryGrid.ts                # 背包格子
+│   │   │   └── ItemEntity.ts                   # 物品实体（含品阶/重量/价值）
+│   │   ├── systems/
+│   │   │   ├── CraftSystem.ts                  # 制作系统（配方查找/自动合成）
+│   │   │   └── ItemDatabase.ts                 # 物品数据库（从配置表加载）
+│   │   └── InventoryModule.ts
+│   │
+│   ├── employee/                               # 员工域
+│   │   ├── components/
+│   │   │   ├── EmployeeEntity.ts               # 员工实体（7个岗位）
+│   │   │   └── EmployeeSlot.ts                 # 岗位槽
+│   │   ├── systems/
+│   │   │   ├── EmployeeWorkSystem.ts           # 员工工作调度（自动产出）
+│   │   │   └── HappinessSystem.ts              # 幸福感系统（4项指标）
+│   │   └── EmployeeModule.ts
+│   │
+│   ├── power/                                  # 电力域
+│   │   ├── components/
+│   │   │   ├── PowerSource.ts                  # 电力来源（太阳能/电鳗/石油）
+│   │   │   └── PowerConsumer.ts                # 电力消耗设备
+│   │   ├── systems/
+│   │   │   └── PowerGrid.ts                    # 电网计算（出力比 1:3:10）
+│   │   └── PowerModule.ts
+│   │
+│   ├── island/                                 # 岛屿域
+│   │   ├── components/
+│   │   │   ├── IslandEntity.ts                 # 岛屿实体（自己/无主/野人岛）
+│   │   │   ├── BaseBuilding.ts                 # 岛上基地
+│   │   │   └── Warehouse.ts                    # 大仓库（一键入库）
+│   │   └── IslandModule.ts
+│   │
+│   ├── tower-defense/                          # 塔防域
+│   │   ├── components/
+│   │   │   ├── DefensePath.ts                  # 固定路径（首版）
+│   │   │   ├── TowerUnit.ts                    # 防御塔（弓弩车）
+│   │   │   ├── EnemyUnit.ts                    # 敌方单位（野人兵种）
+│   │   │   └── MainGate.ts                     # 大门（失守判定点）
+│   │   ├── systems/
+│   │   │   ├── WaveManager.ts                  # 波次管理
+│   │   │   ├── PathfindingSystem.ts            # 寻路系统（首版固定路径）
+│   │   │   ├── CombatSystem.ts                 # 战斗计算
+│   │   │   └── OfflineBattleResolver.ts        # 离线战斗结算
+│   │   └── TowerDefenseModule.ts
+│   │
+│   ├── lockbox/                                # 开锁/箱子域
+│   │   ├── components/
+│   │   │   ├── ChestEntity.ts                  # 箱子实体（材质×锁级别）
+│   │   │   └── LockpickTool.ts                 # 开锁工具（3级，用一次断一个）
+│   │   ├── systems/
+│   │   │   └── LockpickSystem.ts               # 开锁逻辑
+│   │   └── LockboxModule.ts
+│   │
+│   ├── merchant/                               # 商人/回收域
+│   │   ├── components/
+│   │   │   └── MerchantShop.ts                 # 商人界面逻辑
+│   │   ├── systems/
+│   │   │   └── PriceSystem.ts                  # 物品定价（从价格表读取）
+│   │   └── MerchantModule.ts
+│   │
+│   ├── social/                                 # 社交域
+│   │   ├── components/
+│   │   │   ├── ChatWidget.ts                   # 聊天组件（快捷短语版）
+│   │   │   └── LeaderboardWidget.ts            # 排行榜组件
+│   │   ├── systems/
+│   │   │   ├── ChatSystem.ts                   # 聊天系统（预设短语发送）
+│   │   │   └── RankSystem.ts                   # 排名系统
+│   │   └── SocialModule.ts
+│   │
+│   └── ads/                                    # 广告域
+│       ├── components/
+│       │   └── AdTrigger.ts                    # 广告触发点组件
+│       ├── systems/
+│       │   ├── RewardAdSystem.ts               # 激励视频广告系统
+│       │   └── AdCooldown.ts                   # 广告冷却时间管理
+│       └── AdsModule.ts
+│
+├── ui/                                         # ★ UI层（界面组件，无业务逻辑）
+│   │
+│   ├── components/                             # 纯UI原子组件
+│   │   ├── Button.ts                           # 按钮（含音效/防重复点击）
+│   │   ├── Dialog.ts                           # 弹窗（模板基类）
+│   │   ├── ProgressBar.ts                      # 进度条
+│   │   ├── ItemIcon.ts                         # 物品图标（含品阶色框）
+│   │   ├── CountdownTimer.ts                   # 倒计时显示
+│   │   ├── GoldDisplay.ts                      # 金币数量显示
+│   │   └── ToastMessage.ts                     # 消息提示（屏幕底部弹出）
+│   │
+│   ├── panels/                                 # 业务面板（调用modules，不含业务逻辑）
+│   │   ├── MainHUD.ts                          # 主HUD（金币/等级/浮力/潮汐倒计时）
+│   │   ├── InventoryPanel.ts                   # 背包面板
+│   │   ├── CraftPanel.ts                       # 制作面板
+│   │   ├── RaftBuildPanel.ts                   # 建造面板
+│   │   ├── EmployeePanel.ts                    # 员工面板
+│   │   ├── LeaderboardPanel.ts                 # 排行榜面板
+│   │   └── SettingsPanel.ts                    # 设置面板
+│   │
+│   ├── tutorial/                               # 新手引导
+│   │   ├── TutorialManager.ts                  # 引导流程管理
+│   │   ├── TutorialStep.ts                     # 单步引导（高亮+指示箭头）
+│   │   └── steps/                              # 每步引导配置
+│   │       ├── step-01-hook-intro.ts           # 第1步：教出钩
+│   │       ├── step-02-collect-item.ts         # 第2步：捡到第一个物品
+│   │       ├── step-03-craft.ts                # 第3步：制作第一个工具
+│   │       └── step-04-expand-raft.ts          # 第4步：扩建筏体
+│   │
+│   └── effects/                                # 视觉效果（纯表现层）
+│       ├── HookTrail.ts                        # 钩线拖尾
+│       ├── HitEffect.ts                        # 命中特效（蓝/绿/红）
+│       ├── WaterRipple.ts                      # 水波纹（中配/高配）
+│       └── ScreenShake.ts                      # 连钩震屏
+│
+├── analytics/                                  # ★ 埋点层（不含业务逻辑）
+│   ├── AnalyticsManager.ts                     # 埋点管理器
+│   ├── events/                                 # 埋点事件定义
+│   │   ├── TutorialEvents.ts                   # 新手引导漏斗
+│   │   ├── GameplayEvents.ts                   # 核心玩法事件
+│   │   ├── AdEvents.ts                         # 广告事件
+│   │   └── ErrorEvents.ts                      # 错误/崩溃事件
+│   └── adapters/
+│       ├── WechatAnalyticsAdapter.ts           # 微信自带统计
+│       └── CustomAnalyticsAdapter.ts           # 自建埋点（发到云函数）
+│
+└── anti-cheat/                                 # ★ 反作弊层（客户端侧）
+    ├── ChecksumValidator.ts                    # 关键数值校验和
+    ├── TimeIntegrityChecker.ts                 # 本地时间篡改检测
+    └── MemoryWatcher.ts                        # 内存关键值监控（基础）
+```
+
+---
+
+# 第三部分：后端完整结构（腾讯云 Serverless）
+
+## 3.1 后端架构说明
+
+```text
+选型：腾讯云 SCF（Serverless Cloud Function）+ COS + TencentDB MongoDB
+理由：
+  - 双平台（微信/抖音）均可调用 HTTPS 接口
+  - 自动扩容，突发流量无需运维
+  - 按量付费，日活<1万月费约50-200元
+  - 以后上APP只需换域名，接口不变
+```
+
+```text
+server/
+│
+├── functions/                                  # ★ 云函数目录（每个函数独立部署）
+│   │
+│   ├── auth/                                   # 认证云函数
+│   │   ├── index.ts                            # 函数入口
+│   │   ├── handlers/
+│   │   │   ├── login.ts                        # 微信登录（code换openid）
+│   │   │   └── refreshToken.ts                 # Token刷新
+│   │   └── package.json
+│   │
+│   ├── player/                                 # 玩家数据云函数
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   ├── getProfile.ts                   # 获取玩家信息
+│   │   │   ├── syncSave.ts                     # 存档同步（上线时调用）
+│   │   │   ├── validateAndSave.ts              # 校验并保存（防作弊核心）
+│   │   │   └── getOfflineRewards.ts            # 获取离线收益
+│   │   └── package.json
+│   │
+│   ├── leaderboard/                            # 排行榜云函数
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   ├── getGlobalRank.ts                # 全服排行榜
+│   │   │   ├── submitScore.ts                  # 提交分数（含防刷校验）
+│   │   │   └── getRankById.ts                  # 查询单个玩家排名
+│   │   └── package.json
+│   │
+│   ├── social/                                 # 社交云函数
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   ├── sendMessage.ts                  # 发送快捷消息
+│   │   │   ├── getMessages.ts                  # 获取消息列表（分页）
+│   │   │   └── getRegionMessages.ts            # 区服消息
+│   │   └── package.json
+│   │
+│   ├── island/                                 # 岛屿云函数
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   ├── captureIsland.ts                # 占领岛屿
+│   │   │   ├── getIslandState.ts               # 获取岛屿状态
+│   │   │   └── resolveBattle.ts                # 战斗结算（离线塔防）
+│   │   └── package.json
+│   │
+│   ├── battle/                                 # 战斗结算云函数（防作弊关键）
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   ├── resolveTowerDefense.ts          # 塔防结算（服务端计算）
+│   │   │   └── getBattleReplay.ts              # 获取战斗回放数据
+│   │   ├── engine/
+│   │   │   ├── PathFinder.ts                   # 寻路算法（服务端版本）
+│   │   │   ├── BattleSimulator.ts              # 战斗模拟器
+│   │   │   └── ReplayEncoder.ts                # 回放压缩编码
+│   │   └── package.json
+│   │
+│   ├── analytics/                              # 埋点收集云函数
+│   │   ├── index.ts
+│   │   ├── handlers/
+│   │   │   └── trackEvent.ts                   # 批量接收埋点事件
+│   │   └── package.json
+│   │
+│   └── config/                                 # 配置热更新云函数
+│       ├── index.ts
+│       ├── handlers/
+│       │   ├── getConfigVersion.ts             # 检查配置版本号
+│       │   └── getConfig.ts                    # 获取配置内容（变更时调用）
+│       └── package.json
+│
+├── shared/                                     # 后端内部共享代码
+│   │
+│   ├── middleware/                             # 中间件
+│   │   ├── auth.ts                             # 身份验证（验证微信Token）
+│   │   ├── rateLimit.ts                        # 频率限制（防刷接口）
+│   │   └── logger.ts                           # 请求日志
+│   │
+│   ├── database/                               # 数据库访问层
+│   │   ├── MongoClient.ts                      # 数据库连接管理
+│   │   ├── collections/                        # 集合操作封装
+│   │   │   ├── PlayerCollection.ts
+│   │   │   ├── LeaderboardCollection.ts
+│   │   │   ├── ChatCollection.ts
+│   │   │   ├── IslandCollection.ts
+│   │   │   └── BattleLogCollection.ts
+│   │   └── indexes.ts                          # 索引定义（确保查询性能）
+│   │
+│   ├── anti-cheat/                             # 服务端反作弊
+│   │   ├── ScoreValidator.ts                   # 分数合法性校验
+│   │   ├── RateDetector.ts                     # 资源获取速率检测
+│   │   └── BlacklistManager.ts                 # 封禁管理
+│   │
+│   ├── cache/                                  # Redis 缓存层
+│   │   ├── RedisClient.ts                      # Redis 连接
+│   │   ├── LeaderboardCache.ts                 # 排行榜缓存（热数据）
+│   │   └── SessionCache.ts                     # 会话缓存
+│   │
+│   └── utils/
+│       ├── response.ts                         # 统一响应格式
+│       ├── crypto.ts                           # 加密工具（签名验证）
+│       └── time.ts                             # 服务器时间工具
+│
+├── serverless.yml                              # Serverless Framework 部署配置
+├── tsconfig.json
+└── package.json
+```
+
+---
+
+# 第四部分：前后端共享契约层
+
+这一层是防止前后端"各自腐化"的关键：
+
+```text
+shared/                                         # 前后端共享，两边同时引用
+│
+├── contracts/                                  # ★ 接口契约（请求/响应格式）
+│   │
+│   ├── auth/
+│   │   ├── LoginRequest.ts                     # { code: string, platform: 'wechat'|'douyin' }
+│   │   └── LoginResponse.ts                    # { token: string, playerId: string, isNew: boolean }
+│   │
+│   ├── player/
+│   │   ├── SyncSaveRequest.ts                  # 存档上传格式
+│   │   ├── SyncSaveResponse.ts                 # 服务端权威数据返回
+│   │   └── OfflineRewardsResponse.ts           # 离线收益格式
+│   │
+│   ├── leaderboard/
+│   │   ├── SubmitScoreRequest.ts               # { playerId, score, signedData }
+│   │   ├── LeaderboardResponse.ts              # { ranks: RankEntry[], myRank: number }
+│   │   └── RankEntry.ts                        # { rank, playerId, nickname, score, avatar }
+│   │
+│   ├── social/
+│   │   ├── SendMessageRequest.ts               # { phraseId: number, regionCode: string }
+│   │   └── ChatMessage.ts                      # 聊天消息格式
+│   │
+│   ├── battle/
+│   │   ├── BattleResult.ts                     # 战斗结果格式
+│   │   └── ReplayData.ts                       # 回放数据格式
+│   │
+│   └── common/
+│       ├── ApiResponse.ts                      # 统一响应格式 { code, data, message }
+│       ├── ErrorCodes.ts                       # 错误码常量（前后端共用）
+│       └── Pagination.ts                       # 分页格式
+│
+├── types/                                      # ★ 核心游戏类型定义（跨端共用）
+│   ├── Item.ts                                 # 物品类型（含品阶枚举）
+│   ├── RaftLayout.ts                           # 筏体布局数据结构
+│   ├── Employee.ts                             # 员工类型（7个岗位枚举）
+│   ├── Island.ts                               # 岛屿类型
+│   └── BattleUnit.ts                           # 战斗单位类型（含兵种枚举）
+│
+└── constants/                                  # ★ 跨端常量
+    ├── GameConfig.ts                           # 核心游戏常量（不频繁改动）
+    ├── ItemGrade.ts                            # 品阶颜色/权重（白绿蓝紫金）
+    └── PlatformType.ts                         # 平台枚举
+```
+
+---
+
+# 第五部分：高效处理增删改查变更
+
+## 5.1 变更类型判断流程
+
+```text
+收到一个新需求/变更，首先判断变更类型：
+
+变更类型          影响范围                    操作流程
+─────────────────────────────────────────────────────────────
+A. 数值调整       只改配置表                  修改Excel → 运行导出工具 → 更新JSON → 热更新
+B. UI变更         只改UI层                    修改prefab/panel脚本 → 不影响业务逻辑
+C. 新玩法功能     新增模块                    按模块新增流程（见5.2节）
+D. 新接口         shared/contracts + 云函数   按接口新增流程（见5.3节）
+E. 存档结构变更   SaveSchema + SaveMigrator   按存档变更流程（见5.4节）
+F. 新平台接入     PlatformAdapter新增实现     只改platform/层（见5.5节）
+
+判断错误会导致：
+  - 把数值写死在代码里（应在配置表）→ 改一个数要重新发包
+  - 把接口格式散落在业务代码里（应在contracts）→ 前后端对不上
+  - 不写SaveMigrator（应迁移旧存档）→ 老玩家存档读不出来
+```
+
+## 5.2 新增玩法功能的标准流程
+
+以"新增钓鱼系统"为例：
+
+```text
+第1步：在 docs/02_design/ 新建设计文档
+  └── fishing-system.md
+      # 明确：玩法规则、进入条件、产出物品、与其他系统的交互
+
+第2步：判断模块归属
+  └── 属于深海玩法 → 新建 client/assets/_shared/scripts/modules/fishing/
+
+第3步：新增模块目录结构
+  modules/fishing/
+  ├── components/
+  │   ├── FishingRod.ts       # 钓竿组件
+  │   └── FishEntity.ts       # 鱼实体
+  ├── systems/
+  │   └── FishingSystem.ts    # 钓鱼逻辑
+  └── FishingModule.ts        # 注册到ServiceLocator
+
+第4步：更新配置表（Excel）
+  tools/excel-to-json/configs/
+  └── fish.xlsx               # 新增：鱼类型、稀有度、价值
+  运行：make export-configs → 生成 fish.json → 放入 resources-config分包
+
+第5步：如需新接口，按5.3节流程新增
+
+第6步：如需新场景资源，放入对应分包（game-deep/）
+
+第7步：注册到模块系统
+  GameBootstrap.ts → 添加 FishingModule 注册
+
+第8步：更新文档
+  docs/02_design/fishing-system.md → 标记为"已实现"
+  docs/04_technical/bundle-plan.md → 检查分包大小是否超限
+
+第9步：运行守卫
+  make guard → 检查没有跨层依赖
+```
+
+## 5.3 新增接口的标准流程
+
+```text
+第1步：在 shared/contracts/ 新增契约文件
+  shared/contracts/fishing/
+  ├── StartFishingRequest.ts
+  └── FishingResult.ts
+
+第2步：在后端新增云函数 handler
+  server/functions/fishing/
+  ├── index.ts
+  └── handlers/
+      └── startFishing.ts     # 实现业务逻辑，返回符合FishingResult的格式
+
+第3步：在客户端新增 API 调用
+  client/.../modules/fishing/systems/FishingSystem.ts
+  # import { StartFishingRequest } from '@shared/contracts/fishing'
+  # 通过 HttpClient.post('/fishing/start', request)
+
+第4步：在防作弊层评估
+  server/shared/anti-cheat/ScoreValidator.ts
+  # 钓鱼产出的物品价值需要上限校验
+
+第5步：更新接口文档
+  docs/04_technical/api-reference.md
+  # 新增接口说明、请求/响应格式、错误码
+```
+
+## 5.4 存档结构变更流程（最高风险操作）
+
+```text
+⚠️ 存档结构变更 = 所有在玩玩家的数据都受影响，必须有迁移脚本。
+
+第1步：在 SaveSchema.ts 中新增版本
+  export const SAVE_VERSION = 4  // 从3升到4
+  export interface SaveDataV4 extends SaveDataV3 {
+    fishingUnlocked: boolean      // 新增字段
+  }
+
+第2步：在 SaveMigrator.ts 新增迁移函数
+  function migrateV3toV4(v3: SaveDataV3): SaveDataV4 {
+    return {
+      ...v3,
+      fishingUnlocked: false      // 老玩家默认未解锁
+    }
+  }
+
+第3步：在 SaveManager.ts 注册迁移路径
+  migrateChain = [
+    { from: 1, to: 2, fn: migrateV1toV2 },
+    { from: 2, to: 3, fn: migrateV2toV3 },
+    { from: 3, to: 4, fn: migrateV3toV4 },   // ← 新增
+  ]
+
+第4步：测试迁移
+  .local/scratch/test-migration-v3-to-v4.ts
+  # 用真实存档数据测试迁移结果
+
+第5步：更新文档
+  docs/04_technical/save-schema.md
+  # 记录每个版本的变更内容和迁移逻辑
+```
+
+## 5.5 新增平台的标准流程
+
+```text
+以后要上iOS原生APP时：
+
+第1步：新增 Adapter 实现
+  client/.../platform/adapters/
+  └── NativeAdapter.ts            # 实现 PlatformAdapter 接口
+
+第2步：在 PlatformFactory.ts 新增判断
+  if (isNativeApp()) return new NativeAdapter()
+
+第3步：接入原生SDK
+  # 替换：登录SDK、广告SDK（穿山甲/优量汇原生版）、分享SDK
+  # 保持：所有业务逻辑代码零改动
+
+第4步：接入文档
+  docs/04_technical/platform-adapters.md
+  # 记录原生平台的特殊处理事项
+```
+
+## 5.6 配置表（数值）变更流程（最高频操作）
+
+```text
+数值调整是最高频的操作，必须做到：改Excel→自动生成JSON→无需改代码→热更新推送
+
+标准流程：
+  1. 打开 tools/excel-to-json/configs/balance.xlsx
+  2. 修改对应数值（例如：蓝色判定奖励倍数从1.5改为1.8）
+  3. 运行：make export-configs
+     → 自动生成 resources-config/configs/balance.json
+  4. 提交并推送
+     → CI 自动触发 config-version 云函数更新版本号
+  5. 客户端下次启动：
+     HotUpdateManager 检测到版本号变化
+     → 仅下载 balance.json（几KB）
+     → 不需要重新提审整个包
+     → ConfigManager 刷新内存缓存
+     → 所有系统自动使用新数值
+
+make export-configs 做什么：
+  - 读取所有 .xlsx 文件
+  - 验证数据完整性（防止空格、类型错误）
+  - 输出 JSON 到对应目录
+  - 生成 manifest.json（含版本hash，用于热更新对比）
+```
+
+---
+
+# 第六部分：文档目录设计
+
+文档目录的核心目标：**一个问题，有且只有一个显而易见的地方能找到答案**。
+
+```text
+docs/
+│
+├── 00_governance/                              # ★ 规范层（最高优先级）
+│   ├── PROJECT-STRUCTURE-SPEC.md              # 本文件（工程结构规范）
+│   ├── PROJECT-DOCUMENTATION-SPEC.md          # 文档规范（本目录自身的元规范）
+│   ├── AGENTS.md-template.md                  # AGENTS.md 模板
+│   ├── glossary.md                            # ★ 术语表（项目专有名词定义）
+│   │   # 示例：
+│   │   # 出钩（Hook Launch）= 玩家长按蓄力后松手发射钩子的操作
+│   │   # 浮力（Buoyancy）= 所有船体材料容量之和
+│   │   # 品阶（Grade）= 物品稀有度（白/绿/蓝/紫/金）
+│   └── project-map.md                         # 项目地图（目录结构速查+更新日志）
+│
+├── 01_product/                                 # 产品层（"做什么"）
+│   │
+│   ├── vision/
+│   │   ├── product-vision.md                  # 产品愿景（目标用户/差异点/成功标准）
+│   │   └── competitive-analysis.md            # 竞品分析
+│   │
+│   ├── design/                                # ★ 游戏设计文档
+│   │   ├── core-loop.md                       # 核心循环图（出钩→收集→建造→解锁→循环）
+│   │   ├── hook-system.md                     # 出钩系统设计
+│   │   ├── raft-building.md                   # 筏体建设设计（含浮力/重量规则）
+│   │   ├── crafting-system.md                 # 制作系统设计
+│   │   ├── employee-system.md                 # 员工系统设计
+│   │   ├── power-system.md                    # 电力系统设计
+│   │   ├── tower-defense.md                   # 塔防系统设计
+│   │   ├── island-system.md                   # 岛屿系统设计
+│   │   ├── lockbox-system.md                  # 开锁/箱子系统设计
+│   │   ├── social-system.md                   # 社交/排行榜设计
+│   │   ├── daily-event.md                     # 每日活动"赶海多捞哦"设计
+│   │   └── tutorial-flow.md                   # 新手引导流程（分钟级设计）
+│   │
+│   ├── economy/                               # ★ 经济系统（独立成章，极重要）
+│   │   ├── economy-overview.md                # 经济系统总览（金币来源/去向闭环）
+│   │   ├── item-price-table.md                # 物品价格表（全部物品定价依据）
+│   │   ├── balance-curve.md                   # 成长曲线（1-49级收入/支出仿真）
+│   │   ├── buoyancy-numbers.md                # 浮力/重量数值设计文档
+│   │   └── ticket-pricing.md                  # 赶海票定价公式
+│   │
+│   ├── ux/                                    # 用户体验
+│   │   ├── player-journey.md                  # 玩家旅程（第1分/10分/1天/7天）
+│   │   ├── session-design.md                  # 单次游玩节奏设计
+│   │   └── failure-design.md                  # 失败惩罚设计（不让人卸载）
+│   │
+│   └── requirements/
+│       ├── v1-mvp-scope.md                    # ★ 首版MVP范围（P0/P1/P2清单）
+│       └── v2-roadmap.md                      # 二期功能路线图
+│
+├── 02_ui/                                      # UI层（"看起来怎样"）
+│   │
+│   ├── style-guide.md                         # ★ UI规范文档
+│   │   # 包含：色板（含品阶色值）、字号规范、按钮最小尺寸
+│   │   #        安全区/刘海屏适配规则、拇指区布局原则
+│   │
+│   ├── reference-board.md                     # 风格参考板（参考游戏截图）
+│   ├── screen-inventory.md                    # ★ 界面清单（所有界面+弹窗列表）
+│   ├── interaction-flow.md                    # 交互流程图（界面跳转关系）
+│   ├── wireframes/                            # 低保真线框图
+│   │   ├── main-hud.png
+│   │   ├── inventory.png
+│   │   └── build-panel.png
+│   ├── hifi/                                  # 关键界面高保真图
+│   │   ├── hook-gameplay.png
+│   │   └── raft-builder.png
+│   ├── animation-spec.md                      # 动效说明（出钩/命中/开箱/升级）
+│   ├── asset-list.md                          # ★ 美术资源清单（尺寸/数量/来源）
+│   ├── atlas-naming-spec.md                   # 图集与切图命名规范
+│   └── asset-copyright-log.md                 # ★ 素材版权记录表（每个资源的授权）
+│
+├── 03_compliance/                              # 合规层（"合法要求"）
+│   │
+│   ├── privacy-policy.md                      # 隐私政策（含IP定省份说明）
+│   ├── user-agreement.md                      # 用户协议
+│   ├── anti-addiction.md                      # 防沉迷说明文档
+│   ├── probability-disclosure.md              # 随机概率公示表（开箱/沉船/活动）
+│   ├── icp-record.md                          # ICP备案信息记录
+│   ├── copyright-register.md                  # 软著申请记录（含申请回执）
+│   └── review-checklist.md                    # ★ 提审自查清单（微信/抖音常见驳回点）
+│
+├── 04_technical/                               # 技术层（"怎么做到的"）
+│   │
+│   ├── architecture-overview.md               # 技术架构总览（一张图说清楚）
+│   ├── platform-adapters.md                   # 平台适配层说明（微信/抖音/APP差异）
+│   ├── bundle-plan.md                         # ★ 分包方案（哪些内容在哪个包，大小预算）
+│   ├── save-schema.md                         # ★ 存档数据结构（版本历史+迁移记录）
+│   ├── api-reference.md                       # ★ 接口文档（所有云函数接口说明）
+│   ├── offline-calculation.md                 # 离线结算算法设计（产出/战斗/潮汐）
+│   ├── anti-cheat.md                          # 反作弊方案（客户端+服务端分层）
+│   ├── config-table-spec.md                   # 配置表规范（Excel→JSON导出说明）
+│   ├── hot-update.md                          # 热更新方案（配置表版本管理）
+│   ├── performance-budget.md                  # 性能预算（内存上限/帧率目标/加载时间）
+│   ├── analytics-plan.md                      # 埋点方案（事件清单+漏斗设计）
+│   ├── server-cost-estimate.md                # 服务器费用估算（不同日活规模）
+│   └── test-device-list.md                    # 测试机型清单（最低配到高配）
+│
+├── 05_operations/                              # 运营层（"上线后怎么做"）
+│   │
+│   ├── launch-timeline.md                     # ★ 上线时间线（开发/手续并行规划）
+│   ├── milestone-plan.md                      # 里程碑计划（原型/内测/提审/上线）
+│   ├── ad-revenue-estimate.md                 # 广告收入预估模型
+│   ├── growth-strategy.md                     # 拉新策略（分享/录屏/达人）
+│   ├── update-rhythm.md                       # 上线后内容更新节奏
+│   └── kpi-dashboard.md                       # 核心指标定义（次日留存/人均时长/广告收入）
+│
+├── 06_evidence/                               # 证据层（"已发生的事实"）
+│   │
+│   ├── playtest-reports/                      # 测试报告（每次测试存一份）
+│   │   └── 2026-01-15-hook-feel-test.md
+│   ├── review-history/                        # 提审记录（含驳回原因和修改记录）
+│   │   └── 2026-03-01-wechat-review-1.md
+│   ├── crash-reports/                         # 崩溃报告分析
+│   └── adr/                                  # 架构决策记录（Architecture Decision Records）
+│       ├── ADR-001-backend-serverless.md      # 为什么选Serverless
+│       ├── ADR-002-no-physics-engine.md       # 为什么不用物理引擎
+│       └── ADR-003-no-free-chat.md            # 为什么首版不做自由聊天
+│
+└── 07_templates/                              # 模板层（新建文档时复用）
+    ├── system-design-template.md              # 系统设计文档模板
+    ├── api-endpoint-template.md               # 接口文档模板
+    ├── adr-template.md                        # ADR模板
+    └── playtest-report-template.md            # 测试报告模板
+```
+
+---
+
+# 第七部分：文档与代码同步机制
+
+文档最大的问题是"写了就过时"。以下机制让文档和代码保持同步：
+
+## 7.1 文档-代码双向绑定规则
+
+```text
+规则：凡是在代码中有对应实现的设计文档，
+      必须在代码文件顶部注释中注明对应文档路径。
+
+示例 — BuoyancySystem.ts 顶部：
+/**
+ * 浮力/重量计算系统
+ * @design docs/01_product/design/raft-building.md#浮力系统
+ * @numbers docs/01_product/economy/buoyancy-numbers.md
+ *
+ * 核心规则：浮力 ≥ 总重量，否则触发 BUOYANCY_OVERFLOW 事件
+ */
+
+示例 — api-reference.md 中每个接口：
+## POST /player/sync-save
+- 实现位置：server/functions/player/handlers/syncSave.ts
+- 请求契约：shared/contracts/player/SyncSaveRequest.ts
+- 最后更新：2026-01-20（v1.2 新增离线收益字段）
+```
+
+## 7.2 变更联动检查表
+
+```text
+修改以下内容时，必须同步更新对应文档：
+
+代码变更               → 必须同步更新的文档
+───────────────────────────────────────────────────────
+存档Schema变更         → docs/04_technical/save-schema.md
+新增/修改接口          → docs/04_technical/api-reference.md
+新增配置表字段         → docs/04_technical/config-table-spec.md
+分包内容变更           → docs/04_technical/bundle-plan.md
+新增玩法模块           → docs/01_product/design/<module>.md
+新增平台适配           → docs/04_technical/platform-adapters.md
+新增埋点事件           → docs/04_technical/analytics-plan.md
+目录结构变更           → docs/00_governance/project-map.md
+架构重大决策           → docs/06_evidence/adr/ADR-XXX.md
+```
+
+---
+
+# 第八部分：AGENTS.md（微信小游戏专版）
+
+```markdown
+# AGENTS.md
+
+> AI Agent 规范入口。人类请阅读 README.md。
+
+---
+
+## 1. 必读规范（执行任何任务前必须加载）
+
+- 工程结构规范：`docs/00_governance/PROJECT-STRUCTURE-SPEC.md`
+- 项目地图：`docs/00_governance/project-map.md`
+- 术语表：`docs/00_governance/glossary.md`
+- MVP范围：`docs/01_product/requirements/v1-mvp-scope.md`
+
+---
+
+## 2. 项目特殊约束（微信小游戏，与通用规范不同之处）
+
+### 包体硬限制（违反即提审失败）
+- 主包（main bundle）：≤ 4 MB，超出立即报告，不要自行决定删减内容
+- 任何场景、预制体、图集，修改后必须运行 `make check-bundle-size`
+
+### 平台API约束
+- **绝对禁止** 在 modules/ ui/ data/ 层直接调用 `wx.*` 或 `tt.*`
+- 所有平台API必须通过 `PlatformAdapter` 接口调用
+- 新增平台能力时，先在 `PlatformAdapter.ts` 添加接口定义，再在各Adapter实现
+
+### 配置表约束
+- **绝对禁止** 将数值硬编码在 .ts 文件中
+- 所有游戏数值（物品价格/技能伤害/生产速率等）必须在 Excel 配置表中定义
+- 修改数值：修改Excel → `make export-configs` → 提交JSON
+
+### 存档约束
+- 修改 `SaveSchema.ts` 的任何字段，必须同步创建对应的 `SaveMigrator` 迁移函数
+- 不写迁移函数 = 老玩家存档损坏，这是最严重的线上事故
+
+---
+
+## 3. 文件归属速查
+
+新建任何文件前，必须先判断归属：
+
+```
+平台API调用          → client/.../platform/adapters/
+游戏启动/框架        → client/.../core/
+玩法业务逻辑         → client/.../modules/<domain>/
+纯UI组件（无业务）   → client/.../ui/components/
+业务面板（有业务）   → client/.../ui/panels/
+存档管理             → client/.../data/save/
+内存状态             → client/.../data/store/
+埋点事件             → client/.../analytics/events/
+云函数Handler        → server/functions/<domain>/handlers/
+前后端契约类型       → shared/contracts/<domain>/
+游戏核心类型         → shared/types/
+配置表原始文件       → tools/excel-to-json/configs/
+配置表输出JSON       → client/.../resources-config/configs/
+数值设计文档         → docs/01_product/economy/
+系统设计文档         → docs/01_product/design/
+技术方案文档         → docs/04_technical/
+临时草稿/截图        → .local/（不进Git）
+```
+
+---
+
+## 4. 依赖方向约束
+
+```
+客户端：
+  ui/ → modules/ → core/
+  platform/ ← core/（单向，core调platform不反过来）
+  analytics/ 只读不写（只发事件，不改状态）
+
+服务端：
+  functions/handlers/ → shared/database/ → MongoDB
+  functions/handlers/ → shared/anti-cheat/（结果写回，不反向）
+  shared/cache/ 只做读缓存，不做业务决策
+```
+
+---
+
+## 5. 禁止行为
+
+```
+❌ 在 modules/ 或 ui/ 中直接写 wx.setStorage（用 StorageUtils 或 SaveManager）
+❌ 在 modules/ 中直接调用 wx.login / tt.login（用 PlatformAdapter）
+❌ 将数值写死在 .ts 文件（必须在配置表）
+❌ 修改存档结构不写迁移函数
+❌ 修改主包内容不检查包体大小
+❌ 新增接口不在 shared/contracts/ 定义契约类型
+❌ 服务端直接信任客户端上报的分数/资源数量（必须校验）
+❌ 在根目录、client/、server/ 根层新增非白名单文件
+❌ 创建 *_backup / *_old / *_v2 等文件（用Git管理历史）
+```
+
+---
+
+## 6. 每次任务完成后必须检查
+
+```
+[ ] 主包大小是否超出4MB？→ make check-bundle-size
+[ ] 是否有新的 wx.*/tt.* 直接调用？→ grep -r "wx\." src/modules
+[ ] 是否修改了存档结构？→ 确认已写迁移函数
+[ ] 是否新增了硬编码数值？→ 移至配置表
+[ ] 是否新增了接口？→ 确认已在contracts/定义
+[ ] 是否产生了临时文件？→ 移至 .local/ 或删除
+[ ] 是否需要更新对应文档？→ 检查文档-代码双向绑定规则
+[ ] 运行 make guard 并通过所有守卫
+```
+```
+
+---
+
+# 第九部分：Makefile 统一命令入口
+
+```makefile
+# ============================================================
+# 《我的筏不可能这么大》统一命令入口
+# ============================================================
+.PHONY: help setup dev export-configs check-bundle-size guard ci clean
+
+help:
+	@echo "╔══════════════════════════════════════════════════╗"
+	@echo "║           我的筏 - 开发命令中心                   ║"
+	@echo "╠══════════════════════════════════════════════════╣"
+	@echo "║  make setup            初始化开发环境             ║"
+	@echo "║  make export-configs   Excel配置表→JSON（热更新） ║"
+	@echo "║  make check-bundle     检查分包大小               ║"
+	@echo "║  make mock-server      启动本地接口Mock           ║"
+	@echo "║  make deploy-functions 部署全部云函数             ║"
+	@echo "║  make guard            架构守卫（提交前必须通过） ║"
+	@echo "║  make ci               完整CI流水线               ║"
+	@echo "║  make clean            清理临时文件               ║"
+	@echo "╚══════════════════════════════════════════════════╝"
+
+export-configs:
+	@echo "[ Config ] 导出配置表..."
+	node tools/excel-to-json/export.js
+	@echo "[ Config ] 生成版本清单..."
+	node tools/excel-to-json/gen-manifest.js
+	@echo "✅ 配置表导出完成，请检查 resources-config/configs/"
+
+check-bundle:
+	@echo "[ Bundle ] 检查分包大小..."
+	node tools/bundle-analyzer/check-size.js
+	@echo "主包限制：4MB，总包限制：30MB"
+
+mock-server:
+	@echo "[ Mock ] 启动本地Mock服务器..."
+	node tools/mock-server/index.js
+
+deploy-functions:
+	@echo "[ Deploy ] 部署云函数..."
+	cd server && npx serverless deploy
+	@echo "✅ 云函数部署完成"
+
+# ── 架构守卫 ──────────────────────────────────────────────
+
+guard: check-root-pollution check-wx-direct-calls check-hardcoded-values check-bundle
+	@echo "✅ 全部守卫通过"
+
+check-root-pollution:
+	@ILLEGAL=$$(find . -maxdepth 1 \
+	    \( -name "*.png" -o -name "*.log" -o -name "*.bak" \
+	    -o -name "*.tmp" -o -name "debug*" -o -name "*_final*" \) \
+	    2>/dev/null); \
+	if [ -n "$$ILLEGAL" ]; then \
+	    echo "❌ 根目录非法文件：$$ILLEGAL"; exit 1; \
+	fi
+	@echo "✅ 根目录检查通过"
+
+check-wx-direct-calls:
+	@echo "[ Guard ] 检查是否有绕过PlatformAdapter的直接wx.*调用..."
+	@VIOLATIONS=$$(grep -rn "wx\.\|tt\." \
+	    client/assets/_shared/scripts/modules/ \
+	    client/assets/_shared/scripts/ui/ \
+	    client/assets/_shared/scripts/data/ \
+	    2>/dev/null | grep -v "//.*wx\." || true); \
+	if [ -n "$$VIOLATIONS" ]; then \
+	    echo "❌ 发现直接调用wx.*，必须通过PlatformAdapter："; \
+	    echo "$$VIOLATIONS"; exit 1; \
+	fi
+	@echo "✅ 平台API调用检查通过"
+
+check-hardcoded-values:
+	@echo "[ Guard ] 检查是否有硬编码数值（魔法数字）..."
+	@echo "⚠️  此检查需要人工审查，请确认没有把游戏数值写死在代码里"
+	@echo "✅ 请确认后继续"
+
+ci: guard
+	@echo "[ CI ] 运行测试..."
+	cd server && npm test
+	make export-configs
+	make check-bundle
+	@echo "✅ CI全部通过"
+
+clean:
+	rm -rf .local/runtime/ client/temp/ server/.serverless/
+	find . -name "*.log" -not -path "./.git/*" -delete 2>/dev/null || true
+	@echo "✅ 清理完成"
+```
+
+---
+
+# 第十部分：核心规则浓缩（微信小游戏版）
+
+```text
+1. 包体是硬墙，不是软建议。
+   主包≤4MB，超出即失败。每次改动都要 make check-bundle。
+
+2. 平台适配层是唯一出口。
+   wx.*/tt.* 只在 platform/adapters/ 里出现，其他地方零容忍。
+   换平台时，只改适配器，业务逻辑零修改。
+
+3. 配置表是数值的唯一真相来源。
+   任何数字（价格/伤害/概率）写死在代码里 = 技术债，
+   改一次就要重新提审。
+
+4. 存档迁移是对老玩家的承诺。
+   改存档结构不写迁移函数 = 老玩家数据损坏 = 差评 + 卸载。
+
+5. 排行榜数据只信服务端。
+   客户端上报的分数不可信，服务端必须独立校验，
+   否则刷榜者一天内摧毁整个榜单的公信力。
+
+6. 文档与代码同步，不是事后补。
+   设计文档写清楚再动手，实现完成后标记"已实现"，
+   不同步的文档比没有文档更危险（误导自己和AI）。
+
+7. .local/ 是临时状态的黑洞。
+   截图/日志/草稿/AI产物全进 .local/，
+   它完全被 gitignore，不污染仓库。
+
+8. contracts/ 是前后端的唯一协议。
+   接口格式只在 shared/contracts/ 里定义，
+   改接口时两端同时改，TypeScript 编译时报错比运行时报错好无数倍。
+
+9. 模块只对外暴露入口文件。
+   modules/hook/HookModule.ts 是外界唯一的访问入口，
+   内部实现随时可以重构，不影响其他模块。
+
+10. 一个文件有且只有一个显而易见的正确位置。
+    如果不确定放哪，先看文件归属速查表，
+    还不确定就问（不要创建，先明确归属）。
+```
+
+---
+
+> **最后说一句：** 这套结构的价值不在于目录名好看，而在于当你凌晨改 bug、当 AI 帮你生成代码、当三个月后你回来看自己的项目时——每一个文件都在它唯一合理的位置，每一个决策都有文档可查，每一次改动都有守卫把关。**结构是给未来的自己写的情书。**

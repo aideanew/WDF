@@ -1,0 +1,4 @@
+/** 合理性校验：某小时上报的收益超过“理论最大值”即标记复核（规则不改，只做防刷）。 */
+export function exceedsHourlyCap(reportedValue: number, theoreticalMaxPerHour: number, toleranceBp: number = 2000): boolean {
+  return reportedValue > Math.floor((theoreticalMaxPerHour * (10000 + toleranceBp)) / 10000);
+}

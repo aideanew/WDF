@@ -1,0 +1,8 @@
+{
+  "name": "wodefa-client",
+  "uuid": "",
+  "creator": {
+    "version": "3.8.x"
+  },
+  "description": "Cocos Creator 工程。首次用 Cocos Dashboard 以 3.8 LTS 打开本目录，编辑器会补全 uuid 与 settings；锁定补丁号后把 creator.version 改成实际版本（ADR-0001）。"
+}

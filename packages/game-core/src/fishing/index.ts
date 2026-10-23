@@ -1,0 +1,3 @@
+/** 钓鱼：钓鱼玩法与产出
+ * 规则待按 v5.5 章节 3.2 抽取。只写纯函数。 */
+export const MODULE_ID = 'fishing';

@@ -1,0 +1,25 @@
+{
+  "table": "jobs",
+  "module": "crew",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "enum",
+      "values": [
+        "soldier",
+        "cook",
+        "smith",
+        "carpenter",
+        "mechanic",
+        "researcher",
+        "worker"
+      ],
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

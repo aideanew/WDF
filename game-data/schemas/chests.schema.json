@@ -1,0 +1,39 @@
+{
+  "table": "chests",
+  "module": "chest",
+  "primaryKey": "id",
+  "status": "active",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "material": {
+      "type": "enum",
+      "values": [
+        "wood",
+        "copper",
+        "iron"
+      ],
+      "required": true
+    },
+    "lock": {
+      "type": "string",
+      "required": true,
+      "ref": "locks.id"
+    },
+    "smashable": {
+      "type": "bool",
+      "required": true
+    },
+    "size": {
+      "type": "enum",
+      "values": [
+        "small",
+        "medium",
+        "large",
+        "huge"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+/** 可复现的种子随机数（mulberry32）。同种子 → 同序列，前后端一致。 */
+export interface Rng {
+  /** [0, 1) */
+  next(): number;
+  /** [min, max] 整数 */
+  int(min: number, max: number): number;
+  /** 万分比判定：p 为 0..10000 */
+  chance(p: number): boolean;
+  /** 当前内部状态，可存档以便断点续算 */
+  state(): number;
+}
+
+export function createRng(seed: number): Rng {
+  let s = seed >>> 0;
+  const next = (): number => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  return {
+    next,
+    int: (min, max) => min + Math.floor(next() * (max - min + 1)),
+    chance: (p) => next() * 10000 < p,
+    state: () => s,
+  };
+}
+
+/** 从字符串派生种子（如 赶海场次ID+玩家ID）。FNV-1a 32 位。 */
+export function seedFrom(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}

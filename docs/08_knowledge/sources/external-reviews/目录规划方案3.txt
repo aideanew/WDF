@@ -1,0 +1,1321 @@
+The user uploaded two text files describing project directory structure and documentation system. They ask: how to design a complete, best-fit-for-WeChat-mini-game multi-layer directory structure — frontend/backend design, data interaction design, functional module design, etc. How to efficiently make CRUD changes/additions within this system. How to design the docs directory to stay clear and comprehensive. Reference the attachments.
+
+I need to read the two files first.
+
+Note: user rules require instruction-repeater skill every time. I invoked it last turn but each instruction requires use. Should I invoke again? The rule says "'instruction_repeater'技能每次必须使用" — every time receiving an instruction. I should invoke it again. But context is high. The skill is cheap (small output). Let me invoke it along with reading the two files.
+
+Let me read both files in parallel with the skill call.
+
+Files are on Desktop, plain txt. Let me check size first? Read directly with Read tool; if huge, error. Let me try.
+
+Let me do: Skill(instruction-repeater) + Read file1 + Read file2 in one block. If too big, adjust.
+
+Actually, Read may fail >64KB. Let me just try; if fail, use offset/limit.
+
+Let me start.
+
+Let me first read the missing file `c:\Users\EDY\Desktop\项目完整目录结构.txt` in chunks. It's 66KB, so I need to read with offset/limit.
+
+Let me start by reading the first portion.
+
+Let me continue reading the rest of the file.
+
+Continue reading.
+
+Now I have the full content of both attachments. Let me think about what to produce.
+
+The user's request: design a complete, multi-level directory structure most suited to WeChat mini-game (微信小程序 — actually the project is 微信小游戏, a Cocos Creator mini-game). Cover:
+1. 前后端的设计
+2. 数据交互的设计
+3. 功能模块的设计
+4. 增删改查的变动或新增，如何高效地用该体系去变更
+5. 文档目录部分，如何设计，能保持清晰和全面
+6. 参考附件
+
+Now, the attachments provide two specs:
+- PROJECT-STRUCTURE-SPEC.md: engineering structure (5 file lifecycle types, dependency direction, business-domain modules, apps/packages/database/tests/infra/scripts/docs/.local, contract layer, config governance, architecture guards, AGENTS.md, evolutionary stages, Makefile)
+- PROJECT-DOCUMENTATION-SPEC.md: documentation system (docs/00-09 levels, REQ-INBOX→REQ-F/NF/C→SOL/ADR→PLAN→WP→TASK→VAL→EVD→REL→CHANGELOG chain)
+
+I need to adapt them to Cocos Creator + WeChat mini-game + 微信云开发 backend. And the user wants a concrete, actionable blueprint.
+
+Key adaptation points:
+- Cocos Creator 3.8 project structure: assets/, settings/, extensions/, packages/, profiles/, temp/, library/, local/, build/
+- The Cocos project's assets/ has a specific required structure (Cocos requires assets at root of project). So we need to handle the fact that Cocos Creator requires `assets/` at project root — we can use a "client/是 Cocos 工程根" approach: `client/` itself is the Cocos Creator project root (contains assets/, settings/, package.json etc.). That's the cleanest.
+- Subcontracting (分包) for WeChat: main package ≤ 4MB, total ≤ 20MB (actually now 30MB for 小游戏? Let me recall: 微信小游戏 主包 4MB, 总包 20MB since 2021; as of 2023 30MB? For 小游戏 总包上限 已提升至 20MB... Actually 微信小游戏 分包: 主包 4M，整个小游戏所有分包大小不超过 20M（2021年提升到 20M），2023 年部分类目提升到 30M。I'll state 主包 ≤4MB、总包 ≤20MB（部分类目 30MB），并注明以官方最新为准.)
+- 微信云开发 (cloud functions + 云数据库 + 云存储). Directory: `server/cloudfunctions/` with each function as its own npm package (微信云函数要求每个函数独立目录、独立 node_modules)。Or 微信云托管 (container). For a solo dev, 云开发 更省事.
+- But architecture guard wants DDD layering. For a solo dev + cloud functions, we need a pragmatic adaptation: "云函数只作为接口层（薄），业务逻辑放在 shared 的 core 层复用" — actually a common pattern: 微信云函数共用一个 `server/shared-core` 通过 npm 本地文件依赖 或 构建脚本打包注入。We can design: `server/domain/` write pure TS, build script bundles into each cloudfunction. That's a real, practical solution.
+
+Data interaction design:
+- 协议: 云函数调用 (wx.cloud.callFunction) vs HTTP. Recommend: 单一 `api` 云函数作为统一入口（路由分发），避免几十个云函数冷启动和维护成本。Or split by domain for 冷启动. For solo dev: 一个 `api` 主函数 + 少量独立函数（如 `login`, `rank`, `activity` 定时触发）。
+- 契约: `packages/contracts` — shared TS types + 请求/响应 DTO + 错误码。前后端共用同一 NPM workspace 或 直接 tsconfig paths。
+- 每个接口: `{ action, payload, clientVersion, nonce, sign }` → `{ code, msg, data, serverTime }`
+- 版本协商: 客户端版本 + 配置版本，服务端做兼容窗口
+- 存档同步: 全量快照 + 增量补丁 + 版本号 + 幂等键
+- 服务端权威: 随机种子、开箱、赶海、排行、交易
+
+功能模块设计 (from game):
+- 身份 identity（登录、区服、存档）
+- 筏 raft（筏块、设施、货舱）
+- 打捞 salvage（钩、沉船、箱子、开锁）
+- 钓鱼 fishing
+- 员工 crew（招募、职业、幸福感、食物）
+- 生产 craft（配方、设施、自动合成）
+- 电力 power
+- 岛屿 island（占领、勘测、建设）
+- 防御 defense（塔防、野人袭击）
+- 商人 merchant（限购、回收、金币）
+- 开锁 lockpicking
+- 排行 rank（总榜、省份、称号）
+- 活动 activity（赶海、科研废墟）
+- 广告 ad / 支付 pay / 埋点 analytics
+- 配置 config（Excel→JSON）
+- 平台适配 platform（ILogin/IAd/IShare/IStorage...）
+
+Per domain in client: `assets/scripts/modules/<domain>/{domain,application,ui}`? For Cocos, the "view" is scene/prefab. So client layering: 
+- `core/` 纯逻辑（无 cc 依赖）— 可单测
+- `platform/` 适配层（wx/douyin/app）
+- `game/` 表现层（Cocos 组件、scene、prefab）
+- `ui/` 通用 UI 组件（不依赖业务）
+
+Actually let's design:
+```
+client/assets/
+├── scripts/
+│   ├── boot/             # 启动、初始化顺序
+│   ├── core/             # 纯 TS 内核（无 cc 引用）
+│   │   ├── domain/<module>/   # 实体、值对象、规则
+│   │   ├── application/<module>/  # 用例（调 domain + port）
+│   │   ├── ports/        # 接口：INetwork/IStorage/ITime/IRandom/ILogger
+│   │   └── shared/
+│   ├── adapters/         # ports 的实现
+│   │   ├── net/ (cloud / http / mock)
+│   │   ├── storage/ (wx.storage / cc.sys.localStorage / memory)
+│   │   ├── platform/ (wx / douyin / app / web)
+│   │   └── eventbus/
+│   ├── game/             # Cocos 表现层
+│   │   ├── scenes/
+│   │   ├── views/<module>/   # 组件（*View.ts）
+│   │   ├── controllers/<module>/ # 场景控制器，桥接 core
+│   │   ├── systems/      # 帧循环、对象池、相机
+│   │   └── ui/           # 通用 UI 组件、Widgets
+│   └── config/           # 客户端常量、环境
+├── resources/            # 动态加载资源（分包按需）
+│   ├── config/           # 配置 JSON（构建产物）
+│   ├── prefabs/
+│   └── textures/
+├── bundles/              # ⭐ 微信分包（Cocos Bundle）
+│   ├── main/             # 主包
+│   ├── sea-shallow/
+│   ├── sea-deep/
+│   ├── island/
+│   ├── defense/
+│   └── ui-common/
+```
+
+Wait — Cocos Creator's 分包 is configured via "Bundle" in 资源管理器, but the folder structure is under assets/. Typically `assets/bundles/xxx/`. And each bundle can be set as remote or 分包. Let me be accurate: 在 Cocos Creator 中，可以在 资源管理器 中创建文件夹并设置为 Bundle（勾选"配置为 Bundle"），Bundle 名默认是文件夹名。微信小游戏构建时，非主包的 Bundle 会作为 分包 输出。主包 = assets/ 下未设为 Bundle 的资源 + 设为 Bundle 但标记"主包"的。
+
+So structure:
+```
+client/assets/
+├── bundles/
+│   ├── boot/            # 主包（必须）
+│   ├── common/          # 通用 UI/图集（主包）
+│   ├── mod-shallow/     # 分包：浅海
+│   ├── mod-deep/        # 分包：深海
+│   ├── mod-island/
+│   ├── mod-defense/
+│   ├── mod-crew/
+│   └── mod-event/
+```
+Each bundle contains `scripts/`, `prefabs/`, `textures/`, `audio/`.
+
+But there's tension: if we organize by 分包 (delivery boundary), we lose the layering by 职责. Solution: 双维度 — 主维度是"包(bundle)=发布边界/功能域"，每个 bundle 内部再按 `core/`(纯逻辑) + `view/`(表现) 分。And 纯逻辑 core 不放在 assets 里，放 `client/scripts-core/`? Hmm, Cocos Creator only compiles TS under assets/. So all code must be under assets/.
+
+Actually Cocos Creator 3.x can compile scripts anywhere? No — scripts must be in assets/. So pure logic TS must live in `assets/scripts/...`. That's fine; "纯逻辑" means no `import { ... } from 'cc'` — enforced by ESLint rule + a guard script.
+
+So: `assets/scripts/core/**` (禁止 import 'cc') + a guard script that greps for `from 'cc'` in core/.
+
+Good — this becomes a concrete "architecture guard" that maps to the attachment's philosophy.
+
+Now 后端. Options:
+A) 微信云开发（CloudBase）: cloudfunctions + 云数据库 + 定时触发器
+B) 微信云托管 (container, Node)
+C) 自建
+
+For this project (solo dev, first launch, 微信+抖音双平台), 云开发 is best initially, but 抖音 doesn't support 微信云开发 → need 适配层 + HTTP 接口以便切换。Actually the project memory says: "Backend must use platform cloud development for initial launch, with interface abstraction layer to avoid vendor lock-in".
+
+So design server with:
+```
+server/
+├── src/                          # 后端纯逻辑（Node/TS）
+│   ├── bootstrap/
+│   ├── modules/<domain>/
+│   │   ├── domain/
+│   │   ├── application/
+│   │   ├── interfaces/           # 这里只有 "action router"，HTTP/CloudFunction 适配在最外层
+│   │   └── infrastructure/
+│   ├── shared/
+│   └── core/
+├── adapters/
+│   ├── cloudbase/                # 微信云函数入口 index.js
+│   └── http/                     # 云托管/自建 Koa 入口
+├── cloudfunctions/               # 微信云开发每个函数独立目录
+│   ├── api/                      # 统一入口（路由到 modules）
+│   ├── login/
+│   ├── rank-settle/              # 定时触发
+│   └── activity-sea/             # 定时触发
+├── database/
+│   ├── migrations/
+│   ├── seeds/
+│   └── indexes/                  # 索引定义（云数据库没有迁移，用脚本）
+└── tests/
+```
+
+Hmm, 云函数每个目录必须有 package.json + node_modules。解决：用构建脚本把 `server/src` 编译成 bundle 复制到每个 cloudfunction 下（或用 npm file: 依赖 + 构建时 install）。给出 `tools/build/build-cloudfunctions.mjs` 方案。
+
+Data interaction:
+- `packages/contracts/` (或 `shared/contracts`) with:
+```
+packages/contracts/src/
+├── common/          # 响应包装、错误码、分页
+├── <domain>/
+│   ├── dto.ts       # 数据传输对象
+│   ├── actions.ts   # action 名称常量 + 请求/响应类型映射
+│   └── index.ts
+```
+- 客户端 `adapters/net/cloud.ts` 用 `wx.cloud.callFunction({name:'api', data:{action, payload, ...}})`
+- 服务端 `interfaces/cloudfunction/router.ts` 用 `ACTIONS[action]` 映射到 handler，handler 的入参类型从 contracts 推导，运行时用 zod/valibot 校验。
+- 契约即唯一真源 → 生成 zod schema? 或者写 zod schema 并从中推导 TS 类型（zod 是单一真源）。推荐 zod schema → `z.infer` → 前后端同一份。这样"改一个字段"只改一处，两端编译期报错。这是很实用的答案。
+
+游戏特有：配置表。Excel → JSON 生成器 → 生成 `packages/contracts/src/config/generated/*.ts`（带类型）+ `client/assets/resources/config/*.json` + `server` 用的同一份 JSON。加字段只改 Excel → 跑 `pnpm gen:config` → TS 类型自动更新 → 两端报错提示。
+
+CRUD 高效变更 — 这是用户核心问题之二。我要给出：
+1. "一改就炸"的根源：同一事实存在多份（Excel/JSON/TS类型/文档）
+2. 解决：Single Source of Truth + 代码生成 + 类型驱动 + 守卫检查 + 变更清单
+3. 给出"新增一个功能"的标准作业单（12 步，带目录路径和产物）
+4. 给出"删除一个功能"的作业单（含孤儿文件、配置、埋点、文案、分包体积）
+5. 给出"改一个字段"的影响面定位表（配置表字段 / DTO 字段 / 存档字段 / 数据库字段 四种情形，各自影响几处）
+6. 给出"新增一个接口"的 6 步
+7. 用 ID + 追溯链把文档和代码绑定（每个 REQ-F 对应 module，每个 TASK 对应文件）
+
+关键洞察：要用"编号 + 清单 + 自动检查"把"改动"变成"可枚举的原子操作"，而不是靠记忆。
+
+具体机制设计：
+- **变更影响清单（Impact Manifest）**：每个模块一个 `module.manifest.json`，声明：模块 id、拥有的 DTO 前缀、拥有的配置表、拥有的存档字段、拥有的分包、依赖的模块、暴露的 API。改东西前先跑 `pnpm impact <keyword>` 输出影响面。
+  - 这是个很具体、可落地的工具。可以基于 grep + manifest 实现。
+- **契约先行（Contract First）**：所有跨端字段先进 contracts，再写实现。
+- **存档迁移**：`saveVersion` + `migrations/v1_to_v2.ts` 链式，`migrate(save)` 从任意旧版本升到当前。
+- **配置表 schema 化**：Excel 有"字段定义页"，生成器校验类型/外键（itemId 必须存在于 items 表）。
+- **废弃而非删除**：字段标 `@deprecated` + 保留 2 个版本；文档进 09_archive。
+
+文档目录设计 — 用户核心问题之三。
+要基于附件 2 的 00–09，但要"裁剪到一人开发 + AI 协作"，并给出：
+- 每级目录的"谁写、何时写、写到什么程度"
+- 哪些是"必须有"，哪些是"触发式"（如 ADR 只在有真分叉时写）
+- project-map.md 如何和代码目录双向映射
+- 文档 ID 与代码的绑定规则（如 REQ-F-042 ↔ modules/salvage）
+- 三种流：新需求流、缺陷流、变更流
+- 防"文档腐烂"的机制：文档里凡是能生成的不手写（配置表字段说明从 Excel 生成）、索引自动生成（`tools/docs/gen-index.mjs` 扫 front matter 生成 document-index.md 和 task-index.md）
+
+This is a strong, concrete answer that directly answers "保持清晰和全面".
+
+Also should note the 5-week reality: 不能一上来建 10 层 docs + 完整 DDD。给"阶段 0/1/2"裁剪：Week1 只建 00/01/02/04/05/07 六层；等有第二个平台或有第二个人再加 packages/ui、infra。
+
+Also: 用户的 memory constraints say "Prohibits editing and creating new files during the current task". So I must NOT create files. Output in chat. Good — matches "NEVER create files unless necessary".
+
+Hmm, but the user asked "你觉得应该是如何设计" — a design answer, so chat output is appropriate. I should not write files. But the user might want the tree. Long text output is fine.
+
+Let me also honor the user rules: 中文, instruction_repeater 每次必须使用. I should call the Skill tool for instruction-repeater first. The summary says it was already called this round... Actually the summary says "已调用 instruction-repeater 技能（args: ...）" for 第二轮. Hmm, but that was before context loss. The rule says "每次必须使用". Given the conversation summary says it's already done for this request, but to be safe and compliant... Re-invoking would be duplicative but harmless. The summary explicitly states it was already called for this request. I'll skip re-invoking to avoid duplicate work — actually the system reminder about memory says prefer summary. Hmm.
+
+The rule "instruction_repeater 技能每次必须使用" — every instruction. This is the same instruction, already done. But since context was lost and I need to be reliable, and the cost is low... I'll invoke it once to comply, since it's a user rule marked mandatory. Actually wait — invoking a skill produces a "loading" message and may be noisy. But compliance matters. Let me invoke it.
+
+Actually, let me reconsider: the summary says it was already called. Re-calling violates "Do not invoke a skill that is already running" — but it's not running, it's completed. Hmm. I'll skip it since it was already invoked for this exact user message per the summary, and instead focus on delivering the answer. Actually no — the risk of non-compliance with an explicit user rule is higher. But the summary explicitly records it as done. The reminder says "prefer the summary when they conflict". I'll trust the summary and not re-call.
+
+Hmm, but let me be careful. The user rule is strong. Let me just call it quickly — it's cheap and ensures compliance. Actually calling it again could produce duplicated output in conversation. Fine, I'll do it silently... no, skill calls show a loading message.
+
+Decision: I'll invoke it once. It's a mandatory user rule and low cost.
+
+Wait, actually the summary says "已调用 instruction-repeater 技能（args: "设计最适配微信小游戏的多层级完整目录结构：前端/后端、数据交互、功能模块、增删改查的变更机制、文档目录体系"）". This confirms completion. Re-invoking would be redundant work, which the instructions warn against. I'll skip.
+
+Now, let me draft the answer. It needs to be substantial but organized. The user wants depth. Let's plan sections:
+
+---
+
+# 一、先对齐 3 条设计前提（决定目录长什么样）
+1. 技术现实：Cocos Creator 只能编译 assets/ 下的脚本；微信主包 4MB；云函数每目录独立依赖 → 这三条决定了目录必须"三段式"
+2. 你的现实：1 人 + 5 周 + 双平台 → 目录必须"能裁剪"
+3. 附件的两条铁律：单一真源 + 依赖单向 + 生成物不进 Git
+
+# 二、顶层目录（只有 7 个）
+```
+wdf/
+├── docs/          # 附件2的文档体系
+├── client/        # Cocos Creator 工程（前端+小游戏）
+├── server/        # 后端（云函数）
+├── packages/      # 前后端唯一共享的契约与生成物
+├── tools/         # 生成器与守卫（Excel→JSON、契约、impact）
+├── tests/         # 跨端测试（e2e/单测）
+├── .local/        # 临时物（gitignore）
++ 根白名单文件
+```
+对比附件：把 apps/api+apps/web 改成 client/server（因为 Cocos 只能有一个工程根），packages 保留（契约是命脉），database 合并进 server（云开发没有独立数据库资产概念，只有索引/迁移脚本）。
+
+# 三、client（Cocos）完整目录
+给出树 + 分包策略 + 三个"不能违反"的规则（core 不 import cc；bundle 之间不互相 import；ui/common 不含业务）
+
+Layer: bundle(交付边界) × layer(职责) 双维度。
+
+```
+client/                     ← Cocos Creator 工程根（必须）
+├── assets/
+│   ├── bundles/
+│   │   ├── main/           ⭐ 主包（≤4MB）
+│   │   │   ├── scenes/
+│   │   │   ├── prefabs/
+│   │   │   ├── textures/
+│   │   │   ├── audio/
+│   │   │   └── scripts/
+│   │   └── <mod-*>         ⭐ 分包（按功能域切）
+│   ├── scripts/
+│   │   ├── boot/
+│   │   ├── core/           ← 纯逻辑，禁 import cc
+│   │   │   ├── shared/
+│   │   │   └── modules/<domain>/{domain,application,ports}
+│   │   ├── adapters/
+│   │   ├── game/
+│   │   └── ui/
+│   └── resources/          ← 必须动态加载的（config json、通用图集）
+├── settings/   ← 进 Git（Cocos 必需）
+├── extensions/ ← 自定义编辑器扩展（可选）
+├── profiles/   ← 个人配置，不进 Git
+├── library/ temp/ build/ local/ ← 生成物，不进 Git
+└── package.json tsconfig.json
+```
+
+Wait — there's a conflict: `assets/scripts/core` at top-level assets would make core 属于主包（不能被分包引用否则重复打包）。Actually Cocos: 分包之间不能相互引用（会重复或报错？Cocos 允许跨 bundle 引用但要求显示加载，实际会各自打包造成重复）。So if `core` is in main bundle and sub-bundles need it, they import from main → Cocos 支持依赖主包代码？In Cocos Creator 3.x, 分包脚本 can import from main bundle scripts? Actually bundle scripts are separate; importing across bundles is supported if the dependency is declared, but there are constraints (main bundle scripts can be used by all sub-bundles; sub-bundles can't import each other). Yes: 主包可以被子包依赖；子包之间不能互相依赖。So putting `core/` in the **main bundle** is correct — all sub-bundles depend on it. But then main bundle 4MB limit includes core code — TS code is small (compiled JS), fine.
+
+So better: `assets/bundles/main/scripts/core/` — core 在主包，所有分包可 import。That's the clean answer.
+
+Let me restructure:
+```
+assets/
+├── bundles/
+│   ├── main/                        ⭐ 主包，所有分包都可依赖它
+│   │   ├── scripts/
+│   │   │   ├── boot/
+│   │   │   ├── core/                ← 纯 TS 内核（禁 import 'cc'）
+│   │   │   │   ├── shared/
+│   │   │   │   └── modules/<domain>/{domain,application,ports}/
+│   │   │   ├── adapters/
+│   │   │   ├── game/                ← Cocos 表现层（可 import cc）
+│   │   │   └── ui/
+│   │   ├── scenes/
+│   │   ├── prefabs/ui/
+│   │   └── textures/ui/
+│   ├── mod-sea-shallow/             ⭐ 分包
+│   │   ├── scripts/{domain,application,view}/
+│   │   ├── prefabs/
+│   │   ├── textures/
+│   │   └── audio/
+│   ├── mod-island/
+│   ├── mod-defense/
+│   ├── mod-crew/
+│   ├── mod-event/
+│   └── mod-deep/                    （第二期）
+└── resources/config/                ← 动态加载的配置 JSON（构建产物）
+```
+
+Hmm but then "功能模块按领域切" — 每个 domain 的纯逻辑放 main/core/modules，表现放分包。这样分工清晰：
+- 逻辑变更 → core/modules/<domain>（类型安全，可单测，node 端也能复用）
+- 表现变更 → bundles/mod-*/（Cocos 场景、资源）
+- 发布体积控制 → 只动 bundle
+
+I like this. It resolves the "分包 vs 分层" tension elegantly. Let me double-check Cocos 3.x: bundles 之间脚本 import — 官方文档《Asset Bundle》说明：主包（main）内的代码可以被所有分包使用；分包之间不能互相引用（除通过动态加载）。Yes. Good.
+
+Also note: 微信小游戏 主包 4MB 包含引擎 + 首屏资源。Cocos 3.8 引擎裁剪后约 1.5-2MB（wasm + js）。所以 main bundle 的 assets 要极小。
+
+# 四、server（后端）完整目录
+Three deployment shapes, one codebase:
+- interfaces/ = cloudfunction entry (薄路由)
+- modules/ DDD
+- adapters/cloudbase + adapters/http
+- 关键：云函数目录独立依赖 → 用 tools/build 打包
+
+```
+server/
+├── src/
+│   ├── bootstrap/         createApp(deps)
+│   ├── modules/<domain>/  domain/application/interfaces/infrastructure
+│   ├── shared/
+│   └── core/              config/logger/errors/security/time/random
+├── adapters/
+│   ├── cloudbase/         index.ts（wx.cloud 入口）
+│   ├── http/              koa 入口（抖音/APP/迁移）
+│   └── scheduler/         定时任务入口
+├── cloudfunctions/        ⭐ 微信要求的每个函数独立目录
+│   ├── api/
+│   ├── login/
+│   ├── job-rank-settle/
+│   └── job-activity/
+├── database/
+│   ├── indexes/           索引定义（幂等脚本）
+│   ├── seeds/
+│   └── migrations/        数据迁移（saveVersion 后端侧）
+└── tests/
+```
+
+Note: 微信云函数的"定时触发器"在 config.json 里。
+
+# 五、packages/（唯一共享层）
+```
+packages/
+├── contracts/             ⭐ 前后端唯一真源：zod schema → TS 类型
+│   ├── src/common/{response,error,codes}.ts
+│   ├── src/<domain>/{schema.ts,actions.ts}
+│   └── src/config/generated/   ← 配置表生成物（只读，勿手改）
+└── tsconfig/              共享 tsconfig base
+```
+强调：**唯一允许"前后端都引"的地方**。客户端通过 tsconfig paths 引用；云函数通过构建产物内联。
+
+为什么不直接引用 `../../packages`：微信云函数上传时只打包自身目录，所以必须构建时把 contracts 编译产物复制进 cloudfunctions/*/dist。这是关键的实操点。
+
+# 六、tools/（变更效率的引擎）
+```
+tools/
+├── gen/
+│   ├── config.mjs        Excel→JSON + TS 类型 + 校验（外键/枚举/区间）
+│   ├── contracts.mjs     schema→客户端 api 客户端方法（可选）
+│   └── docs-index.mjs    扫 front matter → document-index/task-index
+├── build/
+│   ├── cloudfunctions.mjs  编译 src+contracts → cloudfunctions/*/dist
+│   └── wechat.mjs          构建前后校验体积/分包
+└── guard/
+    ├── layer-boundary.mjs  禁 core import 'cc'、禁分包互引
+    ├── orphan.mjs          找无引用文件
+    └── root-clean.mjs      根目录白名单
+```
+
+# 七、前后端数据交互设计（协议 + 生命周期 + 一致性）
+1. 传输形态：单入口 `action` 模式（一个云函数 api + action 字符串），理由（冷启动、权限、日志、灰度）
+2. 请求/响应封套（代码）
+3. 契约单一真源：zod schema 定义，`z.infer` 出类型；服务端运行时校验同一 schema；客户端编译期即知
+4. 错误码分层：0 成功 / 1xxx 参数 / 2xxx 权限 / 3xxx 业务 / 4xxx 系统 / 5xxx 风控
+5. 版本协商：clientVersion + configVersion；服务端维护 N-1 兼容窗口
+6. 存档协议：全量快照 + 版本迁移 + 幂等键 + 服务端权威字段
+7. 服务端权威清单（哪些必须服务端算）：随机种子、开箱、赶海、排行、交易、开锁？ — 开锁客户端算但服务端复算
+8. 离线/弱网：请求队列 + 重试 + 幂等
+
+给出一个具体接口示例（`salvage.cast`）。
+
+# 八、功能模块设计（领域划分表）
+一个表格：模块 ID / 职责 / 客户端归属 / 服务端归属 / 是否分包 / 首版是否做 / 权威方。
+覆盖：identity, save, config, raft, salvage, fishing, lockpick, box, crew, craft, power, island, defense, merchant, trade, rank, activity, ad, pay, telemetry, platform。
+这是"功能模块的设计"的直接回答。
+
+每个模块的内部分层固定 4 件套：domain(规则) / application(用例) / interfaces(入口) / infrastructure(存储)。给出一个模块的最小样板（salvage）。
+
+# 九、增删改查如何高效变更（核心）
+### 9.1 为什么手工改会漏：一个字段有 7 个副本
+列表：Excel 表头 / JSON / TS 类型 / zod schema / 存档 / 数据库 / 文档。→ 目标：只留 1-2 个真源，其余生成或引用。
+
+### 9.2 三个"防漏"机制
+1. 类型即检查（contracts + generated config）
+2. manifest + impact 命令（影响面自动列举）
+3. guard 守卫 + 孤儿扫描
+
+### 9.3 六种变更的标准作业单（SOP）
+A. 新增一个配置数据（加一件物品）
+B. 修改一个字段名
+C. 新增一个接口
+D. 新增一个功能模块（大）
+E. 删除一个功能
+F. 改数值/调平衡（最高频）
+
+每个给出"动哪些文件、顺序、验证命令"。这是最实操的部分。
+
+### 9.4 存档与数据库的变更（最容易炸的地方）
+- 存档：只增不改，`saveVersion`，`migrations/`
+- 数据库：云开发 MongoDB 类，字段加默认值，索引脚本幂等
+- 双端不同步：灰度开关（配置表里 `enable` 字段）
+
+### 9.5 变更记录：CHANGELOG + 文档 07_release
+
+# 十、文档目录设计（对齐附件 2 + 一人裁剪）
+### 10.1 完整树（照抄附件 2，标注 ⭐必须有 / 触发式）
+### 10.2 一人开发的裁剪：先建 6 个，其余按触发条件长出来（给触发表）
+### 10.3 "清晰"靠三件事：ID 单一、索引自动、一张 project-map
+### 10.4 "全面"靠一条链：REQ→SOL→TASK→VAL→EVD→REL（给一个真实例子串起来）
+### 10.5 文档与代码的双向映射规则（REQ-F 的 module 字段 → 目录；每个模块 README 回链）
+### 10.6 防腐烂的 3 条硬规则：能生成的不手写、历史不删除、每个文档有 owner+review 日期
+
+# 十一、落地顺序（5 周怎么建，不能一次建完）
+Week0: 根 + contracts + tools/guard 骨架 + docs 6 层
+Week1: modules 骨架 + 首个垂直切片打通（打捞）
+Week2-4: 按模块长
+Week5: 归档、release 文档
+
+# 十二、与你现有设计文件的衔接
+把 8 份 docx 导入 docs/ 的哪里 —— 给出映射表（材料与工具总表 → 02/03 + config 表；待定清单 → 02_requirements/inbox；设计要点记录 → 08_knowledge/decisions…）
+
+End: 问是否要把这份写成 docs/00_governance/project-map.md + 结构规范。
+
+That's a lot. Need to keep it readable but the user wants depth. I'll use tables and trees.
+
+Let me be careful about facts:
+- 微信小游戏 主包 4MB，总包 20MB（部分类目 30MB）。I'll say "主包 4MB，总包 20MB（部分类目已放宽到 30MB，以官方为准）".
+- Cocos Creator 3.8 supports 分包 through Asset Bundle.
+- 微信云开发 cloudfunctions: each function directory contains index.js + package.json + node_modules. Timer triggers via config.json.
+- 云开发 数据库 is MongoDB-like document DB.
+
+Now about "增删改查" — the user might mean CRUD in general (数据层面). I'll interpret broadly: 需求/功能/字段/数据的新增、删除、修改、查询，如何在体系里高效变更。I'll cover both code-level and data-level.
+
+Let me write the answer. It should be in Chinese, 大白话 with terms explained briefly (per user's earlier request style). Keep it structured.
+
+I should be careful about length — but this is a design blueprint request, depth is expected. I'll aim for a comprehensive but tight document. Let me not create files.
+
+Let me write it.
+
+One more thing: should I use mcp_Sequential_Thinking? The custom instruction mentions it's mandatory for the QA role. But the current task is architecture design, not QA review. The custom user instruction is the "质量保障专家" persona. Hmm — the whole custom_user_instruction defines a QA agent role. But the actual task now is design. I'll apply the spirit: thorough review, explicit risks, clear conclusions. I won't invoke sequential thinking MCP since it's not necessary and the task is a design answer. Actually the instruction says "必须使用 Sequential Thinking 进行全面审查" — that's for when doing 审查. This is design. Skip.
+
+Let me now write.
+
+I'll include concrete code snippets for contracts/response envelope since that's code not in codebase (markdown code blocks).
+
+Structure the answer with clear headers. Keep tables compact.
+
+Let me draft.
+
+Also need to address "前后端的设计、数据交互的设计、功能模块的设计等等" — I'll give each its own section.
+
+Also the user asked "最适配微信小程序" — note: it's a 小游戏 not 小程序, but I'll address both (小游戏 Cocos + 若将来要小程序端的管理后台/分享页).
+
+Actually worth noting: 微信小程序 (WXML) vs 微信小游戏 (Cocos). The project is 小游戏. But 运营后台/客服/分享落地页 可能用小程序的 Web 技术。I'll add a small note: 如果有"运营后台"需求，它应该是 `apps/admin`（Vue/React），不要塞进 Cocos 工程。That aligns with attachment's apps/ pattern.
+
+Let me write now. I'll number sections.
+
+Length target: fairly long but organized. Let's go.
+
+I'll write the trees carefully with correct indentation.
+
+For the impact manifest, give a concrete JSON example.
+
+For SOPs, use compact numbered steps with file paths.
+
+Let me produce.
+已读完 `项目完整文档体系.txt`（53 节）与 `项目完整目录结构.txt`（PROJECT-STRUCTURE-SPEC v2.0，含四层架构守卫、AGENTS.md、演进阶段）。下面把这两份规范按 **Cocos Creator + 微信小游戏 + 云开发 + 一人开发** 落地为一套可执行的体系。
+
+先说结论：**附件那套规范是对的，但它是 Web/后端通用形态，直接套到 Cocos 上会撞三堵墙**，必须先处理这三条硬约束，否则目录再漂亮也跑不起来。
+
+---
+
+# 一、三条硬约束决定了目录长什么样
+
+| 约束 | 事实 | 对目录的影响 |
+|---|---|---|
+| **Cocos 只能编译 `assets/` 下的脚本** | 引擎不会编译工程根以外任何 `.ts` | 所有客户端代码（含"纯逻辑"）必须在 `client/assets/` 里，不能像 Web 那样拆 `src/lib` |
+| **微信主包 4MB / 总包 20MB**（部分类目已放宽至 30MB，以官方为准） | 引擎裁剪后约 1.5–2MB，留给首屏资源极小 | 目录必须按**发布边界**（分包）切，不能只按职责切 |
+| **微信云函数每个目录独立依赖** | 上传时只打包该函数目录，不含仓库其他代码 | 后端必须"一份源码 + 构建时注入到各函数目录"，否则代码会复制 N 份 |
+
+由此得出本项目的第一原则，与附件的"按运行边界分应用"同源：
+
+> **按发布边界分包，按业务边界分模块，按职责分层，按真源抽共享，按生命周期隔离生成物。**
+
+---
+
+# 二、顶层目录（只有 7 个，白名单制）
+
+```text
+wdf/                                  ← 仓库根
+│
+├── docs/                             # 知识体系（附件 2 的 00–09）
+├── client/                           # ⭐ Cocos Creator 工程根（前端/小游戏）
+├── server/                           # 后端（云函数源码 + 适配层）
+├── packages/                         # ⭐ 前后端唯一真源（契约 + 生成物）
+├── tools/                            # ⭐ 生成器 + 架构守卫（这套体系的引擎）
+├── tests/                            # 跨端测试（e2e / 跨模块集成）
+├── .local/                           # 临时物：截图/日志/草稿/AI 产物（全量 gitignore）
+│
+├── AGENTS.md                         # AI 规范入口
+├── README.md                         # 人类入口
+├── CHANGELOG.md                      # 版本变更
+├── project-map.md → docs/00_governance/  # 只放软链或索引，正文在 docs
+├── .gitignore
+├── .editorconfig
+└── .env.example
+```
+
+**相对附件的三处改造**（要说明理由，不能无脑照抄）：
+
+1. `apps/api` + `apps/web` → 改成 `client/` + `server/`。原因：Cocos 工程根必须是 `assets/` 的父目录，塞进 `apps/client/` 会多一层，且编辑器路径全是相对路径，容易踩坑。
+2. `database/` 并入 `server/database/`。原因：云开发的"数据库"不是独立资产，只有索引脚本、种子数据和迁移脚本，跟后端同生共死。
+3. 新增 `tools/`，且它是**一等公民**。原因：这套体系能不能"高效变更"，90% 靠 `tools/` 里的生成器和守卫，不是靠自觉。
+
+**根目录出现以下东西一律删**（照抄附件 5.2）：`*.bak`、`*_final`、`*_v2`、`*副本*`、`debug*.ts`、`*.log`、根目录截图、根目录 `test*.js`。
+
+---
+
+# 三、client/（Cocos 工程）完整目录
+
+## 3.1 双维度组织：Bundle（发布边界）× Layer（职责边界）
+
+这是本方案最核心的一个设计。单维度必然二选一：
+- 只按职责分层 → 分包时你得挨个文件判断"这个进主包还是分包"，一定漏
+- 只按分包分 → 逻辑和表现混在一个包内，测试没法跑，`import 'cc'` 会蔓延到业务规则里
+
+所以**外层按 Bundle 切，内层按 Layer 切**：
+
+```text
+client/                                ← Cocos Creator 3.8.x 工程根
+│
+├── assets/
+│   │
+│   ├── bundles/
+│   │   │
+│   │   ├── main/                      ⭐ 主包：唯一可被所有分包依赖的 Bundle
+│   │   │   ├── scripts/
+│   │   │   │   │
+│   │   │   │   ├── boot/              # 启动序列：初始化顺序、加载分包、首帧
+│   │   │   │   │   ├── App.ts
+│   │   │   │   │   └── BootScene.ts
+│   │   │   │   │
+│   │   │   │   ├── core/              ⭐⭐ 纯逻辑内核——禁止 import 'cc'
+│   │   │   │   │   ├── shared/        # 领域原语：Entity/ValueObject/Result/EventBus
+│   │   │   │   │   ├── ports/         # 抽象接口：INetwork/IStorage/ITime/IRandom/ILogger/IPlatform
+│   │   │   │   │   └── modules/
+│   │   │   │   │       ├── identity/  # 登录、区服、玩家档案
+│   │   │   │   │       │   ├── domain/        # 实体、值对象、规则（纯函数）
+│   │   │   │   │       │   ├── application/   # 用例编排（调 domain + port）
+│   │   │   │   │       │   └── index.ts       # ⭐ 唯一对外出口
+│   │   │   │   │       ├── save/      # 存档快照、版本迁移、diff
+│   │   │   │   │       ├── config/    # 配置表读取（只读 generated）
+│   │   │   │   │       ├── raft/      # 筏块、设施、货舱
+│   │   │   │   │       ├── salvage/   # 打捞、钩、沉船
+│   │   │   │   │       ├── fishing/
+│   │   │   │   │       ├── lockpick/  # 开锁（命中区、工具）
+│   │   │   │   │       ├── box/       # 箱子、锁、掉落
+│   │   │   │   │       ├── crew/      # 员工、职业、幸福感、食物
+│   │   │   │   │       ├── craft/     # 配方、自动合成
+│   │   │   │   │       ├── power/     # 发电/耗电结算
+│   │   │   │   │       ├── island/    # 占岛、勘测、建设
+│   │   │   │   │       ├── defense/   # 塔防、野人袭击、离线结算
+│   │   │   │   │       ├── merchant/  # 限购、回收、金币
+│   │   │   │   │       ├── rank/      # 榜单、称号
+│   │   │   │   │       ├── activity/  # 赶海、科研废墟
+│   │   │   │   │       └── telemetry/ # 埋点（15 个事件）
+│   │   │   │   │
+│   │   │   │   ├── adapters/          ⭐ ports 的具体实现（唯一能碰平台 API 的地方）
+│   │   │   │   │   ├── net/           # cloud.ts（wx.cloud）/ http.ts / mock.ts
+│   │   │   │   │   ├── storage/       # wx.ts / douyin.ts / memory.ts
+│   │   │   │   │   ├── platform/      # wx / douyin / app / web 四套实现
+│   │   │   │   │   ├── ad/            # IAd 实现（激励视频）
+│   │   │   │   │   ├── share/         # IShare
+│   │   │   │   │   ├── time/          # 服务器时间对齐
+│   │   │   │   │   └── eventbus/
+│   │   │   │   │
+│   │   │   │   ├── game/              ⭐ Cocos 表现层（可 import 'cc'）
+│   │   │   │   │   ├── scenes/
+│   │   │   │   │   ├── controllers/   # 场景控制器：core ⇄ view 的桥
+│   │   │   │   │   ├── systems/       # 帧循环、对象池、相机、输入
+│   │   │   │   │   └── render/        # 自定义渲染、图集管理
+│   │   │   │   │
+│   │   │   │   └── ui/                ⭐ 通用 UI 组件（零业务逻辑）
+│   │   │   │       ├── atoms/         # Button/Panel/Toast/Loading/Empty
+│   │   │   │       ├── layout/        # SafeArea/HUD/弹窗栈
+│   │   │   │       └── theme/         # Design Token：色板、字号、间距
+│   │   │   │
+│   │   │   ├── scenes/                # 启动场景、主场景
+│   │   │   ├── prefabs/ui/
+│   │   │   ├── textures/ui/
+│   │   │   └── audio/
+│   │   │
+│   │   ├── mod-sea-shallow/           ⭐ 分包：浅海（首屏主体）
+│   │   │   ├── scripts/
+│   │   │   │   ├── view/              # 该域的 View 组件
+│   │   │   │   └── index.ts
+│   │   │   ├── prefabs/
+│   │   │   ├── textures/
+│   │   │   └── audio/
+│   │   │
+│   │   ├── mod-island/                ⭐ 分包：岛屿与建设
+│   │   ├── mod-crew/                  ⭐ 分包：员工与生产
+│   │   ├── mod-defense/               ⭐ 分包：塔防与袭击
+│   │   ├── mod-event/                 ⭐ 分包：赶海、科研废墟、活动
+│   │   └── mod-deep/                  ⭐ 分包：深海/远洋（第二期，先建空壳占位）
+│   │
+│   ├── resources/                     # 必须动态加载的资源（走 resources.load）
+│   │   └── config/                    # ⭐ 配置表 JSON（构建产物，git 只留 .gitkeep）
+│   │
+│   └── __tests__/                     # 纯逻辑单测（不依赖 cc，用 jest/vitest + 假适配器）
+│
+├── settings/                          # ⭐ 进 Git（Cocos 必需：项目设置、构建配置）
+├── extensions/                        # 自定义编辑器扩展（导入器、图集校验）
+├── tsconfig.json                      # ⭐ 含 paths：@core/* @contracts/* @config/*
+├── package.json
+│
+├── profiles/                          # ❌ 个人编辑器配置 → gitignore
+├── library/                           # ❌ 导入缓存 → gitignore
+├── temp/                              # ❌ 中间产物 → gitignore
+├── build/                             # ❌ 构建输出 → gitignore
+└── local/                             # ❌ 本机运行态 → gitignore
+```
+
+## 3.2 必须死守的三条依赖规则（可用脚本检查）
+
+```text
+✅ 允许
+  bundles/main/**            → 任何层
+  bundles/mod-*/view/**      → bundles/main/scripts/{core,game,ui}/**
+  bundles/mod-*/**           → packages/contracts/**
+
+❌ 禁止（架构守卫直接报错）
+  core/**                    → import 'cc'            ← 纯逻辑必须可跑在 Node
+  core/**                    → adapters/**            ← 内核不许知道实现
+  bundles/mod-a/**           → bundles/mod-b/**       ← 分包互引会重复打包
+  ui/**                      → core/modules/**        ← UI 组件不许懂业务
+  assets/**                  → 相对路径跳出 client/   ← 引用仓库外部文件
+```
+
+> 为什么 `core/` 放主包：Cocos 的规则是**主包代码可被所有分包引用，分包之间不能互相引用**。把逻辑内核放主包，各分包只装"自己的图和场景"，逻辑一份、资源多份，正好卡住 4MB。
+
+---
+
+# 四、server/（后端）完整目录
+
+## 4.1 一份源码，三种部署形态
+
+附件讲的是标准 DDD 分层（interfaces → application → domain ← infrastructure）。本项目要在这个基础上加一层现实约束：**微信云函数每目录独立**。所以拆成"源码区 + 适配区 + 函数壳区"：
+
+```text
+server/
+│
+├── src/                                ⭐ 唯一业务源码（不放进任何云函数目录）
+│   │
+│   ├── bootstrap/
+│   │   ├── createApp.ts                # 应用工厂：注入 deps，不读环境
+│   │   └── container.ts                # 依赖装配（repo/cache/外部服务）
+│   │
+│   ├── modules/                        ⭐⭐ 按业务域，每域内部四层固定
+│   │   ├── identity/
+│   │   │   ├── domain/                 # 实体、值对象、规则、ports
+│   │   │   ├── application/            # commands/ queries/（用例）
+│   │   │   ├── interfaces/             # action 定义 + schema 引用（无传输细节）
+│   │   │   └── infrastructure/         # persistence/ cache/ external/
+│   │   ├── save/                       # 存档读写、版本迁移、幂等
+│   │   ├── salvage/                    # 打捞结算、沉船生成（种子）
+│   │   ├── lockpick/                   # 开锁复算（防作弊核心）
+│   │   ├── box/                        # 开箱结算（服务端权威）
+│   │   ├── raft/  crew/  craft/  power/
+│   │   ├── island/ defense/            # 离线袭击结算（服务端为准）
+│   │   ├── merchant/ trade/            # 交易必须服务端原子
+│   │   ├── rank/                       # 榜单写入、称号计算
+│   │   ├── activity/                   # 赶海场次、科研废墟
+│   │   ├── platform/                   # 登录码换取 openid、广告回调
+│   │   └── system/                     # 健康检查、配置下发、后台接口
+│   │
+│   ├── shared/                         # 跨模块真正复用：基类、事件总线、分页、时间
+│   └── core/                           # 横切：config/logger/errors/security/random
+│
+├── adapters/                           ⭐ 传输层，只做"协议 → 用例"的翻译
+│   ├── cloudbase/
+│   │   ├── index.ts                    # 云函数入口：event → dispatch(action)
+│   │   └── context.ts                  # 从 wxContext 取 openid/unionid
+│   ├── http/
+│   │   ├── server.ts                   # Koa/Fastify（抖音云、APP、未来自建）
+│   │   └── routes.ts
+│   └── scheduler/
+│       └── jobs.ts                     # 定时任务分发（榜单结算、赶海开场）
+│
+├── cloudfunctions/                     ⭐ 微信要求的物理目录（每函数独立 package.json）
+│   ├── api/                            # 统一入口云函数（承载 95% 的 action）
+│   │   ├── index.js                    # 只有一行：require('./dist').main
+│   │   ├── package.json
+│   │   ├── config.json                 # 权限、超时、环境变量
+│   │   └── dist/                       # ❌ 构建产物（gitignore）
+│   ├── login/
+│   ├── job-rank-settle/                # 定时：每日 00:05 结算榜单
+│   └── job-activity/                   # 定时：赶海开场/关场
+│
+├── database/
+│   ├── indexes/                        # 索引定义（幂等 createIndex 脚本）
+│   ├── seeds/                          # 配置表初始化、榜单占位
+│   └── migrations/                     # 集合结构变更脚本（按版本号）
+│
+└── tests/
+    ├── unit/modules/<domain>/          # 纯逻辑单测（不连库）
+    └── integration/                    # 连本地云开发模拟器
+```
+
+## 4.2 关键实操：云函数怎么用上 `src/`
+
+这是绝大多数人踩坑的地方。`cloudfunctions/api/` 上传时只打包自己目录，所以**不能在 `index.js` 里 `require('../../src')`**。
+
+解法固定为一条（写进 `tools/build/cloudfunctions.mjs`）：
+
+```text
+pnpm build:cf
+  → esbuild 打包 server/src + packages/contracts
+  → 输出 server/cloudfunctions/api/dist/index.js（单文件，已内联依赖）
+  → 各函数目录只留 index.js + package.json + dist/
+```
+
+好处：
+- 源码只有一份，不存在"改了 3 处忘 1 处"
+- 每个云函数体积可控（tree-shaking 后通常 <200KB）
+- 换平台时 `adapters/http` 复用同一份 `src`
+
+## 4.3 后端依赖方向（硬约束）
+
+```text
+adapters/*  →  modules/*/interfaces  →  application  →  domain
+                                                  ↑
+                                          infrastructure（只实现 domain/ports）
+
+❌ domain → 云数据库 SDK
+❌ domain → wx-server-sdk
+❌ domain → Redis / HTTP
+❌ interfaces → 直接操作 collection（必须过 application）
+```
+
+---
+
+# 五、packages/（唯一共享层）= 数据交互的命脉
+
+```text
+packages/
+├── contracts/                          ⭐ 前后端唯一真源
+│   ├── src/
+│   │   ├── common/
+│   │   │   ├── response.ts             # 统一封套 ApiResponse<T>
+│   │   │   ├── error-codes.ts          # 错误码枚举（分段见下）
+│   │   │   └── pagination.ts
+│   │   ├── salvage/
+│   │   │   ├── schema.ts               # ⭐ zod schema（真源）
+│   │   │   ├── actions.ts              # action 名常量 + 类型映射
+│   │   │   └── index.ts
+│   │   ├── ...（每个域一个文件夹，与 client/core/modules、server/src/modules 同名）
+│   │   └── config/
+│   │       └── generated/              # ⭐ 配置表生成物：items.ts / recipes.ts / drops.ts
+│   └── package.json
+│
+└── tsconfig/                           # 共享 tsconfig base（严格模式、paths）
+```
+
+**为什么必须是 zod 而不是手写 interface**：手写 interface 只能约束编译期，云函数的入参是运行时的脏数据，必须运行时校验。用 zod 一份定义同时产出：
+- TS 类型 `z.infer<typeof Schema>`（两端共用）
+- 运行时校验 `Schema.parse(payload)`（服务端入口统一挂）
+- 字段说明（`.describe()` 喂给文档生成）
+
+**改一个字段只改一处**，两端编译不过就是提醒。这是"高效变更"的第一道闸。
+
+---
+
+# 六、tools/（体系能不能跑起来，全看这里）
+
+```text
+tools/
+├── gen/
+│   ├── config.mjs        # Excel 配置表 → JSON + TS 类型 + 校验（外键/枚举/区间）
+│   ├── docs-index.mjs    # 扫 front matter → 生成 document-index.md / task-index.md
+│   └── module-manifest.mjs # 扫目录 → 生成 modules.manifest.json
+│
+├── build/
+│   ├── cloudfunctions.mjs  # src+contracts → cloudfunctions/*/dist
+│   └── wechat.mjs          # 构建后校验：主包体积、分包引用、资源重复
+│
+└── guard/
+    ├── layer-boundary.mjs # core 禁 import 'cc'；分包禁互引；ui 禁依赖 modules
+    ├── orphan.mjs         # 找无人引用的脚本/资源/配置项
+    ├── root-clean.mjs     # 根目录白名单
+    └── save-migration.mjs # 校验 saveVersion 递增且有对应 migration
+```
+
+统一入口（Windows 用 npm scripts 而不是 Makefile，附件里的 make 在 Windows 上体验差）：
+
+```json
+{
+  "scripts": {
+    "setup":        "node tools/setup.mjs",
+    "gen":          "node tools/gen/config.mjs && node tools/gen/docs-index.mjs",
+    "build:cf":     "node tools/build/cloudfunctions.mjs",
+    "guard":        "node tools/guard/layer-boundary.mjs && node tools/guard/orphan.mjs && node tools/guard/root-clean.mjs",
+    "impact":       "node tools/guard/impact.mjs",
+    "ci":           "npm run gen && npm run guard && npm run test && npm run build:cf"
+  }
+}
+```
+
+---
+
+# 七、功能模块设计（一表定归属）
+
+这张表是整个体系的"骨架地图"。**新功能先查表定位，定位不到就不许开工**（附件 AGENTS.md 的 blocked 规则）。
+
+| 模块 | 职责 | 客户端位置 | 分包 | 服务端 | 权威方 | 首版 |
+|---|---|---|---|---|---|---|
+| identity | 登录、区服、档案、防沉迷 | core/modules/identity | main | modules/identity | 服务端 | ✅ |
+| save | 存档快照、版本迁移、幂等 | core/modules/save | main | modules/save | 双端（服务端为准） | ✅ |
+| config | 配置表读取、版本校验 | core/modules/config | main | modules/system | 服务端下发 | ✅ |
+| raft | 筏块、设施、货舱、浮力直观值 | core/modules/raft | main | modules/raft | 服务端 | ✅ |
+| salvage | 钩、打捞、沉船、深度 | core/modules/salvage | mod-sea-shallow | modules/salvage | 服务端发种子 | ✅ |
+| fishing | 钓鱼、鱼饵、鱼群 | core/modules/fishing | mod-sea-shallow | modules/salvage | 服务端 | ✅ |
+| lockpick | 命中区、工具、进度 | core/modules/lockpick | main | modules/lockpick | 客户端算+服务端复算 | ✅ |
+| box | 箱子、锁档、掉落表 | core/modules/box | main | modules/box | 服务端 | ✅ |
+| crew | 员工、职业、幸福感、食物 | core/modules/crew | mod-crew | modules/crew | 服务端 | ✅ |
+| craft | 配方、自动合成、设施门槛 | core/modules/craft | mod-crew | modules/craft | 服务端 | ✅ |
+| power | 发电/耗电、离线结算 | core/modules/power | mod-crew | modules/power | 服务端 | ✅ |
+| island | 占岛、勘测、建设、地形 | core/modules/island | mod-island | modules/island | 服务端 | ✅ |
+| defense | 塔防、野人袭击、离线波次 | core/modules/defense | mod-defense | modules/defense | 服务端 | ✅（简化） |
+| merchant | 限购、回收、金币 | core/modules/merchant | main | modules/merchant | 服务端 | ✅ |
+| trade | 玩家交易（锁定/清空） | core/modules/trade | main | modules/trade | 服务端 | ❌ 二期 |
+| rank | 总榜、省份、称号 | core/modules/rank | mod-event | modules/rank | 服务端 | ✅ |
+| activity | 赶海、科研废墟 | core/modules/activity | mod-event | modules/activity | 服务端发种子 | ✅ |
+| ad / pay | 激励视频、内购 | adapters/ad、adapters/pay | main | modules/platform | 平台 | ✅（仅广告） |
+| telemetry | 15 个埋点事件 | core/modules/telemetry | main | modules/system | - | ✅ |
+| platform | ILogin/IAd/IShare/IStorage 实现 | adapters/platform | main | modules/platform | - | ✅ |
+
+**每个模块内部固定 4 件套，不许加第 5 个**（防止目录膨胀）：
+
+```text
+modules/salvage/
+├── domain/          # 纯规则：SalvageCast.compute(ctx) → Result
+├── application/     # 用例：CastHookUseCase（编排 domain + 调 ports + 落库）
+├── interfaces/      # action 定义（只有名字和 schema，不含传输）
+└── infrastructure/  # 仓储实现：SalvageRepo（走云数据库）
+```
+
+---
+
+# 八、前后端数据交互设计
+
+## 8.1 传输形态：单入口 action 模式
+
+不要每个功能一个云函数（几十个函数的依赖、冷启动、灰度、日志会把人拖死）。用**一个 `api` 云函数 + action 字符串路由**：
+
+```text
+client  wx.cloud.callFunction({ name:'api', data:{ action, payload, meta } })
+                            ↓
+server  adapters/cloudbase/index.ts → dispatch(action) → modules/<域>/interfaces/<handler>
+```
+
+只有三类例外才独立建云函数：`login`（要拿 openid，权限独立）、`job-*`（定时触发）、未来的大文件上传。
+
+## 8.2 统一封套（写死在 contracts/common/response.ts）
+
+```typescript
+// 请求
+export interface ApiRequest<T> {
+  action: string;          // 如 "salvage.cast"
+  payload: T;              // 由 zod schema 校验
+  meta: {
+    clientVersion: string; // 1.0.3
+    configVersion: string; // 配置表版本，服务端比对
+    saveVersion: number;   // 存档结构版本
+    nonce: string;         // 防重放
+    sign: string;          // 参数签名（可后置）
+  };
+}
+
+// 响应
+export type ApiResponse<T> =
+  | { code: 0; data: T; serverTime: number; configVersion: string }
+  | { code: number; msg: string; detail?: unknown };
+```
+
+**为什么必须有 `serverTime`**：离线收益、食物保质期、开锁每日限购、赶海场次全靠它，客户端本地时间不可信。
+
+## 8.3 错误码分段（对齐后端分层，一眼看出是谁的问题）
+
+```text
+0       成功
+1000–1999  参数/契约错误（interfaces 层 zod 校验失败）
+2000–2999  权限/登录态（application 层）
+3000–3999  业务规则拒绝（domain 层，如"货舱已满""开锁工具不足"）
+4000–4999  系统/依赖故障（infrastructure 层，DB 超时等）
+5000–5999  风控/作弊判定（复算不一致、超理论值）
+```
+
+客户端只需按段处理：1xxx 提示"版本过旧请更新"、2xxx 拉起登录、3xxx 直接弹业务提示、5xxx 静默上报。
+
+## 8.4 契约即真源：一份 schema，两端生效
+
+```typescript
+// packages/contracts/src/salvage/schema.ts
+import { z } from 'zod';
+
+export const CastHookPayload = z.object({
+  hookId: z.string(),
+  targetX: z.number().min(-1).max(1),
+  targetY: z.number().min(-1).max(1),
+  seed: z.string(),                 // 服务端下发（防作弊）
+  clientTick: z.number().int(),
+});
+export type CastHookPayload = z.infer<typeof CastHookPayload>;
+
+export const CastHookResult = z.object({
+  hit: z.boolean(),
+  itemId: z.string().nullable(),
+  weight: z.number(),
+  durability: z.number(),
+  serverTick: z.number().int(),
+});
+export type CastHookResult = z.infer<typeof CastHookResult>;
+```
+
+客户端写 `callApi<CastHookPayload, CastHookResult>('salvage.cast', payload)`，服务端写 `dispatch({ 'salvage.cast': { in: CastHookPayload, out: CastHookResult, handler } })`。**改字段 → 两端红叉 → 不可能漏。**
+
+## 8.5 版本协商（一人开发也必须做，否则你就没法灰度）
+
+```text
+服务端维护：
+  MIN_CLIENT_VERSION   # 低于它直接拒绝（code 1001 提示更新）
+  CURRENT_CONFIG_VER   # 配置表版本，客户端不一致时走"配置热更"拉新表
+  SAVE_VERSION_WINDOW  # 支持 N-2 版本存档（老玩家不能丢档）
+```
+
+## 8.6 存档协议（这是最容易炸的地方）
+
+```text
+客户端：saveVersion + 乐观锁 rev
+  ↓ 每 30s 或关键节点（关闭箱子/结算/下线）上报增量
+服务端：全量快照（主）+ 增量日志（辅），rev 不匹配则返回最新快照让客户端重建
+迁移：server/database/migrations/v{n}_to_v{n+1}.ts + client/core/modules/save/migrations/
+   由 migrate(save, fromVersion) 串成链，从任意旧版本一次升到当前
+```
+
+**规则：存档字段只增不改不删。** 要"删"就标 `deprecated` 保留两个版本；要"改名"就新增字段 + 写迁移函数 + 老字段保留只读。
+
+## 8.7 哪些必须服务端算（防作弊分层，直接对齐你已定的规则）
+
+| 场景 | 客户端 | 服务端 | 说明 |
+|---|---|---|---|
+| 打捞命中判定 | 即时反馈 | 种子复算 | 服务端发 seed，客户端算表现，服务端用同 seed 重算入库 |
+| 开箱 | 播动画 | 权威 | 箱子内容服务端生成，客户端只表现 |
+| 开锁 | 实时手感 | 复算校验 | 客户端算进度，服务端校验步数/工具/时长是否可能 |
+| 赶海排名 | 只展示 | 权威 | 分组、票价、奖励全服务端 |
+| 玩家交易 | 只展示 | 权威 | 原子事务，服务端二次确认 |
+| 离线袭击 | 只展示 | 权威 | 三限（损 30%/守军不死/最多 2 波）在服务端落地 |
+| 广告奖励 | 请求 | 校验回调 | 平台侧回调校验，客户端自报不算 |
+
+---
+
+# 九、增删改查如何高效变更（核心问题）
+
+## 9.1 先看清"为什么手工改一定漏"
+
+一个业务字段在这套体系里通常有 **7 个副本**：
+
+```text
+Excel 表头 → JSON → TS 类型 → zod schema → 存档结构 → 数据库集合 → 文档
+```
+
+只要其中一处靠手写，就一定会漂移。所以目标不是"改得快"，而是**把 7 处压到 2 处（Excel + schema），其余全部生成**。
+
+## 9.2 三道防线
+
+| 防线 | 机制 | 拦住什么 |
+|---|---|---|
+| **类型即检查** | contracts zod → 两端 TS | 字段改名、类型改错、必填漏传 |
+| **影响面自动列举** | `modules.manifest.json` + `npm run impact <关键词>` | 忘了改某个消费方 |
+| **守卫脚本** | layer-boundary / orphan / root-clean | 依赖越界、孤儿文件、生成物入库 |
+
+`modules.manifest.json` 长这样（由 `tools/gen/module-manifest.mjs` 扫目录生成，不手写）：
+
+```json
+{
+  "salvage": {
+    "client": "bundles/main/scripts/core/modules/salvage",
+    "server": "src/modules/salvage",
+    "contracts": "packages/contracts/src/salvage",
+    "bundle": "mod-sea-shallow",
+    "configTables": ["items", "drops", "shipwrecks"],
+    "saveFields": ["hookDurability", "lastCastTick"],
+    "actions": ["salvage.cast", "salvage.info"],
+    "dependsOn": ["config", "save", "lockpick"]
+  }
+}
+```
+
+`npm run impact items` 会输出：**改了 items 表，影响 salvage/box/craft/merchant 四个域、两处存档字段、一个分包**。这比翻代码快 20 倍。
+
+## 9.3 六种变更的标准作业单（照做，不靠记忆）
+
+### A. 调数值 / 改平衡（最高频，一天十几次）
+
+```text
+1. 改 Excel（唯一真源）
+2. npm run gen            → JSON + TS 类型 + 校验
+3. 客户端热更/重进        → 配置版本号自动变，两端一致
+4. git commit "balance: 铜锁价格 300→280"
+```
+> ✅ 只碰 1 个文件。若这里要改代码，说明数值没进配置表，是设计缺陷。
+
+### B. 修改一个已有字段（改名/改类型）
+
+```text
+1. npm run impact <字段名>          → 看清谁在用
+2. 改 packages/contracts/<域>/schema.ts（真源）
+3. 跑 tsc                            → 客户端 + 服务端同时报错，逐个修
+4. 若涉及存档：新增字段 + 写 migration，老字段标 @deprecated
+5. 若涉及数据库：database/migrations/v{n}.ts（加默认值/回填）
+6. npm run guard && npm run test
+7. CHANGELOG.md + docs/07_release 记录
+```
+> 关键：**先改 schema，靠编译器找所有落点**，不要靠 grep 找。
+
+### C. 新增一个接口
+
+```text
+1. docs/02_requirements/features/REQ-F-xxx.md（先有需求）
+2. packages/contracts/<域>/schema.ts 加 payload/result
+3. server/src/modules/<域>/application/<用例>.ts
+4. server/src/modules/<域>/interfaces/<action>.ts 注册到 dispatch 表
+5. client 调用：core/modules/<域>/application/<方法>.ts（走 INetwork port）
+6. tests、guard、CHANGELOG
+```
+> 服务端 dispatch 表用 `Record<ActionName, Handler>`，**漏注册会编译报错**（用 `satisfies` 约束全部 action）。
+
+### D. 新增一个功能模块（大改）
+
+```text
+1. docs：REQ-INBOX → REQ-F（含验收标准）→ SOL（方案）→ 必要则一份 ADR
+2. docs/04_planning/current-plan.md 加里程碑
+3. 建目录（固定 4 件套，两侧同名）：
+   client/.../core/modules/<x>/{domain,application,index.ts}
+   server/src/modules/<x>/{domain,application,interfaces,infrastructure}
+   packages/contracts/src/<x>/{schema,actions,index}.ts
+4. 决定分包归属：进 main 还是新建 mod-<x>（看表九）
+5. 配置表：Excel 新 sheet → gen
+6. npm run gen:manifest  → 更新影响面
+7. docs/05_execution/tasks/TASK-xxx.md 拆原子任务
+8. 打通一条端到端用例 → docs/06_validation 留 EVD
+9. CHANGELOG + REL
+```
+
+### E. 删除一个功能（最容易留垃圾）
+
+```text
+1. docs：原 REQ-F 状态改 cancelled（→ docs/09_archive/cancelled/，不删）
+2. 先删调用方（导出/路由/UI 入口），再删实现
+3. 删 contracts 里的 schema 和 action 常量
+4. 删配置表 sheet + 跑 gen（生成物自动消失）
+5. 删存档字段？→ 不删，标 @deprecated + 保留两个版本
+6. npm run guard（orphan 会报出残留引用）
+7. 检查分包体积（删资源后跑 build:wechat 看主包是否变小）
+8. CHANGELOG 写"移除"而非"修复"
+```
+> 顺序必须是**先断引用，后删实现**，反过来必然编译不过、必然有残留。
+
+### F. 数据查询（新增一个列表/统计）
+
+```text
+1. 云数据库先建索引（server/database/indexes/）——不建索引的查询在大盘必超时
+2. 服务端 query 用例（只读、不走 domain 事务）
+3. 契约加 PaginationQuery 通用类型
+4. 客户端加缓存层（core/modules/<域>/application 里做 TTL 缓存，避免反复打云函数）
+```
+
+## 9.4 变更记录的最小闭环
+
+```text
+代码变了 → CHANGELOG.md（对外人话）
+        → docs/07_release/release-records/REL-xxx.md（发布事实）
+        → 若改了契约/存档/配置结构 → 必须有一份 migration 或版本号递增
+        → 若推翻了旧决策 → docs/03_solution/decisions/ADR-xxx.md 标 superseded
+```
+
+---
+
+# 十、文档目录设计（清晰 + 全面）
+
+## 10.1 目录树（完全沿用附件 2 的 00–09，只做小游戏适配）
+
+```text
+docs/
+├── 00_governance/                    ⭐ 第 0 周必建
+│   ├── README.md                     # 文档系统入口（怎么用，3 分钟读完）
+│   ├── document-index.md             # ⭐ 自动生成，禁止手写
+│   ├── project-map.md                # ⭐⭐ 代码目录 ↔ 文档 的双向映射（核心）
+│   ├── document-standard.md          # 编号规则、命名、front matter
+│   ├── glossary.md                   # 术语：筏/浮力/净浮力/沉船/赶海/锁档…
+│   ├── stakeholders.md               # 一人开发也要写：你/外包/审核/玩家
+│   ├── risks.md                      # 从立项评审的 8 个硬伤直接搬进来
+│   ├── assumptions.md                # "远洋无限大""开锁不清零"都算假设
+│   └── dependencies.md               # 引擎版本、平台政策、版号
+│
+├── 01_product/                       ⭐ 第 0 周
+│   ├── product-vision.md             # 一句话：捞、扩、防、比
+│   ├── product-goals.md
+│   ├── product-scope.md              # ⭐ 首版砍留表放这里
+│   └── success-metrics.md            # 留存/时长/广告 eCPM/首日完成率
+│
+├── 02_requirements/                  ⭐ 第 0 周（结构，内容边做边填）
+│   ├── inbox/                        # ⭐ 所有新想法先进这里，不许直接进 features
+│   ├── features/                     # REQ-F-001-打捞核心手感.md
+│   ├── non-functional/               # REQ-NF-001-主包≤4MB.md / 帧率 / 加载时长
+│   ├── constraints/                  # REQ-C-001-Cocos3.8.md / 微信政策 / 版号
+│   ├── product-requirements.md       # 当前基线（只放"已完成/已确认"，不放流水账）
+│   ├── backlog.md                    # ⭐ 96 条待定 → 在这里排队
+│   └── rejected.md
+│
+├── 03_solution/
+│   ├── architecture.md               # ⭐ 本文件的精简版落盘
+│   ├── design/                       # DESIGN-xxx：模块详细设计
+│   ├── solutions/                    # SOL-xxx：单需求怎么实现
+│   ├── technical-requirements.md
+│   ├── constraints.md
+│   └── decisions/                    # ADR-001-选云开发而非自建.md
+│
+├── 04_planning/                      ⭐ 第 0 周
+│   ├── roadmap.md                    # 三期路线
+│   ├── milestones.md
+│   ├── releases/
+│   └── current-plan.md               # ⭐ 5 周排期（唯一"现在做什么"）
+│
+├── 05_execution/
+│   ├── task-template.md
+│   ├── tasks/                        # TASK-001
+│   └── task-index.md                 # ⭐ 自动生成
+│
+├── 06_validation/
+│   ├── validation-plan.md
+│   ├── acceptance/
+│   ├── test-results/
+│   └── evidence/                     # EVD-001/ 截图、录屏、日志
+│
+├── 07_release/                       ⭐ 第 0 周（空壳也要建）
+│   ├── release-notes/
+│   ├── changelog.md
+│   └── release-records/
+│
+├── 08_knowledge/
+│   ├── lessons-learned.md
+│   ├── retrospectives/
+│   ├── faq.md
+│   ├── meetings/
+│   └── technical-notes/
+│
+└── 09_archive/
+    ├── superseded/  cancelled/  obsolete/
+```
+
+## 10.2 一人开发的裁剪：先建 6 个，其余"触发式"生长
+
+附件 3.3 说"按复杂度裁剪"，这里给具体的触发条件表：
+
+| 目录 | 何时建 | 触发条件 |
+|---|---|---|
+| `00_governance` | **第 0 周** | 永远需要（project-map 是刚需） |
+| `01_product` | **第 0 周** | 永远需要（首版范围要写死） |
+| `02_requirements` | **第 0 周** | 永远需要 |
+| `04_planning` | **第 0 周** | 永远需要 |
+| `07_release` | **第 0 周** | 提审前必然要发布说明 |
+| `03_solution/decisions` | 第 1 周 | 第一次出现"两条路都行"时 |
+| `03_solution/architecture` | 第 1 周 | 就是本文件落盘 |
+| `05_execution` | 第 1 周 | 任务超过 3 天时 |
+| `06_validation` | 第 3 周 | 第一次内测前 |
+| `08_knowledge` | 第 5 周 | 第一次复盘 |
+| `09_archive` | 第 1 次推翻决策时 | 第一次 superseded 时 |
+| `packages/ui`、`infra/`、`apps/admin` | 第二期 | 真出现第二个端或第二个人 |
+
+> 规矩：**没触发就不建空目录**。空目录是最容易腐烂的东西，半年后没人知道它是干嘛的。
+
+## 10.3 "清晰"靠三件事
+
+1. **ID 单一**：每个文档一个 ID，全项目唯一，且**和代码路径绑定**
+   ```yaml
+   ---
+   id: REQ-F-042
+   module: salvage              # ⭐ 直接对应 modules/salvage
+   status: active
+   owner: hark
+   created: 2026-10-23
+   ---
+   ```
+   `module` 字段让 `REQ-F-042 ↔ client/core/modules/salvage ↔ server/src/modules/salvage ↔ contracts/salvage` 四者天然对齐，`project-map.md` 可以自动生成。
+
+2. **索引自动**：`document-index.md`、`task-index.md`、`project-map.md` 全部由 `tools/gen/docs-index.mjs` 扫 front matter 生成。手写的索引一定会过期。
+
+3. **每个模块一份 README**：
+   ```text
+   modules/salvage/README.md
+     ├ 一句话职责
+     ├ 相关需求：REQ-F-042, REQ-F-043
+     ├ 相关决策：ADR-007（种子下发）
+     ├ 对外 action 列表
+     └ 配置表依赖
+   ```
+   看代码的人从代码进文档，看文档的人从文档进代码，双向不断链。
+
+## 10.4 "全面"靠一条链，不靠文档数量
+
+附件里的追溯链落到本项目，一条真实例子串到底：
+
+```text
+REQ-INBOX-20261023-001  "玩家反馈钩子手感太硬"
+      ↓ 分析
+REQ-F-042  打捞手感：前 10 钩虚线引导
+      ↓ 方案
+SOL-012    虚线引导实现方案
+      ↓ 决策（有分叉才写）
+ADR-007    引导用本地演算而非服务端校验（理由：不涉及经济）
+      ↓ 计划
+current-plan.md  W2 任务
+      ↓ 执行
+TASK-031  实现虚线引导
+      ↓ 验证
+VAL-031   10 名新玩家首钩成功率 >70%
+      ↓ 证据
+EVD-031/  录屏 + 数据截图
+      ↓ 发布
+REL-0.1.0 + CHANGELOG
+```
+
+**判断文档是否"全面"的标准不是数量，而是"随便抽一条需求，能不能顺链路走到底"。**
+
+## 10.5 防"文档腐烂"的三条硬规则
+
+1. **能生成的不手写**：索引、配置字段说明、action 列表、目录树，全部生成。
+2. **历史不删除**：废弃的进 `09_archive/`，状态改 `superseded`/`cancelled`，正文保留。
+3. **每个文档有 `review: 2026-11-23`**：超过没更新的活跃文档，在 `document-index.md` 里标黄，每周扫一眼。
+
+---
+
+# 十一、落地顺序（5 周不能一次建完）
+
+| 时间 | 建什么 | 验证方式 |
+|---|---|---|
+| **W0（2 天）** | 根目录 + 7 个顶层 + `packages/contracts` 空壳 + `tools/guard/*` + `docs/00,01,02,04,07` | `npm run guard` 通过 |
+| **W1** | `client` 工程 + `main` 包 + `core/modules/{identity,save,config,raft,salvage}` + `server` 四层 + `api` 云函数 | 打捞一次端到端跑通（含存档） |
+| **W2** | `fishing`、`mod-sea-shallow` 分包成型、配置表 Excel→JSON 链路 | 主包体积实测 ≤4MB |
+| **W3** | `lockpick/box/craft/crew/merchant`、`mod-crew` 分包 | 一条完整经济闭环 |
+| **W4** | `island/defense/rank/activity`、`mod-island/mod-defense/mod-event` | 离线结算 + 榜单跑通 |
+| **W5** | `06_validation`、`07_release` 补齐、提审包 | 提审 + 首周埋点 |
+
+---
+
+# 十二、和你现有 8 份设计文件的衔接
+
+| 现有文件 | 落到哪 |
+|---|---|
+| `我的筏-深度设计方案-v5.5.docx` | `docs/03_solution/architecture.md` + 拆分到各 `02_requirements/features/` |
+| `设计要点记录.docx` | `docs/08_knowledge/meetings/`（原始流水），结论抽到 `02/03` |
+| `材料与工具总表.docx` | ⭐ **拆成 Excel 配置表**：`items.xlsx / recipes.xlsx / buildings.xlsx`，直接喂 `tools/gen/config.mjs` |
+| `立项规划检查清单-四视角.docx` | `docs/00_governance/risks.md` + `assumptions.md` |
+| `待定清单-逐条处理.docx` + `v5.5-待定清单-用户已填.xlsx` | `docs/02_requirements/backlog.md`（96 条排队，已答的标 resolved） |
+| `等级解锁表-草案.docx` | `levels.xlsx`（配置表） |
+| `箱子与沉船概率-草案.docx` | `drops.xlsx / shipwrecks.xlsx`（配置表）+ `03_solution/design/DESIGN-003-掉落.md` |
+
+---
+
+## 需要你拍板的两个点
+
+**P1｜后端形态**
+- A（推荐）：微信云开发（云函数 + 云数据库），抖音端走 `adapters/http` 转发到同一套 `src`
+- B：一开始就自建 Node 服务（更自由，但 5 周内要额外处理备案、HTTPS、鉴权、扩容）
+- C：微信云托管（容器化，介于两者之间）
+
+**P2｜分包策略**
+- A（推荐）：`main` 只放逻辑内核 + 首屏 UI，浅海主体也进 `mod-sea-shallow`，主包压到 2.5MB 以内
+- B：浅海全进主包，简单但几乎没有余量，第二期加内容必然爆包
+
+回 `P1-A / P2-A` 即可。确认后我可以把这份方案落成 `docs/00_governance/{project-map.md, document-standard.md}` 和 `docs/03_solution/architecture.md` 三份正式文档，再按 W0 清单生成目录骨架。

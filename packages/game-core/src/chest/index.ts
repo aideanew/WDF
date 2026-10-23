@@ -1,0 +1,18 @@
+/** 已定（v5.5 8.4）：连续命中 n 次才开锁，失误归零，每次蓄力消耗一根工具。 */
+export const LOCK_HITS: Readonly<Record<string, number>> = { iron: 1, copper: 2, silver: 3, gold: 4 };
+
+/**
+ * 连续命中 n 次所需的期望尝试次数（= 期望消耗工具数）。p 为单次命中率（0..1，需真机实测）。
+ * E = (1 - p^n) / ((1 - p) * p^n)
+ */
+export function expectedAttempts(p: number, n: number): number {
+  if (p >= 1) return n;
+  if (p <= 0) return Infinity;
+  const pn = Math.pow(p, n);
+  return (1 - pn) / ((1 - p) * pn);
+}
+
+/** 单次判定：指针位置是否落在命中区（均为 0..10000 的万分比刻度）。 */
+export function isHit(pointer: number, zoneStart: number, zoneWidth: number): boolean {
+  return pointer >= zoneStart && pointer < zoneStart + zoneWidth;
+}

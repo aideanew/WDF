@@ -1,0 +1,19 @@
+{
+  "table": "foods",
+  "module": "crew",
+  "primaryKey": "id",
+  "status": "draft",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "todo": "字段待从 v5.5（模块 crew）抽取"
+}

@@ -1,0 +1,30 @@
+/**
+ * 塔防寻路：统一格子成本时，从大门反向做一次广度优先搜索，得到每格到大门的步数，所有敌人共享这张距离图。
+ * grid: 0=可走 1=阻挡（已升高的地形/建筑）；返回 -1 表示到不了。
+ */
+export function distanceField(grid: readonly (readonly number[])[], gateX: number, gateY: number): number[][] {
+  const h = grid.length;
+  const w = h > 0 ? grid[0]!.length : 0;
+  const dist: number[][] = Array.from({ length: h }, () => new Array<number>(w).fill(-1));
+  const qx = new Int32Array(w * h);
+  const qy = new Int32Array(w * h);
+  let head = 0, tail = 0;
+  dist[gateY]![gateX] = 0; qx[tail] = gateX; qy[tail] = gateY; tail++;
+  while (head < tail) {
+    const x = qx[head]!, y = qy[head]!; head++;
+    const d = dist[y]![x]! + 1;
+    const nb = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
+    for (const [nx, ny] of nb) {
+      if (nx! < 0 || ny! < 0 || nx! >= w || ny! >= h) continue;
+      if (grid[ny!]![nx!] !== 0 || dist[ny!]![nx!] !== -1) continue;
+      dist[ny!]![nx!] = d; qx[tail] = nx!; qy[tail] = ny!; tail++;
+    }
+  }
+  return dist;
+}
+
+/** 建造前检查：每个登陆口都必须能走到大门（禁止完全堵死）。 */
+export function allEntrancesReachable(grid: readonly (readonly number[])[], gate: [number, number], entrances: readonly [number, number][]): boolean {
+  const d = distanceField(grid, gate[0], gate[1]);
+  return entrances.every(([x, y]) => (d[y]?.[x] ?? -1) >= 0);
+}

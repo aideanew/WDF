@@ -1,0 +1,11 @@
+/** 时间一律由调用方传入（服务器时间毫秒）。规则内部不读系统时钟。 */
+export type EpochMs = number;
+export const HOUR_MS = 3_600_000;
+export const MINUTE_MS = 60_000;
+
+/** 两次存档之间的有效经过时间：回拨按 0 处理，单次上限防异常值。 */
+export function elapsed(fromMs: EpochMs, toMs: EpochMs, capMs: number = 30 * 24 * HOUR_MS): number {
+  const d = toMs - fromMs;
+  if (!(d > 0)) return 0;
+  return d > capMs ? capMs : d;
+}
