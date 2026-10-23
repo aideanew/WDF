@@ -5,5 +5,7 @@
   "uuid": "539e28f8-2b03-4344-862d-7cc5fe121d07",
   "files": [],
   "subMetas": {},
-  "userData": {}
+  "userData": {
+    "isBundle": true
+  }
 }
