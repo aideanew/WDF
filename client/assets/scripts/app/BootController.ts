@@ -19,8 +19,7 @@ export class BootController extends Component {
   private revision = -1;
 
   async start(): Promise<void> {
-    const uiRoot = this.buildUI();
-    this.node.addChild(uiRoot);
+    this.buildUI(); // 内部直接挂到 this.node
     this.revision = LocalSave.load()?.revision ?? -1;
     this.setLine1(`Boot 启动…（本地 revision=${this.revision}）`);
 
@@ -37,29 +36,16 @@ export class BootController extends Component {
   private setLine3(t: string): void { this.line3.string = t; }
 
   private buildUI(): Node {
-    // 用 Widget 锚定到 Canvas 顶部，兼容横竖屏
-    const ui = new Node('BootUI');
-    const uiTrans = ui.addComponent(UITransform);
-    uiTrans.setContentSize(1, 1); // 容器本身不需要尺寸
-    const uiWidget = ui.addComponent(Widget);
-    uiWidget.isAlignTop = true;
-    uiWidget.top = 40;
-    uiWidget.isAlignLeft = true;
-    uiWidget.left = 24;
-    uiWidget.isAlignRight = true;
-    uiWidget.right = 24;
+    // 全部直接相对 Canvas 中心定位（iPhone 12 Canvas 可见区域约 ±422）
+    const line1 = this.makeLabel('line1', new Vec3(0, 200, 0), new Color(200, 220, 255));
+    const line2 = this.makeLabel('line2', new Vec3(0, 140, 0), new Color(255, 240, 180));
+    const line3 = this.makeLabel('line3', new Vec3(0, 80, 0),  new Color(200, 255, 200));
 
-    // 三行文字（Widget 会把它们相对 ui 容器定位，容器已锚定顶部）
-    this.line1 = this.makeLabel('line1', new Vec3(0, 0, 0), new Color(200, 220, 255));
-    this.line2 = this.makeLabel('line2', new Vec3(0, -60, 0), new Color(255, 240, 180));
-    this.line3 = this.makeLabel('line3', new Vec3(0, -120, 0), new Color(200, 255, 200));
-    ui.addChild(this.line1.node, this.line2.node, this.line3.node);
-
-    // 黑色按钮（相对容器定位）
+    // 黑色按钮
     const btnNode = new Node('HookButton');
     const btnTrans = btnNode.addComponent(UITransform);
     btnTrans.setContentSize(220, 72);
-    btnNode.setPosition(new Vec3(0, -220, 0));
+    btnNode.setPosition(new Vec3(0, -20, 0));
 
     // 按钮底图：纯色 Sprite
     const bgNode = new Node('Bg');
@@ -81,9 +67,14 @@ export class BootController extends Component {
 
     this.hookBtn = btnNode.addComponent(Button);
     btnNode.on(Node.EventType.TOUCH_END, this.onHook, this);
-    ui.addChild(btnNode);
 
-    return ui;
+    // 全部直接挂到 Canvas
+    this.node.addChild(line1.node);
+    this.node.addChild(line2.node);
+    this.node.addChild(line3.node);
+    this.node.addChild(btnNode);
+
+    return btnNode; // 随便返回一个，start() 里没用
   }
 
   private makeLabel(name: string, pos: Vec3, color: Color): Label {
