@@ -51,3 +51,26 @@ created: 2026-10-26
 **NOTE（非阻塞）**：error-catalog.md 为手维护文件，与 errors.ts 靠人工对齐；建议后续在守卫加"errors.ts↔error-catalog.md 行数对账"断言消除漂移风险（当前 14↔14 一致）。
 
 **优化建议（未采纳，记录备查）**：① 可增 `ChestMaterial` 维度覆盖"木箱可砸"非锁路径；② `pointer` 可定义 `type PointerTick = number` 提升自解释；③ 长期可将错误表校验并入生成器。AT-2001 仅做形状补缺，上述留待后续。
+
+## 2 AT-2101 game-core/hook 确定性核心（完成 → 子智能体评审 PASS-WITH-NOTES）
+
+### 2.1 证据链
+- TASK-0201 完整规格（HookConfig/powerAt/cast/resolveHit/pullBack + 4 条验收）；`mvp-scope.md` C1、`functional-analysis.md` 出钩语义。
+- game-core 纯度约束：无 `Math.random`/`Date.now`/`enum`/`namespace`/绝对导入/IO；复用 `common/result` 的 `ok`/`err`。
+- 测试机制：项目用 `node --import tools/runtime/register.mjs --test` 直接加载 `.ts`（Node 类型剥离），现有 determinism 套件已以此方式导入 game-core TS。
+
+### 2.2 交付物
+1. `packages/game-core/src/hook/index.ts`：`powerAt`（三角波往返）/ `cast`（轨迹）/ `resolveHit`（首个相交目标）/ `pullBack`（承重 `err(3101)`）/ `chargeAndCast`（便捷入口）/ `DEFAULT_HOOK_CONFIG`（常量占位，待迁入 `hooks.csv`）。
+2. `tests/determinism/hook.test.mjs`：6 用例（确定性、powerAt 边界、cast 几何、resolveHit、pullBack、chargeAndCast 边界 + 半径单调不减）。
+
+### 2.3 子智能体评审结论（2026-10-26）
+**结论：PASS-WITH-NOTES**（守卫 9/9、hook 测试 6/6、全套 26/26 均独立重跑通过）
+- **NOTE-1（已修正）**：`resolveHit` 原取"最近"，与 TASK-0201"取首个相交目标"字面偏差 → 改为返回最低索引命中目标。
+- **NOTE-2（接受）**：越界 `angleDeg`/`powerBp` 静默钳制，属防御性处理，记录备查。
+- **NOTE-3（接受）**：`3101` 与 `raft` 浮力共用容量类规则码；TASK-0201 验收指定 3101，保留。
+- **NOTE-4（接受）**：`cfg` 无合法性校验，DEFAULT 合法；外部注入层需覆盖 DEFAULT，记录备查。
+- 占位常量（`cycleMs`/`maxReach`/`hitRadius`/`cables`）为玩法数值，应进 `hooks.csv`；当前空表下用常量属 TASK-0201 已标注的临时占位，合法。
+
+### 2.4 进度影响
+- 全套测试 20 → 26（计划目标 ≥28，将由 AT-2401 补齐）。
+- 解锁下游：AT-2102（HookView）、AT-2103（出钩接线）可启动（依赖 AT-2101 已满足）。
