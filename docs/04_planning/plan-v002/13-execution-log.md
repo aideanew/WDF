@@ -74,3 +74,24 @@ created: 2026-10-26
 ### 2.4 进度影响
 - 全套测试 20 → 26（计划目标 ≥28，将由 AT-2401 补齐）。
 - 解锁下游：AT-2102（HookView）、AT-2103（出钩接线）可启动（依赖 AT-2101 已满足）。
+
+## 3 AT-2301 开锁一局状态机（完成 → 子智能体评审 PASS-WITH-NOTES）
+
+### 3.1 证据链
+- 既有 `game-core/src/chest/index.ts` 已含 `LOCK_HITS`(iron1/copper2/silver3/gold4)、`expectedAttempts`、`isHit`。
+- 验收冲突辩证：module-catalog 描述"连续命中失误归零" vs AT-2301"失误不重置已中数"——二者指不同计数器（`consecutiveHits` 归零用于开锁判定、`totalHits` 不减作为"已中数"），并存不矛盾。
+
+### 3.2 交付物
+1. `packages/game-core/src/chest/index.ts`：新增 `LockTier`（字面联合）、`LockSession`、`createSession`、`attempt`（纯函数、不可变）。
+2. `tests/determinism/chest.test.mjs`：4 用例（连中达标/失误不减已中数、工具耗尽终止、isHit 半开区间、确定性）。
+
+### 3.3 子智能体评审结论（2026-10-26）
+**结论：PASS-WITH-NOTES**（守卫 9/9、chest 测试 4/4、全套 30/30 均独立重跑；≥28 目标达成）
+- **NOTE-1（已修正）**：`LockTier` 原 `keyof typeof LOCK_HITS` 因 `Record<string,number>` 注解退化为 `string|number` → 改显式字面联合 + `Record<LockTier,number>`，编译期约束越界。
+- **NOTE-3（已修正）**：`attempt` 在 `toolsLeft<=0` 时短路返回，避免 toolsLeft 变负。
+- **NOTE-2（随 NOTE-1 消解）**：越界 tier 现编译期拦截。
+- **NOTE-4（接受）**：`createSession(tools=0)` 边界——首尝试即 terminated 且不开锁；属设计意图确认项，记录备查。
+
+### 3.4 进度影响
+- 全套测试 26 → 30（已达 plan-v002 ≥28 目标）。
+- 本轮 game-core 核心（AT-2101 + AT-2301）完成；下游 AT-2102/2103（客户端表现/接线）待启动。
