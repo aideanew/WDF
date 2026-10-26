@@ -127,3 +127,52 @@ created: 2026-10-26
 - **NOTE-3（接受备查）**：bindStart 无未消费票据数量限制、过期票永久留存表；MVP 可接受，后续可加"每 player 未用票 ≤1"或定期清理。
 - **NOTE-4（信息）**：执行日志/TASK 卡改动不在 AT 允许清单，但属流程登记必要产物，审查员判定不构成越权。
 - **NOTE-5（信息）**：幂等表只缓存 c===0 属 AT-2001 既有设计，非本 AT 引入。
+
+## 5 AT-2202 save.resolveFork 分叉裁决（完成 → 待批量评审）
+
+### 5.1 证据链与辩证决策
+- **契约原文裁决**：任务卡 ES 旧文 `resolveFork(baseRevision, chosenRevision)` 与冻结契约 `ResolveForkReq{keep:'local'|'cloud'; localSnapshot?}`（v001 03-contracts-freeze §动作表）冲突 → **以冻结契约为准**。
+- **save_fork 无状态列**（player_id/source/body/created_at，无 PK）→ "另一支标记废弃"以 `audit_log(action='resolve_fork')` 留痕，不改表、零迁移。
+- **不以 fork 行存在为前置**：push 冲突场景（S5 原生）不产生 fork 行，resolveFork 必须两类分叉都能裁。
+
+### 5.2 交付物
+1. `save/repo.ts`：`findSnapshot/insertSnapshot/updateSnapshot` 加 tx 尾参 + `countForks/deleteForks/logForkResolved`。
+2. `save/service.ts`：`resolveFork`（withTx：keep='local' 覆盖云端 rev+1 / keep='cloud' 原样保留，均清 fork + 留痕）、`ForkError`、`pendingForks`。
+3. `save/handlers.ts` +1、网关注册（8→9 件）。
+4. `tests/integration/fork.test.mjs`：5 用例（push 冲突收敛/bind 双向选边/失败路径+幂等/审计留痕）。
+
+### 5.3 过程修复
+- **事务死锁复发一次**：`findSnapshot` 首轮漏加 tx 参数（第二参被忽略仍走全局 q()）→ 测试 SIGTERM 无输出 → 补 tx 尾参后 5/5。教训：**给 repo 函数加 tx 参数必须逐个核对调用点**，已沉淀项目 MEMORY.md。
+
+## 6 AT-2203 leaderboard.report / query 总收益榜（完成 → 待批量评审）
+
+### 6.1 证据链与辩证决策
+- **season**：0001 无 season 表 → 模块常量 `'S1'`（season 系统落地后替换）。
+- **风控上限数值不进代码**：`exceedsHourlyCap` 只读复用，cap 由 env `WDF_INCOME_HOURLY_CAP` 注入，默认不启用；数值表（game-data）就位后改读 config。
+- **4001 超频**：内存限频器（`WDF_REPORT_MIN_INTERVAL_MS` 默认 30s，生产换 Redis 见升级条件）；**seq 回退不报错**——返回当前 acceptedSeq（幂等语义），避免乱序重试陷入 4001 循环。
+- **快照策略**：report 成功即刷新 `global` + `region:<id>` 两份（rows jsonb 宽结构含 region/province 供 query 过滤）；flagged 玩家不入榜；province 全员 null → 暂空榜（契约合法）。
+- **name 兜底**：player 表无昵称列 → `玩家<后4位>`。
+
+### 6.2 交付物
+1. `leaderboard/{repo,service,handlers}.ts`（占位 → 全量实现）+ 网关注册（9→11 件）。
+2. `tests/integration/leaderboard.test.mjs`：5 用例（3 人上报排序+me+分页/非法事件净化+seq 回退/4001/flagged 不入榜/province 空榜）。
+
+### 6.3 过程修复
+- query 的 `scope='province'` 分支漏改 scopeKey（仍查 global 返回 5 人榜）→ 改占位键 `province:unknown` 查空。测试先行抓到。
+
+## 7 AT-2204 telemetry.track 批量埋点（完成 → 待批量评审）
+
+### 7.1 设计口径
+- auth:false（崩溃/错误上报无令牌场景）；批量上限 `WDF_TELEMETRY_MAX_BATCH` 默认 100，超限 **4001**（error-catalog 4001 相关动作本就含 telemetry.track）。
+- 落地复用 `audit_log`（actor=IP，action='telemetry'），专用 TTL 表走 0002（升级条件）。
+- **失败容忍**：写库失败 console.error 后仍返回成功——埋点可丢，绝阻塞主流程。
+
+### 7.2 交付物
+1. `telemetry/{repo,service,handlers}.ts`（占位 → 全量实现）+ 网关注册（11→12 件，剩 8 个 todo 全部依赖 E-06 数值）。
+2. `tests/integration/telemetry.test.mjs`：3 用例（入库+空批次/超限 4001/无令牌+主流程无影响）。
+
+## 8 质量闸门累计（截至 AT-2204）
+- 全套测试 36 → **49**（fork+5 / leaderboard+5 / telemetry+3）；守卫 9/9 全绿。
+- 网关落地动作 8 → **12 件**（20 动作中剩 8 个 todo：salvage/economy/event×3/social×2/ads，均依赖 E-06 数值）。
+- 提交链：`918362f`(2201) → `f173eb5`(2202) → `f7654e9`(2203) → `88f73e6`(2204)，均已推送双端一致。
+- Agent-Server 4 AT（2201~2204）串行完成，批量交叉审查见 §9。
