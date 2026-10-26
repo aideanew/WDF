@@ -24,7 +24,7 @@ const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: 'not implement
 
 /**
  * 动作 → 实现。`satisfies` 保证 contracts 里登记的每个动作都有实现，漏了编译失败。
- * 当前已落地 8 件：account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / config.manifest。
+ * 当前已落地 9 件：account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / config.manifest。
  */
 export const HANDLERS = {
   'account.login': accountHandlers['account.login'],
@@ -34,7 +34,7 @@ export const HANDLERS = {
   'compliance.check': complianceHandlers['compliance.check'],
   'save.pull': saveHandlers['save.pull'],
   'save.push': saveHandlers['save.push'],
-  'save.resolveFork': todo,
+  'save.resolveFork': saveHandlers['save.resolveFork'],
   'salvage.claimInfo': todo,
   'economy.buyQuota': todo,
   'leaderboard.report': todo,
