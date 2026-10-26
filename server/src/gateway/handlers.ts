@@ -7,6 +7,7 @@ import { complianceHandlers } from '../modules/compliance/handlers.ts';
 import { configHandlers } from '../modules/config/handlers.ts';
 import { leaderboardHandlers } from '../modules/leaderboard/handlers.ts';
 import { saveHandlers } from '../modules/save/handlers.ts';
+import { telemetryHandlers } from '../modules/telemetry/handlers.ts';
 
 /** 每个请求的上下文。鉴权后的 claims 由网关填好，handler 不再自己解 token。 */
 export interface HandlerCtx {
@@ -25,7 +26,8 @@ const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: 'not implement
 
 /**
  * 动作 → 实现。`satisfies` 保证 contracts 里登记的每个动作都有实现，漏了编译失败。
- * 当前已落地 11 件：account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / leaderboard.report / leaderboard.query / config.manifest。
+ * 当前已落地 12 件（全部 20 个动作中仅剩 8 个 todo：salvage/economy/event×3/social×2/ads —— 均依赖 E-06 数值）：
+ * account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / leaderboard.report / leaderboard.query / telemetry.track / config.manifest。
  */
 export const HANDLERS = {
   'account.login': accountHandlers['account.login'],
@@ -46,6 +48,6 @@ export const HANDLERS = {
   'social.send': todo,
   'social.pull': todo,
   'ads.claim': todo,
-  'telemetry.track': todo,
+  'telemetry.track': telemetryHandlers['telemetry.track'],
   'config.manifest': configHandlers['config.manifest'],
 } satisfies Record<ActionName, Handler>;
