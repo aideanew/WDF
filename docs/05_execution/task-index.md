@@ -43,6 +43,7 @@ review: 2026-11-23
 | TASK-2501 | 文档一致性返工 | done | `docs/05_execution/tasks/TASK-2501.md` |
 | TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | done | `docs/05_execution/tasks/TASK-3001.md` |
 | TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed | `docs/05_execution/tasks/TASK-3002.md` |
+| TASK-3100 | 客户端配置表读取服务（services/config 实现 + 面板接口对齐） | proposed | `docs/05_execution/tasks/TASK-3100.md` |
 | TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed | `docs/05_execution/tasks/TASK-3101.md` |
 | TASK-3102 | 背包列表页（读 106 行真实物品） | proposed | `docs/05_execution/tasks/TASK-3102.md` |
 | TASK-3103 | 合成面板（80 条真实配方 + 材料判定） | proposed | `docs/05_execution/tasks/TASK-3103.md` |
