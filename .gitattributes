@@ -1,0 +1,8 @@
+# 只对本项目代码目录强制 LF，范围刻意最小化。
+# packages/** 被 tools/sync 与 guard 第 7 项做原始字节比对；core.autocrlf=true 的机器上
+# 若放任 CRLF，checkout 后守卫会报「客户端副本换行不一致」。
+# 刻意不写 `* text=auto eol=lf`：client/assets 与 docs/08_knowledge 下既有 135 个 CRLF 文件
+# （含约定保持原文的 RAW 原始资料目录），全仓规范化需单独一次 re-normalize 提交。
+packages/** text eol=lf
+tools/** text eol=lf
+server/** text eol=lf

@@ -5,6 +5,7 @@ import {
   verifySave,
   type SaveFile,
 } from '../../generated/game-core/save';
+import { CONFIG_VERSION } from '../../generated/game-core/generated/config-types';
 
 const STORAGE_KEY = 'wdf.save.v1';
 const SAVE_ID_KEY = 'wdf.saveId';
@@ -45,7 +46,7 @@ export const LocalSave = {
   init(): SaveFile {
     return sealSave({
       schemaVersion: SAVE_SCHEMA_VERSION,
-      configVersion: '16921d30a67a934f',
+      configVersion: CONFIG_VERSION,
       saveId: loadSaveId(),
       revision: 0,
       savedAt: Date.now(),

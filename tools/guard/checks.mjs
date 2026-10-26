@@ -1,13 +1,17 @@
 // 每个检查返回问题数组（字符串）。run-all 汇总；任一非空即失败。
 import { p, read, readJson, walk, rel, listDirs, exists, sha, catalog, frontMatter } from '../lib/util.mjs';
+import { SYNC_TARGETS } from '../lib/sync-targets.mjs';
 import { readdirSync } from 'node:fs';
 
 const S = 'client/assets/scripts';
 const importsOf = (src) => [...src.matchAll(/(?:import|export)\s[^'"]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g)].map((m) => m[1] ?? m[2]);
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+// 换行与尾随空白规范化。用它判「内容是否同步」，否则 core.autocrlf=true 把源文件还原成 CRLF
+// 时会产生假红；纯换行差异单独上报（见 generatedUntouched 的最后一支）。
+const norm = (s) => s.replace(/\r\n/g, '\n').replace(/[ \t]+$/gm, '');
 
 export function rootWhitelist() {
-  const files = new Set(['AGENTS.md', 'README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'tsconfig.base.json', '.gitignore', '.editorconfig', '.env.example']);
+  const files = new Set(['AGENTS.md', 'README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'tsconfig.base.json', '.gitignore', '.gitattributes', '.editorconfig', '.env.example']);
   const dirs = new Set(['docs', 'game-data', 'packages', 'client', 'server', 'tools', 'tests', 'art-source', '.local', '.git', '.github', '.workbuddy', 'node_modules']);
   const bad = [];
   for (const n of readdirSync(p('.'), { withFileTypes: true })) {
@@ -117,8 +121,16 @@ export function generatedUntouched() {
   for (const [f, h] of Object.entries(m)) { seen.add(f); if (!exists(p(f))) bad.push(`生成文件缺失：${f}`); else if (sha(read(p(f))) !== h) bad.push(`生成文件被手改：${f}（改 packages 源码后 npm run sync）`); }
   for (const f of walk(p(`${S}/generated`), (f) => f.endsWith('.ts'))) if (!seen.has(rel(f))) bad.push(`生成目录里出现未登记文件：${rel(f)}`);
   // 源与副本是否一致（防止改了 packages 忘记 sync）
-  for (const [src, name] of [['packages/game-core/src', 'game-core'], ['packages/contracts/src', 'contracts']])
-    for (const f of walk(p(src), (f) => f.endsWith('.ts'))) { const out = `${S}/generated/${name}/${rel(f).slice(src.length + 1)}`; if (!m[out]) bad.push(`未同步到客户端：${rel(f)}（npm run sync）`); else if (exists(p(out)) && read(p(out)).slice(read(p(out)).indexOf('\n') + 1) !== read(f)) bad.push(`客户端副本过期：${rel(f)}（npm run sync）`); }
+  for (const [src, name] of SYNC_TARGETS)
+    for (const f of walk(p(src), (f) => f.endsWith('.ts'))) {
+      const out = `${S}/generated/${name}/${rel(f).slice(src.length + 1)}`;
+      if (!m[out]) { bad.push(`未同步到客户端：${rel(f)}（npm run sync）`); continue; }
+      if (!exists(p(out))) continue;
+      const srcBody = read(f);
+      const outBody = read(p(out)).slice(read(p(out)).indexOf('\n') + 1);
+      if (norm(srcBody) !== norm(outBody)) bad.push(`客户端副本过期：${rel(f)}（npm run sync）`);
+      else if (srcBody !== outBody) bad.push(`客户端副本换行不一致：${rel(f)}（core.autocrlf=true 把源文件还原成 CRLF；跑 npm run sync，或把源文件统一为 LF）`);
+    }
   return bad;
 }
 

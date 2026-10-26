@@ -1,3 +1,88 @@
-/** 图纸与制作：配方、门槛(设施/员工/等级)、自动合成、品质与品阶
- * 规则待按 v5.5 章节 5.4/5.5 抽取。只写纯函数。 */
+/** 合成判定：解析配方输入串 → 判断材料是否齐 → 扣材料并产出。纯函数：无 IO / 随机 / 时间 / 非相对导入。
+ * 只判"材料够不够"，不做等级与职业门槛 —— recipes.unlock_level 与 job 当前 0/80 填充，
+ * 数值未定前假装有门槛等于伪造数据（TASK-3201 阻塞条件裁决见 EXEC-BRIEF-0002 C-03）。 */
 export const MODULE_ID = 'crafting';
+
+export interface RecipeInput {
+  id: string;
+  count: number;
+}
+
+export interface RecipeShape {
+  id: string;
+  out: string;
+  outCount: number;
+  inputs: RecipeInput[];
+  /** 保留原始串（形如 'item_0001*1;item_0002*2'），便于排障与 UI 展示。 */
+  rawInputs: string;
+}
+
+export type InventoryShape = Readonly<Record<string, number>>;
+
+export interface ParseResult {
+  inputs: RecipeInput[];
+  /** 无法解析的原始片段（不抛异常，交由调用方决定跳过或隐藏）。 */
+  invalid: string[];
+}
+
+export interface MissingItem {
+  id: string;
+  need: number;
+  have: number;
+}
+
+export interface CanCraftResult {
+  ok: boolean;
+  /** 按 recipe.inputs 原顺序输出，禁止排序，否则多次调用不稳定。 */
+  missing: MissingItem[];
+}
+
+/** 解析 'item_0001*1;item_0002*2'。空串返回空结果；非法片段收集进 invalid，不抛。 */
+export function parseInputs(raw: string): ParseResult {
+  const inputs: RecipeInput[] = [];
+  const invalid: string[] = [];
+  if (raw === '') return { inputs, invalid };
+  for (const seg of raw.split(';')) {
+    const piece = seg.trim();
+    if (piece === '') continue;
+    const parsed = parseSegment(piece);
+    if (parsed) inputs.push(parsed);
+    else invalid.push(piece);
+  }
+  return { inputs, invalid };
+}
+
+/** 'id*count'：`*` 是唯一分隔符；count 必须为正整数。 */
+function parseSegment(piece: string): RecipeInput | null {
+  const at = piece.indexOf('*');
+  if (at <= 0 || at === piece.length - 1) return null;
+  const id = piece.slice(0, at).trim();
+  const countText = piece.slice(at + 1).trim();
+  if (!/^\d+$/.test(countText)) return null;
+  const count = Number(countText);
+  if (!Number.isInteger(count) || count <= 0) return null;
+  return { id, count };
+}
+
+/** 材料是否齐。缺料按 inputs 顺序收集，need/have 用配方值与库存值。 */
+export function canCraft(recipe: RecipeShape, inv: InventoryShape): CanCraftResult {
+  const missing: MissingItem[] = [];
+  for (const input of recipe.inputs) {
+    const have = inv[input.id] ?? 0;
+    if (have < input.count) missing.push({ id: input.id, need: input.count, have });
+  }
+  return { ok: missing.length === 0, missing };
+}
+
+/**
+ * 完整库存迁移：扣材料 + 产出。**不改入参**，也不校验 ok（调用方先 canCraft）。
+ * 库存不足时夹到 0 而非负数，避免脏数据流入存档。
+ */
+export function consume(recipe: RecipeShape, inv: InventoryShape): Record<string, number> {
+  const next: Record<string, number> = { ...inv };
+  for (const input of recipe.inputs) {
+    next[input.id] = Math.max(0, (next[input.id] ?? 0) - input.count);
+  }
+  next[recipe.out] = (next[recipe.out] ?? 0) + recipe.outCount;
+  return next;
+}

@@ -88,7 +88,7 @@ review: 2026-11-23
 | PLAN-V002-12 | 第一刀与启动顺序（建议） | active |  | `04_planning/plan-v002/12-first-cut.md` |
 | PLAN-V002-13 | 执行过程记录（2026-10-26 启动） | active |  | `04_planning/plan-v002/13-execution-log.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
-| EXEC-BRIEF-0001 | 助手派工指令 v2（四级大纲：批次 → 任务 → 原子步骤 → 验证断言） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
+| EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done |  | `05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active |  | `05_execution/tasks/TASK-0103.md` |
@@ -110,7 +110,7 @@ review: 2026-11-23
 | TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1601.md` |
 | TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1602.md` |
 | TASK-2001 | 契约补缺（chest 业务类型 + 错误路径对照表） | done |  | `05_execution/tasks/TASK-2001.md` |
-| TASK-2101 | game-core/hook 蓄力+轨迹+命中（确定性） | proposed |  | `05_execution/tasks/TASK-2101.md` |
+| TASK-2101 | game-core/hook 蓄力+轨迹+命中（确定性） | done |  | `05_execution/tasks/TASK-2101.md` |
 | TASK-2102 | HookView 程序化表现（力度条/飞行/回手） | done |  | `05_execution/tasks/TASK-2102.md` |
 | TASK-2103 | 出钩接线（命中→入包→存档） | done |  | `05_execution/tasks/TASK-2103.md` |
 | TASK-2201 | account.bindStart / bindConfirm（账号合并） | done |  | `05_execution/tasks/TASK-2201.md` |
@@ -121,18 +121,18 @@ review: 2026-11-23
 | TASK-2402 | e2e 骨架 1 条 | done |  | `05_execution/tasks/TASK-2402.md` |
 | TASK-2501 | 文档一致性返工 | done |  | `05_execution/tasks/TASK-2501.md` |
 | TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | done |  | `05_execution/tasks/TASK-3001.md` |
-| TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed |  | `05_execution/tasks/TASK-3002.md` |
-| TASK-3100 | 客户端配置表读取服务（services/config 实现 + 面板接口对齐） | proposed |  | `05_execution/tasks/TASK-3100.md` |
-| TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed |  | `05_execution/tasks/TASK-3101.md` |
-| TASK-3102 | 背包列表页（读 106 行真实物品） | proposed |  | `05_execution/tasks/TASK-3102.md` |
-| TASK-3103 | 合成面板（80 条真实配方 + 材料判定） | proposed |  | `05_execution/tasks/TASK-3103.md` |
-| TASK-3104 | 排行榜页（接已实现的 leaderboard.query） | proposed |  | `05_execution/tasks/TASK-3104.md` |
-| TASK-3105 | 云存档同步与分叉裁决 UI（conflict 态唯一出口） | proposed |  | `05_execution/tasks/TASK-3105.md` |
-| TASK-3201 | game-core/crafting 可制作判定（canCraft / consume） | proposed |  | `05_execution/tasks/TASK-3201.md` |
-| TASK-3202 | game-core/inventory 存档段投影（listRows） | proposed |  | `05_execution/tasks/TASK-3202.md` |
-| TASK-3301 | 守卫第 10 项：源 ↔ generated 双向同步校验 | proposed |  | `05_execution/tasks/TASK-3301.md` |
-| TASK-3302 | game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷） | proposed |  | `05_execution/tasks/TASK-3302.md` |
-| TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | proposed |  | `05_execution/tasks/TASK-3401.md` |
+| TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | done |  | `05_execution/tasks/TASK-3002.md` |
+| TASK-3100 | 客户端配置表读取服务（services/config 实现 + 面板接口对齐） | done |  | `05_execution/tasks/TASK-3100.md` |
+| TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | done |  | `05_execution/tasks/TASK-3101.md` |
+| TASK-3102 | 背包列表页（读 106 行真实物品） | done |  | `05_execution/tasks/TASK-3102.md` |
+| TASK-3103 | 合成面板（80 条真实配方 + 材料判定） | done |  | `05_execution/tasks/TASK-3103.md` |
+| TASK-3104 | 排行榜页（接已实现的 leaderboard.query） | done |  | `05_execution/tasks/TASK-3104.md` |
+| TASK-3105 | 云存档同步与分叉裁决 UI（conflict 态唯一出口） | done |  | `05_execution/tasks/TASK-3105.md` |
+| TASK-3201 | game-core/crafting 可制作判定（canCraft / consume） | done |  | `05_execution/tasks/TASK-3201.md` |
+| TASK-3202 | game-core/inventory 存档段投影（listRows） | done |  | `05_execution/tasks/TASK-3202.md` |
+| TASK-3301 | 守卫第 10 项：源 ↔ generated 双向同步校验 | done |  | `05_execution/tasks/TASK-3301.md` |
+| TASK-3302 | game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷） | done |  | `05_execution/tasks/TASK-3302.md` |
+| TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | done |  | `05_execution/tasks/TASK-3401.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |

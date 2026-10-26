@@ -3,11 +3,12 @@ import type { ActionName } from '../../generated/contracts/common/actions';
 import type { RpcRequest, RpcResponse, RequestMeta, Platform } from '../../generated/contracts/common/envelope';
 import { ERR, errorRange } from '../../generated/contracts/common/errors';
 import { SAVE_SCHEMA_VERSION } from '../../generated/game-core/save';
+import { CONFIG_VERSION } from '../../generated/game-core/generated/config-types';
 
 /** 客户端版本号（手动同步 package.json 的 version）。 */
 export const CLIENT_VERSION = 'v0.1.0-s1';
-/** 当前 configVersion（先写死；后续由 config service 热更覆盖）。 */
-export const CONFIG_VERSION = '16921d30a67a934f';
+/** configVersion 唯一来源是 npm run gen 的产物，禁止在此写死；仅转出以保持既有导出名。 */
+export { CONFIG_VERSION };
 
 /** 开发期强制走 mock，完全跳过网络请求（DevTools 的 wx.request 404 红字就不会再出现）。服务器上线后改 false。 */
 export const FORCE_OFFLINE = false;
@@ -84,8 +85,10 @@ export async function invoke<P = unknown, D = unknown>(
     const mock = MOCK_HANDLERS[action];
     if (mock) {
       const r = await mock(req);
-      if (r.c === 0) return r.d as D;
-      throw makeError(r.c, r.msg);
+      // RpcResponse 是联合类型，且错误分支的 c 也是 number → `c === 0` 无法让 TS 收窄，
+      // 只能显式断言到成功分支取 d（成功分支才带 d）。
+      if (r.c === 0) return (r as { c: 0; d: D }).d;
+      throw makeError(r.c, (r as { c: number; msg: string }).msg);
     }
   }
 
@@ -95,9 +98,12 @@ export async function invoke<P = unknown, D = unknown>(
     if (nt) return invoke<P, D>(action, params, rid, true);
   }
 
-  if (!resp) throw makeError(ERR.SYSTEM, 'network unreachable');
+  // 契约冻结 14 码，其中没有专门的"网络错误"码。旧代码写的 ERR.SYSTEM **根本不存在**，
+  // 传进去是 undefined → UX 映射拿到非法码。回落到 INTERNAL(4999)：error + retryable，
+  // 与网络失败语义一致；用 msg 区分来源。（缺专用网络码本身记入契约缺口）
+  if (!resp) throw makeError(ERR.INTERNAL, 'network unreachable');
   if (resp.c === 0) return (resp as { c: 0; d: D }).d;
-  throw makeError(resp.c, resp.msg);
+  throw makeError(resp.c, (resp as { c: number; msg: string }).msg);
 }
 
 /**

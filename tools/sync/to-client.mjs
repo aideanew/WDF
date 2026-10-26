@@ -6,10 +6,10 @@
 // 2. 改为“覆盖写 + 只清理已消失源文件对应的 .ts 产物”，单文件 unlink，不碰任何 .meta。
 // 3. 顺带避免触发沙箱/CI 对批量删除的保护（原实现的 recursive rm 一次删 60+ 文件会被拦截）。
 import { p, read, write, walk, rel, sha, GEN_HEADER, exists } from '../lib/util.mjs';
+import { SYNC_TARGETS } from '../lib/sync-targets.mjs';
 import { unlinkSync } from 'node:fs';
 import { relative, join } from 'node:path';
 
-const targets = [['packages/game-core/src', 'game-core'], ['packages/contracts/src', 'contracts']];
 const outRoot = p('client/assets/scripts/generated');
 const manifestPath = join(outRoot, '_sync-manifest.json');
 
@@ -26,7 +26,7 @@ if (exists(manifestPath)) {
 const manifest = {};
 let removed = 0;
 
-for (const [src, name] of targets) {
+for (const [src, name] of SYNC_TARGETS) {
   const dest = join(outRoot, name);
   const written = new Set();
 

@@ -1,3 +1,54 @@
-/** 物品与仓储：物品、堆叠、重量、货舱、大仓库、锁柜、一键入库
- * 规则待按 v5.5 章节 4.5/13 抽取。只写纯函数。 */
+/** 存档背包段投影：把 modules.inventory（id→数量）投影成可展示行。纯函数：无 IO / 随机 / 时间。
+ * 只取展示必需的四个字段（名称、类别、基准价、数量）—— items 表里其余字段当前 0/106 填充，
+ * 读出来只会显示 0，属于伪造数据（MUST-08，字段清单见 EXEC-BRIEF-0002 §3.3）。 */
+import type { ItemsRow } from '../generated/config-types';
+
 export const MODULE_ID = 'inventory';
+
+export interface ItemRow {
+  id: string;
+  name: string;
+  category: ItemsRow['category'];
+  basePrice: number;
+  count: number;
+}
+
+export interface ListRowsResult {
+  known: ItemRow[];
+  /** 存档里有、items 表里查不到的 id（旧档脏数据），保持原始顺序，不崩不丢弃。 */
+  unknownIds: string[];
+}
+
+/**
+ * `section` 是存档的扁平背包段（形如 `{ item_0001: 3 }`），`items` 是配置表的 id→行索引。
+ * 顺序确定性：基准价降序，同价按 id 升序 —— 不依赖对象键顺序。
+ */
+export function listRows(section: unknown, items: Record<string, ItemsRow>): ListRowsResult {
+  const known: ItemRow[] = [];
+  const unknownIds: string[] = [];
+  if (!isRecord(section)) return { known, unknownIds };
+  // 用 Object.keys 而非 Object.entries：client tsconfig target=ES2015 的 lib 不含 entries（TS2550）。
+  // 末尾会 sort，键遍历顺序不影响确定性。
+  for (const id of Object.keys(section)) {
+    const rawCount = section[id];
+    const count = typeof rawCount === 'number' ? rawCount : NaN;
+    if (!Number.isInteger(count) || count <= 0) continue;
+    const row = items[id];
+    if (!row) {
+      unknownIds.push(id);
+      continue;
+    }
+    known.push({ id, name: row.name, category: row.category, basePrice: row.base_price, count });
+  }
+  known.sort((a, b) => b.basePrice - a.basePrice || cmp(a.id, b.id));
+  return { known, unknownIds };
+}
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
+/** 按 UTF-16 码元比较，避开 localeCompare 的 ICU 区域差异，保证跨环境确定性。 */
+function cmp(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}

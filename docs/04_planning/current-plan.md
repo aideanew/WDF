@@ -12,8 +12,14 @@ review: 2026-11-23
 ## 现在处于哪一步
 
 > **2026-10-26 16:40 重基线（plan-v002 收官后）**：12 个 AT 完成 11（仅 AT-2302 等数值），
-> **下一阶段 = M1 可玩闭环**，**13 张**任务卡已落盘（TASK-3001~3401，其中 3001 已完成），
+> **下一阶段 = M1 可玩闭环**，**13 张**任务卡已落盘（TASK-3001~3401），
 > 派工与四级执行大纲见 `docs/05_execution/ASSISTANT-BRIEF.md`。plan-v001 的"未初始化"结论是 10-23 上午的冻结快照，**以本节为准**。
+>
+> **2026-10-26 23:40 M1 收官（EXEC-BRIEF-0002）**：13 张卡**全部完成**（TASK-3001~3401，含本卡 3401 收口），
+> `verify` 全绿（9 项守卫 + 107 测试）。可演示闭环：打捞 → 背包 → 合成 → 榜单 → 云存档同步。
+> 逐卡证据见 `docs/06_validation/evidence/EVD-3002|3100|3102|3103|3104|3105|3201|3202|3301|3302/`。
+> 遗留缺口（不影响闭环）：①客户端存在 7 个既存类型错误（ASSISTANT-BRIEF BASE-34，含 `RpcClient` 的 `ERR.SYSTEM` 不存在）；
+> ②4 个手写脚本无 `.meta`（BASE-33，编辑器自动补齐）；③`features/*` 其余模块仍为占位。
 
 ### 现在做什么（M1 可玩闭环，2026-10-26 立）
 
@@ -23,7 +29,7 @@ review: 2026-11-23
 | 批次 | 任务 | 归属 | 说明 |
 |---|---|---|---|
 | R2（串行，唯一写入者） | TASK-3001 | Agent-Contract | 第⑥份契约：UX 六态 + 14 码映射（`DESIGN-0001` 已冻结） |
-| R3（并行 3 写） | TASK-3002 / 3100 / 3201 / 3202 / 3301 / 3302 | Client / Core / Guard | configVersion 单一来源、客户端配置读取服务、合成判定与背包投影纯函数、守卫第 10 项、存档封印回归测试 |
+| R3（并行 3 写） | TASK-3002 / 3100 / 3201 / 3202 / 3301 / 3302 | Client / Core / Guard | configVersion 单一来源、客户端配置读取服务、合成判定与背包投影纯函数、守卫换行规范化（原设想"第 10 项"经核实重复覆盖，未落地）、存档封印回归测试 |
 | R4（并行 2 写） | TASK-3101 / 3302 | Client-A / Guard | 主界面 Tab 导航（含 4 面板桩）、存档封印回归测试 |
 | R5（并行 2 写） | TASK-3202 → 3102+3103 / 3104+3105 | Core / Client-A / Client-B | 背包投影 → 背包页、合成页；榜单页、云存档页 |
 | R6（串行） | TASK-3401 | Agent-Docs | 计划/路线图/索引对齐，本轮收口 |
@@ -47,7 +53,7 @@ review: 2026-11-23
   - `project.config.json` 的 AppID 为真 AppID（非测试号）；
   - **服务端 12 个动作已真实实现**（`account.login/refresh/bindStart/bindConfirm`、`compliance.check`、`config.manifest`、`save.pull/push/resolveFork`、`leaderboard.report/query`、`telemetry.track`），其余 **8 个仍 `todo`**（返回 4999，全部依赖 E-06 数值：salvage/economy/event×3/social×2/ads）；
   - 本地数据库：`.local/pg/`（PGlite），**重启进程身份与存档不丢**（已实测 `isNew` true→false）；
-  - `npm run verify` 全绿：**9 项守卫 + 65 个测试**（determinism 17/契约 14/集成 33/e2e 1，2026-10-26 实测）；
+  - `npm run verify` 全绿：**9 项守卫 + 107 个测试**（determinism 52 / 契约 21 / 集成 33 / e2e 1，2026-10-26 M1 收官后实测；旧值 65 为 M1 之前）；
   - 本地全链路探针 `npm run probe`：**30 条断言全绿**（healthz → manifest → login → compliance → pull → push → 幂等 → 冲突 → pull）。
 - **期次变更（12:27）**：商人/回收进 v1.0；**S8 赶海整片（含多捞哦活动与赶海排名）移入 v1.1**；v1.0 只保留"每日一海"的入口；钓鱼/聊天/保护卡移入 v1.1。
 
@@ -99,12 +105,12 @@ npm run dev:server          # → http://127.0.0.1:5050   GET /healthz  POST /v1
 npm run probe
 
 # 3) 提交前闸门
-npm run verify              # 9 项守卫 + 65 个测试
+npm run verify              # 9 项守卫 + 107 个测试
 ```
 
 - 不需要：真机、备案域名、微信开发者工具（服务端侧）、PostgreSQL 安装。
 - 环境变量：`API_PORT`（默认 5050）、`API_HOST`（默认 `127.0.0.1`）、`WDF_DB_DIR`（默认 `.local/pg`，测试用 `:memory:`）、`WDF_TOKEN_SECRET`（**生产必须注入**）、`WDF_AUTH_MODE`（`dev` 默认；`platform` 会抛错，等真机阶段接 code2session）。
-- 客户端侧：`client/assets/scripts/services/net/RpcClient.ts` 的 `FORCE_OFFLINE = false`（E-04 已关闭），已真联网；`features/hook` 出钩玩法已接线本地存档闭环（AT-2102/2103，10-26），当前端到端断点是"数值表 0 行 + 其余 features 占位"，不是网络。
+- 客户端侧：`client/assets/scripts/services/net/RpcClient.ts` 的 `FORCE_OFFLINE = false`（E-04 已关闭），已真联网；`features/hook` 出钩玩法已接线本地存档闭环（AT-2102/2103，10-26）。**M1 闭环已补齐（10-26）**：背包页、合成面板、排行榜页、云存档分叉 UI 全部落地（TASK-3102/3103/3104/3105），端到端断点不再是"features 占位"，而是"数值表 0 行"。
 
 ## 本计划不含
 
