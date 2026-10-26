@@ -37,6 +37,7 @@ export class HookView extends Component {
   private status!: Label;
 
   private shakeUntil = 0;
+  private shaking = false;
 
   start(): void {
     this.buildUI();
@@ -57,7 +58,13 @@ export class HookView extends Component {
       this.hideHookDot();
       this.settleIfLanded();
     }
-    if (Date.now() < this.shakeUntil) this.shakeStep();
+    if (Date.now() < this.shakeUntil) {
+      this.shaking = true;
+      this.shakeStep();
+    } else if (this.shaking) {
+      this.shaking = false;
+      this.node.setPosition(new Vec3(0, 0, 0)); // 震屏结束必须归位
+    }
   }
 
   /** 飞行收回（phase 回 idle）后结算一次：命中 → 入包 → 本地存档；失败走统一错误提示。 */
