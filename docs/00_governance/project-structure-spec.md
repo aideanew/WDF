@@ -133,5 +133,7 @@ wodefa/
 
 ## 6. 根目录白名单
 文件：`AGENTS.md README.md CHANGELOG.md package.json package-lock.json tsconfig.base.json .gitignore .editorconfig .env.example`
-目录：`docs game-data packages client server tools tests art-source .local .git .github node_modules`
+目录：`docs game-data packages client server tools tests art-source .local .git .github .workbuddy node_modules`
 其余一律被 `guard:root` 拒绝。
+
+> `.workbuddy/` 是本机 AI 协作工具的项目工作目录（记忆日志等），与 `.local/` 同属"工具产出的本地状态"，**不进 Git、不得手改其中机器生成的文件**。2026-10-23 加入白名单（此前缺失导致 `npm run verify` 报"根目录不在白名单"，见 KB-FIX-20261023-02）。

@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 94 篇。⚠ 表示活跃文档已过 review 日期。
+共 105 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -52,6 +52,8 @@ review: 2026-11-23
 | ADR-0007 | 发行路线：个人主体 + 微信先发 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0007-issue-route-personal-wechat-first.md` |
 | ADR-0008 | 取消断网可玩，改为必须联网 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0008-online-required.md` |
 | ADR-0009 | 运行时校验采用 zod（前后端同构） | proposed | 2026-10-30 | `03_solution/decisions/ADR-0009-runtime-validation-zod.md` |
+| ADR-0010 | 技术选型复核——对三份外部结构提案的辩证结论 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0010-tech-stack-review-external-proposals.md` |
+| UI-0003 | Cocos 编辑器英文界面中英对照（本项目专用） | active | 2026-11-23 | `03_solution/ui/cocos-editor-glossary.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
 | UI-0001 | UI 规范 | active | 2026-11-23 | `03_solution/ui/style-guide.md` |
 | PLAN-0003 | 当前计划（唯一"现在做什么"） | active | 2026-11-23 | `04_planning/current-plan.md` |
@@ -73,10 +75,10 @@ review: 2026-11-23
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done |  | `05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active |  | `05_execution/tasks/TASK-0103.md` |
-| TASK-0104 | 服务端鉴权与 account.login 真实实现 | active |  | `05_execution/tasks/TASK-0104.md` |
-| TASK-0105 | compliance.check 与 config.manifest 真实实现 | active |  | `05_execution/tasks/TASK-0105.md` |
+| TASK-0104 | 服务端鉴权与 account.login 真实实现 | done |  | `05_execution/tasks/TASK-0104.md` |
+| TASK-0105 | compliance.check 与 config.manifest 真实实现 | done |  | `05_execution/tasks/TASK-0105.md` |
 | TASK-0106 | 本地存档读写与校验（杀进程可恢复） | active |  | `05_execution/tasks/TASK-0106.md` |
-| TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | active |  | `05_execution/tasks/TASK-0107.md` |
+| TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | done |  | `05_execution/tasks/TASK-0107.md` |
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active |  | `05_execution/tasks/TASK-0108.md` |
 | TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active |  | `05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active |  | `05_execution/tasks/TASK-0202.md` |
@@ -107,3 +109,12 @@ review: 2026-11-23
 | REL-CHK | 发布检查清单 | active | 2026-11-23 | `07_release/release-checklist.md` |
 | KB-0001 | 常见问题 | active | 2026-11-23 | `08_knowledge/faq.md` |
 | KB-0002 | 经验教训 | active | 2026-11-23 | `08_knowledge/lessons-learned.md` |
+| KB-0003 | 修复记录索引（所有问题修复的唯一入口） | active | 2026-11-23 | `08_knowledge/technical-notes/fix-log.md` |
+| KB-FIX-20261023-01 | 同步脚本整目录删除导致 Cocos .meta 丢失与 verify 中断 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-01-generated-sync.md` |
+| KB-FIX-20261023-02 | 根目录白名单缺 .workbuddy 导致 verify 报错 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-02-root-whitelist.md` |
+| KB-FIX-20261023-03 | 坏 token 返回 2001 而非 2002，与冻结契约的鉴权错误码语义不一致 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-03-session-expired-semantics.md` |
+| KB-FIX-20261023-04 | PGlite 数据目录落在 server/ 下，14 个空子目录打挂「无空目录」守卫 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-04-pglite-data-dir.md` |
+| KB-FIX-20261023-05 | 服务端依赖边界正则过宽，把 gateway/core 基础设施引用误判为跨模块违规 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-05-server-boundary-regex.md` |
+| KB-FIX-20261023-06 | 客户端版本闸把 config.manifest 自己也拦了，导致旧客户端永久无法更新 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-06-version-gate-deadlock.md` |
+| KB-FIX-20261023-07 | Bundle 配置核对方法错误（require 读 .meta）导致误判"配置不存在"，并校正事实基线 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-07-meta-read-method.md` |
+| KB-FIX-20261023-08 | Bundle 压缩类型的配置位置写错（指向文件夹 Inspector），用户在真实界面上找不到选项 | active |  | `08_knowledge/technical-notes/fixes/FIX-20261023-08-bundle-config-location.md` |

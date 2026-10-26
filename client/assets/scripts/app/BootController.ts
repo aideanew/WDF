@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Button, Color, Vec3, Node, UITransform, Widget, Canvas, Sprite, SpriteFrame, Texture2D, ImageAsset, UIOpacity, Size } from 'cc';
+import { _decorator, Component, Label, Button, Color, Vec3, Node, UITransform, Widget, Canvas, Sprite, SpriteFrame, Texture2D, ImageAsset, UIOpacity, Size, Graphics } from 'cc';
 const { ccclass } = _decorator;
 
 import { invoke, setToken } from '../services/net/RpcClient';
@@ -31,9 +31,9 @@ export class BootController extends Component {
     }
   }
 
-  private setLine1(t: string): void { this.line1.string = t; }
-  private setLine2(t: string): void { this.line2.string = t; }
-  private setLine3(t: string): void { this.line3.string = t; }
+  private setLine1(t: string): void { if (this.line1) this.line1.string = t; else console.warn('[Boot] line1 未初始化:', t); }
+  private setLine2(t: string): void { if (this.line2) this.line2.string = t; else console.warn('[Boot] line2 未初始化:', t); }
+  private setLine3(t: string): void { if (this.line3) this.line3.string = t; else console.warn('[Boot] line3 未初始化:', t); }
 
   private buildUI(): Node {
     // 全部直接相对 Canvas 中心定位（iPhone 12 Canvas 可见区域约 ±422）
@@ -41,29 +41,39 @@ export class BootController extends Component {
     const line2 = this.makeLabel('line2', new Vec3(0, 140, 0), new Color(255, 240, 180));
     const line3 = this.makeLabel('line3', new Vec3(0, 80, 0),  new Color(200, 255, 200));
 
-    // 黑色按钮
+    // ★ 关键修复：把运行时创建的 Label 赋回成员变量，否则 setLine* 里 this.lineX 为 undefined 会崩
+    this.line1 = line1;
+    this.line2 = line2;
+    this.line3 = line3;
+
+    // 按钮：btnNode 只做命中区(Button+UITransform)，底图与文字都放子节点，靠子节点顺序保证"底图在下、文字在上"
     const btnNode = new Node('HookButton');
     const btnTrans = btnNode.addComponent(UITransform);
     btnTrans.setContentSize(220, 72);
     btnNode.setPosition(new Vec3(0, -20, 0));
 
-    // 按钮底图：纯色 Sprite
+    // 1) 底图：Graphics 画蓝色圆角矩形（Sprite 无贴图不渲染，用 Graphics 保证可见）
     const bgNode = new Node('Bg');
     const bgTrans = bgNode.addComponent(UITransform);
     bgTrans.setContentSize(200, 60);
-    const sprite = bgNode.addComponent(Sprite);
-    sprite.color = new Color(30, 30, 30);
-    // 让 Sprite 自动填充 UITransform 尺寸
-    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    bgNode.setSiblingIndex(-1);
+    const g = bgNode.addComponent(Graphics);
+    g.fillColor = new Color(45, 110, 220, 255);
+    g.roundRect(-100, -30, 200, 60, 12);
+    g.fill();
     btnNode.addChild(bgNode);
 
-    const btnLabel = btnNode.addComponent(Label);
+    // 2) 文字：独立子节点，排在底图后 → 绘制在最上层
+    const lblNode = new Node('Label');
+    const lblTrans = lblNode.addComponent(UITransform);
+    lblTrans.setContentSize(200, 60);
+    const btnLabel = lblNode.addComponent(Label);
     btnLabel.string = '出一钩 (S1)';
     btnLabel.fontSize = 24;
     btnLabel.color = new Color(255, 255, 255);
     btnLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
+    btnLabel.verticalAlign = Label.VerticalAlign.CENTER;
     btnLabel.overflow = Label.Overflow.SHRINK;
+    btnNode.addChild(lblNode);
 
     this.hookBtn = btnNode.addComponent(Button);
     btnNode.on(Node.EventType.TOUCH_END, this.onHook, this);

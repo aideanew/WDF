@@ -19,13 +19,15 @@
       "type": "int",
       "min": 0,
       "max": 4,
-      "required": true
+      "required": false,
+      "note": "总表未给开锁次数，留空待补"
     },
     "zone_bp": {
       "type": "int",
       "min": 0,
       "max": 10000,
-      "required": true
+      "required": false,
+      "note": "总表未给分区价值，留空待补"
     },
     "drop_group": {
       "type": "string"

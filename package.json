@@ -15,6 +15,10 @@
     "guard": "node tools/guard/run-all.mjs",
     "impact": "node tools/guard/impact.mjs",
     "test": "node --import ./tools/runtime/register.mjs --test \"tests/**/*.test.mjs\"",
+    "dev:server": "npm run dev -w @wodefa/server",
+    "start:server": "npm run start -w @wodefa/server",
+    "probe": "node tools/dev/probe-s1.mjs",
+    "check:bundles": "node tools/dev/check-bundles.mjs",
     "verify": "npm run gen && npm run guard && npm run test"
   }
 }

@@ -5,3 +5,4 @@ export interface LoginRes { token: string; playerId: string; region: string; pro
 export interface BindStartRes { ticket: string; expiresAt: number }
 export interface BindConfirmReq { ticket: string }
 export interface BindConfirmRes { playerId: string; forkPending: boolean }
+export interface RefreshRes { token: string; serverTime: number }

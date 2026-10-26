@@ -1,1 +1,4 @@
 id,material,lock,smashable,size
+chest_wood,wood,none,,
+chest_copper,copper,none,,
+chest_iron,iron,none,,

@@ -1,5 +1,8 @@
 # —— 本地临时 ——
+# .local/ 放本地数据（含 PGlite 数据库 .local/pg/）与一次性临时文件
 .local/
+# .workbuddy/ 是 AI 协作工具的工作记忆，属本机状态，不进 Git
+.workbuddy/
 *.log
 .DS_Store
 Thumbs.db

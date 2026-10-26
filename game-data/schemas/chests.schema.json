@@ -24,7 +24,8 @@
     },
     "smashable": {
       "type": "bool",
-      "required": true
+      "required": false,
+      "note": "总表未明确每箱可否砸，留空待补"
     },
     "size": {
       "type": "enum",

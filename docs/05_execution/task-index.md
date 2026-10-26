@@ -13,10 +13,10 @@ review: 2026-11-23
 |---|---|---|---|
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done | `docs/05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active | `docs/05_execution/tasks/TASK-0103.md` |
-| TASK-0104 | 服务端鉴权与 account.login 真实实现 | active | `docs/05_execution/tasks/TASK-0104.md` |
-| TASK-0105 | compliance.check 与 config.manifest 真实实现 | active | `docs/05_execution/tasks/TASK-0105.md` |
+| TASK-0104 | 服务端鉴权与 account.login 真实实现 | done | `docs/05_execution/tasks/TASK-0104.md` |
+| TASK-0105 | compliance.check 与 config.manifest 真实实现 | done | `docs/05_execution/tasks/TASK-0105.md` |
 | TASK-0106 | 本地存档读写与校验（杀进程可恢复） | active | `docs/05_execution/tasks/TASK-0106.md` |
-| TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | active | `docs/05_execution/tasks/TASK-0107.md` |
+| TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | done | `docs/05_execution/tasks/TASK-0107.md` |
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active | `docs/05_execution/tasks/TASK-0108.md` |
 | TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active | `docs/05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active | `docs/05_execution/tasks/TASK-0202.md` |

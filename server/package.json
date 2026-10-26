@@ -9,8 +9,11 @@
     "build": "（锁定选型后）esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.11",
     "@wodefa/contracts": "0.0.0",
-    "@wodefa/game-core": "0.0.0"
+    "@wodefa/game-core": "0.0.0",
+    "fastify": "^5.12.7",
+    "zod": "^4.6.7"
   },
   "description": "模块化单体 HTTP 服务（ADR-0003）。框架依赖（fastify/pg/zod）在锁定技术选型后再安装。"
 }

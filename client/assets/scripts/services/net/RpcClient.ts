@@ -10,7 +10,7 @@ export const CLIENT_VERSION = 'v0.1.0-s1';
 export const CONFIG_VERSION = '16921d30a67a934f';
 
 /** 开发期强制走 mock，完全跳过网络请求（DevTools 的 wx.request 404 红字就不会再出现）。服务器上线后改 false。 */
-export const FORCE_OFFLINE = true;
+export const FORCE_OFFLINE = false;
 
 /** 运行期可覆盖。开发时走 localhost（预期 404，mock handler 兜底），真机走云函数地址。 */
 let endpoint = 'http://127.0.0.1:5050/rpc';
@@ -55,6 +55,7 @@ export async function invoke<P = unknown, D = unknown>(
   action: ActionName,
   params: P,
   rid?: string,
+  attemptedRefresh = false,
 ): Promise<D> {
   const platform = getPlatform();
   const meta: RequestMeta = {
@@ -88,9 +89,37 @@ export async function invoke<P = unknown, D = unknown>(
     }
   }
 
+  // 收 2002（SESSION_EXPIRED）：除 refresh 自身外，静默刷新一次并重试（契约承诺）。
+  if (resp && resp.c === ERR.SESSION_EXPIRED && action !== 'account.refresh' && !attemptedRefresh && getToken()) {
+    const nt = await silentRefresh();
+    if (nt) return invoke<P, D>(action, params, rid, true);
+  }
+
   if (!resp) throw makeError(ERR.SYSTEM, 'network unreachable');
   if (resp.c === 0) return (resp as { c: 0; d: D }).d;
   throw makeError(resp.c, resp.msg);
+}
+
+/**
+ * 静默刷新：用当前（可能已过期）的令牌换一枚新令牌。
+ * 并发去重——多个请求同时遇 2002 只刷新一次。refresh 失败（签名无效）返回 null，调用方退回登录。
+ */
+let refreshing: Promise<string | null> | null = null;
+async function silentRefresh(): Promise<string | null> {
+  if (!refreshing) {
+    refreshing = (async (): Promise<string | null> => {
+      try {
+        const r = await invoke<unknown, { token: string }>('account.refresh', {});
+        setToken(r.token);
+        return r.token;
+      } catch {
+        return null;
+      } finally {
+        refreshing = null;
+      }
+    })();
+  }
+  return refreshing;
 }
 
 function makeError(code: number, msg: string): RpcError {

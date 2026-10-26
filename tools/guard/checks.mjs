@@ -8,7 +8,7 @@ const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:]
 
 export function rootWhitelist() {
   const files = new Set(['AGENTS.md', 'README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'tsconfig.base.json', '.gitignore', '.editorconfig', '.env.example']);
-  const dirs = new Set(['docs', 'game-data', 'packages', 'client', 'server', 'tools', 'tests', 'art-source', '.local', '.git', '.github', 'node_modules']);
+  const dirs = new Set(['docs', 'game-data', 'packages', 'client', 'server', 'tools', 'tests', 'art-source', '.local', '.git', '.github', '.workbuddy', 'node_modules']);
   const bad = [];
   for (const n of readdirSync(p('.'), { withFileTypes: true })) {
     if (n.isDirectory() ? !dirs.has(n.name) : !files.has(n.name)) bad.push(`根目录不在白名单：${n.name}`);
@@ -66,7 +66,10 @@ export function serverBoundaries() {
   for (const f of walk(p('server/src/modules'), (f) => f.endsWith('.ts'))) {
     const r = rel(f); const [, , , mod] = r.split('/');
     for (const i of importsOf(stripComments(read(f)))) {
-      const m = /\.\.\/([a-z-]+)\/(repo|handlers)(\.ts)?$/.exec(i);
+      // 只查**同级模块**：`../<模块>/repo|handlers`。必须以 `../` 开头（恰好一层），
+      // 这样 `../../gateway/handlers.ts`、`../../core/db.ts` 这类基础设施引用不算违规
+      // —— gateway/core 不是业务模块，模块依赖它们（拿 Handler 类型、拿 db）是设计内的。
+      const m = /^\.\.\/([a-z-]+)\/(repo|handlers)(\.ts)?$/.exec(i);
       if (m && m[1] !== mod) bad.push(`${r}：跨模块只能调用对方 service，发现 ${i}`);
     }
   }

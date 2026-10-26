@@ -37,7 +37,8 @@
     "weight": {
       "type": "int",
       "min": 0,
-      "required": true
+      "required": false,
+      "note": "总表未给，留空待补（E-06 决策：文档缺字段放松为可选）"
     },
     "capacity": {
       "type": "int",
