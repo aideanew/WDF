@@ -1,144 +1,133 @@
-import { _decorator, Component, Label, Button, Color, Vec3, Node, UITransform, Widget, Canvas, Sprite, SpriteFrame, Texture2D, ImageAsset, UIOpacity, Size, Graphics } from 'cc';
+import { _decorator, Component, Label, Button, Color, Vec3, Node, UITransform, Graphics } from 'cc';
 const { ccclass } = _decorator;
 
 import { invoke, setToken } from '../services/net/RpcClient';
-import { LocalSave } from '../services/save/LocalSave';
+import { MainView } from './MainView';
 
 /**
- * Boot 场景控制器：
- * - 启动时调 compliance.check，显示合规状态；
- * - 提供"出钩"按钮：登录 → 捞一件 mock 物品 → 存本地 → 云端 push（mock）→ 显示 revision；
- * - 三行日志 Label（不依赖 prefab）。
+ * Boot 场景控制器（核心 TASK-3101 改写）：
+ * - 启动链：compliance.check（合规通过才可进入）；
+ * - 进入主界面：点击"进入主界面" → account.login（mock）→ setToken → 挂载 MainView；
+ * - 打捞/存档等真实闭环由 MainView 的"打捞"Tab（HookView）承载，Boot 只负责登录与进场。
+ *
+ * 移除了历史 drifwood 直接写包逻辑的临时 Demo（已由 HookView 的命中→存档闭环覆盖），
+ * 避免脏数据键 `driftwood` 再被写入。
  */
 @ccclass('BootController')
 export class BootController extends Component {
-  private line1!: Label;
-  private line2!: Label;
-  private line3!: Label;
-  private hookBtn!: Button;
-  private revision = -1;
+  private title!: Label;
+  private status!: Label;
+  private enterBtn!: Node;
+  private ready = false;
 
   async start(): Promise<void> {
-    this.buildUI(); // 内部直接挂到 this.node
-    this.revision = LocalSave.load()?.revision ?? -1;
-    this.setLine1(`Boot 启动…（本地 revision=${this.revision}）`);
+    this.buildUI();
+    this.setTitle('奖励一颗麻籽');
+    this.setStatus('启动中…');
 
     try {
-      const c = await invoke('compliance.check', undefined);
-      this.setLine1(`合规状态 verified=${c.verified} minor=${c.minor}`);
+      const c = await invoke<unknown, { verified: boolean; minor: boolean }>('compliance.check', undefined);
+      if (c.verified) {
+        this.setStatus('合规通过，点击进入');
+        this.ready = true;
+        this.setButtonEnabled(true);
+      } else {
+        this.setStatus(`合规未通过（minor=${c.minor}），无法进入`);
+      }
     } catch (e: any) {
-      this.setLine1(`合规查询失败：${e?.msg ?? e}`);
+      this.setStatus(`合规查询失败：${e?.msg ?? e}`);
     }
   }
 
-  private setLine1(t: string): void { if (this.line1) this.line1.string = t; else console.warn('[Boot] line1 未初始化:', t); }
-  private setLine2(t: string): void { if (this.line2) this.line2.string = t; else console.warn('[Boot] line2 未初始化:', t); }
-  private setLine3(t: string): void { if (this.line3) this.line3.string = t; else console.warn('[Boot] line3 未初始化:', t); }
+  private setButtonEnabled(on: boolean): void {
+    const btn = this.enterBtn.getComponent(Button);
+    if (btn) btn.interactable = on;
+  }
 
-  private buildUI(): Node {
-    // 全部直接相对 Canvas 中心定位（iPhone 12 Canvas 可见区域约 ±422）
-    const line1 = this.makeLabel('line1', new Vec3(0, 200, 0), new Color(200, 220, 255));
-    const line2 = this.makeLabel('line2', new Vec3(0, 140, 0), new Color(255, 240, 180));
-    const line3 = this.makeLabel('line3', new Vec3(0, 80, 0),  new Color(200, 255, 200));
+  private async onEnter(): Promise<void> {
+    if (!this.ready) return;
+    this.setButtonEnabled(false);
+    this.setStatus('登录中…');
+    try {
+      const l = await invoke<unknown, { token: string; playerId: string; isNew: boolean }>('account.login', { code: 'mock-code', plat: 'wechat' });
+      setToken(l.token);
+      this.setStatus(`登录 OK player=${l.playerId} isNew=${l.isNew}`);
+      this.enterMain();
+    } catch (e: any) {
+      this.setStatus(`登录失败：${e?.msg ?? e}`);
+      this.setButtonEnabled(true);
+    }
+  }
 
-    // ★ 关键修复：把运行时创建的 Label 赋回成员变量，否则 setLine* 里 this.lineX 为 undefined 会崩
-    this.line1 = line1;
-    this.line2 = line2;
-    this.line3 = line3;
+  private enterMain(): void {
+    // 隐藏启动 UI
+    this.title.node.active = false;
+    this.status.node.active = false;
+    this.enterBtn.active = false;
+    // 挂载主界面（MainView.start 内自行建 Tab 与面板）
+    const main = new Node('MainView');
+    main.addComponent(MainView);
+    this.node.addChild(main);
+  }
 
-    // 按钮：btnNode 只做命中区(Button+UITransform)，底图与文字都放子节点，靠子节点顺序保证"底图在下、文字在上"
-    const btnNode = new Node('HookButton');
-    const btnTrans = btnNode.addComponent(UITransform);
-    btnTrans.setContentSize(220, 72);
+  private setTitle(t: string): void {
+    if (this.title) this.title.string = t;
+  }
+  private setStatus(t: string): void {
+    if (this.status) this.status.string = t;
+  }
+
+  private buildUI(): void {
+    const title = this.makeLabel('Title', new Vec3(0, 240, 0), new Color(255, 240, 180, 255), 30);
+    const status = this.makeLabel('Status', new Vec3(0, 120, 0), new Color(220, 230, 245, 255), 22);
+    this.title = title;
+    this.status = status;
+
+    const btnNode = new Node('EnterButton');
+    btnNode.addComponent(UITransform).setContentSize(240, 76);
     btnNode.setPosition(new Vec3(0, -20, 0));
 
-    // 1) 底图：Graphics 画蓝色圆角矩形（Sprite 无贴图不渲染，用 Graphics 保证可见）
     const bgNode = new Node('Bg');
-    const bgTrans = bgNode.addComponent(UITransform);
-    bgTrans.setContentSize(200, 60);
+    bgNode.addComponent(UITransform).setContentSize(220, 64);
     const g = bgNode.addComponent(Graphics);
     g.fillColor = new Color(45, 110, 220, 255);
-    g.roundRect(-100, -30, 200, 60, 12);
+    g.roundRect(-110, -32, 220, 64, 12);
     g.fill();
     btnNode.addChild(bgNode);
 
-    // 2) 文字：独立子节点，排在底图后 → 绘制在最上层
     const lblNode = new Node('Label');
-    const lblTrans = lblNode.addComponent(UITransform);
-    lblTrans.setContentSize(200, 60);
+    lblNode.addComponent(UITransform).setContentSize(220, 64);
     const btnLabel = lblNode.addComponent(Label);
-    btnLabel.string = '出一钩 (S1)';
+    btnLabel.string = '进入主界面';
     btnLabel.fontSize = 24;
-    btnLabel.color = new Color(255, 255, 255);
+    btnLabel.color = new Color(255, 255, 255, 255);
     btnLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
     btnLabel.verticalAlign = Label.VerticalAlign.CENTER;
     btnLabel.overflow = Label.Overflow.SHRINK;
     btnNode.addChild(lblNode);
 
-    this.hookBtn = btnNode.addComponent(Button);
-    btnNode.on(Node.EventType.TOUCH_END, this.onHook, this);
+    const btn = btnNode.addComponent(Button);
+    btn.interactable = false;
+    btnNode.on(Node.EventType.TOUCH_END, this.onEnter, this);
+    this.enterBtn = btnNode;
 
-    // 全部直接挂到 Canvas
-    this.node.addChild(line1.node);
-    this.node.addChild(line2.node);
-    this.node.addChild(line3.node);
+    this.node.addChild(title.node);
+    this.node.addChild(status.node);
     this.node.addChild(btnNode);
-
-    return btnNode; // 随便返回一个，start() 里没用
   }
 
-  private makeLabel(name: string, pos: Vec3, color: Color): Label {
+  private makeLabel(name: string, pos: Vec3, color: Color, fontSize: number): Label {
     const n = new Node(name);
     const t = n.addComponent(UITransform);
-    t.setContentSize(700, 40);
+    t.setContentSize(700, 44);
     n.setPosition(pos);
     const l = n.addComponent(Label);
-    l.fontSize = 22;
+    l.fontSize = fontSize;
     l.color = color;
     l.string = '';
-    l.horizontalAlign = Label.HorizontalAlign.LEFT;
+    l.horizontalAlign = Label.HorizontalAlign.CENTER;
+    l.verticalAlign = Label.VerticalAlign.CENTER;
     l.overflow = Label.Overflow.SHRINK;
     return l;
-  }
-
-  private async onHook(): Promise<void> {
-    if (this.hookBtn.interactable === false) return;
-    this.hookBtn.interactable = false;
-    try {
-      this.setLine2('登录…');
-      const l = await invoke('account.login', { code: 'mock-code', plat: 'wechat' });
-      setToken(l.token);
-      this.setLine2(`登录 OK player=${l.playerId} isNew=${l.isNew}`);
-
-      // 出钩（临时实现）：mock 捞一件漂流木
-      this.setLine3('出钩 → 漂流木 ×1');
-
-      const existing = LocalSave.load();
-      const next = existing ?? LocalSave.init();
-      const modules = next.modules as Record<string, any>;
-      const inv = modules.inventory ?? {};
-      inv['driftwood'] = (inv['driftwood'] ?? 0) + 1;
-      modules.inventory = inv;
-
-      const saved = LocalSave.save({ ...next, modules, revision: next.revision + 1 });
-      if (!saved) { this.setLine3('本地存档写入失败'); return; }
-      const updated = LocalSave.load();
-      this.revision = updated?.revision ?? -1;
-      this.setLine3(`本地 ok，revision=${this.revision} 漂移木=${inv['driftwood']}`);
-
-      // 云端 push
-      try {
-        const res = await invoke('save.push', { baseRevision: this.revision - 1, snapshot: updated, checksum: updated!.checksum }, 'hook-' + Date.now());
-        if (res.accepted) {
-          this.setLine3(`push OK → revision=${res.revision}`);
-        } else {
-          this.setLine3(`push 冲突：${JSON.stringify(res.conflict)}`);
-        }
-      } catch (e: any) {
-        this.setLine3(`push 失败：${e?.msg ?? e}`);
-      }
-    } finally {
-      this.hookBtn.interactable = true;
-    }
   }
 }
