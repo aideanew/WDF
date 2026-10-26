@@ -88,6 +88,12 @@ export async function report(playerId: string, input: ReportReq, serverNow: numb
 
   const events = sanitizeEvents(input.events);
   const sum = events.reduce((acc, e) => acc + e.value, 0);
+
+  // 零收益（事件全非法/为空）：提前返回，不刷快照、不占限频窗口（防零上报写放大）
+  if (sum <= 0) {
+    return { acceptedSeq: input.seq, flagged: false };
+  }
+
   const flagged = exceedsHourlyCap(sum, hourlyCap());
 
   await withTx(async (tx) => {

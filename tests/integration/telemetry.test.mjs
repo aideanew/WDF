@@ -69,9 +69,13 @@ test('AT-2204 超批量上限 → 4001（明确码，非 500）', async () => {
 });
 
 test('AT-2204 无令牌可上报（auth:false）+ 主流程不受影响', async () => {
-  // 不带令牌：崩溃/错误上报场景
+  // 不带令牌：崩溃/错误上报场景（actor 兜底 'anon'）
   const r = await call('telemetry.track', { events: [ev('client.error', { code: 'E001' })] });
   assert.equal(r.c, 0, 'auth:false 动作无令牌也必须放行');
+  const { q } = await import('../../server/src/core/db.ts');
+  const anonLogs = await q("SELECT actor, detail FROM audit_log WHERE action = 'telemetry' AND actor = 'anon'");
+  assert.equal(anonLogs.length, 1, '无 IP 时 actor 必须兜底为 anon 且落库');
+  assert.equal(anonLogs[0].detail[0].name, 'client.error');
 
   // 埋点之后其他动作照常（主流程不受影响）
   const login = await call('account.login', { code: `tm-after-${Date.now()}`, plat: 'wechat' });

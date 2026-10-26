@@ -133,9 +133,8 @@ export async function resolveFork(playerId: string, input: ResolveForkReq, serve
 
     // keep='cloud'：云端原样保留，清除未决分叉（bind 场景 forkPending 的数据源即 fork 行）
     const discarded = await deleteForks(playerId, tx);
-    if (discarded > 0) {
-      await logForkResolved(playerId, { keep: 'cloud', discardedForks: discarded }, tx);
-    }
+    // 无条件留痕：玩家做过"保留云端"裁决这一事实本身可审计（push 冲突场景 discarded 可为 0）
+    await logForkResolved(playerId, { keep: 'cloud', discardedForks: discarded }, tx);
     return { revision: current?.revision ?? 0 };
   });
 }
