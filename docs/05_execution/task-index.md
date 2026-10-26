@@ -41,7 +41,7 @@ review: 2026-11-23
 | TASK-2401 | handler 契约测试补强 | done | `docs/05_execution/tasks/TASK-2401.md` |
 | TASK-2402 | e2e 骨架 1 条 | done | `docs/05_execution/tasks/TASK-2402.md` |
 | TASK-2501 | 文档一致性返工 | done | `docs/05_execution/tasks/TASK-2501.md` |
-| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | proposed | `docs/05_execution/tasks/TASK-3001.md` |
+| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | done | `docs/05_execution/tasks/TASK-3001.md` |
 | TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed | `docs/05_execution/tasks/TASK-3002.md` |
 | TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed | `docs/05_execution/tasks/TASK-3101.md` |
 | TASK-3102 | 背包列表页（读 106 行真实物品） | proposed | `docs/05_execution/tasks/TASK-3102.md` |

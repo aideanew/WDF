@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 144 篇。⚠ 表示活跃文档已过 review 日期。
+共 145 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -88,6 +88,7 @@ review: 2026-11-23
 | PLAN-V002-12 | 第一刀与启动顺序（建议） | active |  | `04_planning/plan-v002/12-first-cut.md` |
 | PLAN-V002-13 | 执行过程记录（2026-10-26 启动） | active |  | `04_planning/plan-v002/13-execution-log.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
+| EXEC-BRIEF-0001 | 助手派工指令（核心 3 张 / 助手 9 张，两轮） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done |  | `05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active |  | `05_execution/tasks/TASK-0103.md` |
@@ -119,7 +120,7 @@ review: 2026-11-23
 | TASK-2401 | handler 契约测试补强 | done |  | `05_execution/tasks/TASK-2401.md` |
 | TASK-2402 | e2e 骨架 1 条 | done |  | `05_execution/tasks/TASK-2402.md` |
 | TASK-2501 | 文档一致性返工 | done |  | `05_execution/tasks/TASK-2501.md` |
-| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | proposed |  | `05_execution/tasks/TASK-3001.md` |
+| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | done |  | `05_execution/tasks/TASK-3001.md` |
 | TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed |  | `05_execution/tasks/TASK-3002.md` |
 | TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed |  | `05_execution/tasks/TASK-3101.md` |
 | TASK-3102 | 背包列表页（读 106 行真实物品） | proposed |  | `05_execution/tasks/TASK-3102.md` |

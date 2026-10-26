@@ -1,0 +1,80 @@
+/**
+ * UX 态契约（唯一源，DESIGN-0001）。
+ *
+ * 六份契约的第⑥份。此前"加载中/空/失败"由各界面自行判断，并行开发必然分裂；
+ * 本文件把「错误码 → 界面态」收敛成**唯一映射**，客户端禁止再写 `if (code === 2001)` 这类分支。
+ *
+ * 铁律（来自 DESIGN-0001，改动须先改文档 + ADR）：
+ *  1. `conflict` 不由错误码产生 —— 它来自 `save.push` 的 `accepted:false`（业务成功但需二选一）；
+ *  2. `3001 DUPLICATE_REQUEST` 是**成功**（幂等回放），绝不可当冲突或错误；
+ *  3. `noPermission` 一律不可重试（重试只会再失败一次）；
+ *  4. 新增错误码必须先改 DESIGN-0001 §2，否则本文件的 `satisfies` 会编译失败。
+ */
+import { ERR } from './errors';
+import type { SavePushRes } from '../save';
+
+export type UxState = 'loading' | 'empty' | 'error' | 'noPermission' | 'success' | 'conflict';
+
+/** 非错误态下给用户的"下一步"出口；`noPermission` 必带其一，禁止只显红字。 */
+export type UxNext = 'login' | 'update' | 'wait' | 'contact' | 'tomorrow' | 'retry';
+
+export interface UxView {
+  state: UxState;
+  /** 触发该态的错误码；`loading`/`conflict` 无码 */
+  code?: number;
+  retryable: boolean;
+  next?: UxNext;
+}
+
+/** 由错误码推导出的态（`loading` 只能由客户端本地产生，故排除）。 */
+type CodeDrivenRule = Omit<UxView, 'state'> & { state: Exclude<UxState, 'loading' | 'conflict'> };
+
+/**
+ * 14 个错误码的映射（`satisfies Record<keyof typeof ERR, ...>` 保证漏一个就编译失败）。
+ * 数值含义与 `docs/03_solution/design/DESIGN-0001-ux-states.md` §2 逐行一致。
+ */
+export const UX_BY_ERROR_NAME = {
+  BAD_PAYLOAD: { state: 'error', retryable: false },
+  UNKNOWN_ACTION: { state: 'error', retryable: false },
+  NOT_LOGGED_IN: { state: 'noPermission', retryable: false, next: 'login' },
+  SESSION_EXPIRED: { state: 'noPermission', retryable: false, next: 'login' },
+  BANNED: { state: 'noPermission', retryable: false, next: 'contact' },
+  MINOR_TIME_LIMIT: { state: 'noPermission', retryable: false, next: 'wait' },
+  /** 幂等回放：对玩家而言就是"已经成功了"，不弹错 */
+  DUPLICATE_REQUEST: { state: 'success', retryable: false },
+  QUOTA_EXHAUSTED: { state: 'empty', retryable: false, next: 'tomorrow' },
+  EVENT_CLOSED: { state: 'noPermission', retryable: false, next: 'wait' },
+  EVENT_ALREADY_PLAYED: { state: 'success', retryable: false },
+  RATE_LIMITED: { state: 'error', retryable: true, next: 'retry' },
+  INTERNAL: { state: 'error', retryable: true, next: 'retry' },
+  REVIEW_PENDING: { state: 'error', retryable: false, next: 'wait' },
+  CLIENT_TOO_OLD: { state: 'noPermission', retryable: false, next: 'update' },
+} satisfies Record<keyof typeof ERR, CodeDrivenRule>;
+
+/** 建好的码 → 规则表；模块加载时构建一次，避免每次请求都遍历。 */
+const RULES: ReadonlyArray<readonly [number, CodeDrivenRule]> = (
+  Object.keys(UX_BY_ERROR_NAME) as (keyof typeof ERR)[]
+).map((name) => [ERR[name], UX_BY_ERROR_NAME[name]] as const);
+
+const BY_CODE = new Map<number, CodeDrivenRule>(RULES);
+
+/** 未知码的兜底：按"服务端内部错误"处理（可重试一次），不静默当作成功。 */
+const UNKNOWN_CODE_RULE: CodeDrivenRule = { state: 'error', retryable: true, next: 'retry' };
+
+/**
+ * `code === 0` → `success`（是否进一步降级为 `empty` 由业务字段决定，见 DESIGN-0001 §1）；
+ * 未知码 → 内部错误同款（可重试），绝不返回 success。
+ */
+export function toUxState(code: number): UxView {
+  if (code === 0) return { state: 'success', code: 0, retryable: false };
+  const rule = BY_CODE.get(code) ?? UNKNOWN_CODE_RULE;
+  return { ...rule, code };
+}
+
+/**
+ * 存档冲突的唯一判定入口：**只认 `accepted:false`**。
+ * 不得用错误码判断冲突（见文件头铁律 1、2）。
+ */
+export function conflictOf(res: SavePushRes): boolean {
+  return res.accepted === false;
+}
