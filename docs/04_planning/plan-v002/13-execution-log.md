@@ -229,3 +229,14 @@ created: 2026-10-26
 - 提交链：`918362f` → `f173eb5` → `f7654e9` → `88f73e6` → `c38debe` → `487fd61` → `c7aebf6` →（本轮收官提交），全部推送双端一致。
 - 挖出并修复 3 个既有缺陷：sealSave checksum 混入（存档闭环）、resolveHit 严格项编译错、PGlite withTx 死锁（withTx 首次真用）。
 - 遗留：BootController/RpcClient 既有类型债；数值表 0 行（E-06 收尾中）；AT-2302 等数值。
+
+## 14 收官批次终审结论（2026-10-26，独立子智能体）
+**结论：PASS-WITH-NOTES**（AT-2102/2103/2401/2402/2501 五 AT 全 PASS，无 NEEDS-FIX）
+- 两处越权修复（LocalSave.save checksum 剥离、resolveHit undefined 守卫）经独立推导确认**正当且最小**（不修则"杀进程重启物品还在"验收必挂）。
+- 状态机边界、TODO_PAYLOADS↔payload.ts 一致性、2501 数字与实测一致性均逐条核对通过。
+- **NOTE-1（中，已修正）**：`npx tsc` 在本机拉到同名假包（退出码 0 实际未查）——验证命令改为 `npx -p typescript@5.8 tsc`（TASK-2102 已更正；独立复核 hook/save 清零结论成立）。
+- **NOTE-2（低，已修正）**：震屏结束不归位 → shaking 标志 + 无条件归位。
+- NOTE-3（接受）：flyProgress 内部 Date.now 与注入时钟混用，测试性受限，待统一。
+- NOTE-4（接受）：LocalSave.save 修复无直接测试（靠 applyToSave 同模式路径覆盖），待补 stub 用例。
+- NOTE-5/6（接受）：正则健壮性有数量断言兜底不会静默；既有债计数 6/3 与 tsc 5.9.3 实测 7/5 属版本差异。
+- 提交：`338907e` 推送双端一致。**plan-v002 执行阶段正式收官**。
