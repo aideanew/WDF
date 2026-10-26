@@ -21,7 +21,7 @@ review: 2026-11-26
 |---:|---|---|---|---|---|
 | 1001 | BAD_PAYLOAD | CONTRACT | 请求体不符合 zod schema | 请求格式有误，请重试 | 全部动作 |
 | 1002 | UNKNOWN_ACTION | CONTRACT | 动作名不在 `ACTIONS` 登记 | 未知的操作请求 | 全部动作 |
-| 2001 | NOT_LOGGED_IN | AUTH | 需要登录但未带有效会话 | 请先登录 | 全部需登录动作 |
+| 2001 | NOT_LOGGED_IN | AUTH | 需要登录但未带有效会话；**缺口填补复用**：绑定票据失败（不存在/过期/已用/自绑，见 AT-2201）也返回此码 | 请先登录；绑定失败时为"绑定票据无效，请重新发起绑定" | 全部需登录动作 + account.bindConfirm |
 | 2002 | SESSION_EXPIRED | AUTH | 令牌过期且 refresh 失败 | 登录已过期，请重新登录 | 全部需登录动作 |
 | 2003 | BANNED | AUTH | 账号被封禁 | 账号已被封禁，请联系客服 | 全部动作 |
 | 2101 | MINOR_TIME_LIMIT | AUTH | 未成年人防沉迷时段/时长限制 | 未成年人当前时段不可游玩 | compliance.check 等 |
@@ -33,3 +33,8 @@ review: 2026-11-26
 | 4999 | INTERNAL | SYSTEM | 服务端未实现或内部错误（未实现动作也返回此码，见 AT-2401） | 服务暂时不可用 | 全部动作 |
 | 5001 | REVIEW_PENDING | RISK | 内容在审核中 / 复核不一致 | 内容审核中 | event.submit / social.send |
 | 9001 | CLIENT_TOO_OLD | UPGRADE | 客户端版本过低需更新 | 请更新到最新版本 | config.manifest / 全部动作 |
+
+> **已登记缺口（AT-2201，2026-10-26）**：合同冻结仅 14 码，无专用"绑定票据无效"码；`TASK-1401`
+> 纪律禁止自造数字，故票据失败（不存在/过期/已用/自绑/无身份）统一复用 **2001**（AUTH 段，
+> 客户端回登录重来即可恢复，不会像 2002 那样触发静默刷新死循环）。若未来合同解冻，
+> 建议新增 `2004 BIND_TICKET_INVALID` 精确区分。

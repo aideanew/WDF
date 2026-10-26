@@ -95,3 +95,35 @@ created: 2026-10-26
 ### 3.4 进度影响
 - 全套测试 26 → 30（已达 plan-v002 ≥28 目标）。
 - 本轮 game-core 核心（AT-2101 + AT-2301）完成；下游 AT-2102/2103（客户端表现/接线）待启动。
+
+## 4 AT-2201 account.bindStart / bindConfirm 账号合并（完成 → 子智能体评审）
+
+### 4.1 证据链（动手前穿透）
+- `ACTIONS` 注册表：`bindStart/bindConfirm` 均 `auth:true + idempotent:true` → 网关要求 rid，走 `idempotency` 表（只缓存 c===0）。
+- `payload.ts` 已登记两动作 schema（bindStart 无入参、bindConfirm `{ticket: Id}`）→ 无需改。
+- `bind_ticket` 表已存在（`0001_init.sql:16`：ticket PK / player_id / expires_at / used_at），无需迁移。
+- 合并方向（architecture-overview.md:161）：A 平台发起锚定 A 的 player → B 平台 confirm 把 B 的 identity 改挂到 A → 两份存档进分叉选择（**不相加**）。
+- 错误码缺口：合同冻结 14 码中无专用"票据无效"码；`TASK-1401:37` 禁止自造数字。
+
+### 4.2 交付物
+1. `server/src/modules/account/repo.ts`：+`insertTicket/findTicket/consumeTicket/moveIdentity/findSnapshot/insertFork`，全部带可选 `tx` 尾参（事务感知）。
+2. `server/src/modules/account/service.ts`：+`bindStart`（签发 10 分钟一次性票据）、`bindConfirm`（`withTx` 事务内：验票 → 改挂 identity → 登记 save_fork(source='bind') → 消费票据）、`BindError`。
+3. `server/src/modules/account/handlers.ts`：+2 handler（BindError → RpcResponse 转换）。
+4. `server/src/gateway/handlers.ts`：替换 2 处 `todo`（落地 6 → 8 件）。
+5. `tests/integration/bind.test.mjs`：6 用例（签发/幂等回放/两平台合并核心验收/confirm 幂等+换 rid 拒绝/失败路径×3/forkPending 双向+save_fork 登记）。
+
+### 4.3 辩证决策（两项）
+- **D-1 错误码复用 2001**：票据失败（不存在/过期/已用/自绑/无身份）统一复用 `NOT_LOGGED_IN(2001)`。理由：AUTH 段、客户端回登录重来即可恢复，不会像 2002 触发静默刷新死循环；2003 BANNED 会误显"账号被封禁"。已在 `error-catalog.md` 登记缺口（解冻后建议新增 2004 BIND_TICKET_INVALID）。
+- **D-2 PGlite 事务死锁发现**：探针实测 `withTx` 回调内调全局 `q()`（走 `getDb()`）与已开启事务争抢同一单连接**永久死锁**（`withTx` 此前为死代码，本 AT 为首个使用者）；`tx.query` 正常。修复：repo 新函数带可选 `tx` 尾参，事务路径一律用 `tx`。改动全部限于 account/**（未触碰不在允许清单内的 core/db.ts）。
+
+### 4.4 质量闸门实跑
+- bind 测试 6/6；守卫 9/9；全套测试 30 → **36**。
+- 修测试自身 bug 一处：`rid('same')` 每次调用自增 seq 导致幂等用例 rid 不一致（先固化为变量）。
+
+### 4.5 子智能体评审结论（2026-10-26）
+**结论：PASS-WITH-NOTES**（bind 6/6、全套 36/36、守卫 9/9 均由审查员独立重跑；逐条验收对照通过；越权检查通过：7 文件改动全部在允许清单内，禁止修改区 contracts/0001_init.sql 零触碰）
+- **NOTE-1（已修正）**："无身份可挂"失败路径（moved===0）无测试覆盖 → 补第 4 小例（幽灵 player + 无副作用断言 used_at 仍为 null）。
+- **NOTE-2（已修正）**：换 rid 用例的弱恒真断言 → 改为断言可读 msg。
+- **NOTE-3（接受备查）**：bindStart 无未消费票据数量限制、过期票永久留存表；MVP 可接受，后续可加"每 player 未用票 ≤1"或定期清理。
+- **NOTE-4（信息）**：执行日志/TASK 卡改动不在 AT 允许清单，但属流程登记必要产物，审查员判定不构成越权。
+- **NOTE-5（信息）**：幂等表只缓存 c===0 属 AT-2001 既有设计，非本 AT 引入。
