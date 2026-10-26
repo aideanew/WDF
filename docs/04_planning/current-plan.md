@@ -23,15 +23,15 @@ review: 2026-11-23
   - 7 个 `b-*` 目录的 `.meta` 均 `isBundle: true`；**其中只有 `b-common` 存下了 `priority=6`，其余 6 个没有 `priority`；7 个全都没有 `compressionType`**（用 `npm run check:bundles` 实测）。目录内只有 `README.md`（无真实资源）；
   - 已构建过微信包：`client/build/wechatgame/`，**主包 3.1MB**（引擎 `cocos-js` 占 2.5MB），`game.json` 里**没有 `subpackages`**（即当前没有任何分包）；
   - `project.config.json` 的 AppID 为真 AppID（非测试号）；
-  - **服务端 5 个动作已真实实现**（`account.login`、`compliance.check`、`config.manifest`、`save.pull`、`save.push`），其余 **15 个仍 `todo`**（返回 4999）；
+  - **服务端 12 个动作已真实实现**（`account.login/refresh/bindStart/bindConfirm`、`compliance.check`、`config.manifest`、`save.pull/push/resolveFork`、`leaderboard.report/query`、`telemetry.track`），其余 **8 个仍 `todo`**（返回 4999，全部依赖 E-06 数值：salvage/economy/event×3/social×2/ads）；
   - 本地数据库：`.local/pg/`（PGlite），**重启进程身份与存档不丢**（已实测 `isNew` true→false）；
-  - `npm run verify` 全绿：**9 项守卫 + 20 个测试**（单元7/契约3/集成10；e2e 0）；
+  - `npm run verify` 全绿：**9 项守卫 + 65 个测试**（determinism 17/契约 14/集成 33/e2e 1，2026-10-26 实测）；
   - 本地全链路探针 `npm run probe`：**30 条断言全绿**（healthz → manifest → login → compliance → pull → push → 幂等 → 冲突 → pull）。
 - **期次变更（12:27）**：商人/回收进 v1.0；**S8 赶海整片（含多捞哦活动与赶海排名）移入 v1.1**；v1.0 只保留"每日一海"的入口；钓鱼/聊天/保护卡移入 v1.1。
 
 ## 必须先知道的三件事
 
-1. **verify 全绿 ≠ 有功能**：服务端 **14/20 handler 仍是 `todo`**（返回 4999；已实现 6 个），46 张数值表已转录 **300 行**（items/prices/recipes/locks/chests），但 **13 张核心表仍 0 行**（raft_tiles/levels/units/waves/islands/merchants/hooks/lines…），客户端 `features/*` 23/23 仍是占位空壳。已实现的 6 个动作多是"能跑通"，玩法逻辑仍在 `game-core` 占位模块里（hook/crafting/…）。
+1. **verify 全绿 ≠ 有功能**：服务端 **8/20 handler 仍是 `todo`**（返回 4999；已实现 12 个），46 张数值表已转录 **300 行**（items/prices/recipes/locks/chests），但 **13 张核心表仍 0 行**（raft_tiles/levels/units/waves/islands/merchants/hooks/lines…）。已实现的 12 个动作覆盖账号/存档/榜单/埋点全闭环；`features/hook` 出钩玩法已接线（AT-2102/2103），其余 `features/*` 仍多为占位空壳。
 2. **S1 的服务端断点已经接上**：`compliance.check` / `account.login` / `save.push` 不再是 todo，本地 `npm run dev:server` + `npm run probe` 即可验证。**客户端 `FORCE_OFFLINE` 已改 `false`（E-04 已关闭，10-26）**，`RpcClient` 已接"收 2002→静默刷新→重试"闭环，端到端已打通。
 3. **48 个原子任务：v1.0 可开工 28 个，20 个被阻塞或移入 v1.1**（数值欠账 10、环境 5、v1.1 移出 5，逐条见 plan-v001/06）。
 
@@ -54,7 +54,7 @@ review: 2026-11-23
 | ~~—~~ | ~~E-03~~ | ~~三件未实现前"必须联网"无法验证~~ → **已关闭**：本地已实测 `offlineAllowanceMs=0` 且断网即失败 |
 | ~~—~~ | ~~E-01~~ | ~~Bundle 分包配置 0/7 生效~~ → **已关闭**（10-26 10:48）：用户改方案微信行=`Subpackage`，Agent 补 6 个文件夹 priority；`npm run check:bundles` 三层全绿，`game.json` 含 8 个 `subpackages`（resources + 7 Bundle，全部本地）。验收见 `06_validation/evidence/EVD-0108` |
 | 2 | ~~—~~ | ~~E-04~~ | ~~客户端 `FORCE_OFFLINE`~~ → **已关闭**（10-26 11:0x）：改 `false` 真联网；`RpcClient` 接好"收 2002→静默刷新一次→重试"闭环；`account.refresh` 标 `auth:false` 自校验签名重签发（过期令牌也可）；服务端起 + 探针 30/30、测试 20/20 全绿 |
-| 3 | **E-05（续）** | **`account.refresh` 已落地**（契约 + 服务端 handler + 客户端自动刷新 + 集成测试）。**剩余 14 个 handler 仍 `todo`**：`account.bindStart/bindConfirm`、`save.resolveFork`、`salvage.claimInfo`、`economy.buyQuota`、`leaderboard.*`、`event.*`、`social.*`、`ads.claim`、`telemetry.track`——它们需要 E-06 的数值与业务规则，等 E-06 解锁后再分批实现 |
+| 3 | **E-05（收尾）** | **plan-v002 四组不依赖数值的 handler 已全部落地**（10-26）：`account.bindStart/bindConfirm`（账号合并）、`save.resolveFork`（分叉裁决）、`leaderboard.report/query`（收益榜）、`telemetry.track`（埋点）。**剩余 8 个 `todo`**：`salvage.claimInfo`、`economy.buyQuota`、`event.start/submit/result`、`social.send/pull`、`ads.claim`——全部依赖 E-06 数值表填充后分批实现 |
 | 4 | **E-06（收尾中）** | **数值转录**：`npm run gen:config` 已通过（46 表 / **300 行**）。已转录 `items`(106)/`prices`(106)/`locks`(5)/`chests`(3)/**`recipes`(80)**，数值全部取自《材料与工具总表》、零自编；`items.weight`/`locks.hits_required,zone_bp`/`chests.smashable` 放松为可选（文档未给，留空待补）；`prices.recycle_bp` 上限放宽 10000→100000；`recipes` 21 条特殊/设施类配方合规跳过（见 UNKNOWN 第五节）。**全部留空待填项已统一登记进 `game-data/UNKNOWN-TABLES.md`**（第三/四/五节），含 items 4 空字段、recipes 的 job/unlock_level、chests 的 smashable/size、41 张无源空表清单、21 条配方跳过明细。**剩余（非阻塞，待补来源）**：① 41 张无源表补来源后转录；② recipes 的 `job`（依赖空表 jobs 先填充）与 `unlock_level` 待设计文档给值；③ items 的 `weight/capacity/stack/unlock_level` 待补。 |
 | 5 | ~~—~~ | ~~E-07~~ | ~~payload 校验 4/20~~ → **已关闭**（10-26 11:0x）：补齐 16 个动作 schema，覆盖 20/20；加契约测试遍历 `ACTIONS` 断言"有 schema 或显式豁免"，防 zod/TS 漂移（`tests/integration/payload.test.mjs`） |
 
@@ -77,12 +77,12 @@ npm run dev:server          # → http://127.0.0.1:5050   GET /healthz  POST /v1
 npm run probe
 
 # 3) 提交前闸门
-npm run verify              # 9 项守卫 + 17 个测试
+npm run verify              # 9 项守卫 + 65 个测试
 ```
 
 - 不需要：真机、备案域名、微信开发者工具（服务端侧）、PostgreSQL 安装。
 - 环境变量：`API_PORT`（默认 5050）、`API_HOST`（默认 `127.0.0.1`）、`WDF_DB_DIR`（默认 `.local/pg`，测试用 `:memory:`）、`WDF_TOKEN_SECRET`（**生产必须注入**）、`WDF_AUTH_MODE`（`dev` 默认；`platform` 会抛错，等真机阶段接 code2session）。
-- 客户端侧：`client/assets/scripts/services/net/RpcClient.ts` 的 `FORCE_OFFLINE = false`（E-04 已关闭），已真联网；当前端到端断点是"出钩玩法仍走 mock/空壳"（`features/hook` 占位），不是网络。
+- 客户端侧：`client/assets/scripts/services/net/RpcClient.ts` 的 `FORCE_OFFLINE = false`（E-04 已关闭），已真联网；`features/hook` 出钩玩法已接线本地存档闭环（AT-2102/2103，10-26），当前端到端断点是"数值表 0 行 + 其余 features 占位"，不是网络。
 
 ## 本计划不含
 

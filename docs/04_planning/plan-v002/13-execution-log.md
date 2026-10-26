@@ -176,3 +176,56 @@ created: 2026-10-26
 - 网关落地动作 8 → **12 件**（20 动作中剩 8 个 todo：salvage/economy/event×3/social×2/ads，均依赖 E-06 数值）。
 - 提交链：`918362f`(2201) → `f173eb5`(2202) → `f7654e9`(2203) → `88f73e6`(2204)，均已推送双端一致。
 - Agent-Server 4 AT（2201~2204）串行完成，批量交叉审查见 §9。
+
+## 9 Agent-Server 批量审查结论（2026-10-26，独立子智能体）
+**结论：PASS-WITH-NOTES**（三 AT 各 PASS，无 NEEDS-FIX）
+- 越权检查：三提交（f173eb5/f7654e9/88f73e6）全部在允许清单内，禁止区零触碰。
+- 实跑：npm test 49/49、guard 9/9 由审查员独立执行。
+- 事务安全：全项目 3 处 withTx 回调内 repo 调用逐一核对，tx 传递零泄漏。
+- SQL 注入面：全参数化，无拼接；测试环境变量隔离经探针实证（node:test 每文件独立进程）。
+- **NOTE-1（已修正）**：keep='cloud' 无条件写 audit（push 冲突场景裁决事实可审计）。
+- **NOTE-2（已修正）**：sum===0 提前返回，不刷快照、不占限频窗口（防零上报写放大）。
+- **NOTE-4（已修正）**：telemetry 补 actor='anon' 落库显式断言。
+- **NOTE-3（接受）**：rateState Map 只增不删——生产换 Redis 属已登记升级条件。
+- **NOTE-5（接受）**：resolveFork checksum 信任客户端（与 push 既有口径一致），权威化待统一收紧。
+
+## 10 AT-2102 HookView + AT-2103 出钩接线（完成 → 待终审）
+
+### 10.1 穿透修正
+- generated 副本与源**从未漂移**（首轮 diff 差异系 GEN_HEADER 一行注释）；AT-2101 源实际含 `armLength/flightSpeed/HookPoint.t` 轨迹表现层，AT-2102 据实消费。
+
+### 10.2 交付物
+1. `HookModel`：idle/charging/flying 状态机（不依赖 cc），消费 `powerAt/chargeAndCast`；`applyToSave` 命中入包纯逻辑。
+2. `HookView`：纯代码 UI——力度条（Graphics 底条+动态填充，蓝→绿→红）、TOUCH_START/END 接状态机、飞行钩点沿轨迹按 t 插值、`vibrateShort`+震屏、`telemetry.track` 埋点 hook.hit/miss（失败静默）。
+3. `tests/integration/hook-save.test.mjs`：4 用例（命中入包 revision+1/脱钩原样/JSON 往返重启/篡改拒绝）。
+
+### 10.3 两个既有缺陷被测试抓出并修复（辩证越权说明）
+- **★sealSave 旧 checksum 混入**：`sealSave({...file})` 展开把旧 checksum 混入校验和 → verify 永远失配（探针实证）。修复两处：`HookModel.applyToSave`（新代码）与 **`LocalSave.save`（AT-0106 既有实现，越 AT-2103 允许清单——但它是"杀进程重启物品还在"验收的硬前置）**。
+- **★resolveHit 严格项编译错**：客户端 tsconfig `noUncheckedIndexedAccess` 下 `targets[idx]` 报错 → 源加 undefined 守卫 + `npm run sync` 同步（属 AT-2101 回归修复）。
+- 遗留既有债（不扩范围）：`BootController.ts`（6 处 TS18046）、`RpcClient.ts`（3 处既有类型错）待专门清理轮次。
+
+### 10.4 验证
+- hook-save 4/4；全套 49 → **53**；`npx tsc --noEmit`（client）hook/save 相关错误清零；守卫 9/9。
+
+## 11 AT-2401 契约测试补强 + AT-2402 e2e 骨架（完成 → 待终审）
+
+### 11.1 交付物
+1. `tests/contract/handlers.test.mjs`：遍历 ACTIONS 断言 20 个；已实现 12 动作静态覆盖检查（tests/integration 必须出现动作名）；**8 个 todo 动作带合法令牌+入参实调逐个断言 4999**（反"全占位也全绿"）。
+2. `tests/e2e/skeleton.test.mjs`：login → telemetry → push(rev1) → pull（body 逐字段+checksum 一致）→ push(rev2) → pull 闭环。
+
+### 11.2 验证
+- 新增 12/12；全套 **65**（determinism 17/contract 14/integration 33/e2e 1），远超 ≥28 目标。
+
+## 12 AT-2501 文档一致性返工（完成 → 待终审）
+
+- `current-plan.md`：handler 5/15→**12/8**（三处）、测试 20→**65**（两处）、verify 注释、features/hook 断点描述——全部按命令实测。
+- `structure-verification.md`：追加 §6 复核节（不改 §4/§5 历史快照），登记守卫盲区（generated 源-副本同步不校验）、PGlite 事务铁律、sealSave 缺陷。
+- 5 张 TASK 卡落盘转 done（2102/2103/2401/2402/2501）。
+
+## 13 本轮执行总账（plan-v002 收官）
+
+- **12 AT 中 11 完成**（2001/2101/2102/2103/2201/2202/2203/2204/2301/2401/2402/2501），1 BLOCKED（2302 开锁 UI，drops=0）。
+- 测试 30 → **65**；handler 6 → **12 件**；e2e 0 → 1；守卫 9/9 持续全绿。
+- 提交链：`918362f` → `f173eb5` → `f7654e9` → `88f73e6` → `c38debe` → `487fd61` → `c7aebf6` →（本轮收官提交），全部推送双端一致。
+- 挖出并修复 3 个既有缺陷：sealSave checksum 混入（存档闭环）、resolveHit 严格项编译错、PGlite withTx 死锁（withTx 首次真用）。
+- 遗留：BootController/RpcClient 既有类型债；数值表 0 行（E-06 收尾中）；AT-2302 等数值。

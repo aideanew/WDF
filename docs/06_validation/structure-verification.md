@@ -105,3 +105,27 @@ review: 2026-11-23
 3. **本轮 4 个坑全部留档**：鉴权错误码语义（03）、PGlite 数据目录（04）、守卫正则误报（05）、版本闸自锁（06）。都是"实现能跑但语义/工程不对"的类型，`verify` 抓不到，必须靠断言抓。
 4. **`FORCE_OFFLINE` 现在是全项目唯一的功能断点**：服务端 30 条断言全绿，但只要这一行是 `true`，客户端就永远不会真的发请求。是否切换需用户拍板（E-04）。
 5. **Bundle 配置的事实基线被推翻一次**：第 4 节写"7 个全未设 `priority`"，本轮用 `npm run check:bundles` 实测发现 **`b-common` 的 `priority=6` 已经落盘**（用户后来点过绿色 ✓）。教训是"界面没变"不等于"文件没变"，一切以读文件为准。同时把核对方式从 `require('.meta')`（会 `SyntaxError`）改成脚本读 JSON，见 KB-FIX-20261023-07。
+
+## 6. 2026-10-26 现状复核（plan-v002 执行阶段收官后）
+
+> 背景：plan-v002 十二个 AT 全部完成（AT-2302 除外，BLOCKED）。**§5 表格里"5 个真实实现/15 todo"、"17 测试"、"FORCE_OFFLINE=true 断点"三行已过期，以本节为准**；其余行（引擎/资源/场景/构建/主包/AppID）未变动。
+
+| 检查项 | 命令 / 依据 | 实测结果 | 判定 |
+|---|---|---|---|
+| 服务端 handler | `server/src/gateway/handlers.ts` | **12 个真实实现**（account×4 / compliance / config / save×3 / leaderboard×2 / telemetry），**8 个仍 todo**（salvage/economy/event×3/social×2/ads，全部依赖 E-06 数值） | ✅ 不依赖数值的 handler 清零 |
+| 集成测试总数 | `npm test` | **65 个**（determinism 17 / contract 14 / integration 33 / e2e 1） | ✅ 超 plan-v002 ≥28 目标 |
+| 守卫 | `npm run guard` | 9/9 全绿 | ✅ |
+| e2e 骨架 | `tests/e2e/skeleton.test.mjs` | login→telemetry→push→pull 闭环 1 条（revision/checksum/body 逐字段断言） | ✅ 从 0 → 1 |
+| todo 动作反占位 | `tests/contract/handlers.test.mjs` | 8 个 todo 动作带合法令牌+入参实调，全部 4999；已实现动作静态覆盖检查 | ✅ 反"全占位也全绿" |
+| 客户端脚本 | `find client/assets/scripts -name '*.ts'` | 130（含 generated 42） | ✅ |
+| 出钩玩法 | `features/hook/{model,view}` | HookModel 状态机 + HookView 力度条/飞行/震屏/埋点 + 命中入包存档闭环（AT-2102/2103） | ✅ 手工演示待录屏（EVD-2102） |
+| FORCE_OFFLINE | `RpcClient.ts` | `false`（§5 的唯一功能断点已关闭） | ✅ |
+| 存档 checksum | `tests/integration/hook-save.test.mjs` | **发现并修复 sealSave 旧 checksum 混入缺陷**（`{...file}` 展开带旧值 → load 永远失败）；修复后 JSON 往返重启闭环通过 | ✅（缺陷见执行日志） |
+| 版本闸/幂等/乐观锁 | 集成测试 | 沿用 §5 结论，未回归 | ✅ |
+
+### 6.1 本轮新增结论
+
+1. **plan-v002 目标全部达成**：核心玩法确定性核心（hook/chest）+ 服务端 4 组 handler + 测试收紧（20→65）+ e2e 骨架 + 文档对齐；唯一例外 AT-2302（开锁 UI）因 `drops=0` 维持 BLOCKED。
+2. **两个既有缺陷在执行中被测试抓出并修复**：① `LocalSave.save` / `applyToSave` 的旧 checksum 混入（存档闭环必挂）；② `resolveHit` 在客户端 `noUncheckedIndexedAccess` 严格项下编译失败。教训：packages 源码要在**客户端 tsconfig 严格项**下过编译，不能只看 packages 自己的宽松配置。
+3. **守卫盲区登记**：`generatedUntouched` 只校验"generated 未被手改"（manifest 哈希），**不校验"源与 generated 是否同步"**——改 packages 源后漏跑 `npm run sync` 不会红。本轮以 `npm run sync` + 复查兜底；建议后续给守卫加"源哈希 vs manifest"双向校验。
+4. **PGlite 事务铁律**：`withTx` 回调内调全局 `q()`（走 `getDb()`）与事务争抢同一单连接会**永久死锁**；必须用回调入参 `tx`。全项目 3 处 withTx 已逐一核对传 tx。
