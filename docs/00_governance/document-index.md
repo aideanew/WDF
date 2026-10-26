@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 105 篇。⚠ 表示活跃文档已过 review 日期。
+共 144 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -42,6 +42,7 @@ review: 2026-11-23
 | DATA-0004 | 接口目录（生成） | active | 2026-11-23 | `03_solution/data/api-catalog.md` |
 | DATA-0001 | 数值表说明 | active | 2026-11-23 | `03_solution/data/config-tables.md` |
 | DATA-0003 | 数据库结构 | active | 2026-11-23 | `03_solution/data/db-schema.md` |
+| DATA-0005 | 错误码对照表（手维护） | active | 2026-11-26 | `03_solution/data/error-catalog.md` |
 | DATA-0002 | 本地存档结构 | active | 2026-11-23 | `03_solution/data/save-schema.md` |
 | ADR-0001 | 引擎：Cocos Creator 3.8 LTS | proposed | 2026-11-23 | `03_solution/decisions/ADR-0001-engine-cocos-3-8.md` |
 | ADR-0002 | 前后端共用确定性规则包 game-core | accepted | 2026-11-23 | `03_solution/decisions/ADR-0002-shared-game-core.md` |
@@ -53,6 +54,8 @@ review: 2026-11-23
 | ADR-0008 | 取消断网可玩，改为必须联网 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0008-online-required.md` |
 | ADR-0009 | 运行时校验采用 zod（前后端同构） | proposed | 2026-10-30 | `03_solution/decisions/ADR-0009-runtime-validation-zod.md` |
 | ADR-0010 | 技术选型复核——对三份外部结构提案的辩证结论 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0010-tech-stack-review-external-proposals.md` |
+| ADR-0011 | 契约缺口与解冻申请（回收动作 / 绑定票据错误码 / 赶海 ops 载体） | proposed | 2026-11-09 | `03_solution/decisions/ADR-0011-contract-gaps.md` |
+| DESIGN-0001 | UX 态契约（六份契约之⑥：空/加载/错误/无权限/成功/冲突） | active | 2026-11-26 | `03_solution/design/DESIGN-0001-ux-states.md` |
 | UI-0003 | Cocos 编辑器英文界面中英对照（本项目专用） | active | 2026-11-23 | `03_solution/ui/cocos-editor-glossary.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
 | UI-0001 | UI 规范 | active | 2026-11-23 | `03_solution/ui/style-guide.md` |
@@ -71,6 +74,19 @@ review: 2026-11-23
 | PLAN-V001-10 | 风险与待裁决决策 | draft | 2026-10-30 | `04_planning/plan-v001/10-risks-and-decisions.md` |
 | PLAN-V001-11 | 规划自检（任一不过则修正后重检） | draft | 2026-10-30 | `04_planning/plan-v001/11-self-check.md` |
 | PLAN-V001-12 | 第一刀启动顺序（S0 → S1 → S2） | draft | 2026-10-30 | `04_planning/plan-v001/12-first-cut.md` |
+| PLAN-V002-00 | 规划快照（plan-v002 基线钉桩） | active | 2026-11-02 | `04_planning/plan-v002/00-snapshot.md` |
+| PLAN-V002-01 | 事实基线（真实代码证据 + 未实现需求矩阵 + 文档/代码不一致） | active |  | `04_planning/plan-v002/01-fact-baseline.md` |
+| PLAN-V002-02 | 需求基线复核（MUST/SHOULD/COULD/MUST NOT + 冲突 + 未知登记） | active |  | `04_planning/plan-v002/02-requirements-baseline.md` |
+| PLAN-V002-03 | 契约冻结包（六份，含唯一源与缺口） | active |  | `04_planning/plan-v002/03-contracts-freeze.md` |
+| PLAN-V002-04 | 数据模型基线（现状 + 迁移编排 + 索引策略） | active |  | `04_planning/plan-v002/04-data-model.md` |
+| PLAN-V002-05 | 垂直切片（现状 + 本轮重排：聚焦核心与测试） | active |  | `04_planning/plan-v002/05-vertical-slices.md` |
+| PLAN-V002-07 | 依赖 DAG（并行组 / 串行链 / 关键路径 / 环检测） | active |  | `04_planning/plan-v002/07-dag.md` |
+| PLAN-V002-08 | 所有权矩阵与档位分配（含重叠缺陷处理） | active |  | `04_planning/plan-v002/08-ownership-and-tiers.md` |
+| PLAN-V002-09 | 基线指标与验收体系（含首次测量值 / 尚无基线声明） | active |  | `04_planning/plan-v002/09-metrics-and-acceptance.md` |
+| PLAN-V002-10 | 风险清单 / 未决问题 / 待裁决 | active |  | `04_planning/plan-v002/10-risks-and-decisions.md` |
+| PLAN-V002-11 | 自检结果（逐条对照 long-text §12） | active |  | `04_planning/plan-v002/11-self-check.md` |
+| PLAN-V002-12 | 第一刀与启动顺序（建议） | active |  | `04_planning/plan-v002/12-first-cut.md` |
+| PLAN-V002-13 | 执行过程记录（2026-10-26 启动） | active |  | `04_planning/plan-v002/13-execution-log.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done |  | `05_execution/tasks/TASK-0101.md` |
@@ -80,7 +96,7 @@ review: 2026-11-23
 | TASK-0106 | 本地存档读写与校验（杀进程可恢复） | active |  | `05_execution/tasks/TASK-0106.md` |
 | TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | done |  | `05_execution/tasks/TASK-0107.md` |
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active |  | `05_execution/tasks/TASK-0108.md` |
-| TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active |  | `05_execution/tasks/TASK-0201.md` |
+| TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | done |  | `05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active |  | `05_execution/tasks/TASK-0202.md` |
 | TASK-0802 | 赶海 ops 复算计分（v1.1） | proposed |  | `05_execution/tasks/TASK-0802.md` |
 | TASK-0803 | 赶海 21:05 结算与发奖（v1.1） | proposed |  | `05_execution/tasks/TASK-0803.md` |
@@ -92,6 +108,29 @@ review: 2026-11-23
 | TASK-1503 | 34 张占位表补列结构（列由设计文档推导，数字不编） | active |  | `05_execution/tasks/TASK-1503.md` |
 | TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1601.md` |
 | TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed |  | `05_execution/tasks/TASK-1602.md` |
+| TASK-2001 | 契约补缺（chest 业务类型 + 错误路径对照表） | done |  | `05_execution/tasks/TASK-2001.md` |
+| TASK-2101 | game-core/hook 蓄力+轨迹+命中（确定性） | proposed |  | `05_execution/tasks/TASK-2101.md` |
+| TASK-2102 | HookView 程序化表现（力度条/飞行/回手） | done |  | `05_execution/tasks/TASK-2102.md` |
+| TASK-2103 | 出钩接线（命中→入包→存档） | done |  | `05_execution/tasks/TASK-2103.md` |
+| TASK-2201 | account.bindStart / bindConfirm（账号合并） | done |  | `05_execution/tasks/TASK-2201.md` |
+| TASK-2202 | save.resolveFork（存档分叉裁决） | done |  | `05_execution/tasks/TASK-2202.md` |
+| TASK-2203 | leaderboard.report / query（总收益榜） | done |  | `05_execution/tasks/TASK-2203.md` |
+| TASK-2204 | telemetry.track（批量埋点） | done |  | `05_execution/tasks/TASK-2204.md` |
+| TASK-2401 | handler 契约测试补强 | done |  | `05_execution/tasks/TASK-2401.md` |
+| TASK-2402 | e2e 骨架 1 条 | done |  | `05_execution/tasks/TASK-2402.md` |
+| TASK-2501 | 文档一致性返工 | done |  | `05_execution/tasks/TASK-2501.md` |
+| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | proposed |  | `05_execution/tasks/TASK-3001.md` |
+| TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed |  | `05_execution/tasks/TASK-3002.md` |
+| TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed |  | `05_execution/tasks/TASK-3101.md` |
+| TASK-3102 | 背包列表页（读 106 行真实物品） | proposed |  | `05_execution/tasks/TASK-3102.md` |
+| TASK-3103 | 合成面板（80 条真实配方 + 材料判定） | proposed |  | `05_execution/tasks/TASK-3103.md` |
+| TASK-3104 | 排行榜页（接已实现的 leaderboard.query） | proposed |  | `05_execution/tasks/TASK-3104.md` |
+| TASK-3105 | 云存档同步与分叉裁决 UI（conflict 态唯一出口） | proposed |  | `05_execution/tasks/TASK-3105.md` |
+| TASK-3201 | game-core/crafting 可制作判定（canCraft / consume） | proposed |  | `05_execution/tasks/TASK-3201.md` |
+| TASK-3202 | game-core/inventory 存档段投影（listRows） | proposed |  | `05_execution/tasks/TASK-3202.md` |
+| TASK-3301 | 守卫第 10 项：源 ↔ generated 双向同步校验 | proposed |  | `05_execution/tasks/TASK-3301.md` |
+| TASK-3302 | game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷） | proposed |  | `05_execution/tasks/TASK-3302.md` |
+| TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | proposed |  | `05_execution/tasks/TASK-3401.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |

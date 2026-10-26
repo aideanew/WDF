@@ -14,7 +14,7 @@ review: 2026-11-23
 | 动作 | 模块 | 需登录 | 写操作（需 rid） | 说明 |
 |---|---|---|---|---|
 | `account.login` | account | — | ✔ | 平台 code 换会话；返回内部玩家ID、区服、是否新号 |
-| `account.refresh` | account | ✔ | — | 刷新会话 |
+| `account.refresh` | account | — | — | 刷新会话（令牌过期也可用，handler 自校验签名后重签发） |
 | `account.bindStart` | account | ✔ | ✔ | 发起绑定，返回一次性绑定票据 |
 | `account.bindConfirm` | account | ✔ | ✔ | 在另一平台确认绑定，进入存档分叉选择 |
 | `compliance.check` | compliance | ✔ | — | 实名/防沉迷状态与今日可玩时长 |

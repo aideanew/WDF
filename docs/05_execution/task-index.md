@@ -18,7 +18,7 @@ review: 2026-11-23
 | TASK-0106 | 本地存档读写与校验（杀进程可恢复） | active | `docs/05_execution/tasks/TASK-0106.md` |
 | TASK-0107 | save.push / save.pull 真实落库（含幂等与版本冲突返回） | done | `docs/05_execution/tasks/TASK-0107.md` |
 | TASK-0108 | Boot 场景控制器 + 统一 RPC 客户端 + 错误展示 | active | `docs/05_execution/tasks/TASK-0108.md` |
-| TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | active | `docs/05_execution/tasks/TASK-0201.md` |
+| TASK-0201 | game-core/hook 蓄力与轨迹规则（确定性） | done | `docs/05_execution/tasks/TASK-0201.md` |
 | TASK-0202 | HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈） | active | `docs/05_execution/tasks/TASK-0202.md` |
 | TASK-0802 | 赶海 ops 复算计分（v1.1） | proposed | `docs/05_execution/tasks/TASK-0802.md` |
 | TASK-0803 | 赶海 21:05 结算与发奖（v1.1） | proposed | `docs/05_execution/tasks/TASK-0803.md` |
@@ -30,3 +30,26 @@ review: 2026-11-23
 | TASK-1503 | 34 张占位表补列结构（列由设计文档推导，数字不编） | active | `docs/05_execution/tasks/TASK-1503.md` |
 | TASK-1601 | 契约测试自动生成 + 数值表非空断言（登记，暂不实施） | proposed | `docs/05_execution/tasks/TASK-1601.md` |
 | TASK-1602 | 密钥扫描守卫（第 10 项 guard，登记，暂不实施） | proposed | `docs/05_execution/tasks/TASK-1602.md` |
+| TASK-2001 | 契约补缺（chest 业务类型 + 错误路径对照表） | done | `docs/05_execution/tasks/TASK-2001.md` |
+| TASK-2101 | game-core/hook 蓄力+轨迹+命中（确定性） | proposed | `docs/05_execution/tasks/TASK-2101.md` |
+| TASK-2102 | HookView 程序化表现（力度条/飞行/回手） | done | `docs/05_execution/tasks/TASK-2102.md` |
+| TASK-2103 | 出钩接线（命中→入包→存档） | done | `docs/05_execution/tasks/TASK-2103.md` |
+| TASK-2201 | account.bindStart / bindConfirm（账号合并） | done | `docs/05_execution/tasks/TASK-2201.md` |
+| TASK-2202 | save.resolveFork（存档分叉裁决） | done | `docs/05_execution/tasks/TASK-2202.md` |
+| TASK-2203 | leaderboard.report / query（总收益榜） | done | `docs/05_execution/tasks/TASK-2203.md` |
+| TASK-2204 | telemetry.track（批量埋点） | done | `docs/05_execution/tasks/TASK-2204.md` |
+| TASK-2401 | handler 契约测试补强 | done | `docs/05_execution/tasks/TASK-2401.md` |
+| TASK-2402 | e2e 骨架 1 条 | done | `docs/05_execution/tasks/TASK-2402.md` |
+| TASK-2501 | 文档一致性返工 | done | `docs/05_execution/tasks/TASK-2501.md` |
+| TASK-3001 | UX 态契约落地（common/ux.ts + 契约测试） | proposed | `docs/05_execution/tasks/TASK-3001.md` |
+| TASK-3002 | configVersion 单一来源（消除客户端两处硬编码） | proposed | `docs/05_execution/tasks/TASK-3002.md` |
+| TASK-3101 | 主界面 Tab 导航 + 四个面板桩（纯代码 UI） | proposed | `docs/05_execution/tasks/TASK-3101.md` |
+| TASK-3102 | 背包列表页（读 106 行真实物品） | proposed | `docs/05_execution/tasks/TASK-3102.md` |
+| TASK-3103 | 合成面板（80 条真实配方 + 材料判定） | proposed | `docs/05_execution/tasks/TASK-3103.md` |
+| TASK-3104 | 排行榜页（接已实现的 leaderboard.query） | proposed | `docs/05_execution/tasks/TASK-3104.md` |
+| TASK-3105 | 云存档同步与分叉裁决 UI（conflict 态唯一出口） | proposed | `docs/05_execution/tasks/TASK-3105.md` |
+| TASK-3201 | game-core/crafting 可制作判定（canCraft / consume） | proposed | `docs/05_execution/tasks/TASK-3201.md` |
+| TASK-3202 | game-core/inventory 存档段投影（listRows） | proposed | `docs/05_execution/tasks/TASK-3202.md` |
+| TASK-3301 | 守卫第 10 项：源 ↔ generated 双向同步校验 | proposed | `docs/05_execution/tasks/TASK-3301.md` |
+| TASK-3302 | game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷） | proposed | `docs/05_execution/tasks/TASK-3302.md` |
+| TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | proposed | `docs/05_execution/tasks/TASK-3401.md` |
