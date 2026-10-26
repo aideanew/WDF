@@ -5,6 +5,7 @@ import type { Claims } from './auth.ts';
 import { accountHandlers } from '../modules/account/handlers.ts';
 import { complianceHandlers } from '../modules/compliance/handlers.ts';
 import { configHandlers } from '../modules/config/handlers.ts';
+import { leaderboardHandlers } from '../modules/leaderboard/handlers.ts';
 import { saveHandlers } from '../modules/save/handlers.ts';
 
 /** 每个请求的上下文。鉴权后的 claims 由网关填好，handler 不再自己解 token。 */
@@ -24,7 +25,7 @@ const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: 'not implement
 
 /**
  * 动作 → 实现。`satisfies` 保证 contracts 里登记的每个动作都有实现，漏了编译失败。
- * 当前已落地 9 件：account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / config.manifest。
+ * 当前已落地 11 件：account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / leaderboard.report / leaderboard.query / config.manifest。
  */
 export const HANDLERS = {
   'account.login': accountHandlers['account.login'],
@@ -37,8 +38,8 @@ export const HANDLERS = {
   'save.resolveFork': saveHandlers['save.resolveFork'],
   'salvage.claimInfo': todo,
   'economy.buyQuota': todo,
-  'leaderboard.report': todo,
-  'leaderboard.query': todo,
+  'leaderboard.report': leaderboardHandlers['leaderboard.report'],
+  'leaderboard.query': leaderboardHandlers['leaderboard.query'],
   'event.start': todo,
   'event.submit': todo,
   'event.result': todo,
