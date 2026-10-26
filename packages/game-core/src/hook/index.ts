@@ -114,6 +114,7 @@ export function cast(powerBp: number, angleDeg: number, cfg: HookConfig): HookPa
 export function resolveHit(path: HookPath, targets: HookTarget[], cfg: HookConfig): HitResult | null {
   for (let idx = 0; idx < targets.length; idx++) {
     const tg = targets[idx];
+    if (!tg) continue;
     let minD = Infinity;
     for (const p of path.points) {
       const dx = p.x - tg.x;

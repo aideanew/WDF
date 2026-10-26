@@ -53,10 +53,11 @@ export const LocalSave = {
     });
   },
 
-  /** 写入；成功返回 true。 */
+  /** 写入；成功返回 true。必须剥离旧 checksum 再 seal，否则旧值混入校验和导致 load 永远失败。 */
   save(file: SaveFile): boolean {
     const platform = getPlatform();
-    const sealed = sealSave({ ...file, savedAt: Date.now(), schemaVersion: SAVE_SCHEMA_VERSION });
+    const { checksum: _stale, ...body } = file;
+    const sealed = sealSave({ ...body, savedAt: Date.now(), schemaVersion: SAVE_SCHEMA_VERSION });
     return platform.storage.set(STORAGE_KEY, JSON.stringify(sealed));
   },
 };
