@@ -16,10 +16,11 @@ import { DEFAULT_HOOK_CONFIG, type HookConfig, type HookPoint } from '../../../g
 import { invoke } from '../../../services/net/RpcClient';
 import { LocalSave } from '../../../services/save/LocalSave';
 import { getPlatform } from '../../../platform';
+import { preload, table } from '../../../services/config';
 
-/** 演示用固定入参：目标距离与出钩角度（确定性核心要求同输入同输出，手感来自蓄力时机）。 */
-const DEMO_TARGET_DIST = 600;
-const DEMO_ANGLE_DEG = 15;
+/** 回落常量（与 hooks 表 D-04 等值：target_dist=600/angle_deg=15/max_power_bp=10000）。表空或缺字段时用这些。 */
+const FALLBACK_TARGET_DIST = 600;
+const FALLBACK_ANGLE_DEG = 15;
 
 const BAR_W = 420;
 const BAR_H = 26;
@@ -29,6 +30,8 @@ const BAR_POS = new Vec3(0, -180, 0);
 export class HookView extends Component {
   private model = new HookModel();
   private cfg: HookConfig = DEFAULT_HOOK_CONFIG;
+  private demoTargetDist = FALLBACK_TARGET_DIST;
+  private demoAngleDeg = FALLBACK_ANGLE_DEG;
 
   private barFill!: Graphics;
   private barFillTrans!: UITransform;
@@ -42,6 +45,23 @@ export class HookView extends Component {
   start(): void {
     this.buildUI();
     this.bindInput();
+    void this.loadHookConfig();
+  }
+
+  /** 从 hooks 表读 target_dist/angle_deg/max_power_bp；表空或字段缺回落常量并 warn。 */
+  private async loadHookConfig(): Promise<void> {
+    await preload(['hooks']);
+    const rows = table('hooks');
+    const row = rows[0];
+    if (!row) {
+      console.warn('[hook] hooks 表为空，回落常量 target_dist=600/angle_deg=15/max_power_bp=10000');
+      return;
+    }
+    if (typeof row.target_dist === 'number') this.demoTargetDist = row.target_dist;
+    if (typeof row.angle_deg === 'number') this.demoAngleDeg = row.angle_deg;
+    if (typeof row.max_power_bp === 'number') {
+      this.cfg = { ...DEFAULT_HOOK_CONFIG, maxPowerBp: row.max_power_bp };
+    }
   }
 
   update(dt: number): void {
@@ -141,7 +161,7 @@ export class HookView extends Component {
   }
 
   private releaseNow(): void {
-    const outcome = this.model.release(Date.now(), DEMO_ANGLE_DEG, DEMO_TARGET_DIST, this.cfg);
+    const outcome = this.model.release(Date.now(), this.demoAngleDeg, this.demoTargetDist, this.cfg);
     if (!outcome) return;
     this.showHookDot();
     this.report(outcome);
