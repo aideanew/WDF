@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 221 篇。⚠ 表示活跃文档已过 review 日期。
+共 222 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -151,6 +151,7 @@ review: 2026-11-23
 | PLAN-V008-07 | 步骤 3 · UI 收口（开箱面板 + addButton 抽取 + 六态走查） | active | 2026-11-10 | `04_planning/plan-v008/07-step3-ui-close.md` |
 | PLAN-V008-08 | 步骤 4 · 证据补录、合规重写、文档收口与推送（派工卡） | active | 2026-11-10 | `04_planning/plan-v008/08-step4-evidence-release.md` |
 | PLAN-V008-09 | 自检、前提与局限、第一刀 | active | 2026-11-10 | `04_planning/plan-v008/09-self-check.md` |
+| PLAN-V008-10 | 从最初设计文件找回的答案（箱子 / 锁 / 开箱） | active | 2026-11-10 | `04_planning/plan-v008/10-design-source-answers.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
