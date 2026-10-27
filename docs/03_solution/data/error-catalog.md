@@ -30,7 +30,7 @@ review: 2026-11-26
 | 3002 | QUOTA_EXHAUSTED | RULE | 区服每日限量已售罄 | 今日已售罄 | economy.buyQuota |
 | 3201 | EVENT_CLOSED | RULE | 赶海场次未开放（非 20:00-21:00） | 本场赶海已结束 | event.start |
 | 3202 | EVENT_ALREADY_PLAYED | RULE | 当日已参与过赶海 | 今日已参与过赶海 | event.start |
-| 4001 | RATE_LIMITED | SYSTEM | 触发频率限制（如榜单上报超频） | 操作过于频繁，请稍后再试 | leaderboard.report / telemetry.track |
+| 4001 | RATE_LIMITED | SYSTEM | 触发频率限制：网关 IP 维度固定窗口（`auth:false` 动作，`gateway/ratelimit.ts`）或业务级频控（榜单上报间隔） | 操作过于频繁，请稍后再试 | 全部 `auth:false` 动作 / leaderboard.report / telemetry.track |
 | 4999 | INTERNAL | SYSTEM | 服务端未实现或内部错误（未实现动作也返回此码，见 AT-2401） | 服务暂时不可用 | 全部动作 |
 | 5001 | REVIEW_PENDING | RISK | 内容在审核中 / 复核不一致 | 内容审核中 | event.submit / social.send |
 | 9001 | CLIENT_TOO_OLD | UPGRADE | 客户端版本过低需更新 | 请更新到最新版本 | config.manifest / 全部动作 |

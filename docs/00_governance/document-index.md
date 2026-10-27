@@ -43,7 +43,7 @@ review: 2026-11-23
 | DATA-0001 | 数值表说明 | active | 2026-11-23 | `03_solution/data/config-tables.md` |
 | DATA-0003 | 数据库结构 | active | 2026-11-23 | `03_solution/data/db-schema.md` |
 | DATA-0005 | 错误码对照表（手维护） | active | 2026-11-26 | `03_solution/data/error-catalog.md` |
-| SOL-gateway-gaps | 网关未实现能力登记（限流 / cfg 回传 / sv 校验） | active | 2026-11-27 | `03_solution/data/gateway-gaps.md` |
+| SOL-gateway-gaps | 网关能力登记（限流 / cfg 回传 / sv 校验） | active | 2026-11-27 | `03_solution/data/gateway-gaps.md` |
 | DATA-0002 | 本地存档结构 | active | 2026-11-23 | `03_solution/data/save-schema.md` |
 | ADR-0001 | 引擎：Cocos Creator 3.8 LTS | proposed | 2026-11-23 | `03_solution/decisions/ADR-0001-engine-cocos-3-8.md` |
 | ADR-0002 | 前后端共用确定性规则包 game-core | accepted | 2026-11-23 | `03_solution/decisions/ADR-0002-shared-game-core.md` |

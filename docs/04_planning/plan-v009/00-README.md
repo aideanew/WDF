@@ -75,7 +75,7 @@ snapshot:
 | **F-44** | `docs/07_release/compliance/copyright-materials.md` 由并行线写入**虚假陈述**：「已通过微信官方提供的接口接入防沉迷系统」，而 `server/src/modules/compliance/service.ts:4` 自承「能登录即视为实名通过；未成年标志固定 false；离线额度 0」 | 这是**将要提交给平台的法律文件里的假话**。且该文件被我方 `1bc9bbf` 清掉的过期 `configVersion 16921d30a67a934f` 又回来了 | **P0** | 我 |
 | **F-45** | `docs/04_planning/current-plan.md` 现行规划指针被**回滚**：v008 指针被删、v007 重新标为"唯一现行"，并新增「相关问题已修复，合规材料已就绪」 | 接手者按指针读会读到两代前的规划；「已就绪」是 F-44 同源的过度宣称 | **P0** | 我 |
 | **F-46** | `server/src/modules/save/service.ts:9` 是全仓**唯一**用扁平 barrel `from '@wodefa/contracts'` 导入子模块类型的文件；其余 6 个模块全用 `@wodefa/contracts/src/<m>/index.ts`。`contracts/index.ts` 把子模块都 `export * as X`（**命名空间**），扁平导入必然 TS2305 | 5 条类型错、**零运行时影响**（Node 类型剥离）→ 所以躺了最久没人管 | **P0** | 我 |
-| **F-42（更正）** | 原登记「`gateway/version.ts` 只有一行常量、服务端根本不校验 `cfg`/`sv`」——**表述错误**。实测：版本闸 `cv → 9001` **已实现**（`gateway/rpc.ts:36-41`），有测试（`auth.test.mjs:211`），且 `config.manifest` 有豁免防死锁。真问题拆成三条：**F-42a** `version.ts` 是死文件（导出 `MIDDLEWARE` 全仓零引用）+ 注释承诺的「cfg 不一致 → 附最新 cfg」未实现（`RpcResponse.cfg?` 从未被赋值）；**F-42b** `ratelimit.ts` 同为死文件 → **限流零实现**（`telemetry.track` 是 `auth:false`，无限流即可刷）；**F-42c** `m.sv` 服务端从未读取 | 真正未做的是**限流**与 **cfg 回传**，不是版本闸 | **P1** | 待裁决 |
+| **F-42（更正）** | 原登记「`gateway/version.ts` 只有一行常量、服务端根本不校验 `cfg`/`sv`」——**表述错误**。实测：版本闸 `cv → 9001` **已实现**（`gateway/rpc.ts:36-41`），有测试（`auth.test.mjs:211`），且 `config.manifest` 有豁免防死锁。真问题拆成三条：**F-42a** `version.ts` 是死文件（导出 `MIDDLEWARE` 全仓零引用）+ 注释承诺的「cfg 不一致 → 附最新 cfg」未实现（`RpcResponse.cfg?` 从未被赋值）；**F-42b** `ratelimit.ts` 同为死文件 → **限流零实现**（`telemetry.track` 是 `auth:false`，无限流即可刷）；**F-42c** `m.sv` 服务端从未读取 | 真正未做的是**限流**与 **cfg 回传**，不是版本闸 | P1 | **a/b 已落地**（6008/6007）；**c 仍待口径**（需先定存档兼容策略，属行为变更，要 ADR） |
 | **F-27（重述）** | 根因不是"缺类型收窄"，是 `SellPayload = SellReq & { merchantId: string }` 为 **4015 前的遗留**——`SellReq` 现在**已有** `merchantId?: 'merchant_village'\|'merchant_wander'\|'merchant_black'`，整个交叉类型别名可删 | client tsc 唯一真错 | **P0** | 我（原派助手线 A，收回） |
 
 ## 4. 并行写入的实际裁决（不是"全对"也不是"全错"）
@@ -103,7 +103,9 @@ snapshot:
 | **TASK-6003** | server tsc 11 条真错归零 | F-46 + 4 处 | 我 | TODO |
 | **TASK-6004** | client tsc 归零（F-27 收回自做） | F-27 | 我 | TODO |
 | **TASK-6005** | 合规材料去假 + 指针修复 | F-44 / F-45 | 我 | TODO |
-| **TASK-6006** | F-42a/b/c 归档与裁决 | F-42 | 我 + 裁决 | TODO |
+| **TASK-6006** | F-42a/b/c 归档与裁决 | F-42 | 我 + 裁决 | ✅ done |
+| **TASK-6007** | 限流落地（裁决 1：IP 固定窗口，覆盖全部 `auth:false` 动作） | F-42b | 我 | ✅ done |
+| **TASK-6008** | `cfg` 版本提示落地（裁决 2：只回 string，只提示不拒请求） | F-42a | 我 | ✅ done |
 
 **为什么 F-27 收回自己做**：用户既定纪律是「中低难度派外部 Agent」，但 F-27 已经被派出去**至少两代规划**而至今未修（`plan-v008` §10「仍未做」表里就写着它）。派出去不落地 = 没派。且它是 client tsc 归零的**唯一**障碍，挡在闸门接电的必经路上 —— 属于关键路径，收回。
 
@@ -139,7 +141,7 @@ npm run verify
 
 > 只记已验证的事实。每条带 commit 或命令输出。
 
-**全部 6 张卡完成。总验收 `npm run verify` → `exit=0`（本项目史上第一次包含类型检查且通过）。**
+**全部 8 张卡完成。总验收 `npm run verify` → `exit=0`（本项目史上第一次包含类型检查且通过）。**
 
 | 卡 | 内容 | 状态 | 证据 |
 |---|---|---|---|
@@ -149,6 +151,8 @@ npm run verify
 | **TASK-6004** | F-27：删 `SellPayload` 陈留别名 + `toMerchantId` 谓词 | ✅ done | `tsc -p client` → **`exit=0`，零输出**；`grep SellPayload` 零命中；`git diff` 新增行**零 `as`** |
 | **TASK-6005** | 合规材料去假 + 指针修复 | ✅ done | `copyright-materials.md` 从 `HEAD` 恢复（取回 60 页/≥50 行/页眉页脚/PDF 等规格）+ 新增 §6「未接入项」（5 项，每项带代码行号）；`review-checklist.md` 修正"开锁"误述；`current-plan.md` → v009；`roadmap.md` → v009 |
 | **TASK-6006** | 两个死文件处理 + F-42 归档 | ✅ done | `version.ts`/`ratelimit.ts` 的 `export const MIDDLEWARE` 已移除（改为显式"未实现"注释块）；新增 `docs/03_solution/data/gateway-gaps.md` 登记 F-42a/b/c |
+| **TASK-6007** | 网关限流落地（裁决 1） | ✅ done | `gateway/ratelimit.ts`：IP 维度固定窗口，覆盖**全部 4 个 `auth:false` 动作**；默认 600/min、`config.manifest` 内置 1200/min；env 可调可关。`tests/integration/ratelimit.test.mjs` **8 例全绿** |
+| **TASK-6008** | `cfg` 版本提示落地（裁决 2） | ✅ done | `gateway/version.ts` 的 `attachCfgHint` + `config/service.ts` 的 `activeConfigVersion`（60s 缓存）；`rpc.ts` 的 `withCfgHint()` 覆盖**两条**返回路径。`tests/integration/cfg-hint.test.mjs` **5 例全绿** |
 
 **门禁终值**：
 
@@ -157,7 +161,7 @@ npm run verify  →  exit=0
   配置生成     ：46 张表 / 327 行 / configVersion=c6a54f0fb00341c5
   客户端同步   ：43 个文件，清理 0 个失效产物
   守卫         ：9/9 全部通过
-  运行时测试   ：156/156 pass / 0 fail
+  运行时测试   ：169/169 pass / 0 fail   ← 156（原）+ 8（限流）+ 5（cfg 提示）
   类型检查     ：client 0 错 / server 0 错   ← 本次新增，此前从未入门禁
   文档索引     ：227 篇（v008 时 221 篇）
 ```
@@ -169,4 +173,18 @@ npm run verify  →  exit=0
 | **D-1** | （计划外发现）`03-cards.md` TASK-6002 假设 client 侧「引擎噪声 102 行」是环境问题，只能靠 `grep -v "^C:/"` 过滤 | **根因是 `client/tsconfig.json` 没设 `skipLibCheck`**——它 `extends "./temp/tsconfig.cocos.json"`（Cocos 生成、被 gitignore），**不走 `tsconfig.base.json`**，而 base 里早已有 `skipLibCheck: true`。加上之后 **103 行 → 1 行** | **这条是本版最重要的计划外收益**：它让「唯一正确过滤式」这条旧教条**整体作废**。现在裸跑 `tsc -p client --noEmit` 就是正确姿势，退出码可信。此前那条 `grep -v "^C:/"` 的规矩本身就是"3 次假绿"里的第 1 次（过滤式吞掉真错），现在终于不用了 |
 | D-2 | `03-cards.md` TASK-6006 验收：「`grep -rn MIDDLEWARE server/src` 不再让人误以为中间件已存在」 | 注释块里**仍保留** `MIDDLEWARE` 字样（用于说明"该常量已移除、为何移除"）。**零 `export`** 已达成 | 完全抹掉字样会丢失"这里曾经有个假中间件"这条信息，反而更容易被下一个人重新加回来。验收口径改为「**零导出**」而非「零命中」 |
 | D-3 | 计划没写要动 `docs/03_solution/` | 新增 `data/gateway-gaps.md` | F-42a/b/c 需要一个"未实现能力"的归属地；`error-catalog.md` 管错误码，`api-catalog.md` 是生成物不可手改 |
+| **D-4** | `05` 裁决 1「建议只对 `account.login` / `telemetry.track` 两个动作限流」 | **扩到全部 4 个 `auth:false` 动作** | 实测 `account.refresh`（HMAC 验签/签发）与 `config.manifest`（查 `config_release`）同样是 `auth:false`。只堵两个等于留两个后门 |
+| **D-5** | `05` 裁决 1 建议阈值「60/min」 | **改为 600/min（10 QPS）**，`config.manifest` 内置 1200 | 国内 CGNAT 下一个公网 IP 可能承载成百上千玩家，60/min 会让 NAT 后的正常玩家**进不去游戏**。误杀正常玩家的代价远大于多放几个脚本请求；运维可用 `WDF_RL_DEFAULT_PER_MIN` 随时收紧，不必改代码 |
+| **D-6** | 计划没写要动 `error-catalog.md` | 更新 4001 的触发面 | 4001 此前只登记为"榜单超频 / 埋点批量超限"，现在网关层也会返回它（覆盖全部 `auth:false` 动作）。不写清楚，客户端会把"限流"误判成"业务规则拒绝" |
+
+### 执行中修掉的两个自身缺陷（测试抓到，不是设计时想到的）
+
+| # | 缺陷 | 发现方式 | 修法 |
+|---|---|---|---|
+| **E-1** | `limitPerMinFor` 对空白 env 值用 `Number('   ')` → **0** → 等于**静默关掉限流** | `ratelimit.test.mjs` 限流 6 用例 | 先 `trim()` 再判空；只有显式 `0` 才是关闭 |
+| **E-2** | 幂等命中是 `return hit` **提前返回**，绕过末尾统一加 cfg 提示的那段 → 重放时 `cfg === undefined` | `cfg-hint.test.mjs` 第 5 用例（决定性那条） | 把提示抽成 `withCfgHint()`，**两条返回路径都经过它**；缓存里只存业务结果 |
+
+> **E-1 与 E-2 都是"我写的、我以为对、测试一跑就红"的形态。**
+> 值得一提的是 E-1 正好就是我写测试时想钉死的那个陷阱（`Number('abc')=NaN`），
+> 结果只防了 NaN，没防空白 —— **只想到一半的防御等于没防**。
 

@@ -62,8 +62,8 @@ review: 2026-10-30
 | 实名认证 | **桩**：能登录即视为实名通过 | `server/src/modules/compliance/service.ts:4` |
 | 防沉迷（未成年人时段 / 时长） | **桩**：未成年标志固定 `false`，离线额度 `0` | 同上（ADR-0008 要求必须联网） |
 | 隐私协议弹窗与授权流程 | **未实现**（全仓仅设计文档提及） | `grep -rn "隐私\|privacy"` 只命中两个模块 README |
-| 网关限流 | **未实现**（`gateway/ratelimit.ts` 零引用） | `plan-v009` F-42b |
-| 可玩时长上报（`compliance.check`） | 接口已通，但返回的是桩数据 | `packages/contracts/src/common/actions.ts:7` |
+| 网关限流 | **已实现**（IP 维度固定窗口，覆盖全部 `auth:false` 动作，默认 10 QPS） | `server/src/gateway/ratelimit.ts`；`tests/integration/ratelimit.test.mjs` |
+| 可玩时长上报（`compliance.check`） | 接口已通，但返回的是桩数据 | `packages/contracts/src/common/actions.ts` |
 
 **当前配置版本**：`c6a54f0fb00341c5`（取自 `client/assets/resources/config/_manifest.json`，**不要手写**，改配置就会变）。
 

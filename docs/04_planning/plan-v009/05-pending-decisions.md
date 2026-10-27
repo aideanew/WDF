@@ -10,12 +10,26 @@ review: 2026-11-10
 
 # 05 · 待裁决事项
 
-> 本版**不阻塞**在这两个问题上：TASK-6001~6005 全部可独立执行，6006 只做归档。
-> 但下面两项在裁决前**不得由任何人自行实现**——因为都需要先定口径，否则只能编数值。
+> ## ✅ 两项均已裁决并落地（2026-10-27 20:56，「按照你的建议，开始执行」）
+>
+> | 裁决 | 结论 | 落地 |
+> |---|---|---|
+> | **裁决 1 · 限流** | 选 **B**：只做「最小可用」，覆盖**全部 `auth:false` 动作**（不止原计划的 2 个——`account.refresh` 与 `config.manifest` 同样是 `auth:false`，漏掉等于没堵）。IP 维度固定窗口，默认 10 QPS，`config.manifest` 内置 20 QPS。阈值走 env，可**不改代码**收紧/关闭。 | TASK-6007 · `server/src/gateway/ratelimit.ts` + `tests/integration/ratelimit.test.mjs`（8 例） |
+> | **裁决 2 · `cfg` 回传** | 选 **A**：只回 `string`（零契约变更），**只做提示不拒请求**。每次现算，不进幂等缓存。 | TASK-6008 · `server/src/gateway/version.ts` + `tests/integration/cfg-hint.test.mjs`（5 例） |
+>
+> **两处与原建议的偏差**（都在执行中发现，记录在此）：
+> 1. **限流覆盖面从"2 个动作"扩到"全部 `auth:false` 的 4 个"**。原建议只点 `account.login` / `telemetry.track`，
+>    实测 `account.refresh`（要做 HMAC 验签/签发）与 `config.manifest`（查 `config_release`）也是 `auth:false` ——
+>    只堵两个等于留两个。
+> 2. **阈值从"60/min"改为"600/min"**。原因：国内运营商 CGNAT 下一个公网 IP 可能承载成百上千玩家，
+>    60/min 会直接让 NAT 后的正常玩家进不去游戏。**误杀正常玩家的代价远大于多放几个脚本请求。**
+>    运维可随时用 `WDF_RL_DEFAULT_PER_MIN` 收紧，不需要改代码。
+>
+> 下面保留**裁决前的原文**，作为决策依据存档。
 
 ---
 
-## 裁决 1：限流（F-42b）是否纳入 v1.0？
+## 裁决 1：限流（F-42b）是否纳入 v1.0？（已裁决：B）
 
 **现状事实**：
 - `server/src/gateway/ratelimit.ts` 全文只有两行（注释 + `export const MIDDLEWARE = 'ratelimit'`），**全仓零引用** → 限流完全没实现。
@@ -42,7 +56,7 @@ review: 2026-11-10
 
 ---
 
-## 裁决 2：`RpcResponse.cfg` 回传（F-42a）要不要实现？
+## 裁决 2：`RpcResponse.cfg` 回传（F-42a）要不要实现？（已裁决：A）
 
 **现状事实**：
 - 契约 `common/envelope.ts:22` 声明 `RpcResponse` 成功分支有 `cfg?: string`。
