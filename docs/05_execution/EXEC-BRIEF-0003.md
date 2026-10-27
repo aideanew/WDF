@@ -203,6 +203,26 @@ docs/04_planning/plan-v003/decision-sheet.md（数值唯一来源）、plan-v003
 连续 2 次 FAIL 停手上报（§7）；发现事实与本文件冲突 → 停手按 §7 熔断，不得自行解释。
 ```
 
+### 8.2 助手续跑 prompt（2026-10-27 12:20 助手异常恢复后用；4002~4006 已完成）
+```text
+你是 WDF v1.0 冲刺的唯一执行者（续跑）。仓库根 E:/Demo/WDF，分支 master，起点 commit 9d22859（git log --oneline -1 确认；远端有新提交先 pull）。
+【已完成，勿重做】TASK-4002（六表清欠 46 行+transcribe.mjs）、4003（HookView 接表）、4004（引导浮层）、4005（ADR-0012）、4006（economy.sell：影子账本+限购+幂等+集成测试 5 例）。
+基线（续跑前自校验）：guard 9/9、npm test 119/119、tsc 过滤式 0 项目错误、configVersion=38fc1faf915f8bbf。任一不符 → 停手上报。
+【你的剩余卡链，严格按序】4012 包体基线 → 4007 商人页 → 4008 背包回收入口 → 4009 开锁+salvage.claimInfo → 4015 契约解冻（2004） → 4013 合规清单 → 4014 瘦身（仅当 4012 实测主包 >4MB） → 4016 四文档对齐（最后）。4010/4011（真机卡）不进链：材料就绪即插入，缺环境标 BLOCKED 跳过。
+必读（按序）：EXEC-BRIEF-0003.md（§1 铁律、§2 锁定值、§3 接口契约、§4 剩余卡 L3/L4、§6 上报模板、§7 熔断）；plan-v003/07 与 08 你名下卡；4015 步骤见 §4 W4（S-415.1~S-415.5）。
+硬约束提醒：
+- 每卡按 §6.1 模板上报一次，主控复核 PASS 才进下一张；禁 git commit；push 须用户单独委托（PAT 临时给，-c http.version=HTTP/1.1，即用即弃）。
+- 数值只准来自 decision-sheet（G-02），缺 → BLOCKED 不得自编。
+- 仅 4015 可改 contracts/errors.ts 与 ux.ts（G-03 例外二，只增不改）；改 packages/** 后必 npm run sync（G-04）；禁手改 generated/** 与 client/resources/config/**（G-05）。
+- 类型检查只用 G-06 过滤式（npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 | grep -v "^C:/"）；npm test 全绿 ≠ 完成（G-07）；真机缺失时 UI 运行时断言记 UNKNOWN + 替代证据。
+- 读资源照抄 services/config/index.ts 的 4 参回调包 Promise 范式（G-08，无 loadAsync）；背包段是扁平 modules.inventory（G-09）。
+- 面板必须 createXxxPanel 工厂+PanelHandle；仅 4007 可扩 PanelKey 'merchant'（§3.1）；4007/4008 只准 invoke('economy.sell')，失败态走 toUxState（G-11）：1001=影子不一致、3002=限购尽。
+- 4009 drops 空表降级已锁死：固定掉 base_price 最低物品 + telemetry，禁自编掉落。
+- 4015 五步（§4 W4）：errors.ts 增 BIND_TICKET_INVALID:2004 → save/service.ts 票据失败改抛 2004 → ux.ts 映射（satisfies 强制）→ error-catalog.md 登记+契约测试+gen/sync → ADR-0011 缺口 1/2 翻 accepted（3/4 保持 proposed）。
+- 4016 须待 4015 PASS 后才动 current-plan/roadmap。
+连续 2 次 FAIL 停手（§7）；事实冲突 → 停手熔断。
+```
+
 ## 9. 本指令事实校验（可复跑，2026-10-27 实测）
 
 | # | 命令 | 期望 |
