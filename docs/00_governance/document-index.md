@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 212 篇。⚠ 表示活跃文档已过 review 日期。
+共 221 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -142,6 +142,15 @@ review: 2026-11-23
 | PLAN-V007-09 | 步骤 4 · W3 真机降级（4010/4011）与合规清单（4013） | active | 2026-11-10 | `04_planning/plan-v007/09-step4-device-and-compliance.md` |
 | PLAN-V007-10 | 步骤 5 · W4 v1.0 宣告（四文档对齐 + v1.1 种子 + 自检清单） | active | 2026-11-10 | `04_planning/plan-v007/10-step5-release-close.md` |
 | PLAN-V007-11 | 基线漂移 2 号 · W0/W1 并行半成品审计（16:07 实测） | active | 2026-11-10 | `04_planning/plan-v007/11-drift-audit-w0w1.md` |
+| PLAN-V008-01 | 事实基线（16:48 逐文件实测）与文档-代码不一致清单 | active | 2026-11-10 | `04_planning/plan-v008/01-fact-baseline.md` |
+| PLAN-V008-02 | 需求基线复核（MUST/SHOULD/COULD/MUST NOT + 冲突 + 未知登记册） | active | 2026-11-10 | `04_planning/plan-v008/02-requirements.md` |
+| PLAN-V008-03 | 契约冻结包（六份）与唯一源声明 | active | 2026-11-10 | `04_planning/plan-v008/03-contract-freeze.md` |
+| PLAN-V008-04 | 所有权矩阵、依赖 DAG 与档位预算 | active | 2026-11-10 | `04_planning/plan-v008/04-ownership-dag.md` |
+| PLAN-V008-05 | 步骤 1 · 修 P0 三处（F-27 / F-28 / F-34） | active | 2026-11-10 | `04_planning/plan-v008/05-step1-p0-defects.md` |
+| PLAN-V008-06 | 步骤 2 · 开箱权威化（F-29 / F-30 / F-31 / F-32 / F-33） | active | 2026-11-10 | `04_planning/plan-v008/06-step2-chest-authority.md` |
+| PLAN-V008-07 | 步骤 3 · UI 收口（开箱面板 + addButton 抽取 + 六态走查） | active | 2026-11-10 | `04_planning/plan-v008/07-step3-ui-close.md` |
+| PLAN-V008-08 | 步骤 4 · 证据补录、合规重写、文档收口与推送（派工卡） | active | 2026-11-10 | `04_planning/plan-v008/08-step4-evidence-release.md` |
+| PLAN-V008-09 | 自检、前提与局限、第一刀 | active | 2026-11-10 | `04_planning/plan-v008/09-self-check.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -203,11 +212,11 @@ review: 2026-11-23
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
 | CMP-anti-addiction | 防沉迷方案 | draft | 2026-11-23 | `07_release/compliance/anti-addiction.md` |
-| CMP-copyright-materials | 软著提交材料清单 | active | 2026-10-30 | `07_release/compliance/copyright-materials.md` |
+| COMP-001 | 软著与提审材料说明 | active |  | `07_release/compliance/copyright-materials.md` |
 | CMP-filings | 资质与备案进度 | draft | 2026-11-23 | `07_release/compliance/filings.md` |
 | CMP-privacy-policy | 隐私政策（草稿） | draft | 2026-11-23 | `07_release/compliance/privacy-policy.md` |
 | CMP-prob | 概率公示（生成） | active | 2026-11-23 | `07_release/compliance/probability-disclosure.md` |
-| CMP-review-checklist | 提审自查清单 | draft | 2026-11-23 | `07_release/compliance/review-checklist.md` |
+| COMP-002 | 提审核对清单 | active |  | `07_release/compliance/review-checklist.md` |
 | CMP-user-agreement | 用户协议（草稿） | draft | 2026-11-23 | `07_release/compliance/user-agreement.md` |
 | OPS-0003 | 客服常见问题 | active | 2026-11-23 | `07_release/operations/customer-support.md` |
 | OPS-0004 | 故障处理卡 | active | 2026-11-23 | `07_release/operations/incident-runbook.md` |

@@ -1,13 +1,24 @@
 ---
 id: PLAN-V007-00
 title: plan-v007 · v1.0 收口唯一现行规划（导航与谱系）
-status: active
+status: superseded
 module: planning
 owner: hark
 created: 2026-10-27
 review: 2026-11-10
-related: [PLAN-V006-00, PLAN-V005-00, PLAN-V004-00]
+related: [PLAN-V006-00, PLAN-V005-00, PLAN-V004-00, PLAN-V008-00]
 ---
+
+> # ⛔ 2026-10-27 16:50 起，本规划已被 `docs/04_planning/plan-v008/` 取代
+>
+> **为什么取代**：v007 假设"工作树静止"，据此在 16:07 做了一次静态裁决；但同一棵树在 16:20、16:47 被外部持续写入，
+> 导致 v007 `11-drift-audit-w0w1.md` 对 `chest/service.ts` 的 8 条指控（`tx`/`AppError`/`latestSnapshot`/`appendDelta`/
+> `checkIdempotency`/`claims.playerId`/`SHADOW_STATE_MISMATCH`/幂等表结构）**在 16:47 全部失效**——该文件已被重写。
+>
+> **仍然有效的部分（已被 v008 全部继承）**：F-01~F-18 缺陷编号与逐文件实测结论、D-27 保底口径、四参照系完成度判定、
+> 35 张空表的 v1.1 种子分级。**失效的部分**：步骤编号、以及 11 号文里对 chest 的具体指控。
+>
+> 现行入口：`plan-v008/00-README.md`。接手第一步不是读本目录，而是读 `plan-v008/01-fact-baseline.md`。
 
 # 00 · plan-v007 总导航
 
