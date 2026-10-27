@@ -66,7 +66,7 @@ snapshot:
 | **F-34** | `chest/service.ts:1` `import { withTx }` **未使用** | 死导入；若开 `noUnusedLocals` 即报错 | P2 |
 | **F-35** | 工作树被**多路实时写入**，无归属声明 | 任何基线结论秒级失效；并行改同一文件必冲突 | **P0（流程）** |
 
-### 3.1 开箱落地过程中新发现（F-36 ~ F-41）
+### 3.1 开箱落地过程中新发现（F-36 ~ F-42）
 
 | 编号 | 缺陷 | 一句话后果 | 等级 | 状态 |
 |---|---|---|---|---|
@@ -74,8 +74,9 @@ snapshot:
 | **F-37** | `current-plan.md` 过度宣称"已修复" | 看板与事实不符 | P1 | 助手线 D 处理 |
 | **F-38** | `chests` 表把 `lock`/`smashable` 两个**实例属性**当成箱型属性 | 一旦支持装锁，同一 `chest_wood` 有"能砸/不能砸"两态，配置表表达不了 | P1 | 登记，v1.1 处理 |
 | **F-39** | `updateSnapshotServerSide` 改了 body 却**沿用 `current.checksum`** | 客户端 `verifySave()` 判存档损坏 → **玩家开箱后掉档** | **P0** | ✅ `1fd7364` 已修 |
-| **F-40** | `game-core/economy/index.ts:24` 注释称 `basePrice`"用于上限保护"，实际 `void basePrice` 后**零实现** | 卖价无上限；全表 106 行当前 `recycle_bp/base_price` 比值 0.400~0.507 恰好不越界，**靠数据巧合而非代码守卫** | P1 | 登记，未修（涉数值口径，需设计源裁决） |
-| **F-41** | `prices.recycle_bp` 列名是"万分比"（bp=basis point），实际被当**绝对回收价**用（`floor(recycle_bp * regionBp / 10000)`） | 填表人按列名理解会差 4 个数量级；`base_price` 列实际不参与计算 | P1 | 登记，未修（改列名要动 CSV + schema + 生成器 + 服务端 + 客户端） |
+| **F-40** | `game-core/economy/index.ts` 的 `sellValue` **丢掉了 `recyclePrice` 已有的 ±30% 钳制**，且 `void basePrice` 使注释承诺的"上限保护"零实现；`merchants.schema.json` 的 `region_bp` 还允许填到 `20000`（+100%） | 设定「各地 ±30% 浮动」在 `sellValue` 路径上无强制；填错 `region_bp`/`recycle_bp` 即可买低卖高无限刷灵草 | **P0** | ✅ **已修**（见 §13） |
+| **F-41** | `prices.recycle_bp` 列名是"万分比"（bp），实际存**绝对回收价**；`base_price` 列不参与计算 | 填表人按列名理解会差 4 个数量级 | P1 | ✅ 已修（不改列名，语义写入 schema note；改名留 v1.1） |
+| **F-42** | `server/src/gateway/version.ts` 只有一行常量 `MIDDLEWARE = 'version'`，**无任何实现** | 契约里 `cfg`/`sv` 有语义（配置版本不一致应下发最新、客户端太旧应返 9001），服务端实际**完全不校验** —— 老客户端可以带着过期的 `configVersion` 一直跑 | P1 | 登记，未修（需先定义契约行为） |
 
 **F-40 / F-41 的证据**（本次 HTTP 端到端验证时发现）：
 - `item_0020` 木棍 `base_price=4` / `recycle_bp=2` → 实卖 **2 灵草**（= 50% 回收）。
@@ -244,3 +245,87 @@ node E:/tmp/verify-chest-e2e.mjs               # 12/12
 | 推送 | `9d22859..c56bc22`，双端 `0/0` 一致 |
 | 服务端口 | `5050`（`server/src/main.ts:10` 默认值，与客户端对齐） |
 | 凭据 | PAT 仅在命令行 URL 内嵌一次性使用，`.git/config` 已核验**零残留** |
+
+## 13. F-40 / F-41 修复记录（2026-10-27 20:xx，按设计源设定）
+
+### 设定原文（唯一依据，不自编数值）
+
+- `docs/01_product/design-source/材料与工具总表.md:182`
+- `docs/01_product/design-source/我的筏-深度设计方案-v5.5.md:1140`
+
+> **「原价 = 商人卖价；回收价 = 商人收购价 = 原价 × 50%。各地商人在此基础上 ±30% 浮动。」**
+
+配套：「品阶按原价落档，各地 ±30% 和活动价格不改变品阶」（`立项评审-Hark回答.md:434`）、
+「海水 原价 0 / 不收」（总表价格表）、「回收价格单独定义」（`对话讨论.txt:4639`）。
+
+### 修复前实测的两个漏洞
+
+```
+场景 A：merchants.region_bp 填成 20000（+100%）
+  recyclePrice(10, 10000) = 6    ← 一直被钳在 +30%
+  sellValue(10, 5, 20000)  = 10  ← 没钳，直接翻倍
+
+场景 B：prices.recycle_bp 填成 12（> 原价 10）
+  sellValue(10, 12, 13000) = 15  ← 卖价 > 原价，买低卖高
+```
+
+根因不是"数据错了"，是**同文件里两套实现口径不一致**：
+`recyclePrice()` 是严格按设定写的（`basePrice × 5000 × (10000+bp) / 1e8`，`bp` 硬钳 `±3000`），
+`sellValue()` 是后来为修 D-01 恒 0 问题补的，**只搬了公式、丢了钳制**。
+
+### 修了什么（三层，从填表期到运行期）
+
+| 层 | 位置 | 改动 |
+|---|---|---|
+| 填表期 | `game-data/schemas/merchants.schema.json` | `region_bp` 的 `max` 由 **20000 → 13000**、`min` 由 0 → **7000**，`gen` 时校验 |
+| 运行期 | `packages/game-core/src/economy/index.ts` 的 `sellValue` | ① `regionBp` 钳到 `[7000, 13000]`（与 `recyclePrice` 同口径）② `result > basePrice` 时截到原价 ③ `basePrice <= 0` 返回 0（海水不收） |
+| 契约 | 同上 + `prices.schema.json` | 删掉 `void basePrice` 与那句没兑现的"上限保护"注释；两处 schema note 写清 `recycle_bp` 是绝对价、`region_bp` 的 ±30% 区间 |
+
+**两个边界必须记**（我第一版改坏了一个）：
+1. `regionBp === 0` **不能**钳到 7000。既有契约 `sellValue(10,5,0) === 0`（0 = 系数 0 = 未配置/不收），
+   钳过去会让"漏配 region_bp"变成照付 70%。改成 `regionBp === 0 → return 0`。
+2. `basePrice <= 0 → 0` 是设定要求（海水 0 / 不收），不是防御性冗余。
+
+### 数据侧核查结论：**数据本身没错，不用改**
+
+| 核查项 | 结果 |
+|---|---|
+| `recycle_bp === floor(base_price / 2)` | **100 / 106 行严格相等** |
+| 偏差 5 行 | `item_0045/0056/0068/0078/0084`，用的是 `round(base/2)`（如 331→166），**差 1 枚，属取整差异**，且设计源注明"暂定采用现有数值" |
+| `recycle_bp` 为空 | **1 行**：`item_0013` 海水（`base_price=0`，`recipe_0007` 材料）→ 设计源明写"海水 0 / 不收"，**刻意非漏填** |
+| 黑市档（×1.3）卖价超原价的行 | **0 行** |
+
+所以本次**没有改任何一行 CSV 数值** —— 只加守卫。
+
+### 验证
+
+- `tests/determinism/economy.test.mjs`：7 → **13 例全绿**（新增 F-40 ①~⑤）
+  其中 ⑤ 遍历真实 106 行 × 3 档商人 = **315 次断言**，要求"加守卫后与原式结果逐行相同"→ 证明零行为变更
+- `npm test` 全量 **156/156**（改完 12 个测试文件封套后重跑）
+- `npm run guard` 9/9
+- HTTP 端到端 12/12，`economy.sell` 木棍仍 `herbDelta=2`（与修前一致）
+
+### 一个我先前写错的判断，必须更正
+
+我一度写下"改 schema → `configVersion` 由 `16921d30a67a934f` 变成 `c6a54f0fb00341c5`"。**核实后是错的**：
+
+- `configVersion = sha(JSON.stringify(clean))`（`tools/gen/config.mjs:73`），`clean` 只含**数据行**；
+  改 schema 的 `min`/`max`/`note` **不进 hash**。
+- `git show HEAD:client/assets/resources/config/_manifest.json` → 它**一直是** `c6a54f0fb00341c5`，
+  本次 `gen` 前后无 diff（`git status` 里没有它）。
+- `16921d30a67a934f` 是 `1448b88`（10-23 前）时代的值，早已过期。
+
+**但顺着这个错误查出一件真事**：`tests/` 下 **12 个文件**都写死 `'16921d30a67a934f'`。
+它们一直绿着，因为 `gateway/version.ts` 是桩（F-42），服务端根本不比对 `cfg` ——
+封套里装的是假版本号也没人发现。**校验缺失让错误数据无害化**，这是"测试在说谎"的典型形态。
+
+已建 `tests/fixtures/version.mjs` 作为单一真源（从 `_manifest.json` 读 `configVersion`，
+并统一 `CLIENT_VERSION`），12 个文件全部改为引用它。服务端将来真校验 `cfg` 时，这些测试不会集体变红。
+
+### 仍未修（不在本次范围）
+
+| 项 | 原因 |
+|---|---|
+| F-41 的**列名** `recycle_bp → recycle_price` | 要动 CSV 表头 + schema + 生成器 + 服务端 + 客户端 + 测试，收益只是可读性；先把语义写进 schema note，改名留给 v1.1 一次性做 |
+| `economy/service.ts` 的 `MERCHANTS` 硬编码 | 注释已自承"后续改读 merchants 表"。现在 schema 收紧 + `sellValue` 钳制，硬编码也不会越界，但配置与代码双源问题仍在（同 F-38 的形态） |
+| `version.ts` 桩（F-42） | 需先定义"cfg 不一致时"的契约行为（下发新配置？返回 9001？） |

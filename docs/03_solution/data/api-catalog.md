@@ -22,6 +22,7 @@ review: 2026-11-23
 | `save.push` | save | ✔ | ✔ | 提交存档（带修订号） |
 | `save.resolveFork` | save | ✔ | ✔ | 玩家选择保留哪份存档 |
 | `salvage.claimInfo` | salvage | ✔ | ✔ | 领取沉船信息份数 |
+| `chest.open` | chest | ✔ | ✔ | 开启带锁或无锁箱子并领取保底奖励 |
 | `economy.buyQuota` | economy | ✔ | ✔ | 购买区服每日限量物品（如高级开锁工具） |
 | `economy.sell` | economy | ✔ | ✔ | 商人回收物品（影子账本校验，容差=0，ADR-0012） |
 | `leaderboard.report` | leaderboard | ✔ | ✔ | 批量上报联网实时收获 |

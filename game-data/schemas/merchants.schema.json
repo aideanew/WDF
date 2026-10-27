@@ -13,9 +13,10 @@
     },
     "region_bp": {
       "type": "int",
-      "min": 0,
-      "max": 20000,
-      "required": true
+      "min": 7000,
+      "max": 13000,
+      "required": true,
+      "note": "区域价格系数（万分比：10000 = 基准价）。设定（材料与工具总表.md:182 / 我的筏-v5.5.md:1140）：「各地商人在此基础上 ±30% 浮动」→ 合法区间 [7000, 13000]。原 max=20000（+100%）与设定冲突，F-40 收紧。现三档：渔村 10000（基准）/ 流浪 8500（-15%）/ 黑市 13000（+30%）。运行时 game-core sellValue 会再钳一次（防绕过 schema 的硬编码路径，如 economy/service.ts 的 MERCHANTS 表）。"
     },
     "daily_limit": {
       "type": "int",

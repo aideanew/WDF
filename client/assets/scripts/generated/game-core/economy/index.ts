@@ -19,13 +19,38 @@ export function sellPrice(basePrice: number, regionBp: number = 0): number {
  * region_bp/10000 是区域系数（渔村=1.0 / 流浪=0.85 / 黑市=1.3）。
  * 结果与 recyclePrice(basePrice, bp) 在 bp = regionBp - 10000 时完全一致。
  *
- * `basePrice` 入参保留（S-406.2 签名要求），不参与计算但用于上限保护（卖价不超过原价）。
+ * ## 两条设定硬约束（F-40，此前只写在注释里、代码零实现）
+ *
+ * 设定原文（`材料与工具总表.md:182`、`我的筏-深度设计方案-v5.5.md:1140`）：
+ * **「原价 = 商人卖价；回收价 = 商人收购价 = 原价 × 50%。各地商人在此基础上 ±30% 浮动。」**
+ *
+ * 1. **区域系数钳在 ±30%**（`region_bp ∈ [7000, 13000]`）。
+ *    同文件的 `recyclePrice()` 一直这么做（`Math.max(-3000, Math.min(3000, bp))`），
+ *    但 `sellValue` 是后来补的，把这个钳制丢了 —— 配置里把 `region_bp` 写成 20000
+ *    就等于 +100%，直接突破设定。现在两边同口径。
+ *
+ * 2. **回收价不得超过原价**。原注释承诺的"上限保护"此前是 `void basePrice;`，一行都没实现。
+ *    正常数据下永不触发（50%×1.3 = 65% 原价），但数据巧合不是守卫：
+ *    一旦有人把 `recycle_bp` 填成大于 `base_price`，买低卖高即可无限刷灵草。
+ *
+ * `basePrice <= 0` 视为"无价"直接返回 0（设定：海水 原价 0 / 不收）。
  */
 export function sellValue(basePrice: number, recycleBp: number, regionBp: number): number {
-  void basePrice;
   if (!Number.isFinite(recycleBp) || !Number.isFinite(regionBp)) return 0;
   if (recycleBp < 0 || regionBp < 0) return 0;
-  const result = Math.floor((recycleBp * regionBp) / 10000);
+  // 原价 0 = 不可回收物（设定：海水 原价 0 / 不收），卖价恒 0
+  if (!Number.isFinite(basePrice) || basePrice <= 0) return 0;
+  // 区域系数 0 = 未配置/不收（既有契约 sellValue(10,5,0) === 0）。
+  // 注意不能把 0 当 "-100%" 再钳到 7000 —— 那会让"漏配 region_bp"变成照付 70%。
+  if (regionBp === 0) return 0;
+
+  // ① 区域系数钳在 ±30%（与 recyclePrice 的 bp 钳制等价：[7000, 13000]）
+  const region = Math.max(7000, Math.min(13000, regionBp));
+
+  let result = Math.floor((recycleBp * region) / 10000);
+  // ② 回收价不得超过原价（防填错 recycle_bp 后买低卖高）
+  if (result > basePrice) result = Math.floor(basePrice);
+
   if (!Number.isSafeInteger(result) || result < 0) return 0;
   return result;
 }
