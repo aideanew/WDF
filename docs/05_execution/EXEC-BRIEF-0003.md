@@ -27,11 +27,11 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 |---|---|---|
 | G-01 | 默认只读；只写各卡"允许修改"清单内路径 | standing 规划 §1 |
 | G-02 | 数值唯一来源 = `plan-v003/decision-sheet.md`；表内没有的值**禁止自编**，缺 → BLOCKED 上报 | E-06 + DS 解冻凭证 |
-| G-03 | 禁改 `packages/contracts/**`，**唯一例外 TASK-4015**（且与 4006 同提交） | ADR-0011 + DS 解冻授权 |
+| G-03 | 禁改 `packages/contracts/**`，**仅两处例外**：TASK-4006（只准 `contracts/actions.ts` 增 `economy.sell`，禁碰 errors/ux）与 TASK-4015（errors/ux）；4015 与 4006 同提交暂存 | ADR-0011 + DS 解冻授权（主控 2026-10-27 扩裁） |
 | G-04 | 改 `packages/**` 后必跑 `npm run sync`，否则守卫 `generatedUntouched` 红 | 守卫第 7 项 |
 | G-05 | 禁手改 `client/assets/scripts/generated/**`（改源重 sync） | 同上 |
 | G-06 | 类型检查唯一过滤式：`npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 \| grep -v "^C:/"`；**禁止** `grep 项目路径`（漏 services/** 假绿） | BASE-34 教训 |
-| G-07 | 依赖 `'cc'` 的代码 Node 测不到：`npm test` 全绿 ≠ 完成，必须叠加 G-06 +（UI 卡）真机录屏 | P0 读表崩溃教训 |
+| G-07 | 依赖 `'cc'` 的代码 Node 测不到：`npm test` 全绿 ≠ 完成，必须叠加 G-06 +（UI 卡）真机录屏。**无真机降级判据**：真机缺失时 UI 运行时断言记 **UNKNOWN**（不得记 PASS），替代证据 = G-06 零错 + 逻辑层单测 + 上报中列出走查过的代码行号；不阻塞该卡其余断言与下一卡 | P0 读表崩溃教训 + 主控 2026-10-27 裁定 |
 | G-08 | Cocos 3.8 `resources.load` 全部重载返回 void、**无 loadAsync**：读资源一律 4 参回调包 Promise（范本 `services/config/index.ts` 已修好，照抄范式） | 10-27 主控 hot-fix |
 | G-09 | 存档背包段是**扁平** `modules.inventory = { [itemId]: number }`，**没有 `.items` 子键**；未知 id（如 driftwood）走 unknownIds 分支不崩 | HookModel.ts:114-117 |
 | G-10 | `QueryRes` 字段是 **`items`**（非 rows），另有 `me?/next?/snapshotAt` | contracts/leaderboard/index.ts:6 |
@@ -52,12 +52,14 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 - **D-04 hooks**：1 行 target_dist=600、angle_deg=15、max_power_bp=DEFAULT_HOOK_CONFIG 现值（等值迁移）。
 - **D-05 guide_steps**：5 行（出钩→背包→合成→回收→榜单），每行一句文案+target_panel。
 - **D-06 ad_placements**：3 行（hook_cooldown/offline_double/shop_refresh），每位置每日上限 3。
-- **D-07 items**：weight=1/capacity=0/stack=99/unlock_level=0（全 106 行）。
+- **D-07 items**：weight=1/capacity=0/stack=99/unlock_level=0（全 106 行）。**主控裁定：客户端本期维持不显示 weight/capacity/unlock_level**——TASK-3102/3103 的"读 0 = 伪造数据 / 不读 station/job/unlock_level"守卫断言（V-07.c / V-10.e）继续有效；显示放开延后至 v1.1（已登记 plan-v003/10-risks）。4002 只管把真实值转录进表，不改任何面板。
 - **D-08 locks**：hits_required none=0/iron=3/copper=5/silver=8/gold=12；zone_bp=0。
 - **D-09 chests**：smashable=true/size=1（3 行）。
 - **D-10 recipes**：job 空、unlock_level=0。
 - **D-11**：ADR-0012 影子账本（容差 0，不一致=1001+telemetry；限购日界=服务端 Asia/Shanghai 自然日）→ `economy.sell{itemId,count}`。
 - **D-12**：新增 `BIND_TICKET_INVALID=2004`；**D-13**：event ops 仅登记；**D-14**：维持 INTERNAL 回落+登记。
+
+> **ADR-0011 时序裁定（主控 2026-10-27）**：ADR-0011 文档现状 `proposed` 且写明"不进入本轮允许修改范围"，但 D-11/D-12 已由用户裁决锁定。**授权条款：缺口 1（sell/ADR-0012）与缺口 2（2004）视为主控预授权，TASK-4006 可即时按 §2/§3.3 改 contracts/actions，无需等 ADR 文档翻状态；ADR-0011/0012 的 `proposed→accepted` 状态翻转由 TASK-4015 在 W4 事后补录并链接提交号**。助手执行以本文件 + decision-sheet 为准，不得以 ADR 文档旧状态为由停手。
 
 ## 3. 跨任务接口契约（唯一共享面）
 
@@ -77,10 +79,13 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 ```
 4007/4008 **只准 `invoke('economy.sell')`**，禁直接改 game-core 或 LocalSave 的经济段。
 
-### 3.4 存档键（勿改）
+### 3.4 存档键（主控裁定，4004 照办）
 `modules.inventory`（扁平）、`modules.guide.done: string[]`（4004 新增，写前先读后并）。
+**迁移裁定**：`modules` 是 `Record<string, unknown>` 开放 map，**新增 `modules.<key>` 属开放 map 扩展，不算存档结构变更，不递增 `SAVE_SCHEMA_VERSION`、不写迁移函数**；但 4004 须在其卡内登记一行"新增键 = guide.done，默认值 []"（写入 plan-v003/05 的卡面备注即可）。除此之外任何存档**已有键的形状变更**仍触发 AGENTS.md 的版本递增+迁移+测试三件套。
 
 ## 4. 波次与任务卡（L3 步骤 / L4 断言）
+
+> **TASK-4001（数值转录工具设计）已并入 TASK-4002 执行**：其唯一核心产出 `tools/gen/transcribe.mjs` 当前**不存在**（tools/gen/ 仅有 catalog/config/conversation-log/docs-index 四个 mjs），由 S-402.2 新建——这是预期内的"建"而非"改"，不构成熔断。§4 因此只覆盖 15 张卡的执行细节。
 
 ### W1（B 先行，A 跟进；C 全程并行 S14 三卡）
 
@@ -92,11 +97,11 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 - S-402.5 确认：guard 9/9；`node tools/gen/transcribe.mjs --dry-run` 幂等（二次跑 0 变更）。
 - V-402.a `table('merchants').length===3 && table('hooks')[0].target_dist===600`
 - V-402.b items 106 行中 weight 全=1、stack 全=99；locks hits_required=[0,3,5,8,12]
-- V-402.c `configVersion()` 数值变化且 `_manifest.json` 同步
+- V-402.c `configVersion()` 返回值 ≠ **基线 `b249f288e985da48`**（2026-10-27 主控实测 `_manifest.json` 现值），且 `_manifest.json` 的 `tables` 数组同步
 - V-402.d 全量 verify 绿 + G-06 零项目错误
-- 允许：game-data/**、tools/gen/**、services/config/tables.ts、client/resources/config（gen 产物）、UNKNOWN-TABLES.md。禁止：contracts/**、server/**、features/**。
+- 允许：game-data/**、tools/gen/**、services/config/tables.ts、UNKNOWN-TABLES.md。**`client/resources/config/**` 是 gen 产物：只准经 `npm run gen:config` 生成（G-05），禁手改**。禁止：contracts/**、server/**、features/**。
 
-**TASK-4003 HookView 接表（助手 A）**：见 plan-v003/05；要点——缺行回落**现常量**并 warn；HookModel 入参 cfg 注入；hook 既有测试全绿。V：改表→手感变；删表→等值回落；G-06 零错。
+**TASK-4003 HookView 接表（助手 A）**：见 plan-v003/05；要点——缺行回落**现常量**并 warn；HookModel 入参 cfg 注入；hook 既有测试全绿。V：改 `hooks.target_dist` 600→500 后 `chargeAndCast` 达杆距离同步 −100（数值断言）；删表→回落 600 等值；G-06 零错。
 
 **TASK-4004 引导层（助手 A，可与 4003 串行同波）**：见 plan-v003/05；新建 `features/guide/**`；`modules.guide.done` 读写并包 try/catch；V：首启出第 1 步、5 步后不再现、失败不阻塞主界面。
 
@@ -117,7 +122,7 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 - S-406.4 `salvage` 侧（供 4009 复用）：`ledger_entry` 记获得（type=salvage）的 repo 函数。
 - S-406.5 集成测试 `tests/integration/economy-sell.test.mjs`：正常卖/超卖/重复 rid/限购尽/影子不一致 5 例。
 - V-406.a 新测试全绿且 `# tests ≥ 113`；V-406.b 集成断言 `ledger_entry` 有行；V-406.c 超卖零副作用（前后快照相等）；V-406.d verify 绿。
-- 允许：contracts/actions、game-core/economy、server/economy·salvage·db 迁移**无**、tests/**。禁止：save.push 语义、errors.ts（留给 4015）。
+- 允许：`packages/contracts/src/actions.ts`（仅增 economy.sell）、`packages/game-core/src/economy/**`、`server/src/modules/economy/**`、`server/src/modules/salvage/**`、`tests/**`。**db 迁移：无**（ledger_entry 已在 0001_init.sql:44）。禁止：save.push 语义、contracts/errors.ts 与 ux.ts（留给 4015）。
 
 **TASK-4007 商人页（助手 A）**：见 plan-v003/06；PanelKey 扩 `merchant`（唯一授权）；空额度=empty 态"今日额度已用完，明天再来"；卖成功 `navigate('inventory')`。V：切换不重建；G-06 零错；录屏 EVD-4007。
 
@@ -144,10 +149,12 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 
 ## 5. 并发与排他锁表
 
+> 口径：**写者 = 助手**（一个助手同一时段只有一张在写卡；同一助手名下多卡为串行，不占多席）。
+
 | 时段 | 写者1 | 写者2 | 写者3 | 排他要点 |
 |---|---|---|---|---|
-| W1 前半 | B:4002 | C:4012 | C:4011 | 4002 独占 game-data+tables.ts |
-| W1 后半 | A:4003→4004 | B:4005 | C:4010 | A 独占 features/hook+guide；B 独占 docs/03_solution/decisions |
+| W1 前半 | B:4002 | C:4012 | — | 4002 独占 game-data+tables.ts；C 完成 4012 后接 4010 |
+| W1 后半 | A:4003→4004 | B:4005 | C:4010→4011 | A 独占 features/hook+guide；B 独占 docs/03_solution/decisions |
 | W2 前半 | B:4006 | C 收尾 | — | 4006 独占 contracts/actions+server/economy |
 | W2 后半 | A:4007→4008 | — | — | A 独占 panel-types+economy/inventory 视图 |
 | W3 | A:4009 | B 配合 server | C:4010~12 | 4009 独占 salvage |
@@ -171,7 +178,7 @@ UNRESOLVED: <无 或 列表>
 ## 7. 熔断与升级
 - 同卡连续 2 次 FAIL → 停手，改任务书/升档位/标 BLOCKED；**禁止换提示词硬撞第 3 次**。
 - 发现事实与本文件冲突（如契约字段与 §3 不符）→ 停手上报主控，不得自行解释。
-- 真机环境缺失 → 4010/4011 标 BLOCKED 转 4012 先行，不造数据。
+- 真机环境缺失 → 4010/4011 标 BLOCKED 转 4012 先行，不造数据；**UI 卡（4003/4004/4007/4008/4009）的录屏断言按 G-07 降级记 UNKNOWN，卡本身不因此 BLOCKED**。
 
 ## 8. 三段可复制 prompt
 
@@ -181,7 +188,7 @@ UNRESOLVED: <无 或 列表>
 必读（按序）：docs/05_execution/EXEC-BRIEF-0003.md 全文（§1 铁律、§2 锁定值、§3 接口、§4 你名下卡片、§5 锁表、§6 上报、§7 熔断）、
 docs/04_planning/plan-v003/decision-sheet.md（数值唯一来源）、plan-v003/05 与 06 与 08 中你名下任务卡。
 你名下卡片与顺序：TASK-4002 → 4005 → 4006 → 4015（4015 须待 4006 合入且主控放行）。
-硬约束提醒：数值只准来自 decision-sheet（G-02）；禁改 errors.ts/ux.ts 直到 4015（G-03 例外）；改 packages 后必 npm run sync（G-04）；
+硬约束提醒：数值只准来自 decision-sheet（G-02）；contracts 仅 4006 可增 economy.sell（G-03 例外一），errors.ts/ux.ts 直到 4015 才可动（例外二）；ADR-0011 缺口 1/2 已预授权（§2 裁定），勿因 ADR 文档旧状态停手；改 packages 后必 npm run sync（G-04）；
 类型检查只用 EXEC-BRIEF §1 G-06 的过滤式（G-06）；客户端背包段是扁平 modules.inventory 无 .items（G-09）。
 禁 git commit/push；每卡按 §6.1 模板上报，一次一张；连续 2 次 FAIL 停手（§7）。
 ```
@@ -219,6 +226,6 @@ UX 态只用 toUxState/conflictOf（G-11）；读资源照抄 services/config/in
 | 6 | `npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 \| grep -v "^C:/" \| grep -c "error TS"` | 0 |
 | 7 | `npm run guard` | 9/9 |
 | 8 | `npm test` | pass 107（4006 后 ≥113） |
-| 9 | `grep -n "loadAsync" client/assets/scripts/services/config/index.ts` | 无输出（G-08 证据） |
+| 9 | `grep -c "new Promise" client/assets/scripts/services/config/index.ts` ≥ 1 **且** `grep -n "loadAsync" client/assets/scripts/services/config/index.ts \| grep -v "//" \| wc -l` = 0（4 参回调范式在位；loadAsync 仅允许出现在注释里——第 13 行注释，G-08 证据） | 两式同时成立 |
 
 > 波次批末主控动作：全量 `npm run verify` → 复核各卡上报 → 统一 commit/push（`-c http.version=HTTP/1.1`）。
