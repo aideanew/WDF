@@ -10,6 +10,7 @@ export const ACTIONS = {
   'save.resolveFork': { module: 'save', auth: true, idempotent: true, desc: '玩家选择保留哪份存档' },
   'salvage.claimInfo': { module: 'salvage', auth: true, idempotent: true, desc: '领取沉船信息份数' },
   'economy.buyQuota': { module: 'economy', auth: true, idempotent: true, desc: '购买区服每日限量物品（如高级开锁工具）' },
+  'economy.sell': { module: 'economy', auth: true, idempotent: true, desc: '商人回收物品（影子账本校验，容差=0，ADR-0012）' },
   'leaderboard.report': { module: 'leaderboard', auth: true, idempotent: true, desc: '批量上报联网实时收获' },
   'leaderboard.query': { module: 'leaderboard', auth: true, idempotent: false, desc: '查询榜单快照' },
   'event.start': { module: 'event', auth: true, idempotent: true, desc: '开赶海场次：服务器生成种子与装备快照' },

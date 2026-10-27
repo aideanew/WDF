@@ -45,6 +45,12 @@ export const PAYLOAD_SCHEMAS: Partial<Record<ActionName, z.ZodTypeAny>> = {
     itemId: Id,
     count: z.number().int().min(1).max(9999),
   }),
+  // 商人回收（ADR-0012）：merchantId 可选，缺省 merchant_village（服务端兜底）
+  'economy.sell': z.object({
+    itemId: Id,
+    count: z.number().int().min(1).max(999),
+    merchantId: z.enum(['merchant_village', 'merchant_wander', 'merchant_black']).optional(),
+  }),
 
   // —— 排行榜 ——
   'leaderboard.report': z.object({

@@ -5,6 +5,7 @@ import type { Claims } from './auth.ts';
 import { accountHandlers } from '../modules/account/handlers.ts';
 import { complianceHandlers } from '../modules/compliance/handlers.ts';
 import { configHandlers } from '../modules/config/handlers.ts';
+import { economyHandlers } from '../modules/economy/handlers.ts';
 import { leaderboardHandlers } from '../modules/leaderboard/handlers.ts';
 import { saveHandlers } from '../modules/save/handlers.ts';
 import { telemetryHandlers } from '../modules/telemetry/handlers.ts';
@@ -40,6 +41,7 @@ export const HANDLERS = {
   'save.resolveFork': saveHandlers['save.resolveFork'],
   'salvage.claimInfo': todo,
   'economy.buyQuota': todo,
+  'economy.sell': economyHandlers['economy.sell'],
   'leaderboard.report': leaderboardHandlers['leaderboard.report'],
   'leaderboard.query': leaderboardHandlers['leaderboard.query'],
   'event.start': todo,
