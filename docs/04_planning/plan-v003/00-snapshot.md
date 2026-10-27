@@ -40,7 +40,8 @@ snapshot:
 | 文件 | 内容 | 谁读 |
 |---|---|---|
 | [01-fact-baseline.md](01-fact-baseline.md) | 事实基线 + 文档/代码差异清单 | 全员 |
-| [02-scope-and-decisions.md](02-scope-and-decisions.md) | v1.0 范围复核 + **BLOCKING 裁决清单（数值欠账结构化）** | **用户必读** |
+| [02-scope-and-decisions.md](02-scope-and-decisions.md) | v1.0 范围复核 + ~~BLOCKING 裁决清单~~ **已全部裁决（2026-10-27"全按建议值"）** | 全员 |
+| [decision-sheet.md](decision-sheet.md) | ★裁决表（D-01~D-14 锁定值，status: accepted）——**数值唯一合法来源** | 执行者必读 |
 | [03-slices.md](03-slices.md) | 垂直切片 S11~S16 + 排序理由 | 全员 |
 | [04-task-index-and-dag.md](04-task-index-and-dag.md) | 任务索引 + 依赖 DAG + 所有权矩阵 | 派工 |
 | [05-wave1-data-unblock.md](05-wave1-data-unblock.md) | W1 数值清欠（卡 TASK-4001~4004） | 执行者 |
@@ -50,6 +51,7 @@ snapshot:
 | [09-metrics.md](09-metrics.md) | 基线指标（含首次测量值或"尚无基线"） | 全员 |
 | [10-risks.md](10-risks.md) | 风险 / 未决 / 待裁决 | 用户+主控 |
 | [11-self-check.md](11-self-check.md) | 本规划自检结果 | 全员 |
+| `../../05_execution/EXEC-BRIEF-0003.md` | ★派工指令（三段可复制 prompt + 铁律 G-01~18 + 波次锁表 + 断言） | 助手 A/B/C |
 
 ## 0.4 使用纪律（沿用 EXEC-BRIEF-0002 已验证有效的）
 
