@@ -18,7 +18,7 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 
 1. 每个助手拿到 §8 对应一段 prompt 开场，先读本文件 §1~§7 与 plan-v003 对应卡，再按 §4 波次顺序执行。
 2. **同时最多 3 个写者**（§5 锁表）；单卡只跑自身验证，波次批末跑全量 `npm run verify`。
-3. **禁 git commit**：所有助手只改文件+跑验证+按 §6 上报；统一由主控提交/推送。
+3. **禁 git commit**：所有助手只改文件+跑验证+按 §6 上报；commit 统一由主控做。**推送例外（用户 2026-10-27 委托）**：push 可由任一助手代执行——PAT 由用户在派工 prompt 之外单独临时提供，即用即删，禁止写入任何文件或 .gitconfig；命令须带 `-c http.version=HTTP/1.1`。该委托不含 commit 权：助手只推已存在的本地提交。
 4. 每卡上报一次，严格按 §6.1 模板；发现本文件与真实代码冲突 → 停手按 §7 熔断上报。
 
 ## 1. 通用铁律（G-01~G-18，违反即 FAIL）
@@ -39,7 +39,7 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 | G-12 | 新面板必须走 `createXxxPanel(parent): PanelHandle` 工厂 + PanelKey 注册；MainView 仅 ≤5 行挂载改动 | TASK-3101 契约 |
 | G-13 | game-core 纯函数：无 Math.random/Date.now/enum/namespace/IO/绝对导入；时间由入参传 | gameCorePurity 守卫 |
 | G-14 | 改完任何 `git checkout --` 必跑换行探测：`git diff --quiet && npm run guard`（仓库已有 `.gitattributes`，仍须防残留） | C-06 教训 |
-| G-15 | push/commit 归主控；助手本地验证命令一律不碰网络远端 | 并发纪律 |
+| G-15 | commit 归主控；push 默认主控，用户委托助手代推时按 §0.3 例外执行（仍禁自行 commit） | 并发纪律 + 2026-10-27 用户委托 |
 | G-16 | 文档 md 必须带 front matter（id/title/status），status ∈ 守卫白名单 | docsFrontMatter |
 | G-17 | 长命令不接管道（假死），重定向文件再读；**例外** G-06 过滤式 | P-06 |
 | G-18 | 上报只报 PASS/FAIL/UNKNOWN + 证据路径，不写长篇解释 | 防自证循环 |
@@ -228,4 +228,4 @@ UX 态只用 toUxState/conflictOf（G-11）；读资源照抄 services/config/in
 | 8 | `npm test` | pass 107（4006 后 ≥113） |
 | 9 | `grep -c "new Promise" client/assets/scripts/services/config/index.ts` ≥ 1 **且** `grep -n "loadAsync" client/assets/scripts/services/config/index.ts \| grep -v "//" \| wc -l` = 0（4 参回调范式在位；loadAsync 仅允许出现在注释里——第 13 行注释，G-08 证据） | 两式同时成立 |
 
-> 波次批末主控动作：全量 `npm run verify` → 复核各卡上报 → 统一 commit/push（`-c http.version=HTTP/1.1`）。
+> 波次批末主控动作：全量 `npm run verify` → 复核各卡上报 → 统一 commit；push 按用户委托由助手代推（§0.3 例外，`-c http.version=HTTP/1.1`）。
