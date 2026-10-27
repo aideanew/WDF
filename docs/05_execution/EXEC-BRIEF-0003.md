@@ -80,7 +80,7 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 4007/4008 **只准 `invoke('economy.sell')`**，禁直接改 game-core 或 LocalSave 的经济段。
 
 ### 3.4 存档键（主控裁定，4004 照办）
-`modules.inventory`（扁平）、`modules.guide.done: string[]`（4004 新增，写前先读后并）、`modules.currency = { gold: number }`（4007 新增，**本地展示镜像**：卖出成功 `gold += herbDelta`；权威在服务端 `ledger_entry`，**禁止用镜像做扣费依据**，D-15）。**术语统一"金币"**（设计权威 v5.5 L614），`herbDelta` 字段名保留不改（D-15）。单价显示只能 import `game-core/economy` 的 `sellValue` 复算，禁在面板重写公式（D-16）。
+`modules.inventory`（扁平）、`modules.guide.done: string[]`（4004 新增，写前先读后并）、`modules.wallet = { gold: number }`（4007 新增，**本地展示镜像**：卖出成功 `gold += herbDelta`；权威在服务端 `ledger_entry`，**禁止用镜像做扣费依据**，D-15）。**术语统一"金币"**（设计权威 v5.5 L614），`herbDelta` 字段名保留不改（D-15）。单价显示只能 import `game-core/economy` 的 `sellValue` 复算，禁在面板重写公式（D-16）。
 **迁移裁定**：`modules` 是 `Record<string, unknown>` 开放 map，**新增 `modules.<key>` 属开放 map 扩展，不算存档结构变更，不递增 `SAVE_SCHEMA_VERSION`、不写迁移函数**；但 4004 须在其卡内登记一行"新增键 = guide.done，默认值 []"（写入 plan-v003/05 的卡面备注即可）。除此之外任何存档**已有键的形状变更**仍触发 AGENTS.md 的版本递增+迁移+测试三件套。
 
 ## 4. 波次与任务卡（L3 步骤 / L4 断言）

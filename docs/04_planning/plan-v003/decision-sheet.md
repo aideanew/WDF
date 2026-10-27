@@ -51,7 +51,7 @@ related: [PLAN-V003-02, PLAN-V003-05, EXEC-BRIEF-0003]
 
 | # | 议题 | 裁决 |
 |---|---|---|
-| **D-15** | 货币载体与术语（C-01） | **A**：术语统一为**金币**（设计权威 v5.5 L614「只有一种货币：金币」优先于卡面旧称"灵草"）；`SellRes.herbDelta` 字段名**保留不改**（改名另立卡）；客户端新增 `modules.currency = { gold: number }` 作为**本地展示镜像**（§3.4 开放 map 扩展，不递增 SAVE_SCHEMA_VERSION）。**权威仍是服务端 `ledger_entry`**，镜像随卖出 `+herbDelta` 递增；服务端余额查询接口留后续卡，届时改为服务端同步（禁止用镜像做扣费依据）。 |
+| **D-15** | 货币载体与术语（C-01） | **A**：术语统一为**金币**（设计权威 v5.5 L614「只有一种货币：金币」优先于卡面旧称"灵草"）；`SellRes.herbDelta` 字段名**保留不改**（改名另立卡）；客户端新增 `modules.wallet = { gold: number }` 作为**本地展示镜像**（键名服从 module-catalog 既有 `save:["wallet"]` 声明）（§3.4 开放 map 扩展，不递增 SAVE_SCHEMA_VERSION）。**权威仍是服务端 `ledger_entry`**，镜像随卖出 `+herbDelta` 递增；服务端余额查询接口留后续卡，届时改为服务端同步（禁止用镜像做扣费依据）。 |
 | **D-16** | 单价显示来源（C-02） | **允许客户端复算，但必须 import `game-core/economy` 的 `sellValue(basePrice, recycleBp, regionBp)` 纯函数**，禁止在面板里重写公式（公式单点在 game-core，符合 G-02 "数值唯一来源"）。单价 = `sellValue(row.base_price, row.recycle_bp, merchant.regionBp)`。 |
 | **D-17** | 额度展示口径（C-03） | 确认助手的方案：**面板顶部显示当前商人的 `quotaLeft / daily_limit`**（来自最近一次 `economy.sell` 响应，首次进入前显示满额度）；**行不参与额度状态**，行只显示单价 + 该商人日上限（同一数值）。 |
 | **D-18** | `SellReq` 缺 `merchantId` 字段 | 前端 TS 类型缺此字段（运行时 zod 已接受、handler 已读）。**归 TASK-4015 补**（契约解冻授权范围内一并处理），4007 期间用局部交叉类型 `SellReq & { merchantId?: string }` 规避。 |

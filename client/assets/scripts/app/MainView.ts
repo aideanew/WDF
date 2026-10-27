@@ -21,11 +21,13 @@ import { createCraftingPanel } from '../features/crafting/view/CraftingPanel';
 import { createLeaderboardPanel } from '../features/leaderboard/view/LeaderboardPanel';
 import { createSettingsPanel, type SettingsHandle } from '../features/settings/view/SettingsPanel';
 import { createGuideOverlay, type GuideHandle } from '../features/guide/view/GuideOverlay';
+import { createMerchantPanel } from '../features/economy/view/MerchantPanel';
 
 const TABS: ReadonlyArray<{ key: PanelKey; label: string }> = [
   { key: 'hook', label: '打捞' },
   { key: 'inventory', label: '背包' },
   { key: 'crafting', label: '合成' },
+  { key: 'merchant', label: '商人' },
   { key: 'leaderboard', label: '榜单' },
 ];
 
@@ -50,11 +52,12 @@ export class MainView extends Component {
     content.setPosition(new Vec3(0, -TAB_H / 2, 0));
     this.node.addChild(content);
 
-    // 按 PanelKey 分发工厂，挂载 4 个面板
+    // 按 PanelKey 分发工厂，挂载 5 个面板
     const factories: Record<PanelKey, (p: Node) => PanelHandle> = {
       hook: createHookPanel,
       inventory: createInventoryPanel,
       crafting: createCraftingPanel,
+      merchant: createMerchantPanel,
       leaderboard: createLeaderboardPanel,
     };
     for (const t of TABS) {

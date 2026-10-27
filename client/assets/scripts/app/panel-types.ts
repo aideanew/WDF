@@ -10,7 +10,7 @@
  */
 import type { Node } from 'cc';
 
-export type PanelKey = 'hook' | 'inventory' | 'crafting' | 'leaderboard';
+export type PanelKey = 'hook' | 'inventory' | 'crafting' | 'leaderboard' | 'merchant';
 
 export interface PanelHandle {
   /** 该面板对应的 Tab 键（与 PanelKey 一一对应）。 */
