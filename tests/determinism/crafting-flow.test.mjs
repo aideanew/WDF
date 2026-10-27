@@ -14,6 +14,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 const { CraftingModel } = await import('../../client/assets/scripts/features/crafting/model/CraftingModel.ts');
 const { SAVE_SCHEMA_VERSION, sealSave, verifySave } = await import('../../packages/game-core/src/save/index.ts');
@@ -26,7 +27,7 @@ const ITEMS = Object.fromEntries(
 function seed(revision, inventory) {
   return sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_craft_flow_test',
     revision,
     savedAt: 1,

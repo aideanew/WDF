@@ -15,6 +15,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 process.env.WDF_DB_DIR = ':memory:';
 process.env.WDF_AUTH_MODE = 'dev';
@@ -29,8 +30,8 @@ after(async () => {
   await closeDb();
 });
 
-const CV = 'v0.1.0-s1';
-const CFG = '16921d30a67a934f';
+const CV = CLIENT_VERSION;
+const CFG = CONFIG_VERSION;
 let seq = 0;
 const rid = (tag) => `sell-${tag}-${(seq += 1)}`;
 /** 与 service.ts dayOf 同式：Asia/Shanghai 自然日 */

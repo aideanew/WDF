@@ -16,6 +16,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 const { ChestModel, projectChests, applyOpen, lockText, materialText } = await import(
   '../../client/assets/scripts/features/chest/model/ChestModel.ts'
@@ -38,7 +39,7 @@ const REWARD = 'item_0020';
 function seed(revision, inventory) {
   return sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_chest_flow_test',
     revision,
     savedAt: 1,

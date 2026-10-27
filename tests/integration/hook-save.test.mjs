@@ -12,6 +12,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 const { HookModel, HOOK_DEMO_ITEM_ID } = await import('../../client/assets/scripts/features/hook/model/HookModel.ts');
 const { DEFAULT_HOOK_CONFIG } = await import('../../packages/game-core/src/hook/index.ts');
@@ -31,7 +32,7 @@ function throwOnce(holdMs, targetDist) {
 test('AT-2103 命中 → 物品 +1、revision 递增、checksum 有效', () => {
   const seed = sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_hook_save_test',
     revision: 0,
     savedAt: 1,
@@ -52,7 +53,7 @@ test('AT-2103 命中 → 物品 +1、revision 递增、checksum 有效', () => {
 test('AT-2103 脱钩 → 存档原样（revision/物品不变）', () => {
   const seed = sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_hook_save_test',
     revision: 3,
     savedAt: 1,
@@ -70,7 +71,7 @@ test('AT-2103 脱钩 → 存档原样（revision/物品不变）', () => {
 test('AT-2103 杀进程重启（JSON 往返）后物品与 revision 保留', () => {
   const seed = sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_hook_save_test',
     revision: 0,
     savedAt: 1,
@@ -98,7 +99,7 @@ test('AT-2103 杀进程重启（JSON 往返）后物品与 revision 保留', () 
 test('AT-2103 存档被篡改 → verifySave 拒绝（损坏走云端档的前置）', () => {
   const seed = sealSave({
     schemaVersion: SAVE_SCHEMA_VERSION,
-    configVersion: '16921d30a67a934f',
+    configVersion: CONFIG_VERSION,
     saveId: 's_hook_save_test',
     revision: 1,
     savedAt: 1,

@@ -13,6 +13,7 @@
  */
 import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 process.env.WDF_DB_DIR = ':memory:';
 process.env.WDF_AUTH_MODE = 'dev';
@@ -26,8 +27,8 @@ after(async () => {
   await closeDb();
 });
 
-const CV = 'v0.1.0-s1';
-const CFG = '16921d30a67a934f';
+const CV = CLIENT_VERSION;
+const CFG = CONFIG_VERSION;
 let seq = 0;
 const rid = (tag) => `fork-${tag}-${(seq += 1)}`;
 

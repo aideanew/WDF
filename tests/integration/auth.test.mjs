@@ -14,6 +14,7 @@ import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 // 必须在 import db.ts 之前设定：db.ts 在加载时读取环境变量
 process.env.WDF_DB_DIR = ':memory:';
@@ -30,8 +31,8 @@ after(async () => {
   await closeDb();
 });
 
-const CV = 'v0.1.0-s1';
-const CFG = '16921d30a67a934f';
+const CV = CLIENT_VERSION;
+const CFG = CONFIG_VERSION;
 let seq = 0;
 const rid = (tag) => `test-${tag}-${(seq += 1)}`;
 

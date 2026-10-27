@@ -16,6 +16,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { q } from '../../server/src/core/db.ts';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 process.env.WDF_DB_DIR = ':memory:';
 process.env.WDF_AUTH_MODE = 'dev';
@@ -26,8 +27,8 @@ const { handleRpc } = await import('../../server/src/gateway/rpc.ts');
 await initDb();
 test.after(async () => { await closeDb(); });
 
-const CV = 'v0.1.0-s1';
-const CFG = '16921d30a67a934f';
+const CV = CLIENT_VERSION;
+const CFG = CONFIG_VERSION;
 
 /** 契约 15 码表里的常量（tests 不直接 import contracts，避免 Node 类型剥离差异）。 */
 const C_OK = 0;

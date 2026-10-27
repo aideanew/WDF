@@ -9,6 +9,7 @@
  */
 import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
+import { CONFIG_VERSION, CLIENT_VERSION } from '../fixtures/version.mjs';
 
 process.env.WDF_DB_DIR = ':memory:';
 process.env.WDF_AUTH_MODE = 'dev';
@@ -22,8 +23,8 @@ after(async () => {
   await closeDb();
 });
 
-const CV = 'v0.1.0-s1';
-const CFG = '16921d30a67a934f';
+const CV = CLIENT_VERSION;
+const CFG = CONFIG_VERSION;
 
 function call(a, p = {}, opts = {}) {
   const m = { rid: opts.rid ?? `e2e-${a}-${Math.random().toString(36).slice(2)}`, cv: CV, cfg: CFG, sv: 1, plat: 'wechat' };
