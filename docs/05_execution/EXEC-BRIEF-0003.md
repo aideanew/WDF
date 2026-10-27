@@ -11,13 +11,13 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 # EXEC-BRIEF-0003 · v1.0 冲刺派工指令
 
 > **前提**：用户已于 2026-10-27 裁决"全按建议值"（`docs/04_planning/plan-v003/decision-sheet.md`，status: accepted）。
-> 本指令是**唯一执行依据**；与 plan-v003/05~08 的任务卡配合使用（卡=交付什么，本文件=怎么做与怎么验）。
-> **主控不执行任何卡**；三个助手互相不能通信，唯一共享面 = 本文件 §2/§3 + 契约 + decision-sheet。
+> **执行模式（2026-10-27 11:08 用户更新）：只有主控 + 一个助手**——助手按 §5 串行卡链依次执行全部 16 卡；本文件是**唯一执行依据**；与 plan-v003/05~08 的任务卡配合使用（卡=交付什么，本文件=怎么做与怎么验）。
+> **主控不执行任何卡**，只复核/提交/委托推送。
 
 ## 0. 怎么用
 
-1. 每个助手拿到 §8 对应一段 prompt 开场，先读本文件 §1~§7 与 plan-v003 对应卡，再按 §4 波次顺序执行。
-2. **同时最多 3 个写者**（§5 锁表）；单卡只跑自身验证，波次批末跑全量 `npm run verify`。
+1. 每个助手拿到 §8 单段 prompt 开场，先读本文件 §1~§7 与 plan-v003 对应卡，再按 §5 串行卡链执行。
+2. **单助手串行**：同一时刻只有一张在写卡；单卡只跑自身验证，波次批末跑全量 `npm run verify`。
 3. **禁 git commit**：所有助手只改文件+跑验证+按 §6 上报；commit 统一由主控做。**推送例外（用户 2026-10-27 委托）**：push 可由任一助手代执行——PAT 由用户在派工 prompt 之外单独临时提供，即用即删，禁止写入任何文件或 .gitconfig；命令须带 `-c http.version=HTTP/1.1`。该委托不含 commit 权：助手只推已存在的本地提交。
 4. 每卡上报一次，严格按 §6.1 模板；发现本文件与真实代码冲突 → 停手按 §7 熔断上报。
 
@@ -86,8 +86,9 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 ## 4. 波次与任务卡（L3 步骤 / L4 断言）
 
 > **TASK-4001（数值转录工具设计）已并入 TASK-4002 执行**：其唯一核心产出 `tools/gen/transcribe.mjs` 当前**不存在**（tools/gen/ 仅有 catalog/config/conversation-log/docs-index 四个 mjs），由 S-402.2 新建——这是预期内的"建"而非"改"，不构成熔断。§4 因此只覆盖 15 张卡的执行细节。
+> **单助手模式**：卡面括号内的 (助手 B/A/C) 是原三助手方案的归属标注，**只读作"该卡属于哪条能力线"，不表示执行者不同**——一个助手按 §5 卡链全部做完。
 
-### W1（B 先行，A 跟进；C 全程并行 S14 三卡）
+### W1（数值与手感先行）
 
 **TASK-4002 数值转录（助手 B）**——卡面见 plan-v003/05
 - S-402.1 探测：`cat docs/04_planning/plan-v003/decision-sheet.md` 确认 status=accepted。
@@ -107,7 +108,7 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 
 **S14 并行三卡（助手 C）**：4010 录屏（4 mp4+6 态矩阵，真机由用户提供，缺→BLOCKED 不造数）；4011 命中率采样（≥3人×20钩，附原始日志≥20条；未达标只记录禁调参）；4012 包体基线（`tools/measure-bundle.mjs`，主包数字落 EVD-4012；>4MB 出瘦身候选清单但不动包）。
 
-### W2（B 先行架构，A 跟进 UI）
+### W2（架构与商人 UI）
 
 **TASK-4005 ADR-0012（助手 B，按已锁定方案成文）**
 - S-405.1 按本文件 §2 D-11 与 §3.3 写 `docs/03_solution/decisions/ADR-0012-authoritative-inventory.md`：数据流图（salvage/claimInfo 与 push diff 记获得 → sell 校验 → ledger 追加）、容差=0 依据、失败码=1001、限购日界=服务端时区、回滚方案（关校验开关）。
@@ -147,18 +148,17 @@ ledger_entry 追加行：{ player_id, type:'sell'|'salvage', item_id, count, val
 
 **TASK-4013 合规清单（助手 C）** / **TASK-4014 瘦身（助手 A，条件：4012 实测>4MB）** / **TASK-4016 四文档对齐（助手 C）**：见 plan-v003/08。
 
-## 5. 并发与排他锁表
+## 5. 执行卡链（单助手串行；2026-10-27 三助手锁表作废，仅保留依赖序）
 
-> 口径：**写者 = 助手**（一个助手同一时段只有一张在写卡；同一助手名下多卡为串行，不占多席）。
-
-| 时段 | 写者1 | 写者2 | 写者3 | 排他要点 |
-|---|---|---|---|---|
-| W1 前半 | B:4002 | C:4012 | — | 4002 独占 game-data+tables.ts；C 完成 4012 后接 4010 |
-| W1 后半 | A:4003→4004 | B:4005 | C:4010→4011 | A 独占 features/hook+guide；B 独占 docs/03_solution/decisions |
-| W2 前半 | B:4006 | C 收尾 | — | 4006 独占 contracts/actions+server/economy |
-| W2 后半 | A:4007→4008 | — | — | A 独占 panel-types+economy/inventory 视图 |
-| W3 | A:4009 | B 配合 server | C:4010~12 | 4009 独占 salvage |
-| W4 | B:4015 | A:4014(条件) | C:4013→4016 | 4015 独占 contracts/errors·ux；4016 最后跑 |
+```
+4002 数值转录 → 4012 包体基线（趁包体未膨胀先测） → 4003 HookView 接表
+→ 4005 ADR-0012 → 4004 引导层 → 4006 economy.sell（4005 成文后动契约）
+→ 4007 商人页 → 4008 回收入口 → 4009 开锁 → 4015 契约解冻（须 4006 已合入）
+→ 4013 合规清单 → 4014 瘦身（仅当 4012 实测 >4MB） → 4016 四文档对齐（最后，须 4015 PASS）
+```
+- **4010/4011（真机卡）不进链**：真机材料就绪即插入执行，缺环境标 BLOCKED 继续下一卡，不阻塞任何卡。
+- 每张卡完成即按 §6.1 上报一次；主控复核 PASS 后助手才进下一张。
+- 排他要点退化为主控 commit 范围核对（主控提交前 `git status` 逐项核对，禁 `add -A`——2026-10-27 已发生一次混提交拆分）。
 
 ## 6. 上报协议
 
@@ -180,38 +180,27 @@ UNRESOLVED: <无 或 列表>
 - 发现事实与本文件冲突（如契约字段与 §3 不符）→ 停手上报主控，不得自行解释。
 - 真机环境缺失 → 4010/4011 标 BLOCKED 转 4012 先行，不造数据；**UI 卡（4003/4004/4007/4008/4009）的录屏断言按 G-07 降级记 UNKNOWN，卡本身不因此 BLOCKED**。
 
-## 8. 三段可复制 prompt
+## 8. 单助手全链 prompt（可直接复制）
 
-### 8.1 助手 B（数据 + 服务端 + 契约）
+### 8.1 助手（数据 + 客户端 + 验证，一人全链）
 ```text
-你是 WDF v1.0 冲刺的"数据与服务端执行者"。仓库根 E:/Demo/WDF，分支 master，起点 commit a37176e（先 git pull 确认）。
-必读（按序）：docs/05_execution/EXEC-BRIEF-0003.md 全文（§1 铁律、§2 锁定值、§3 接口、§4 你名下卡片、§5 锁表、§6 上报、§7 熔断）、
-docs/04_planning/plan-v003/decision-sheet.md（数值唯一来源）、plan-v003/05 与 06 与 08 中你名下任务卡。
-你名下卡片与顺序：TASK-4002 → 4005 → 4006 → 4015（4015 须待 4006 合入且主控放行）。
-硬约束提醒：数值只准来自 decision-sheet（G-02）；contracts 仅 4006 可增 economy.sell（G-03 例外一），errors.ts/ux.ts 直到 4015 才可动（例外二）；ADR-0011 缺口 1/2 已预授权（§2 裁定），勿因 ADR 文档旧状态停手；改 packages 后必 npm run sync（G-04）；
-类型检查只用 EXEC-BRIEF §1 G-06 的过滤式（G-06）；客户端背包段是扁平 modules.inventory 无 .items（G-09）。
-禁 git commit/push；每卡按 §6.1 模板上报，一次一张；连续 2 次 FAIL 停手（§7）。
-```
-
-### 8.2 助手 A（客户端 UI/玩法）
-```text
-你是 WDF v1.0 冲刺的"客户端执行者"。仓库根 E:/Demo/WDF，分支 master，起点 commit a37176e（先 git pull 确认）。
-必读：EXEC-BRIEF-0003.md §1/§2/§3.1~3.2/§4/§5/§6/§7；plan-v003/decision-sheet.md（D-01~D-10 数值）；plan-v003/05/06/07/08 你名下卡。
-你名下卡片与顺序：TASK-4003 → 4004 →（待 4006 上报 PASS）4007 → 4008 → 4009 → 4014（仅当 4012 实测>4MB）。
-硬约束提醒：面板必须 createXxxPanel 工厂+PanelHandle（G-12）；PanelKey 只有 4007 可扩 merchant（§3.1）；
-UX 态只用 toUxState/conflictOf（G-11）；读资源照抄 services/config/index.ts 的回调包 Promise 范式（G-08，无 loadAsync）；
-依赖 'cc' 的代码 Node 测不到——每卡除 npm test 外必须跑 G-06 过滤式，UI 行为留待主控真机录屏（G-07）。
-禁改 contracts/**、generated/**、server/**；禁 git commit/push；按 §6.1 上报；2 次 FAIL 停手。
-```
-
-### 8.3 助手 C（验证 + 证据 + 文档）
-```text
-你是 WDF v1.0 冲刺的"验证与文档执行者"。仓库根 E:/Demo/WDF，分支 master，起点 commit a37176e（先 git pull 确认）。
-必读：EXEC-BRIEF-0003.md §1/§4/§5/§6/§7；plan-v003/07 与 08 你名下卡；docs/03_solution/design/DESIGN-0001-ux-states.md（6 态走查依据）。
-你名下卡片与顺序：TASK-4012 → 4011 → 4010（真机材料就绪即做，缺环境标 BLOCKED 转下一张）→ 4013 → 4016（最后，须待 4015 PASS）。
-硬约束提醒：一切数字必须来自真实测量/埋点，缺数据=UNKNOWN，禁止造数（G-02/G-18）；未达标只记录禁止顺手调参；
-4011 采样需真机用户配合，先出采集脚本与记录模板。4016 前必须确认 4015 已 PASS 再动 current-plan/roadmap。
-禁改代码与 contracts；禁 git commit/push；按 §6.1 上报；2 次 FAIL 停手。
+你是 WDF v1.0 冲刺的唯一执行者（数据/服务端/客户端/验证全链）。仓库根 E:/Demo/WDF，分支 master，起点 commit 0b8f9b4 或其后继（先 git fetch origin && git log --oneline -1 确认）。
+必读（按序）：docs/05_execution/EXEC-BRIEF-0003.md 全文（§1 铁律、§2 锁定值、§3 接口契约、§4 你的卡片、§5 执行卡链、§6 上报、§7 熔断）、
+docs/04_planning/plan-v003/decision-sheet.md（数值唯一来源）、plan-v003/05/06/07/08 全部任务卡。
+你的执行顺序 = EXEC-BRIEF §5 卡链：4002 → 4012 → 4003 → 4005 → 4004 → 4006 → 4007 → 4008 → 4009 → 4015 → 4013 → 4014(仅当 4012 实测>4MB) → 4016。
+4010/4011（真机卡）不进链：材料就绪即插入，缺环境标 BLOCKED 跳过。每卡完成按 §6.1 模板上报一次，主控复核 PASS 后才进下一张。
+硬约束提醒：
+- 数值只准来自 decision-sheet（G-02），表内没有的值禁止自编，缺 → BLOCKED 上报；
+- contracts 仅 4006 可增 economy.sell（G-03 例外一），errors.ts/ux.ts 直到 4015 才可动（例外二）；ADR-0011 缺口 1/2 已预授权（§2 裁定），勿因 ADR 文档旧状态停手；
+- 改 packages/** 后必 npm run sync（G-04）；禁手改 generated/** 与 client/resources/config/**（只准经 gen 工具生成，G-05）；
+- 类型检查只用 G-06 过滤式（npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 | grep -v "^C:/"），禁止 grep 项目路径；
+- 依赖 'cc' 的代码 Node 测不到（G-07）：npm test 全绿 ≠ 完成，每卡必叠 G-06；真机缺失时 UI 运行时断言记 UNKNOWN + 替代证据，卡不因此 BLOCKED；
+- 读资源照抄 services/config/index.ts 的 4 参回调包 Promise 范式（G-08，Cocos 3.8 无 loadAsync）；
+- 背包段是扁平 modules.inventory 无 .items（G-09）；QueryRes 字段是 items 非 rows（G-10）；UX 态只用 toUxState/conflictOf（G-11）；
+- 新面板必须 createXxxPanel 工厂 + PanelKey 注册，PanelKey 只有 4007 可扩 merchant（§3.1）；
+- 新增 modules.<key> 属开放 map 扩展，不递增 SAVE_SCHEMA_VERSION（§3.4）；weight/capacity/unlock_level 本期维持不显示（§2 D-07 裁定）。
+禁 git commit（主控统一提交）；push 按用户单独委托执行（§0.3 例外，PAT 用户临时给，-c http.version=HTTP/1.1，即用即删）。
+连续 2 次 FAIL 停手上报（§7）；发现事实与本文件冲突 → 停手按 §7 熔断，不得自行解释。
 ```
 
 ## 9. 本指令事实校验（可复跑，2026-10-27 实测）
