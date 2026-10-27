@@ -37,9 +37,11 @@ export function parseCsv(text) {
   return rows;
 }
 export function frontMatter(text) {
-  const m = /^---\n([\s\S]*?)\n---/.exec(text);
+  // 兼容 LF 与 CRLF：Windows 侧工具（含部分编辑器/代理）写出的 md 常为 CRLF，
+  // 严格 `---\n` 会把合规文档误判为"缺少 front matter"（2026-10-27 plan-v004 假红实测）。
+  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
   if (!m) return null;
   const o = {};
-  for (const line of m[1].split('\n')) { const k = /^([A-Za-z_]+):\s*(.*)$/.exec(line); if (k) o[k[1]] = k[2].trim(); }
+  for (const line of m[1].split(/\r?\n/)) { const k = /^([A-Za-z_]+):\s*(.*)$/.exec(line); if (k) o[k[1]] = k[2].trim(); }
   return o;
 }
