@@ -46,6 +46,17 @@ let token: string | null = null;
 export function setToken(t: string | null): void { token = t; }
 export function getToken(): string | null { return token; }
 
+import { ACTIONS } from '../../generated/contracts/common/actions';
+
+// uuid v4 equivalent (no crypto in minigame)
+function uuid(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 /**
  * 统一 RPC 客户端：
  *  - 封套 meta（cv / cfg / sv / plat / rid）
@@ -59,12 +70,18 @@ export async function invoke<P = unknown, D = unknown>(
   attemptedRefresh = false,
 ): Promise<D> {
   const platform = getPlatform();
+  const act = ACTIONS[action];
+  let finalRid = rid;
+  if (act && act.idempotent && !finalRid) {
+    finalRid = uuid();
+  }
+
   const meta: RequestMeta = {
     cv: CLIENT_VERSION,
     cfg: CONFIG_VERSION,
     sv: SAVE_SCHEMA_VERSION,
     plat: platOf(platform),
-    ...(rid !== undefined ? { rid } : {}),
+    ...(finalRid !== undefined ? { rid: finalRid } : {}),
   };
   const req: RpcRequest<P> = { a: action, p: params, m: meta };
 
@@ -95,7 +112,7 @@ export async function invoke<P = unknown, D = unknown>(
   // 收 2002（SESSION_EXPIRED）：除 refresh 自身外，静默刷新一次并重试（契约承诺）。
   if (resp && resp.c === ERR.SESSION_EXPIRED && action !== 'account.refresh' && !attemptedRefresh && getToken()) {
     const nt = await silentRefresh();
-    if (nt) return invoke<P, D>(action, params, rid, true);
+    if (nt) return invoke<P, D>(action, params, finalRid, true);
   }
 
   // 契约冻结 14 码，其中没有专门的"网络错误"码。旧代码写的 ERR.SYSTEM **根本不存在**，
