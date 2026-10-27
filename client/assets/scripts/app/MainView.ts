@@ -20,6 +20,7 @@ import { createInventoryPanel } from '../features/inventory/view/InventoryPanel'
 import { createCraftingPanel } from '../features/crafting/view/CraftingPanel';
 import { createLeaderboardPanel } from '../features/leaderboard/view/LeaderboardPanel';
 import { createSettingsPanel, type SettingsHandle } from '../features/settings/view/SettingsPanel';
+import { createGuideOverlay, type GuideHandle } from '../features/guide/view/GuideOverlay';
 
 const TABS: ReadonlyArray<{ key: PanelKey; label: string }> = [
   { key: 'hook', label: '打捞' },
@@ -34,6 +35,7 @@ const TAB_H = 96;
 export class MainView extends Component {
   private handles: PanelHandle[] = [];
   private settings: SettingsHandle | null = null;
+  private guide: GuideHandle | null = null;
   private activeKey: PanelKey = 'hook';
   private tabButtons: Node[] = [];
 
@@ -61,6 +63,8 @@ export class MainView extends Component {
 
     // 设置浮层（不在 PanelKey 切换循环内）
     this.settings = createSettingsPanel(this.node);
+    // 新手引导覆盖层（TASK-4004）
+    this.guide = createGuideOverlay(this.node);
 
     // 底部 Tab 栏 + 右上角设置入口
     this.buildTabBar(w, h);
