@@ -1,0 +1,162 @@
+{
+  "platform": "wechatgame",
+  "buildDir": "client/build/wechatgame",
+  "mainBytes": 3054159,
+  "mainMB": 2.913,
+  "mainFileCount": 30,
+  "mainGzipBytes": 815823,
+  "subpackageCount": 8,
+  "subpackageBytes": 17868,
+  "totalBytes": 3072027,
+  "budgetBytes": 4194304,
+  "withinBudget": true,
+  "headroomMB": 1.087,
+  "topLevel": [
+    {
+      "name": "cocos-js",
+      "bytes": 2605711,
+      "kb": 2544.6
+    },
+    {
+      "name": "assets",
+      "bytes": 241830,
+      "kb": 236.2
+    },
+    {
+      "name": "web-adapter.js",
+      "bytes": 102097,
+      "kb": 99.7
+    },
+    {
+      "name": "src",
+      "bytes": 28488,
+      "kb": 27.8
+    },
+    {
+      "name": "engine-adapter.js",
+      "bytes": 23825,
+      "kb": 23.3
+    },
+    {
+      "name": "first-screen.js",
+      "bytes": 18878,
+      "kb": 18.4
+    },
+    {
+      "name": "logo.png",
+      "bytes": 14496,
+      "kb": 14.2
+    },
+    {
+      "name": "slogan.png",
+      "bytes": 11482,
+      "kb": 11.2
+    },
+    {
+      "name": "application.js",
+      "bytes": 3302,
+      "kb": 3.2
+    },
+    {
+      "name": "game.js",
+      "bytes": 2608,
+      "kb": 2.5
+    },
+    {
+      "name": "game.json",
+      "bytes": 989,
+      "kb": 1
+    },
+    {
+      "name": "project.config.json",
+      "bytes": 453,
+      "kb": 0.4
+    }
+  ],
+  "topFiles": [
+    {
+      "file": "client/build/wechatgame/cocos-js/_virtual_cc-C7iGm02z.js",
+      "kb": 2314.6,
+      "bytes": 2370184
+    },
+    {
+      "file": "client/build/wechatgame/cocos-js/assets/spine-CC34fKUR.wasm",
+      "kb": 200.4,
+      "bytes": 205175
+    },
+    {
+      "file": "client/build/wechatgame/assets/internal/import/04/04f923b60.json",
+      "kb": 121.4,
+      "bytes": 124299
+    },
+    {
+      "file": "client/build/wechatgame/web-adapter.js",
+      "kb": 99.7,
+      "bytes": 102097
+    },
+    {
+      "file": "client/build/wechatgame/assets/main/index.js",
+      "kb": 65.9,
+      "bytes": 67443
+    },
+    {
+      "file": "client/build/wechatgame/assets/internal/index.js",
+      "kb": 44.1,
+      "bytes": 45110
+    },
+    {
+      "file": "client/build/wechatgame/engine-adapter.js",
+      "kb": 23.3,
+      "bytes": 23825
+    },
+    {
+      "file": "client/build/wechatgame/cocos-js/spine.wasm-Bg5oOXwa.js",
+      "kb": 21.6,
+      "bytes": 22167
+    },
+    {
+      "file": "client/build/wechatgame/first-screen.js",
+      "kb": 18.4,
+      "bytes": 18878
+    },
+    {
+      "file": "client/build/wechatgame/logo.png",
+      "kb": 14.2,
+      "bytes": 14496
+    }
+  ],
+  "subpackages": [
+    {
+      "root": "subpackages/resources",
+      "bytes": 8499
+    },
+    {
+      "root": "subpackages/b-common",
+      "bytes": 1383
+    },
+    {
+      "root": "subpackages/b-shallow",
+      "bytes": 1338
+    },
+    {
+      "root": "subpackages/b-deep",
+      "bytes": 1326
+    },
+    {
+      "root": "subpackages/b-defense",
+      "bytes": 1346
+    },
+    {
+      "root": "subpackages/b-island",
+      "bytes": 1360
+    },
+    {
+      "root": "subpackages/b-event",
+      "bytes": 1301
+    },
+    {
+      "root": "subpackages/b-social",
+      "bytes": 1315
+    }
+  ]
+}
