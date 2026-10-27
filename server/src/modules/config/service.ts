@@ -51,6 +51,26 @@ export async function activeMinClient(): Promise<string | null> {
 /** 测试/运维改过 config_release 后手动失效缓存。 */
 export function invalidateConfigCache(): void {
   gateCache = null;
+  cfgCache = null;
+}
+
+// 成功响应上的 cfg 提示每个请求都要算，同样缓存 60s（与版本闸共用 TTL 常量）
+let cfgCache: { at: number; version: string } | null = null;
+
+/**
+ * 当前生效的 configVersion：有 `config_release` 记录以表为准，否则用 `npm run gen` 的产物。
+ *
+ * 与 `manifest()` 的取值口径同源（验收标准 1：未发布时必须与 gen 输出完全一致），
+ * 但**只算版本、不拼 packUrl** —— 它每个成功响应都会被调用一次，
+ * 不该为了一条提示多读两个字段。
+ */
+export async function activeConfigVersion(): Promise<string> {
+  const at = Date.now();
+  if (cfgCache && at - cfgCache.at < GATE_TTL_MS) return cfgCache.version;
+  const row = await latestRelease();
+  const version = row?.version ?? generatedConfigVersion();
+  cfgCache = { at, version };
+  return version;
 }
 
 export async function manifest(): Promise<ConfigManifestRes> {

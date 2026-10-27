@@ -1,18 +1,38 @@
 /**
- * ⛔ 未实现：客户端版本/configVersion 中间件 —— 见 docs/03_solution/data/gateway-gaps.md
+ * 版本相关的响应修饰：`m.cfg`（客户端 configVersion）与服务端当前值不一致时，
+ * 在**成功响应**上补 `cfg: <最新版本>` 作为提示（F-42a，2026-10-27 裁决 2 的实现）。
  *
- * 本文件曾导出 `MIDDLEWARE = 'version'`，但**全仓零引用**，加根目录守卫也查不出来。
- * 它唯一的作用是让 `grep MIDDLEWARE` 命中，从而让人误以为中间件存在 —— 属于误导性代码，已移除。
+ * ## 为什么放在这里，而不是做成"中间件"
  *
- * 真实情况（2026-10-27 实测，别再搞错）：
- *  1. 版本闸（cv < minClientVersion → 9001）**已实现**，但实现在 `rpc.ts:36-41`，**不在本文件**。
- *     有测试：`tests/integration/auth.test.mjs:211`。`config.manifest` 豁免防死锁（`rpc.ts:19`）。
- *  2. 本文件注释原本承诺的另一半「configVersion 不一致 → 响应附带最新 cfg」**确实未实现**：
- *     契约 `RpcResponse.cfg?: string` 存在，客户端 `RpcClient.ts:81` 也在发 `cfg`，
- *     但 `grep -rn "cfg:" server/src` 零命中 —— 从未被赋值。编号 F-42a。
- *  3. `m.sv`（存档 schema 版本）服务端从未读取（只信 `body.schemaVersion`）。编号 F-42c。
+ * 本文件此前只导出一个无人引用的 `MIDDLEWARE = 'version'` 常量，看起来"有这个中间件"，
+ * 实际零实现 —— 属误导性代码，已移除（见 commit `13fac21`）。
+ * 现在它只做一件具体的事：**修饰响应**。真正的版本闸（`cv` 低于下限 → 9001）在
+ * `rpc.ts:36-41`，两者职责分开，避免再次出现"两个地方都像在做版本，但只有一个在动"。
  *
- * 实现前须先裁决语义（`docs/04_planning/plan-v009/05-pending-decisions.md` 裁决 2）。
+ * ## 口径（裁决 2）
+ *
+ * 1. **只做提示，不拒请求。** 客户端 configVersion 旧了，但旧配置算出的结果**未必错**
+ *    （可能只是少了一件物品）。拒绝会让未及时更新的玩家直接无法游戏，
+ *    代价远大于收益。真正的硬约束应由**存档 schema 版本**（`m.sv`，F-42c）承担。
+ * 2. **只修饰 `c === 0` 的响应。** 失败响应要优先暴露真实错误，
+ *    混一个版本提示进去会让排查时以为是版本问题。
+ * 3. **字段类型保持 `string`**（契约 `RpcResponse.cfg?: string` 原样），
+ *    不改成整个 manifest —— 那要动契约，而契约在冻结期。
+ *    客户端拿到不一致信号后自己去拉 `config.manifest`，那里才有 `packUrl` 能做热更。
+ * 4. **客户端完全不认这个字段也不会坏。** 它是纯增量提示，老客户端忽略即可。
  */
+import type { RpcResponse } from '@wodefa/contracts';
 
-export {};
+/**
+ * 给成功响应补 `cfg` 提示。
+ *
+ * @param res        handler 的原始响应
+ * @param clientCfg  客户端上报的 `m.cfg`（可能缺省）
+ * @param latest     服务端当前生效的 configVersion
+ */
+export function attachCfgHint<D>(res: RpcResponse<D>, clientCfg: string | undefined, latest: string): RpcResponse<D> {
+  if ('msg' in res) return res; // 失败分支：不修饰
+  if (clientCfg === latest) return res; // 一致：字段不出现（避免噪声）
+  if (!latest) return res; // 服务端没拿到版本：宁可不说
+  return { ...res, cfg: latest };
+}
