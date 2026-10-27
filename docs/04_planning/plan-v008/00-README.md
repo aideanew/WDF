@@ -66,6 +66,26 @@ snapshot:
 | **F-34** | `chest/service.ts:1` `import { withTx }` **未使用** | 死导入；若开 `noUnusedLocals` 即报错 | P2 |
 | **F-35** | 工作树被**多路实时写入**，无归属声明 | 任何基线结论秒级失效；并行改同一文件必冲突 | **P0（流程）** |
 
+### 3.1 开箱落地过程中新发现（F-36 ~ F-41）
+
+| 编号 | 缺陷 | 一句话后果 | 等级 | 状态 |
+|---|---|---|---|---|
+| **F-36** | 合规材料（`copyright-materials.md`）有虚假陈述 | 软著/版号材料失真 | **P0** | 助手线 C 处理 |
+| **F-37** | `current-plan.md` 过度宣称"已修复" | 看板与事实不符 | P1 | 助手线 D 处理 |
+| **F-38** | `chests` 表把 `lock`/`smashable` 两个**实例属性**当成箱型属性 | 一旦支持装锁，同一 `chest_wood` 有"能砸/不能砸"两态，配置表表达不了 | P1 | 登记，v1.1 处理 |
+| **F-39** | `updateSnapshotServerSide` 改了 body 却**沿用 `current.checksum`** | 客户端 `verifySave()` 判存档损坏 → **玩家开箱后掉档** | **P0** | ✅ `1fd7364` 已修 |
+| **F-40** | `game-core/economy/index.ts:24` 注释称 `basePrice`"用于上限保护"，实际 `void basePrice` 后**零实现** | 卖价无上限；全表 106 行当前 `recycle_bp/base_price` 比值 0.400~0.507 恰好不越界，**靠数据巧合而非代码守卫** | P1 | 登记，未修（涉数值口径，需设计源裁决） |
+| **F-41** | `prices.recycle_bp` 列名是"万分比"（bp=basis point），实际被当**绝对回收价**用（`floor(recycle_bp * regionBp / 10000)`） | 填表人按列名理解会差 4 个数量级；`base_price` 列实际不参与计算 | P1 | 登记，未修（改列名要动 CSV + schema + 生成器 + 服务端 + 客户端） |
+
+**F-40 / F-41 的证据**（本次 HTTP 端到端验证时发现）：
+- `item_0020` 木棍 `base_price=4` / `recycle_bp=2` → 实卖 **2 灵草**（= 50% 回收）。
+  若 `recycle_bp` 真是万分比，应卖 `floor(4*2/10000)=0`。说明它存的是"绝对价"。
+- 全表 106 行中 **0 行** `recycle_bp >= base_price`，比值区间 0.400~0.507 —— 所以现在**没有**刷钱漏洞，
+  但这是数据分布带来的巧合，`sellValue` 里没有任何守卫。一旦有人填 `recycle_bp=600 / base_price=500`，
+  买低卖高即可无限刷灵草。
+- 唯一 `recycle_bp` 为空的行是 `item_0013`（**海水**，`base_price=0`，`recipe_0007` 的合成材料）。
+  **这是刻意不可回收，不是漏填** —— `sell()` 对它返回 1001 `no recycle price`，行为正确。
+
 ## 4. 三方争议项的技术裁决
 
 | 争议 | 观测者 B 的主张 | 实测 | 裁决 |
@@ -180,3 +200,47 @@ snapshot:
 | `MerchantPanel`/`LeaderboardPanel`/`SettingsPanel`/`GuideOverlay` 剩余手写按钮 | 后续 | 属各 feature 自己的重构，不在 5007a 范围（该卡只要求 `InventoryPanel`） |
 | 6 段人工录屏 | 待做 | 需要 Cocos 运行时，沙箱内无法执行；走 UNKNOWN |
 | `next:'login'` 的落地出口 | v1.1 | 需先有独立登录面板 |
+
+## 11. 端到端验证（2026-10-27，HTTP 层，12/12）
+
+前面所有测试都是**进程内**调 `handleRpc`（绕过 HTTP 与鉴权）。本节是**真实 HTTP**：
+服务端跑在 `127.0.0.1:5050`（与客户端 `RpcClient` 默认 endpoint 对齐），脚本走
+`POST /v1/rpc` + `Authorization: Bearer`。
+
+| # | 断言 | 结果 |
+|---|---|---|
+| 1 | `account.login` | ✅ `playerId=p_82e891fc…` |
+| 2 | `save.push` 建立存档（铁箱×2 + 金锁×1） | ✅ `revision=1` |
+| 3 | `chest.open(item_0067)` | ✅ `rewards=[{item_0020, 1}]` |
+| 4 | **金锁 `item_0071` 当箱子 → 1001**（F-31） | ✅ `item_0071 is not a chest` |
+| 5 | 未知物品 → 1001 | ✅ |
+| 6 | 背包：铁箱 2→1 | ✅ |
+| 7 | 背包：奖励 +1 | ✅ |
+| 8 | 背包：金锁未被消耗 | ✅ |
+| 9 | **开箱后立刻 `economy.sell` → 0**（F-29 决定性证据） | ✅ `herbDelta=2, quotaLeft=19` |
+| 10 | 幂等重放两次语义等价 | ✅ |
+| 11 | 幂等重放：铁箱只扣 1 个 | ✅ |
+| 12 | 幂等重放：奖励只发一次 | ✅ |
+
+**第 10 条踩到一个坑，记下来**：幂等回放的响应**对象键序会变**
+（`{success,rewards}` → `{rewards,success}`，元素内 `{itemId,count}` → `{count,itemId}`），
+因为网关把结果写进 `idempotency` 表再读回，PG 的 `jsonb` 会重排键。
+**这不是缺陷**（客户端按字段名取值），但**任何"响应字节级比对"的写法都会假红** ——
+比较必须按字段签名，不能用 `JSON.stringify` 逐字节比。
+
+**怎么复现**：
+```bash
+API_PORT=5050 WDF_AUTH_MODE=dev node --import ./tools/runtime/register.mjs server/src/main.ts
+curl -s http://127.0.0.1:5050/healthz          # {"ok":true,"t":...}
+node E:/tmp/verify-chest-e2e.mjs               # 12/12
+```
+> 注意 `meta.plat` 只接受 `wechat|douyin|app`，传 `web` 会 1001。客户端 `platOf()` 负责映射。
+
+## 12. 发布状态
+
+| 项 | 值 |
+|---|---|
+| 远端 | `https://github.com/aideanew/WDF`（主分支 `master`） |
+| 推送 | `9d22859..c56bc22`，双端 `0/0` 一致 |
+| 服务端口 | `5050`（`server/src/main.ts:10` 默认值，与客户端对齐） |
+| 凭据 | PAT 仅在命令行 URL 内嵌一次性使用，`.git/config` 已核验**零残留** |
