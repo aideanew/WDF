@@ -129,3 +129,54 @@ snapshot:
 - 不做真机/备案（用户 10-23 已定"先本地开发"）。
 - 不做全量回归（用户 16:44 明确要求按阶段体检）。
 - 不为"未来可能需要"建表或建目录。
+
+## 10. 实施进度（滚动更新，最后更新 2026-10-27）
+
+> 只记**已验证**的事实。每条带 commit 或命令，无证据的不写进来。
+
+### 步骤 1 + 2：已完成（`1fd7364`）
+
+| 卡 | 缺陷 | 状态 | 证据 |
+|---|---|---|---|
+| 5002 | F-28 自造码 3103 | ✅ done | `grep 3103` 源码零命中，仅注释留痕；改用 `ERR.BAD_PAYLOAD` |
+| 5002 | F-34 `withTx` 死导入 | ✅ done | 重写 `chest/service.ts` 时删除 |
+| 5004 | F-31 箱型无校验 | ✅ done | `chest/repo.ts` 新增 `findChestByItemId`；测试"四种锁当箱子 → 1001" |
+| 5004 | F-33 事务 TOCTOU | ✅ done | 校验/扣箱/发奖/记账全在 `updateSnapshotServerSide` 单事务内 |
+| 5004 | F-29 开箱不写账本 | ✅ done | `economy` 新增 `recordLoss` + `grantItem`/`consumeItem`；测试"开箱后立刻 sell → 0" |
+| 5004 | F-32 无档静默成功 | ✅ done | `updateSnapshotServerSide` 返回 boolean；无档 → 2001 |
+| 5005 | 测试覆盖 | ✅ done | `tests/integration/chest.test.mjs` 3 例 → **7 例全绿** |
+| — | **F-39（新发现）** | ✅ done | 服务端改 body 却沿用旧 checksum → 客户端 `verifySave` 判损坏。已按 `computeChecksum` 重算 |
+| — | 契约删 `hitsUsed` | ✅ done | 设计源「首版建议延期」；源码零残留，仅历史规划文档留字 |
+| 5003 | 测试文件入版本库 | ✅ done | `tests/integration/chest.test.mjs` 已随 `1fd7364` 入库 |
+
+### 步骤 3：已完成（本次）
+
+| 卡 | 项 | 状态 | 证据 |
+|---|---|---|---|
+| 5007a | 抽 `addButton` + `setButtonDisabled`/`setButtonText` 到 `panel-ui.ts` | ✅ done | `InventoryPanel` 两处手写按钮（回收 / 去打捞）已替换，该文件 `Graphics`/`Label` 导入已删 |
+| 5007b | `ChestModel.ts`（纯函数投影，无 `cc`） | ✅ done | `tests/determinism/chest-flow.test.mjs` **15 例全绿** |
+| 5007b | `ChestPanel.ts`（六态面板） | ✅ done | tsc 零错；六态各有显式代码路径（见 `07` §4.2 走查） |
+| 5007b | 主界面 Tab 加"箱子" | ✅ done | `panel-types.ts` 的 `PanelKey` + `MainView.ts` 的 `TABS`/`factories`（第 3 位，6 个 Tab） |
+
+**门禁结果**：`npm run guard` 9/9；`tests/determinism` 82/82；`tests/integration/chest` 7/7；client tsc 仅剩 F-27（`MerchantPanel.ts:223`，助手线任务 A）。
+
+### 对原计划的偏差（必须记下来）
+
+| # | 计划写的 | 实际做的 | 原因 |
+|---|---|---|---|
+| D-1 | `07` §4.2「`chest/` 下 `roundRect` 零命中」 | **2 处命中**：卡片底 + 材质色块 | 该条本意是"按钮不得手写"。`addButton` 只管按钮，卡片底板必须自绘。验收口径已改为"按钮零手写" |
+| D-2 | `07` §3.1「箱子卡 700×120，首张 y=60」 | 首张 y=**20** | y=60 时卡片顶到 120，与错误条（y=106）重叠。下移 40 让出红条位置 |
+| D-3 | `07` §3.1「状态行：今日已开 N 次 / 工具剩余 M」 | 改为「背包里共 N 个箱子」 | 服务端**没有**"今日已开次数"字段，v1.0 也没有开锁工具。编一个就是伪造数据（同 `InventoryPanel` 不显示 weight 的理由） |
+| D-4 | `07` §3.3 `noPermission` → "跳登录" | 文案 + 「重试」按钮 | 登录入口在启动流程（`GameApp`/`BootController`），面板层没有登录面板；不造假按钮。契约 `next:'login'` 的落地缺口已登记 |
+| D-5 | `07` §3.4「`ChestView` 保留空壳」 | 照做 | ✅ 无偏差 |
+
+### 仍未做（不属本步）
+
+| 项 | 归属 | 说明 |
+|---|---|---|
+| F-27 `MerchantPanel.ts:223` | 助手线 A | client tsc 唯一真错 |
+| 合规材料重写（F-36） | 助手线 C | — |
+| 文档收口（`current-plan.md` 的"已修复"等） | 助手线 D | — |
+| `MerchantPanel`/`LeaderboardPanel`/`SettingsPanel`/`GuideOverlay` 剩余手写按钮 | 后续 | 属各 feature 自己的重构，不在 5007a 范围（该卡只要求 `InventoryPanel`） |
+| 6 段人工录屏 | 待做 | 需要 Cocos 运行时，沙箱内无法执行；走 UNKNOWN |
+| `next:'login'` 的落地出口 | v1.1 | 需先有独立登录面板 |

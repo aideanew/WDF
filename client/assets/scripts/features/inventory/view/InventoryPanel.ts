@@ -12,7 +12,7 @@
  * 布局坐标系：面板 750×1400、原点居中；MainView 把内容容器下移 48，
  * 故可用纵向范围约 panel-local [-640, +640]。
  */
-import { Node, UITransform, Label, Color, Vec3, Graphics } from 'cc';
+import { Node, UITransform, Color, Vec3 } from 'cc';
 import { preload, table } from '../../../services/config';
 import { LocalSave } from '../../../services/save/LocalSave';
 import { invoke } from '../../../services/net/RpcClient';
@@ -20,7 +20,7 @@ import { toUxState } from '../../../generated/contracts/common/ux';
 import type { SellReq, SellRes } from '../../../generated/contracts/economy/index';
 import type { ItemsRow } from '../../../generated/game-core/generated/config-types';
 import type { PanelHandle } from '../../../app/panel-types';
-import { addTitle, addEmptyHint, addLabel, addConfirmDialog } from '../../../app/panel-ui';
+import { addTitle, addEmptyHint, addLabel, addConfirmDialog, addButton } from '../../../app/panel-ui';
 import { navigate } from '../../../app/nav';
 import { InventoryModel } from '../model/InventoryModel';
 import { applySell } from '../../economy/index';
@@ -93,29 +93,23 @@ export function createInventoryPanel(parent: Node): PanelHandle {
         width: 480,
       });
 
-      // 回收按钮
-      const btn = new Node(`Recycle_${i}`);
-      btn.addComponent(UITransform).setContentSize(96, 34);
-      btn.setPosition(new Vec3(260, y, 0));
-      const g = btn.addComponent(Graphics);
-      g.fillColor = new Color(200, 80, 80, 255);
-      g.roundRect(-48, -17, 96, 34, 8);
-      g.fill();
-      const l = btn.addComponent(Label);
-      l.string = '回收';
-      l.fontSize = 18;
-      l.color = new Color(255, 255, 255, 255);
-      l.horizontalAlign = Label.HorizontalAlign.CENTER;
-      l.verticalAlign = Label.VerticalAlign.CENTER;
-      body.addChild(btn);
-
-      btn.on(Node.EventType.TOUCH_END, () => {
-        addConfirmDialog({
-          parent: node,
-          title: '确认回收',
-          text: `确认以基准价回收 1 个 ${r.name} 吗？\n(受当前区域物价影响)`,
-          onConfirm: () => void sellOne(r),
-        });
+      // 回收按钮（TASK-5007a：走 app/panel-ui 的 addButton，不再手写 Graphics.roundRect）
+      addButton({
+        parent: body,
+        name: `Recycle_${i}`,
+        text: '回收',
+        pos: new Vec3(260, y, 0),
+        size: { w: 96, h: 34 },
+        fill: new Color(200, 80, 80, 255),
+        fontSize: 18,
+        onClick: () => {
+          addConfirmDialog({
+            parent: node,
+            title: '确认回收',
+            text: `确认以基准价回收 1 个 ${r.name} 吗？\n(受当前区域物价影响)`,
+            onConfirm: () => void sellOne(r),
+          });
+        },
       });
     });
     const more = rows.length - MAX_ROWS;
@@ -134,6 +128,12 @@ export function createInventoryPanel(parent: Node): PanelHandle {
   let busy = false;
   async function sellOne(r: ItemRow): Promise<void> {
     if (busy) return;
+    // plan-v008 §5-3：行内 count 非法（0 / 非整数）时不发请求。
+    // 正常渲染不会出现（projectChests 同款口径），但并发卖出后旧行可能残留。
+    if (!Number.isInteger(r.count) || r.count <= 0) {
+      addConfirmDialog({ parent: node, text: '这个物品已经卖完了', onConfirm: () => {} });
+      return;
+    }
     busy = true;
     try {
       const payload: SellReq = { itemId: r.id, count: 1 };
@@ -170,31 +170,16 @@ export function createInventoryPanel(parent: Node): PanelHandle {
   }
 
   function makeGoHookButton(): void {
-    const btn = new Node('GoHookButton');
-    btn.addComponent(UITransform).setContentSize(240, 64);
-    btn.setPosition(new Vec3(0, -90, 0));
-
-    const bg = new Node('Bg');
-    bg.addComponent(UITransform).setContentSize(220, 56);
-    const g = bg.addComponent(Graphics);
-    g.fillColor = new Color(45, 110, 220, 255);
-    g.roundRect(-110, -28, 220, 56, 12);
-    g.fill();
-    btn.addChild(bg);
-
-    const lbl = new Node('Label');
-    lbl.addComponent(UITransform).setContentSize(220, 56);
-    const l = lbl.addComponent(Label);
-    l.string = '去打捞';
-    l.fontSize = 24;
-    l.color = new Color(255, 255, 255, 255);
-    l.horizontalAlign = Label.HorizontalAlign.CENTER;
-    l.verticalAlign = Label.VerticalAlign.CENTER;
-    l.overflow = Label.Overflow.SHRINK;
-    btn.addChild(lbl);
-
-    btn.on(Node.EventType.TOUCH_END, () => navigate('hook'));
-    body.addChild(btn);
+    // TASK-5007a：同一段"底 + 字 + 点击"重复了第 3 遍，改走 panel-ui 的 addButton
+    addButton({
+      parent: body,
+      name: 'GoHookButton',
+      text: '去打捞',
+      pos: new Vec3(0, -90, 0),
+      size: { w: 220, h: 56 },
+      fontSize: 24,
+      onClick: () => navigate('hook'),
+    });
   }
 
   // 在途去重：MainView.switchTo 会连着调 onShow + refresh，不该起两次加载

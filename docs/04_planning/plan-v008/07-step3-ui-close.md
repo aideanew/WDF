@@ -75,58 +75,81 @@ export function addButton(opts: ButtonOpts): Node { /* ... */ }
 
 | 元素 | 规格 |
 |---|---|
-| 面板 | `contentSize(750, 1400)`，标题"箱子"（`addTitle`，y≈300） |
-| 状态行 | y≈152，字号 20，色 `#FFE28C`：显示"今日已开 N 次 / 工具剩余 M" |
-| 箱子卡 | 每张 `700×120`，纵向间距 `132`，首张 y=60 |
-| 卡内左侧 | `96×96` 圆角方块，填充色按材质：木 `#A9793F` / 铜 `#C87941` / 铁 `#8A9099` |
-| 卡内中部 | 名称（字号 22，白）+ 数量（字号 18，`#FFE28C`） |
-| 卡内右侧 | 状态徽标：`无锁` 灰底 / `铁锁` 等显示锁档 + `需 N 次` |
-| 交互按钮 | `addButton`，`196×58`，文案随状态变：`开箱` / `开始开锁` / `开锁中…` |
-| 开锁态浮层 | 居中 `600×300`，显示"连续命中 X / N" + 进度点阵（N 个圆点，命中填充金色） |
+| 面板 | `contentSize(750, 1400)`，标题"箱子"（`addTitle`，y≈280） |
+| 状态行 | y=152，字号 20，色 `#FFE28C`：显示"背包里共 N 个箱子" |
+| 错误条 | y=106，字号 19，红 `#FF8080`（error / noPermission 共用同一位置） |
+| toast | y=212，字号 22，绿 `#8FE3A0`，2 秒自动消失 |
+| 箱子卡 | 每张 `700×120`，纵向间距 `128`，首张 y=**20** |
+| 卡内左侧 | `96×96` 圆角方块（x=-282），填充色按材质：木 `#A9793F` / 铜 `#C87941` / 铁 `#8A9099`，块内显示材质首字 |
+| 卡内中部 | 名称（字号 23，左对齐，x=-95 宽 240）+ 数量「持有 ×N」（字号 18，`#FFE28C`） |
+| 卡内右侧 | 锁徽标（x=95，宽 130）：`无锁` 绿 / 有锁则 `铁锁·未开放` 灰 |
+| 交互按钮 | `addButton`，`160×54`（x=245），文案随状态变：`开箱` / `开箱中…` / `未开放`（disabled） |
+
+> **2026-10-27 实施偏差**（见 `00` §10 D-1~D-3）：
+> - 原写"首张 y=60"→ 实测 y=60 时卡片顶到 120，与错误条（y=106）重叠，下移为 **y=20**；
+> - 原写"状态行：今日已开 N 次 / 工具剩余 M"→ **改为"背包里共 N 个箱子"**。
+>   服务端没有"今日已开次数"字段，v1.0 也没有开锁工具；编一个就是伪造数据
+>   （同 `InventoryPanel` 不显示 weight 的理由：items 表 weight 0 填充）。
+>   **`noPermission` 态同理**：原写"跳登录"，但登录入口在启动流程（`GameApp`/`BootController`），
+>   面板层没有登录面板 → 实现为"文案 + 重试按钮"，不造假按钮；缺口已登记。
 
 ### 3.2 交互流
 
+> **2026-10-27 修订**：`lock !== 'none'` 的整条分支（开锁浮层、点 N 次、`hitsUsed`）**已删**，
+> 理由见本文顶部修订注记与 `10-design-source-answers.md`。以下为 v1.0 实际实现。
+
 ```
-进入面板
-  → loading（读 save.pull 取背包）
+进入面板（onShow → load）
+  → loading（preload(['chests','items']) + LocalSave.load()）
+  → 配置表为空 → error（"配置表未就绪"）
   → empty（无任何箱子）| 列表（有箱子）
-       ↓ 点「开箱」（lock === 'none'）
-       直接 invoke('chest.open', { itemId, hitsUsed: 0 })     ← 无锁 required=0
-       ↓ 点「开始开锁」（lock !== 'none'）
-       进入开锁浮层 → 点击 N 次（每次圆点填充）→ 满 N 次后
-       invoke('chest.open', { itemId, hitsUsed: N })           ← 弱校验，见 06 §2 决策3
+       ↓ 点「开箱」
+       invoke('chest.open', { itemId })          ← 无 hitsUsed，无 rid
        ↓
-  → success：toast「获得 木棍 ×1」，列表刷新（数量 −1）
-  → error：按 uxFor(c) 显示
+  → success：toast「获得 木棍 ×1」+ applyOpen 落盘 + 列表重建（数量 −1）
+  → error：1001 → "背包里没有这个箱子"；其他 → toUxState 文案 + 红条
+  → noPermission：清列表 + "登录已失效" + 重试按钮
 ```
+
+按钮状态机（三道闸，防止连点发两次请求）：
+
+1. `opening !== null` → `openOne` 直接 return；
+2. 请求发出前 `disableAllButtons()`（`setButtonDisabled`，只挡点击不改 `active`，避免布局跳动）；
+3. 请求结束统一在 `finally` 里 `await load()` 重建列表 —— 数量刷新与按钮复位一次完成，
+   不做手工回滚（中途抛错时手工回滚容易只恢复一半）。
 
 ### 3.3 六态映射（契约要求，逐态必查）
 
-| 态 | 触发条件 | 界面表现 | 走查要点 |
+| 态 | 触发条件 | 界面表现（已实现） | 走查要点 |
 |---|---|---|---|
-| `loading` | 首次拉背包 / 请求中 | 列表区显示"加载中…"，按钮 `disabled` | 连点不得发第二个请求 |
-| `empty` | 背包内无任何 `chest` 类物品 | `addEmptyHint('还没有箱子，去海里捞一个吧')` | 与"有箱子但都是其他物品"区分 |
-| `success` | `c === 0` | toast + 列表数量刷新 | toast 不遮挡按钮 |
-| `error` | 其他非 0 码 | `uxFor(c)` 文案 + 面板内红条 | **1001 必须显示"背包里没有这个箱子"**（并发被抢的真实场景） |
-| `noPermission` | `2001` | "登录已失效，请重新登录" + 跳登录 | 不得显示成通用错误 |
-| `conflict` | — | **不适用**（`chest.open` 不产生冲突态） | 确认代码里没有误用 |
+| `loading` | 首次读配置/存档、请求在途 | 列表区"加载中…"；请求中按钮文字变"开箱中…"且 `disabled` | 连点不得发第二个请求（三道闸，见 §3.2） |
+| `empty` | 背包内无任何箱子 | `addEmptyHint('还没有箱子，去海里捞一个吧')` + "去打捞"按钮 | 与"有箱子但都是其他物品"区分 |
+| `success` | `c === 0` | toast「获得 X ×1」+ `applyOpen` 落盘 + 列表重建 | toast 不遮挡按钮（y=212，卡首 y=20） |
+| `error` | 其他非 0 码 | `toUxState(c)` 文案 + 红条（y=106） | **1001 必须显示"背包里没有这个箱子"**（并发被抢的真实场景） |
+| `noPermission` | `2001`/`2002` | 清列表 + "登录已失效，请重新登录" + **重试**按钮 | 不得显示成通用错误；登录入口不在面板层（缺口已登记） |
+| `conflict` | — | **不适用**（`chest.open` 不产生 `accepted:false`） | 代码里无 `conflictOf` 调用 |
 
 ### 3.4 文件落点
 
 | 文件 | 动作 |
 |---|---|
-| `client/assets/scripts/features/chest/view/ChestPanel.ts` | **新建**（与 `InventoryPanel`/`MerchantPanel` 同构，导出 `createChestPanel(parent): PanelHandle`） |
-| `client/assets/scripts/features/chest/model/ChestModel.ts` | **新建**：把 `save.pull` 的 `inventory` 投影成"箱子行"，读 `chests` 配置取 `lock`/名称。纯函数，可 Node 测 |
-| `client/assets/scripts/features/chest/view/ChestView.ts` | 保留空壳（场景挂载用），面板由 `ChestPanel` 承担 |
-| `client/assets/scripts/app/panel-ui.ts` | 追加 `addButton` |
-| 主界面 Tab 注册 | 在现有 Tab 容器里加"箱子"入口（约 3 行） |
+| `client/assets/scripts/features/chest/view/ChestPanel.ts` | ✅ **新建**（导出 `createChestPanel(parent): PanelHandle`，key=`'chest'`） |
+| `client/assets/scripts/features/chest/model/ChestModel.ts` | ✅ **重写**（原 11 行空桩 → `projectChests` / `applyOpen` / `ChestModel`，无 `cc`，Node 可测） |
+| `client/assets/scripts/features/chest/view/ChestView.ts` | ✅ 保留空壳（场景挂载用） |
+| `client/assets/scripts/app/panel-ui.ts` | ✅ 追加 `addButton` + `setButtonDisabled` + `setButtonText` + `BTN_W`/`BTN_H` |
+| `client/assets/scripts/app/panel-types.ts` | ✅ `PanelKey` 加 `'chest'` |
+| `client/assets/scripts/app/MainView.ts` | ✅ `TABS` 第 3 位加"箱子"、`factories` 加 `chest: createChestPanel` |
+| `client/assets/scripts/features/inventory/view/InventoryPanel.ts` | ✅ 两处手写按钮（回收 / 去打捞）改走 `addButton`，清理 `Label`/`Graphics` 导入；补 `count <= 0` 守卫 |
+| `tests/determinism/chest-flow.test.mjs` | ✅ **新建**（15 例，唯一能自动验证本步的测试） |
 
 ### 3.5 关键实现约束
 
-1. **禁止在 view 里写业务判定**。`lock → required` 的映射放 `ChestModel`（纯函数）或直接由服务端返回；view 只读结果。
-2. **`hitsUsed` 上报值 = 玩家实际点击数**，不得为了"一定通过"直接报 `required`（那是作弊，且违背"客户端不伪造"原则）。**若玩家没点满 N 次，不发请求**。
-3. **`invoke` 自动补 `rid`**（`05` 已确认 `RpcClient` 对 `idempotent:true` 自动生成），所以**不要**自己传 `rid`，也不要在 `params` 里塞。
-4. **禁止 `Math.random()`**（`game-core` 纯度约束虽不覆盖 client，但开箱结果是服务端权威，客户端不应有随机）。
+1. **禁止在 view 里写业务判定**。`openable` 由 `ChestModel`（纯函数）决定，扣箱与发奖由服务端决定；view 只读结果。
+2. ~~`hitsUsed` 上报值 = 玩家实际点击数~~ —— **该参数已从契约删除**（v1.0 不做开锁）。
+   v1.1 恢复开锁时必须先在服务端按 `locks.csv` 复算，不得信任客户端上报。
+3. **`invoke` 自动补 `rid`**（`RpcClient` 对 `idempotent:true` 自动生成并复用），所以**不要**自己传 `rid`，也不要在 `params` 里塞。
+4. **禁止 `Math.random()`**：开箱结果是服务端权威，客户端不应有随机。
+5. **`applyOpen` 必须先剥旧 checksum 再 `sealSave`**：漏了这一步 `LocalSave.load()` 的 `verifySave` 会永久失败 → 玩家开完箱重启就掉档（这是服务端 F-39 的客户端镜像，同一类错误）。
 
 ## 4. 验收（tsc 必跑，单测无效）
 
@@ -143,10 +166,12 @@ npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 | grep -v "^C:/"
 ### 4.2 结构走查（人工，逐条勾）
 
 - [ ] `grep -n "new Node" client/assets/scripts/features/chest/view/ChestPanel.ts` —— 只允许面板根节点与容器节点，**不得有手写按钮**
-- [ ] `grep -n "roundRect" client/assets/scripts/features/chest/` —— **零命中**（必须走 `addButton`）
-- [ ] `grep -n "rid" client/assets/scripts/features/chest/` —— **零命中**（rid 由 `RpcClient` 补）
+- [ ] **按钮零手写**：`chest/` 下 `roundRect` 只允许出现在"卡片底板 / 材质色块"，**不得用于按钮**（`addButton` 已覆盖按钮）
+  > 2026-10-27 修订：原写"`roundRect` 零命中"过严。`addButton` 只管按钮，卡片底与色块必须自绘。
+  > 实测 2 处命中：`ChestPanel.ts:221`（卡片底）、`:231`（材质色块），均非按钮。
+- [ ] `grep -n "rid" client/assets/scripts/features/chest/` —— **只允许出现在注释**（rid 由 `RpcClient` 补）
 - [ ] `ChestModel.ts` 无 `import ... from 'cc'`（保证它能被 Node 直接单测）
-- [ ] 六态分支在 `ChestPanel.ts` 里各有显式代码路径（`grep -c "uxFor\|addEmptyHint"`）
+- [ ] 六态分支在 `ChestPanel.ts` 里各有显式代码路径（`grep -c "renderLoading\|renderEmpty\|renderRows\|renderError\|renderNoPermission"`）
 
 ### 4.3 人工验证（录屏，不可省略）
 

@@ -17,6 +17,7 @@ import type { PanelHandle, PanelKey } from './panel-types';
 import { setNav, clearNav } from './nav';
 import { createHookPanel } from '../features/hook/view/HookPanel';
 import { createInventoryPanel } from '../features/inventory/view/InventoryPanel';
+import { createChestPanel } from '../features/chest/view/ChestPanel';
 import { createCraftingPanel } from '../features/crafting/view/CraftingPanel';
 import { createLeaderboardPanel } from '../features/leaderboard/view/LeaderboardPanel';
 import { createSettingsPanel, type SettingsHandle } from '../features/settings/view/SettingsPanel';
@@ -26,6 +27,7 @@ import { createMerchantPanel } from '../features/economy/view/MerchantPanel';
 const TABS: ReadonlyArray<{ key: PanelKey; label: string }> = [
   { key: 'hook', label: '打捞' },
   { key: 'inventory', label: '背包' },
+  { key: 'chest', label: '箱子' },
   { key: 'crafting', label: '合成' },
   { key: 'merchant', label: '商人' },
   { key: 'leaderboard', label: '榜单' },
@@ -56,6 +58,7 @@ export class MainView extends Component {
     const factories: Record<PanelKey, (p: Node) => PanelHandle> = {
       hook: createHookPanel,
       inventory: createInventoryPanel,
+      chest: createChestPanel,
       crafting: createCraftingPanel,
       merchant: createMerchantPanel,
       leaderboard: createLeaderboardPanel,

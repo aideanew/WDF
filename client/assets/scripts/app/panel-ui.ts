@@ -58,6 +58,133 @@ export function addEmptyHint(parent: Node, text: string): Label {
   });
 }
 
+// ——————————————————————————————————————————————————————————
+// 按钮（TASK-5007a：抽出来，禁止各面板再手写 Graphics.roundRect）
+// ——————————————————————————————————————————————————————————
+
+/** 按钮标准尺寸（与 MerchantPanel 既有 196×58 一致，抽成常量避免各处抄数字）。 */
+export const BTN_W = 196;
+export const BTN_H = 58;
+
+const BTN_DEFAULT_FILL = new Color(45, 110, 220, 255);
+const BTN_DISABLED_FILL = new Color(88, 96, 112, 255);
+const BTN_DEFAULT_TEXT = new Color(255, 255, 255, 255);
+const BTN_DISABLED_TEXT = new Color(168, 178, 195, 255);
+
+export interface ButtonOpts {
+  parent: Node;
+  name: string;
+  text: string;
+  pos: Vec3;
+  /** 默认 196×58。 */
+  size?: { w: number; h: number };
+  fill?: Color;
+  textColor?: Color;
+  fontSize?: number;
+  disabled?: boolean;
+  onClick: () => void;
+}
+
+interface ButtonMeta {
+  w: number;
+  h: number;
+  fill: Color;
+  textColor: Color;
+  fontSize: number;
+  /** 可变：`setButtonDisabled` 改它，点击回调读它。 */
+  disabled: boolean;
+}
+
+/** 按钮元数据挂在 WeakMap 上，不往 Node 上塞自定义字段（否则要改 cocos 类型）。 */
+const BUTTON_META = new WeakMap<Node, ButtonMeta>();
+
+/** 圆角半径按高度自适应：34 高的行内小按钮配 10 半径会看起来像胶囊。 */
+function radiusOf(h: number): number {
+  return Math.min(10, Math.floor(h / 4));
+}
+
+function paintBg(node: Node, meta: ButtonMeta): void {
+  const g = node.getChildByName('Bg')?.getComponent(Graphics);
+  if (!g) return;
+  g.clear();
+  g.fillColor = meta.disabled ? BTN_DISABLED_FILL : meta.fill;
+  g.roundRect(-meta.w / 2, -meta.h / 2, meta.w, meta.h, radiusOf(meta.h));
+  g.fill();
+}
+
+function paintText(node: Node, meta: ButtonMeta): void {
+  const l = node.getChildByName('Text')?.getComponent(Label);
+  if (l) l.color = meta.disabled ? BTN_DISABLED_TEXT : meta.textColor;
+}
+
+/**
+ * 统一按钮：圆角矩形底 + 居中文字 + 点击回调。
+ *
+ * 结构用「底/字各一个子节点」而不是把 `Graphics` 与 `Label` 挂在同一节点上：
+ * 两者都是 UIRenderer，同节点双渲染组件在部分 Cocos 版本会被 `addComponent` 拒掉，
+ * 表现是"按钮只剩文字没背景"。分成子节点是行为确定的写法。
+ *
+ * `disabled` 只挡点击、不改 `active`，避免节点消失导致布局跳动。
+ */
+export function addButton(opts: ButtonOpts): Node {
+  const w = opts.size?.w ?? BTN_W;
+  const h = opts.size?.h ?? BTN_H;
+  const meta: ButtonMeta = {
+    w,
+    h,
+    fill: opts.fill ?? BTN_DEFAULT_FILL,
+    textColor: opts.textColor ?? BTN_DEFAULT_TEXT,
+    fontSize: opts.fontSize ?? 22,
+    disabled: opts.disabled === true,
+  };
+  const node = new Node(opts.name);
+  node.addComponent(UITransform).setContentSize(w, h);
+  node.setPosition(opts.pos);
+
+  const bg = new Node('Bg');
+  bg.addComponent(UITransform).setContentSize(w, h);
+  bg.addComponent(Graphics);
+  node.addChild(bg);
+
+  const text = new Node('Text');
+  text.addComponent(UITransform).setContentSize(w, h);
+  const l = text.addComponent(Label);
+  l.string = opts.text;
+  l.fontSize = meta.fontSize;
+  l.horizontalAlign = Label.HorizontalAlign.CENTER;
+  l.verticalAlign = Label.VerticalAlign.CENTER;
+  l.overflow = Label.Overflow.SHRINK;
+  node.addChild(text);
+
+  BUTTON_META.set(node, meta);
+  paintBg(node, meta);
+  paintText(node, meta);
+
+  // 监听常驻，用 meta.disabled 挡：这样 setButtonDisabled(false) 能立刻恢复可点
+  node.on(Node.EventType.TOUCH_END, () => {
+    if (meta.disabled) return;
+    opts.onClick();
+  });
+
+  opts.parent.addChild(node);
+  return node;
+}
+
+/** 改按钮可用态（重绘底色与字色）。 */
+export function setButtonDisabled(node: Node, disabled: boolean): void {
+  const meta = BUTTON_META.get(node);
+  if (!meta || meta.disabled === disabled) return;
+  meta.disabled = disabled;
+  paintBg(node, meta);
+  paintText(node, meta);
+}
+
+/** 改按钮文案（开箱中…／开箱）。 */
+export function setButtonText(node: Node, s: string): void {
+  const l = node.getChildByName('Text')?.getComponent(Label);
+  if (l) l.string = s;
+}
+
 export interface ConfirmDialogOpts {
   parent: Node;
   title?: string;
