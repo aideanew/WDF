@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 146 篇。⚠ 表示活跃文档已过 review 日期。
+共 160 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -87,8 +87,22 @@ review: 2026-11-23
 | PLAN-V002-11 | 自检结果（逐条对照 long-text §12） | active |  | `04_planning/plan-v002/11-self-check.md` |
 | PLAN-V002-12 | 第一刀与启动顺序（建议） | active |  | `04_planning/plan-v002/12-first-cut.md` |
 | PLAN-V002-13 | 执行过程记录（2026-10-26 启动） | active |  | `04_planning/plan-v002/13-execution-log.md` |
+| PLAN-V003-00 | 快照与索引（v1.0 冲刺规划） | active |  | `04_planning/plan-v003/00-snapshot.md` |
+| PLAN-V003-01 | 事实基线（2026-10-27，commit 13e6b68） | active |  | `04_planning/plan-v003/01-fact-baseline.md` |
+| PLAN-V003-02 | 范围复核与裁决清单（v1.0） | active |  | `04_planning/plan-v003/02-scope-and-decisions.md` |
+| PLAN-V003-03 | 垂直切片 S11~S16（含排序理由） | active |  | `04_planning/plan-v003/03-slices.md` |
+| PLAN-V003-04 | 任务索引 · 依赖 DAG · 所有权矩阵 · 档位预算 | active |  | `04_planning/plan-v003/04-task-index-and-dag.md` |
+| PLAN-V003-05 | W1 数值清欠（TASK-4001~4004） | active |  | `04_planning/plan-v003/05-wave1-data-unblock.md` |
+| PLAN-V003-06 | W2 权威背包+商人回收（TASK-4005~4008） | active |  | `04_planning/plan-v003/06-wave2-authority.md` |
+| PLAN-V003-07 | W3 开锁 + 真机验证（TASK-4009~4012） | active |  | `04_planning/plan-v003/07-wave3-unlock-verify.md` |
+| PLAN-V003-08 | W4 合规包体 + 契约解冻（TASK-4013~4016） | active |  | `04_planning/plan-v003/08-wave4-release.md` |
+| PLAN-V003-09 | 基线指标（无基线的指标不算指标） | active |  | `04_planning/plan-v003/09-metrics.md` |
+| PLAN-V003-10 | 风险 · 未决 · 待裁决 | active |  | `04_planning/plan-v003/10-risks.md` |
+| PLAN-V003-11 | 自检结果（对照 standing 规划 §12） | active |  | `04_planning/plan-v003/11-self-check.md` |
+| PLAN-V003-DS | 裁决表（D-01~D-14，已全部裁决） | accepted |  | `04_planning/plan-v003/decision-sheet.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
+| EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
 | TASK-TPL | 任务模板 | active | 2026-11-23 | `05_execution/task-template.md` |
 | TASK-0101 | Cocos 工程初始化与 Bundle 配置（【人工】） | done |  | `05_execution/tasks/TASK-0101.md` |
 | TASK-0103 | 契约类型补缺（G-06 / G-07 / 命名核对） | active |  | `05_execution/tasks/TASK-0103.md` |
