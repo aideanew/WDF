@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 222 篇。⚠ 表示活跃文档已过 review 日期。
+共 228 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -43,6 +43,7 @@ review: 2026-11-23
 | DATA-0001 | 数值表说明 | active | 2026-11-23 | `03_solution/data/config-tables.md` |
 | DATA-0003 | 数据库结构 | active | 2026-11-23 | `03_solution/data/db-schema.md` |
 | DATA-0005 | 错误码对照表（手维护） | active | 2026-11-26 | `03_solution/data/error-catalog.md` |
+| SOL-gateway-gaps | 网关未实现能力登记（限流 / cfg 回传 / sv 校验） | active | 2026-11-27 | `03_solution/data/gateway-gaps.md` |
 | DATA-0002 | 本地存档结构 | active | 2026-11-23 | `03_solution/data/save-schema.md` |
 | ADR-0001 | 引擎：Cocos Creator 3.8 LTS | proposed | 2026-11-23 | `03_solution/decisions/ADR-0001-engine-cocos-3-8.md` |
 | ADR-0002 | 前后端共用确定性规则包 game-core | accepted | 2026-11-23 | `03_solution/decisions/ADR-0002-shared-game-core.md` |
@@ -152,6 +153,11 @@ review: 2026-11-23
 | PLAN-V008-08 | 步骤 4 · 证据补录、合规重写、文档收口与推送（派工卡） | active | 2026-11-10 | `04_planning/plan-v008/08-step4-evidence-release.md` |
 | PLAN-V008-09 | 自检、前提与局限、第一刀 | active | 2026-11-10 | `04_planning/plan-v008/09-self-check.md` |
 | PLAN-V008-10 | 从最初设计文件找回的答案（箱子 / 锁 / 开箱） | active | 2026-11-10 | `04_planning/plan-v008/10-design-source-answers.md` |
+| PLAN-V009-01 | plan-v009 · 实测基线（带时间戳与命令原文） | active | 2026-11-10 | `04_planning/plan-v009/01-baseline-measured.md` |
+| PLAN-V009-02 | plan-v009 · 事实更正台账（我自己错在哪） | active | 2026-11-10 | `04_planning/plan-v009/02-fact-corrections.md` |
+| PLAN-V009-03 | plan-v009 · 卡片明细（逐卡的改法与验收） | active | 2026-11-10 | `04_planning/plan-v009/03-cards.md` |
+| PLAN-V009-04 | plan-v009 · 闸门加固设计与事实基线交付物 | active | 2026-11-10 | `04_planning/plan-v009/04-guard-hardening.md` |
+| PLAN-V009-05 | plan-v009 · 待裁决事项 | active | 2026-11-10 | `04_planning/plan-v009/05-pending-decisions.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -213,11 +219,11 @@ review: 2026-11-23
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
 | CMP-anti-addiction | 防沉迷方案 | draft | 2026-11-23 | `07_release/compliance/anti-addiction.md` |
-| COMP-001 | 软著与提审材料说明 | active |  | `07_release/compliance/copyright-materials.md` |
+| CMP-copyright-materials | 软著提交材料清单 | active | 2026-10-30 | `07_release/compliance/copyright-materials.md` |
 | CMP-filings | 资质与备案进度 | draft | 2026-11-23 | `07_release/compliance/filings.md` |
 | CMP-privacy-policy | 隐私政策（草稿） | draft | 2026-11-23 | `07_release/compliance/privacy-policy.md` |
 | CMP-prob | 概率公示（生成） | active | 2026-11-23 | `07_release/compliance/probability-disclosure.md` |
-| COMP-002 | 提审核对清单 | active |  | `07_release/compliance/review-checklist.md` |
+| COMP-002 | 提审核对清单 | active | 2026-11-23 | `07_release/compliance/review-checklist.md` |
 | CMP-user-agreement | 用户协议（草稿） | draft | 2026-11-23 | `07_release/compliance/user-agreement.md` |
 | OPS-0003 | 客服常见问题 | active | 2026-11-23 | `07_release/operations/customer-support.md` |
 | OPS-0004 | 故障处理卡 | active | 2026-11-23 | `07_release/operations/incident-runbook.md` |
