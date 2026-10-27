@@ -46,7 +46,7 @@ related: [PLAN-V003-00, PLAN-V003-DS, EXEC-BRIEF-0002, ADR-0011]
 
 ## 2. 锁定裁决值（= decision-sheet 摘要，转录唯一依据）
 
-- **D-01 merchants**：渔村 region_bp=10000/限购20；流浪 8500/10；黑市 13000/5。回收价=`floor(base_price × recycle_bp/10000 × region_bp/10000)`。
+- **D-01 merchants**：渔村 region_bp=10000/限购20；流浪 8500/10；黑市 13000/5。回收价=`floor(recycle_bp × region_bp/10000)`（**2026-10-27 主控修正**：实测 prices 表 `recycle_bp` 为回收基数绝对值 ≈ base×50%，原式量纲错误；与 M1 recyclePrice 等价）。
 - **D-02 facilities**：9 行（熔炉/灶台/锯台/砧台/木炭窑/炼油炉/高炉/锁匠铺/机械工坊），effect_bp=10000。
 - **D-03 buildings**：6 行，大仓库 storage+50、货舱 +20，其余 0。
 - **D-04 hooks**：1 行 target_dist=600、angle_deg=15、max_power_bp=DEFAULT_HOOK_CONFIG 现值（等值迁移）。

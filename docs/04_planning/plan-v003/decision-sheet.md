@@ -17,7 +17,7 @@ related: [PLAN-V003-02, PLAN-V003-05, EXEC-BRIEF-0003]
 
 | # | 表 | 锁定内容 | 转录目标 |
 |---|---|---|---|
-| D-01 | merchants | 3 行：`merchant_village`(渔村, region_bp=10000, 日限购 20) / `merchant_wander`(流浪, 8500, 10) / `merchant_black`(黑市, 13000, 5)；回收价公式 = `base_price × recycle_bp/10000 × region_bp/10000`（向下取整） | `game-data` → config `merchants.json` |
+| D-01 | merchants | 3 行：`merchant_village`(渔村, region_bp=10000, 日限购 20) / `merchant_wander`(流浪, 8500, 10) / `merchant_black`(黑市, 13000, 5)；回收价公式 = `floor(recycle_bp × region_bp / 10000)`（**2026-10-27 主控修正**：实测 prices 表 106 行，`recycle_bp` 字段语义为**回收基数绝对值**（≈ floor(base_price×50%)，非万分比系数）——原式 `base×recycle_bp/10000×region_bp/10000` 会使全部回收价为 0，与 M1 既有 `recyclePrice`（50% 基准±30%）在 recycle_bp=base/2 时数学等价） | `game-data` → config `merchants.json` |
 | D-02 | facilities | 9 行（熔炉/灶台/锯台/砧台/木炭窑/炼油炉/高炉/锁匠铺/机械工坊），字段 `effect_bp=10000`（产出×1.0 占位）、`station` 取 recipes 原工位串 | config `facilities.json` |
 | D-03 | buildings | 6 行（大仓库 storage+50 / 货舱 storage+20 / 兵营 0 / 厨房 0 / 农田 0 / 潜水工坊 0），效果字段 `storage_bp`，其余 0 占位 | config `buildings.json` |
 | D-04 | hooks | 1 行：`target_dist=600`、`angle_deg=15`、`max_power_bp` 以 `generated/game-core/hook` 的 `DEFAULT_HOOK_CONFIG` 现值为准转录（等值迁移，不改手感） | config `hooks.json` |
