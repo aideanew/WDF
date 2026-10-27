@@ -2,7 +2,7 @@
   "table": "guide_steps",
   "module": "guide",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
@@ -11,9 +11,15 @@
     "name": {
       "type": "string"
     },
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "target_panel": {
+      "type": "string"
+    },
     "note": {
       "type": "string"
     }
-  },
-  "todo": "字段待从 v5.5（模块 guide）抽取"
+  }
 }

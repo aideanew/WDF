@@ -1,1 +1,1 @@
-[]
+[{"id":"step_1","name":"出钩","text":"出钩收获第一件物品","target_panel":"hook","note":"DS-D-05"},{"id":"step_2","name":"背包","text":"查看背包","target_panel":"inventory","note":"DS-D-05"},{"id":"step_3","name":"合成","text":"完成一次合成","target_panel":"crafting","note":"DS-D-05"},{"id":"step_4","name":"回收","text":"商人处回收","target_panel":"merchant","note":"DS-D-05"},{"id":"step_5","name":"榜单","text":"查看榜单","target_panel":"leaderboard","note":"DS-D-05"}]

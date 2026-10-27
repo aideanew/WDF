@@ -1,6 +1,6 @@
 id,hits_required,zone_bp,drop_group
-none,,,
-iron,,,
-copper,,,
-silver,,,
-gold,,,
+none,0,0,
+iron,3,0,
+copper,5,0,
+silver,8,0,
+gold,12,0,

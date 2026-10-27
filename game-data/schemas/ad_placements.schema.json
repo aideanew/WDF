@@ -2,7 +2,7 @@
   "table": "ad_placements",
   "module": "ads",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
@@ -11,9 +11,13 @@
     "name": {
       "type": "string"
     },
+    "daily_cap": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
     "note": {
       "type": "string"
     }
-  },
-  "todo": "字段待从 v5.5（模块 ads）抽取"
+  }
 }

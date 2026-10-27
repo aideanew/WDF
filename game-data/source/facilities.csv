@@ -1,1 +1,10 @@
-id,name,note
+id,name,effect_bp,station,note
+furnace,熔炉,10000,熔炉,DS-D-02
+stove,灶台,10000,灶台,DS-D-02
+saw_table,锯台,10000,,DS-D-02
+anvil,砧台,10000,,DS-D-02
+charcoal_kiln,木炭窑,10000,木炭窑,DS-D-02
+oil_refinery,炼油炉,10000,炼油炉,DS-D-02
+blast_furnace,高炉,10000,高炉/铁匠,DS-D-02
+locksmith,锁匠铺,10000,,DS-D-02
+mechanic_workshop,机械工坊,10000,机械工坊/机械师,DS-D-02

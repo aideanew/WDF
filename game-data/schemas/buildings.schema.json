@@ -2,7 +2,7 @@
   "table": "buildings",
   "module": "island",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
@@ -11,9 +11,12 @@
     "name": {
       "type": "string"
     },
+    "storage_bp": {
+      "type": "int",
+      "min": 0
+    },
     "note": {
       "type": "string"
     }
-  },
-  "todo": "字段待从 v5.5（模块 island）抽取"
+  }
 }

@@ -2,7 +2,7 @@
   "table": "hooks",
   "module": "hook",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
@@ -11,9 +11,24 @@
     "name": {
       "type": "string"
     },
+    "target_dist": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
+    "angle_deg": {
+      "type": "int",
+      "min": 0,
+      "max": 360,
+      "required": true
+    },
+    "max_power_bp": {
+      "type": "int",
+      "min": 0,
+      "required": true
+    },
     "note": {
       "type": "string"
     }
-  },
-  "todo": "字段待从 v5.5（模块 hook）抽取"
+  }
 }

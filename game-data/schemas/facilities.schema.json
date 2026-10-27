@@ -2,7 +2,7 @@
   "table": "facilities",
   "module": "raft",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
@@ -11,9 +11,16 @@
     "name": {
       "type": "string"
     },
+    "effect_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000
+    },
+    "station": {
+      "type": "string"
+    },
     "note": {
       "type": "string"
     }
-  },
-  "todo": "字段待从 v5.5（模块 raft）抽取"
+  }
 }

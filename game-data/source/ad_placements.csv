@@ -1,1 +1,4 @@
-id,name,note
+id,name,daily_cap,note
+hook_cooldown,出钩冷却广告,3,DS-D-06
+offline_double,离线双倍广告,3,DS-D-06
+shop_refresh,商店刷新广告,3,DS-D-06

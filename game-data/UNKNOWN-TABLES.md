@@ -10,21 +10,27 @@
 
 | 表 | 状态 | 行数 | 说明 |
 |---|---|---|---|
-| items | ✅ 已转录 | 106 | id 用 `item_NNNN` 稳定序号；`name/category/base_price` 取自总表；`craftable` 由总表"不可打造"标注推导（10 个 false）；`weight/capacity/stack/unlock_level` 文档未给→留空（见第三节） |
+| items | ✅ 已转录 | 106 | id 用 `item_NNNN` 稳定序号；`name/category/base_price` 取自总表；`craftable` 由总表"不可打造"标注推导（10 个 false）；`weight/capacity/stack/unlock_level` 由 D-07 填充（见第三节） |
 | prices | ✅ 已转录 | 106 | `base_price/recycle_bp` 取自总表；`recycle_bp` schema 上限已由 10000 放宽至 100000（金锭/古董等最高 15000） |
-| locks | ✅ 已转录 | 5 | none/iron/copper/silver/gold；`hits_required/zone_bp` 文档未给→留空 |
-| chests | ✅ 已转录 | 3 | wood/copper/iron；`lock` 默认 none；`smashable/size` 文档未给→留空 |
-| recipes | ✅ 已转录 | 80 | 总表二~十一段配方列解析；21 条特殊/设施类跳过（见第五节）；`job/unlock_level` 留空（见第三节）；名称映射 `简易过滤器→简易海水过滤器` 已补（原误跳 1 条已修复） |
+| locks | ✅ 已转录 | 5 | none/iron/copper/silver/gold；`hits_required/zone_bp` 由 D-08 填充（见第三节） |
+| chests | ✅ 已转录 | 3 | wood/copper/iron；`lock` 默认 none；`smashable/size` 由 D-09 填充（见第三节） |
+| recipes | ✅ 已转录 | 80 | 总表二~十一段配方列解析；21 条特殊/设施类跳过（见第五节）；`unlock_level` 由 D-10 填充 0；`job` 保持空（见第三节）；名称映射 `简易过滤器→简易海水过滤器` 已补（原误跳 1 条已修复） |
+| merchants | ✅ 已转录（D-01） | 3 | 渔村/流浪/黑市；region_bp + daily_limit |
+| facilities | ✅ 已转录（D-02） | 9 | 熔炉/灶台/锯台/砧台/木炭窑/炼油炉/高炉/锁匠铺/机械工坊；effect_bp=10000、station 取 recipes 原工位串 |
+| buildings | ✅ 已转录（D-03） | 6 | 大仓库/货舱/兵营/厨房/农田/潜水工坊；storage_bp |
+| hooks | ✅ 已转录（D-04） | 1 | target_dist=600、angle_deg=15、max_power_bp=10000（等值迁移自 DEFAULT_HOOK_CONFIG） |
+| guide_steps | ✅ 已转录（D-05） | 5 | 出钩→背包→合成→回收→榜单；text + target_panel |
+| ad_placements | ✅ 已转录（D-06） | 3 | hook_cooldown/offline_double/shop_refresh；daily_cap=3 |
 
 ---
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **41 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **35 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-ad_placements, bait, blueprints, buildings, consumers, crew_traits, defenses, drops, event_drops, events, explore, facilities, fish, foods, generators, guide_steps, hooks, islands, jobs, levels, limits, lines, lockpick_tools, merchants, oil, phrases, protection_cards, quality, raft_tiles, regions, rooms, seasons, shipwrecks, spawns, throwables, tides, titles, units, unlocks, waves, zones
+bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, levels, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, raft_tiles, regions, rooms, seasons, shipwrecks, spawns, throwables, tides, titles, units, unlocks, waves, zones
 
-> 注：`buildings/facilities/foods/fish/islands/events/tides/merchants/…` 玩法上确实存在，但当前设计文档未给数值（价格/配方已并入 items/prices/recipes 对应行）。若后续补文档，优先从这些表开始。
+> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
@@ -32,16 +38,16 @@ ad_placements, bait, blueprints, buildings, consumers, crew_traits, defenses, dr
 
 | 表 | 字段 | 现状 | 备注 |
 |---|---|---|---|
-| items | `weight` | 0/106 填充 | 必填→可选 |
-| items | `capacity` | 0/106 填充 | 文档未给，留空待补 |
-| items | `stack` | 0/106 填充 | 文档未给，留空待补 |
-| items | `unlock_level` | 0/106 填充 | 文档未给，留空待补 |
-| locks | `hits_required` | 0/5 填充 | 必填→可选 |
-| locks | `zone_bp` | 0/5 填充 | 必填→可选 |
-| chests | `smashable` | 0/3 填充 | 必填→可选（总表未明确每箱可否砸） |
-| chests | `size` | 0/3 填充 | 文档未给，留空待补 |
-| recipes | `job` | 0/79 填充 | 引用 `jobs.id`，而 jobs 表为空 → 暂无法填；源表工位串如 `高炉/铁匠` 含职业信息但未拆分 |
-| recipes | `unlock_level` | 0/79 填充 | 文档未给，留空待补 |
+| items | `weight` | ✅ 106/106 填充（D-07） | 全 1 |
+| items | `capacity` | ✅ 106/106 填充（D-07） | 全 0 |
+| items | `stack` | ✅ 106/106 填充（D-07） | 全 99 |
+| items | `unlock_level` | ✅ 106/106 填充（D-07） | 全 0（schema min 1→0） |
+| locks | `hits_required` | ✅ 5/5 填充（D-08） | none=0/iron=3/copper=5/silver=8/gold=12（schema max 4→12） |
+| locks | `zone_bp` | ✅ 5/5 填充（D-08） | 全 0 |
+| chests | `smashable` | ✅ 3/3 填充（D-09） | 全 true |
+| chests | `size` | ✅ 3/3 填充（D-09） | 全 1（schema enum→int） |
+| recipes | `job` | 0/80 填充 | D-10 裁决"保持空"；引用 `jobs.id`，jobs 表为空 → 暂无法填；源表工位串如 `高炉/铁匠` 含职业信息但未拆分 |
+| recipes | `unlock_level` | ✅ 80/80 填充（D-10） | 全 0（schema min 1→0） |
 | prices | `recycle_bp` 上限 | — | 10000 → 100000（非留空，属上限放宽） |
 
 > **station 字段说明**：recipes.station 已填 48/79（其余为本就无工位的段落，留空正确）。
@@ -84,8 +90,8 @@ ad_placements, bait, blueprints, buildings, consumers, crew_traits, defenses, dr
 
 ## 五、进度
 
-- `npm run gen:config` 通过：**46 张表、300 行**、configVersion=`b249f288e985da48`。
-- 较上轮（220 行）新增 80 行 recipes；21 条特殊配方合规跳过。
-- `npm run sync` 已执行：42 个文件同步至 `client/assets/scripts/generated/`。
-- 空表不参与校验（0 行），待补来源后转录即可。
+- `npm run gen:config` 通过：**46 张表、327 行**、configVersion=`38fc1faf915f8bbf`（2026-10-27，TASK-4002 转录 D-01~D-10 后）。
+- 较上轮（300 行）新增 27 行（merchants 3 + facilities 9 + buildings 6 + hooks 1 + guide_steps 5 + ad_placements 3）；items/locks/chests/recipes 字段级填充不改行数。
+- `npm run sync` 已执行：43 个文件同步至 `client/assets/scripts/generated/`。
+- 空表 35 张（原 41，移出 6 张已转录表），待补来源后转录即可。
 - 全部留空待填项已统一登记于本文档第三、四、五节，后续补充时回填并勾销。

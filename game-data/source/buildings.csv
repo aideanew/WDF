@@ -1,1 +1,7 @@
-id,name,note
+id,name,storage_bp,note
+warehouse,大仓库,50,DS-D-03
+cargo_hold,货舱,20,DS-D-03
+barracks,兵营,0,DS-D-03
+kitchen,厨房,0,DS-D-03
+farm,农田,0,DS-D-03
+diving_workshop,潜水工坊,0,DS-D-03

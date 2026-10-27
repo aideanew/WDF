@@ -25,16 +25,12 @@
     "smashable": {
       "type": "bool",
       "required": false,
-      "note": "总表未明确每箱可否砸，留空待补"
+      "note": "D-09 裁决值：全 3 行 true"
     },
     "size": {
-      "type": "enum",
-      "values": [
-        "small",
-        "medium",
-        "large",
-        "huge"
-      ]
+      "type": "int",
+      "min": 1,
+      "note": "D-09 裁决值：全 3 行 size=1（原 enum 改 int）"
     }
   }
 }

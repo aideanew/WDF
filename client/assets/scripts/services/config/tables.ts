@@ -2,14 +2,22 @@
 // **不 import cc**：行类型取自生成物，I/O 走可注入 loader —— 这样缓存、在途去重、
 // 行只读三件事能在 Node 下直接测。Cocos 侧的 loader 由 ./index.ts 注入。
 import type {
+  AdPlacementsRow,
+  BuildingsRow,
   ChestsRow,
+  FacilitiesRow,
+  GuideStepsRow,
+  HooksRow,
   ItemsRow,
   LocksRow,
+  MerchantsRow,
   PricesRow,
   RecipesRow,
 } from '../../generated/game-core/generated/config-types';
 
-export type TableName = 'items' | 'recipes' | 'prices' | 'locks' | 'chests';
+export type TableName =
+  | 'items' | 'recipes' | 'prices' | 'locks' | 'chests'
+  | 'merchants' | 'facilities' | 'buildings' | 'hooks' | 'guide_steps' | 'ad_placements';
 
 /** 表名 → 行类型。行类型从生成物取，禁止在此复制字段定义。 */
 export interface TableRowMap {
@@ -18,6 +26,12 @@ export interface TableRowMap {
   prices: PricesRow;
   locks: LocksRow;
   chests: ChestsRow;
+  merchants: MerchantsRow;
+  facilities: FacilitiesRow;
+  buildings: BuildingsRow;
+  hooks: HooksRow;
+  guide_steps: GuideStepsRow;
+  ad_placements: AdPlacementsRow;
 }
 
 export type TableRow<K extends TableName> = TableRowMap[K];

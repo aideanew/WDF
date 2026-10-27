@@ -1,1 +1,2 @@
-id,name,note
+id,name,target_dist,angle_deg,max_power_bp,note
+hook_default,默认出钩,600,15,10000,DS-D-04

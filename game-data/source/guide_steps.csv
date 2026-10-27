@@ -1,1 +1,6 @@
-id,name,note
+id,name,text,target_panel,note
+step_1,出钩,出钩收获第一件物品,hook,DS-D-05
+step_2,背包,查看背包,inventory,DS-D-05
+step_3,合成,完成一次合成,crafting,DS-D-05
+step_4,回收,商人处回收,merchant,DS-D-05
+step_5,榜单,查看榜单,leaderboard,DS-D-05

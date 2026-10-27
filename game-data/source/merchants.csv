@@ -1,1 +1,4 @@
-id,name,note
+id,name,region_bp,daily_limit,note
+merchant_village,渔村,10000,20,DS-D-01
+merchant_wander,流浪商人,8500,10,DS-D-01
+merchant_black,黑市商人,13000,5,DS-D-01
