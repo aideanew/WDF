@@ -1,13 +1,19 @@
 ---
 id: PLAN-V005-00
 title: plan-v005 · v1.0 收口与测试闭环执行体系（总导航）
-status: active
+status: superseded
 module: planning
 owner: hark
 created: 2026-10-27
 review: 2026-11-10
-related: [PLAN-V004-00, PLAN-0003, PLAN-0001]
+related: [PLAN-V004-00, PLAN-0003, PLAN-0001, PLAN-V007-00]
 ---
+
+> # ⛔ 本规划已冻结归档 —— 现行规划是 `docs/04_planning/plan-v007/`
+>
+> **2026-10-27 16:10 归档。** 本目录的**事实基线**（F-01~F-18 缺陷编号、逐文件实测结论）**仍然有效并被 plan-v007 全部继承**；
+> 但**步骤编号已失效**——本目录 step1/step2 已完成、step3 部分完成，起点已前移约 40%。
+> 请勿按本目录的步骤顺序施工。现行入口：`plan-v007/00-README.md`。
 
 # 00 · plan-v005 总导航
 

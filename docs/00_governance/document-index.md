@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 193 篇。⚠ 表示活跃文档已过 review 日期。
+共 212 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -124,6 +124,24 @@ review: 2026-11-23
 | PLAN-V005-12 | 步骤 7 · W6 合规材料与四文档对齐（v1.0 收官宣告） | active | 2026-11-10 | `04_planning/plan-v005/12-step7-release-docs.md` |
 | PLAN-V005-13 | 步骤 8 · W7 v1.1 种子与数值清欠登记 | active | 2026-11-10 | `04_planning/plan-v005/13-step8-v11-seed.md` |
 | PLAN-V005-14 | 自检清单与反作弊判据（含本规划的可证伪点） | active | 2026-11-10 | `04_planning/plan-v005/14-self-check.md` |
+| PLAN-V006-00 | 规划快照 | superseded |  | `04_planning/plan-v006/00-snapshot.md` |
+| PLAN-V006-01 | 事实基线（含文档与代码不一致清单） | active |  | `04_planning/plan-v006/01-fact-baseline.md` |
+| PLAN-V006-02 | 需求基线复核 | active |  | `04_planning/plan-v006/02-requirements.md` |
+| PLAN-V006-03 | 契约冻结包与数据模型 | active |  | `04_planning/plan-v006/03-contracts.md` |
+| PLAN-V006-04 | 垂直切片与基线指标 | active |  | `04_planning/plan-v006/04-slices.md` |
+| PLAN-V006-05 | 原子任务卡全集与 DAG | active |  | `04_planning/plan-v006/05-tasks-and-dag.md` |
+| PLAN-V006-06 | 规划总结 | active |  | `04_planning/plan-v006/06-summary.md` |
+| PLAN-V007-01 | 事实基线（2026-10-27 15:58 实测 + 逐卡四参照系审计） | active | 2026-11-10 | `04_planning/plan-v007/01-fact-baseline.md` |
+| PLAN-V007-02 | 缺陷审计（F-01~F-26 生命周期 + 新增 F-19~F-26 详解） | active | 2026-11-10 | `04_planning/plan-v007/02-gap-audit.md` |
+| PLAN-V007-03 | 裁决表（D-34 ~ D-41） | active | 2026-11-10 | `04_planning/plan-v007/03-decisions.md` |
+| PLAN-V007-04 | 架构分层与实测所有权矩阵 | active | 2026-11-10 | `04_planning/plan-v007/04-architecture.md` |
+| PLAN-V007-05 | 执行 DAG（5 波次 · 冲突矩阵 · 出口判据） | active | 2026-11-10 | `04_planning/plan-v007/05-dag.md` |
+| PLAN-V007-06 | 步骤 1 · W0 基础链路（4020 rid 注入 + 4008 三处收尾） | active | 2026-11-10 | `04_planning/plan-v007/06-step1-rid-and-recycle-close.md` |
+| PLAN-V007-07 | 步骤 2 · W1 开箱全栈（4009 重构执行） | active | 2026-11-10 | `04_planning/plan-v007/07-step2-chest-open.md` |
+| PLAN-V007-08 | 步骤 3 · W2 文档收口（4 处残留 + EVD 三份补录） | active | 2026-11-10 | `04_planning/plan-v007/08-step3-docs-and-evidence.md` |
+| PLAN-V007-09 | 步骤 4 · W3 真机降级（4010/4011）与合规清单（4013） | active | 2026-11-10 | `04_planning/plan-v007/09-step4-device-and-compliance.md` |
+| PLAN-V007-10 | 步骤 5 · W4 v1.0 宣告（四文档对齐 + v1.1 种子 + 自检清单） | active | 2026-11-10 | `04_planning/plan-v007/10-step5-release-close.md` |
+| PLAN-V007-11 | 基线漂移 2 号 · W0/W1 并行半成品审计（16:07 实测） | active | 2026-11-10 | `04_planning/plan-v007/11-drift-audit-w0w1.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -173,12 +191,13 @@ review: 2026-11-23
 | TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | done |  | `05_execution/tasks/TASK-3401.md` |
 | TASK-4007 | 商人页 UI + 限购（buyQuota 接真数值） | draft |  | `05_execution/tasks/TASK-4007.md` |
 | TASK-4008 | 背包页回收入口 + 确认弹窗组件 | draft |  | `05_execution/tasks/TASK-4008.md` |
-| TASK-4009 | 开锁交互（chest+locks 接表）+ salvage.claimInfo | draft |  | `05_execution/tasks/TASK-4009.md` |
+| TASK-4009 | 开锁交互（chest+locks 接表）+ chest.open 动作 | draft |  | `05_execution/tasks/TASK-4009.md` |
 | TASK-4010 | 四面板真机录屏 + 6 态走查 | draft |  | `05_execution/tasks/TASK-4010.md` |
 | TASK-4011 | 首钩命中率采样脚本 + 采样记录 | draft |  | `05_execution/tasks/TASK-4011.md` |
 | TASK-4013 | 合规材料清单落 docs/07_release | draft |  | `05_execution/tasks/TASK-4013.md` |
 | TASK-4015 | 契约解冻执行（2004 码等） | draft |  | `05_execution/tasks/TASK-4015.md` |
 | TASK-4016 | error-catalog / glossary / current-plan / roadmap 四文档对齐 | draft |  | `05_execution/tasks/TASK-4016.md` |
+| TASK-4020 | RpcClient 自动补齐 rid | draft |  | `05_execution/tasks/TASK-4020.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |

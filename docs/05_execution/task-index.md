@@ -56,9 +56,10 @@ review: 2026-11-23
 | TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | done | `docs/05_execution/tasks/TASK-3401.md` |
 | TASK-4007 | 商人页 UI + 限购（buyQuota 接真数值） | draft | `docs/05_execution/tasks/TASK-4007.md` |
 | TASK-4008 | 背包页回收入口 + 确认弹窗组件 | draft | `docs/05_execution/tasks/TASK-4008.md` |
-| TASK-4009 | 开锁交互（chest+locks 接表）+ salvage.claimInfo | draft | `docs/05_execution/tasks/TASK-4009.md` |
+| TASK-4009 | 开锁交互（chest+locks 接表）+ chest.open 动作 | draft | `docs/05_execution/tasks/TASK-4009.md` |
 | TASK-4010 | 四面板真机录屏 + 6 态走查 | draft | `docs/05_execution/tasks/TASK-4010.md` |
 | TASK-4011 | 首钩命中率采样脚本 + 采样记录 | draft | `docs/05_execution/tasks/TASK-4011.md` |
 | TASK-4013 | 合规材料清单落 docs/07_release | draft | `docs/05_execution/tasks/TASK-4013.md` |
 | TASK-4015 | 契约解冻执行（2004 码等） | draft | `docs/05_execution/tasks/TASK-4015.md` |
 | TASK-4016 | error-catalog / glossary / current-plan / roadmap 四文档对齐 | draft | `docs/05_execution/tasks/TASK-4016.md` |
+| TASK-4020 | RpcClient 自动补齐 rid | draft | `docs/05_execution/tasks/TASK-4020.md` |
