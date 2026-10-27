@@ -37,7 +37,7 @@ related: [ADR-0011, PLAN-V003-04]
 
 **目标**：新 Tab"商人"（走既有 `createXxxPanel` 工厂 + PanelKey 扩展），读 `merchants` 表展示回收价/限购，卖出入走 4006 接口。
 **步骤**：1) `panel-types.ts` PanelKey 增 `merchant`（**本卡是唯一授权改该文件者**）；2) `features/economy/view/MerchantPanel.ts`；3) buyQuota 接真数值（日重置：服务端返回 quota，端上不自己算日界——归 D-11 裁决）；4) 卖出成功后 `navigate('inventory')` 回背包刷新。
-**验收**：a) 空态"今日额度已用完"（QUOTA_EXHAUSTED→empty 态，DESIGN-0001 §2）；b) 卖出后背包行数减少且灵草增加；c) 面板切换不重建（沿用 3101 纪律）。
+**验收**：a) 空态"今日额度已用完"（QUOTA_EXHAUSTED→empty 态，DESIGN-0001 §2）；b) 卖出后背包行数减少且金币增加（`modules.currency.gold += herbDelta`，D-15）；c) 面板切换不重建（沿用 3101 纪律）。
 **验证命令**：全量 verify + tsc 过滤式。
 **允许**：app/panel-types.ts（仅加 key）、features/economy/**、app/MainView.ts 挂载 ≤5 行；**禁止**：改 PanelHandle 结构。
 **规模**：中（0.5–1d）。
