@@ -30,7 +30,7 @@ export interface UxView {
 type CodeDrivenRule = Omit<UxView, 'state'> & { state: Exclude<UxState, 'loading' | 'conflict'> };
 
 /**
- * 14 个错误码的映射（`satisfies Record<keyof typeof ERR, ...>` 保证漏一个就编译失败）。
+ * 15 个错误码的映射（`satisfies Record<keyof typeof ERR, ...>` 保证漏一个就编译失败）。
  * 数值含义与 `docs/03_solution/design/DESIGN-0001-ux-states.md` §2 逐行一致。
  */
 export const UX_BY_ERROR_NAME = {
@@ -38,6 +38,8 @@ export const UX_BY_ERROR_NAME = {
   UNKNOWN_ACTION: { state: 'error', retryable: false },
   NOT_LOGGED_IN: { state: 'noPermission', retryable: false, next: 'login' },
   SESSION_EXPIRED: { state: 'noPermission', retryable: false, next: 'login' },
+  /** 绑定票据无效（D-12）：重试只会再失败一次，必须重新发起绑定/登录。 */
+  BIND_TICKET_INVALID: { state: 'noPermission', retryable: false, next: 'login' },
   BANNED: { state: 'noPermission', retryable: false, next: 'contact' },
   MINOR_TIME_LIMIT: { state: 'noPermission', retryable: false, next: 'wait' },
   /** 幂等回放：对玩家而言就是"已经成功了"，不弹错 */

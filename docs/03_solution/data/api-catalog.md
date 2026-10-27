@@ -23,6 +23,7 @@ review: 2026-11-23
 | `save.resolveFork` | save | ✔ | ✔ | 玩家选择保留哪份存档 |
 | `salvage.claimInfo` | salvage | ✔ | ✔ | 领取沉船信息份数 |
 | `economy.buyQuota` | economy | ✔ | ✔ | 购买区服每日限量物品（如高级开锁工具） |
+| `economy.sell` | economy | ✔ | ✔ | 商人回收物品（影子账本校验，容差=0，ADR-0012） |
 | `leaderboard.report` | leaderboard | ✔ | ✔ | 批量上报联网实时收获 |
 | `leaderboard.query` | leaderboard | ✔ | — | 查询榜单快照 |
 | `event.start` | event | ✔ | ✔ | 开赶海场次：服务器生成种子与装备快照 |

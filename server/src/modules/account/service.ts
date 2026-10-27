@@ -77,10 +77,9 @@ export async function playerExists(playerId: string): Promise<boolean> {
 // B 平台 `bindConfirm(ticket)` 把 B 在当前平台上的 identity 改挂到 A；若 B 已有存档则标记 forkPending
 // 并登记 save_fork(source='bind')，由 AT-2202 save.resolveFork 裁决，两方存档"不相加"。
 //
-// 错误码：合同冻结只有 14 码且无专用"票据无效"码（TASK-1401 禁止自造数字）。
-// 票据失败（不存在 / 过期 / 已用 / 自绑 / 无身份）统一复用 2001 NOT_LOGGED_IN —— 属 AUTH 段、
-// 客户端按"鉴权失败"优雅回登录重来，不会像 2002 那样触发静默刷新死循环。属缺口填补，
-// 待合同解冻后可新增 2004 BIND_TICKET_INVALID 精确区分。
+// 错误码：TASK-4015 契约解冻后，票据失败（不存在 / 过期 / 已用 / 自绑 / 无身份）
+// 统一抛 2004 BIND_TICKET_INVALID（原复用 2001 的缺口已关闭，D-12）。
+// 2001 仍只表示"确实没登录/没身份"的上下文缺失，不表示票据本身无效。
 
 /** 票据有效期：10 分钟（一次性，过期作废）。 */
 const BIND_TICKET_TTL_MS = 10 * 60 * 1000;
@@ -127,17 +126,17 @@ export async function bindConfirm(
 ): Promise<BindConfirmResult> {
   return withTx(async (tx) => {
     const row = await findTicket(ticket, tx);
-    if (!row) throw new BindError(ERR.NOT_LOGGED_IN, 'bind ticket not found');
-    if (row.used_at) throw new BindError(ERR.NOT_LOGGED_IN, 'bind ticket already used');
-    if (new Date(row.expires_at).getTime() < t) throw new BindError(ERR.NOT_LOGGED_IN, 'bind ticket expired');
+    if (!row) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket not found');
+    if (row.used_at) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket already used');
+    if (new Date(row.expires_at).getTime() < t) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket expired');
 
     const anchor = row.player_id;
     if (anchor === confirmerPlayerId) {
-      throw new BindError(ERR.NOT_LOGGED_IN, 'cannot bind a player to itself');
+      throw new BindError(ERR.BIND_TICKET_INVALID, 'cannot bind a player to itself');
     }
 
     const moved = await moveIdentity(confirmerPlat, confirmerPlayerId, anchor, tx);
-    if (moved === 0) throw new BindError(ERR.NOT_LOGGED_IN, 'no identity to bind on this platform');
+    if (moved === 0) throw new BindError(ERR.BIND_TICKET_INVALID, 'no identity to bind on this platform');
 
     const snap = await findSnapshot(confirmerPlayerId, tx);
     let forkPending = false;

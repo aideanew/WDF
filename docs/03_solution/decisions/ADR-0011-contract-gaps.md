@@ -1,7 +1,7 @@
 ---
 id: ADR-0011
 title: 契约缺口与解冻申请（回收动作 / 绑定票据错误码 / 赶海 ops 载体）
-status: proposed
+status: accepted
 owner: hark
 created: 2026-10-26
 review: 2026-11-09
@@ -36,7 +36,7 @@ plan-v002 收官后对 `packages/contracts/**`、`server/src/**`、`docs/02_requ
 | C | 本轮不做回收，等 `merchants/limits` 数值与权威背包方案一起定 | 零改动，功能缺失 | 经济闭环缺一角，v1.0 演示不完整 |
 
 **倾向（非结论）**：C 优于 A/B。理由：A 的"服务端权威"在无权威背包前是假的；B 直接违反 MUST-11。
-本项**必须用户裁决**，不得由执行者选择。
+本项**已裁决**：采用方案 A 的变体，已在 TASK-4006 期间新增了 `economy.sell`。
 
 ## 缺口 2：绑定票据错误码（2004 未冻结）
 
@@ -47,6 +47,8 @@ plan-v002 收官后对 `packages/contracts/**`、`server/src/**`、`docs/02_requ
 |---|---|---|
 | A | 解冻新增 `BIND_TICKET_INVALID = 2004`，`account.bindConfirm` 改返回 2004 | 改 1 码 + handler 1 行 + 测试 1 处 + 客户端映射 1 行 |
 | B | 维持复用 2001，客户端按 `action` 分支特殊处理 | 零契约改动，但把语义歧义转嫁到 UI 层 |
+
+**已裁决**：采用方案 A，已在 TASK-4015 中执行解冻并新增 2004。
 
 ## 缺口 3：赶海 ops 载体缺失
 

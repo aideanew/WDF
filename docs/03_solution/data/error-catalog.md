@@ -9,21 +9,22 @@ review: 2026-11-26
 
 # 错误码对照表
 
-> 单一可读来源：本表与 `packages/contracts/src/common/errors.ts` 的 14 个错误码**一一对应**。
+> 单一可读来源：本表与 `packages/contracts/src/common/errors.ts` 的 15 个错误码**一一对应**。
 >
 > **落点说明（辩证修正 AT-2001）**：原 AT 计划把错误表写入 `docs/03_solution/data/api-catalog.md`，
 > 但 `api-catalog.md` 由 `tools/gen/catalog.mjs` 第 18 行**整文件覆盖生成**（仅输出动作表），
 > 手补内容会在下次 `npm run gen` 被抹掉。同目录已有 `config-tables.md / db-schema.md / save-schema.md`
 > 等手维护范式，故错误码可读映射单独落在此文件，避免被生成脚本覆盖，同时仍满足
-> "14 个错误码每个至少对照 1 条失败路径与前端文案" 的契约补缺目标。
+> "15 个错误码每个至少对照 1 条失败路径与前端文案" 的契约补缺目标。
 
 | 错误码 | 名称 | 分段 | 触发条件（失败路径） | 前端文案 | 相关动作 |
 |---:|---|---|---|---|---|
 | 1001 | BAD_PAYLOAD | CONTRACT | 请求体不符合 zod schema | 请求格式有误，请重试 | 全部动作 |
 | 1002 | UNKNOWN_ACTION | CONTRACT | 动作名不在 `ACTIONS` 登记 | 未知的操作请求 | 全部动作 |
-| 2001 | NOT_LOGGED_IN | AUTH | 需要登录但未带有效会话；**缺口填补复用**：绑定票据失败（不存在/过期/已用/自绑，见 AT-2201）也返回此码 | 请先登录；绑定失败时为"绑定票据无效，请重新发起绑定" | 全部需登录动作 + account.bindConfirm |
+| 2001 | NOT_LOGGED_IN | AUTH | 需要登录但未带有效会话 | 请先登录 | 全部需登录动作 |
 | 2002 | SESSION_EXPIRED | AUTH | 令牌过期且 refresh 失败 | 登录已过期，请重新登录 | 全部需登录动作 |
 | 2003 | BANNED | AUTH | 账号被封禁 | 账号已被封禁，请联系客服 | 全部动作 |
+| 2004 | BIND_TICKET_INVALID | AUTH | 绑定票据无效（不存在/过期/已用/自绑/无身份） | 绑定票据无效，请重新发起绑定 | account.bindConfirm |
 | 2101 | MINOR_TIME_LIMIT | AUTH | 未成年人防沉迷时段/时长限制 | 未成年人当前时段不可游玩 | compliance.check 等 |
 | 3001 | DUPLICATE_REQUEST | RULE | 相同 `rid` 的写操作重复提交 | 操作已处理，请勿重复 | 幂等写动作 |
 | 3002 | QUOTA_EXHAUSTED | RULE | 区服每日限量已售罄 | 今日已售罄 | economy.buyQuota |
@@ -38,3 +39,5 @@ review: 2026-11-26
 > 纪律禁止自造数字，故票据失败（不存在/过期/已用/自绑/无身份）统一复用 **2001**（AUTH 段，
 > 客户端回登录重来即可恢复，不会像 2002 那样触发静默刷新死循环）。若未来合同解冻，
 > 建议新增 `2004 BIND_TICKET_INVALID` 精确区分。
+>
+> **缺口解冻（TASK-4015，2026-10-27）**：已新增 `2004 BIND_TICKET_INVALID` 精确区分绑定票据无效的场景。

@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 160 篇。⚠ 表示活跃文档已过 review 日期。
+共 193 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -54,7 +54,8 @@ review: 2026-11-23
 | ADR-0008 | 取消断网可玩，改为必须联网 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0008-online-required.md` |
 | ADR-0009 | 运行时校验采用 zod（前后端同构） | proposed | 2026-10-30 | `03_solution/decisions/ADR-0009-runtime-validation-zod.md` |
 | ADR-0010 | 技术选型复核——对三份外部结构提案的辩证结论 | accepted | 2026-11-23 | `03_solution/decisions/ADR-0010-tech-stack-review-external-proposals.md` |
-| ADR-0011 | 契约缺口与解冻申请（回收动作 / 绑定票据错误码 / 赶海 ops 载体） | proposed | 2026-11-09 | `03_solution/decisions/ADR-0011-contract-gaps.md` |
+| ADR-0011 | 契约缺口与解冻申请（回收动作 / 绑定票据错误码 / 赶海 ops 载体） | accepted | 2026-11-09 | `03_solution/decisions/ADR-0011-contract-gaps.md` |
+| ADR-0012 | 权威背包：服务端影子账本（容差=0） | accepted | 2026-11-27 | `03_solution/decisions/ADR-0012-authoritative-inventory.md` |
 | DESIGN-0001 | UX 态契约（六份契约之⑥：空/加载/错误/无权限/成功/冲突） | active | 2026-11-26 | `03_solution/design/DESIGN-0001-ux-states.md` |
 | UI-0003 | Cocos 编辑器英文界面中英对照（本项目专用） | active | 2026-11-23 | `03_solution/ui/cocos-editor-glossary.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
@@ -100,6 +101,29 @@ review: 2026-11-23
 | PLAN-V003-10 | 风险 · 未决 · 待裁决 | active |  | `04_planning/plan-v003/10-risks.md` |
 | PLAN-V003-11 | 自检结果（对照 standing 规划 §12） | active |  | `04_planning/plan-v003/11-self-check.md` |
 | PLAN-V003-DS | 裁决表（D-01~D-14，已全部裁决） | accepted |  | `04_planning/plan-v003/decision-sheet.md` |
+| PLAN-V004-00 | 快照与索引（v1.0 最终冲刺与闭环规划） | active |  | `04_planning/plan-v004/00-snapshot.md` |
+| PLAN-V004-01 | 事实基线（2026-10-27，commit 3c1add1） | active |  | `04_planning/plan-v004/01-fact-baseline.md` |
+| PLAN-V004-02 | 需求基线复核 | active |  | `04_planning/plan-v004/02-requirements-baseline.md` |
+| PLAN-V004-03 | 契约冻结包与解冻计划 | active |  | `04_planning/plan-v004/03-contracts-freeze.md` |
+| PLAN-V004-04 | 数据模型基线 | active |  | `04_planning/plan-v004/04-data-model.md` |
+| PLAN-V004-05 | 垂直切片 S17~S19 | active |  | `04_planning/plan-v004/05-vertical-slices.md` |
+| PLAN-V004-06 | 任务索引 · 依赖 DAG · 所有权矩阵 | active |  | `04_planning/plan-v004/06-tasks-and-dag.md` |
+| PLAN-V004-07 | 档位分配、基线指标与风险清单 | active |  | `04_planning/plan-v004/07-metrics-and-risks.md` |
+| PLAN-V004-11 | 自检结果 | active |  | `04_planning/plan-v004/11-self-check.md` |
+| PLAN-V005-01 | 事实基线（2026-10-27 15:00 实测，逐条带证据） | active | 2026-11-10 | `04_planning/plan-v005/01-fact-baseline.md` |
+| PLAN-V005-02 | 辩证复核（正题 / 反题 / 合题 + 四重相对性） | active | 2026-11-10 | `04_planning/plan-v005/02-dialectical-review.md` |
+| PLAN-V005-03 | 阻塞项与裁决表（D-19 ~ D-28） | active | 2026-11-10 | `04_planning/plan-v005/03-blockers-decisions.md` |
+| PLAN-V005-04 | 分层架构与所有权（五层 · 实测路径 · 性能/拓展/复用基线） | active | 2026-11-10 | `04_planning/plan-v005/04-architecture.md` |
+| PLAN-V005-05 | 执行 DAG（8 波次 · 冲突矩阵 · 关键路径 · 出口判据） | active | 2026-11-10 | `04_planning/plan-v005/05-task-dag.md` |
+| PLAN-V005-06 | 步骤 1 · W0 止血——让 verify 回绿 | active | 2026-11-10 | `04_planning/plan-v005/06-step1-stop-bleeding.md` |
+| PLAN-V005-07 | 步骤 2 · W1 契约解冻收尾（2004 全链路） | active | 2026-11-10 | `04_planning/plan-v005/07-step2-contract-close.md` |
+| PLAN-V005-08 | 步骤 3 · W2 背包回收入口 + 弹窗组件 + 幂等 rid 注入 | active | 2026-11-10 | `04_planning/plan-v005/08-step3-inventory-recycle.md` |
+| PLAN-V005-09 | 步骤 4 · W3 开箱/开锁机制 + chest.open 契约 + 可达性裁决 | active | 2026-11-10 | `04_planning/plan-v005/09-step4-lockpick-salvage.md` |
+| PLAN-V005-10 | 步骤 5 · W4 测试矩阵与防假绿体系 | active | 2026-11-10 | `04_planning/plan-v005/10-step5-test-matrix.md` |
+| PLAN-V005-11 | 步骤 6 · W5 真机证据与命中率采样（合法降级路径） | active | 2026-11-10 | `04_planning/plan-v005/11-step6-device-lab.md` |
+| PLAN-V005-12 | 步骤 7 · W6 合规材料与四文档对齐（v1.0 收官宣告） | active | 2026-11-10 | `04_planning/plan-v005/12-step7-release-docs.md` |
+| PLAN-V005-13 | 步骤 8 · W7 v1.1 种子与数值清欠登记 | active | 2026-11-10 | `04_planning/plan-v005/13-step8-v11-seed.md` |
+| PLAN-V005-14 | 自检清单与反作弊判据（含本规划的可证伪点） | active | 2026-11-10 | `04_planning/plan-v005/14-self-check.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -147,7 +171,16 @@ review: 2026-11-23
 | TASK-3301 | 守卫第 10 项：源 ↔ generated 双向同步校验 | done |  | `05_execution/tasks/TASK-3301.md` |
 | TASK-3302 | game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷） | done |  | `05_execution/tasks/TASK-3302.md` |
 | TASK-3401 | 计划 / 路线图 / 任务索引对齐（本轮收口） | done |  | `05_execution/tasks/TASK-3401.md` |
+| TASK-4007 | 商人页 UI + 限购（buyQuota 接真数值） | draft |  | `05_execution/tasks/TASK-4007.md` |
+| TASK-4008 | 背包页回收入口 + 确认弹窗组件 | draft |  | `05_execution/tasks/TASK-4008.md` |
+| TASK-4009 | 开锁交互（chest+locks 接表）+ salvage.claimInfo | draft |  | `05_execution/tasks/TASK-4009.md` |
+| TASK-4010 | 四面板真机录屏 + 6 态走查 | draft |  | `05_execution/tasks/TASK-4010.md` |
+| TASK-4011 | 首钩命中率采样脚本 + 采样记录 | draft |  | `05_execution/tasks/TASK-4011.md` |
+| TASK-4013 | 合规材料清单落 docs/07_release | draft |  | `05_execution/tasks/TASK-4013.md` |
+| TASK-4015 | 契约解冻执行（2004 码等） | draft |  | `05_execution/tasks/TASK-4015.md` |
+| TASK-4016 | error-catalog / glossary / current-plan / roadmap 四文档对齐 | draft |  | `05_execution/tasks/TASK-4016.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
+| EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
 | CMP-anti-addiction | 防沉迷方案 | draft | 2026-11-23 | `07_release/compliance/anti-addiction.md` |

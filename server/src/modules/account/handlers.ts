@@ -49,7 +49,7 @@ export const accountHandlers = {
 
   /**
    * 确认绑定：校验票据后把"确认方"在当前平台上的 identity 改挂到锚定方。
-   * 票据失败（不存在/过期/已用/自绑/无身份）统一复用 2001（见 service.ts 注释）。
+   * 票据失败（不存在/过期/已用/自绑/无身份）统一抛 2004 BIND_TICKET_INVALID（TASK-4015，见 service.ts 注释）。
    */
   'account.bindConfirm': (async (req, t, ctx) => {
     const playerId = ctx.claims?.sub;

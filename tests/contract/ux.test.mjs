@@ -19,6 +19,7 @@ const EXPECTED = {
   UNKNOWN_ACTION: { state: 'error', retryable: false },
   NOT_LOGGED_IN: { state: 'noPermission', retryable: false, next: 'login' },
   SESSION_EXPIRED: { state: 'noPermission', retryable: false, next: 'login' },
+  BIND_TICKET_INVALID: { state: 'noPermission', retryable: false, next: 'login' },
   BANNED: { state: 'noPermission', retryable: false, next: 'contact' },
   MINOR_TIME_LIMIT: { state: 'noPermission', retryable: false, next: 'wait' },
   DUPLICATE_REQUEST: { state: 'success', retryable: false },
@@ -31,9 +32,9 @@ const EXPECTED = {
   CLIENT_TOO_OLD: { state: 'noPermission', retryable: false, next: 'update' },
 };
 
-test('14 个错误码全覆盖，且逐行与 DESIGN-0001 §2 一致', () => {
+test('15 个错误码全覆盖，且逐行与 DESIGN-0001 §2 一致', () => {
   const codeNames = Object.keys(ERR).sort();
-  assert.equal(codeNames.length, 14, 'ERR 码数量应为 14（合同冻结）');
+  assert.equal(codeNames.length, 15, 'ERR 码数量应为 15（TASK-4015 解冻 +2004）');
   assert.deepEqual(Object.keys(UX_BY_ERROR_NAME).sort(), codeNames, '每个码都必须有映射');
   for (const name of codeNames) {
     const expected = EXPECTED[name];
@@ -51,6 +52,17 @@ test('code===0 → success，不携带出口', () => {
   assert.equal(v.state, 'success');
   assert.equal(v.retryable, false);
   assert.equal(v.next, undefined);
+});
+
+test('2004 BIND_TICKET_INVALID → noPermission / 不可重试 / 回登录（D-12 解冻）', () => {
+  assert.equal(ERR.BIND_TICKET_INVALID, 2004);
+  const v = toUxState(ERR.BIND_TICKET_INVALID);
+  assert.equal(v.code, 2004);
+  assert.equal(v.state, 'noPermission');
+  assert.equal(v.retryable, false);
+  assert.equal(v.next, 'login');
+  // 与 2001 同段但语义不同：2001 是"没登录"，2004 是"票据无效"——两者不得复用同一码
+  assert.notEqual(ERR.BIND_TICKET_INVALID, ERR.NOT_LOGGED_IN);
 });
 
 test('幂等回放 3001 是 success（绝不可当冲突/错误）', () => {

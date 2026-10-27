@@ -1,1 +1,1 @@
-export { EconomyModel } from './model/EconomyModel';
+export { EconomyModel, applySell } from './model/EconomyModel';

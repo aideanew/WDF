@@ -8,7 +8,7 @@
  *  - bindStart：签发一次性票据（ticket + expiresAt），同 rid 幂等回放
  *  - bindConfirm：两平台身份合并后 playerId 相同（锚定发起方）；绑定后 B 平台登录复用锚定 player
  *  - 幂等：同 rid 回放首次结果；换 rid 重放已用票据 → 拒绝
- *  - 失败路径：票据不存在 / 过期 / 已用 / 自绑 → 2001（合同冻结无专用码，缺口填补复用，见 service.ts）
+ *  - 失败路径：票据不存在 / 过期 / 已用 / 自绑 → 2004 BIND_TICKET_INVALID（TASK-4015 契约解冻，见 service.ts）
  *  - forkPending：确认方已有存档 → true（登记 save_fork source='bind'）；无存档 → false
  */
 import test, { after } from 'node:test';
@@ -104,16 +104,16 @@ test('AT-2201 bindConfirm 幂等：同 rid 回放首次结果；换 rid 重放�
 
   // 换 rid：票据已消费 → 拒绝（不得 500）
   const c3 = await call('account.bindConfirm', { ticket }, { token: b.token, rid: rid('ic2') });
-  assert.equal(c3.c, 2001, '已用票据换 rid 重放必须被拒');
+  assert.equal(c3.c, 2004, '已用票据换 rid 重放必须被拒');
   assert.ok(typeof c3.msg === 'string' && c3.msg.length > 0, '必须带可读 msg');
 });
 
-test('AT-2201 失败路径：票据不存在 / 过期 / 自绑 → 2001（非 500）', async () => {
+test('AT-2201 失败路径：票据不存在 / 过期 / 自绑 → 2004（非 500）', async () => {
   const b = await login(`bad-ticket-${Date.now()}`, 'douyin');
 
   // 1) 票据不存在
   const missing = await call('account.bindConfirm', { ticket: '00000000-0000-0000-0000-000000000000' }, { token: b.token, rid: rid('bt1') });
-  assert.equal(missing.c, 2001, '不存在的票据应返回明确错误码');
+  assert.equal(missing.c, 2004, '不存在的票据应返回明确错误码');
   assert.ok(typeof missing.msg === 'string' && missing.msg.length > 0, '必须带可读 msg');
 
   // 2) 过期票据：直接插入一条已过期的票（expires_at 为过去时刻）
@@ -121,12 +121,12 @@ test('AT-2201 失败路径：票据不存在 / 过期 / 自绑 → 2001（非 50
   const expiredTicket = 'aaaaaaa1-0000-0000-0000-000000000001';
   await insertTicket(expiredTicket, a2.playerId, Date.now() - 1000);
   const expired = await call('account.bindConfirm', { ticket: expiredTicket }, { token: b.token, rid: rid('bt2') });
-  assert.equal(expired.c, 2001, '过期票据应被拒');
+  assert.equal(expired.c, 2004, '过期票据应被拒');
 
   // 3) 自绑：锚定方用自己令牌 confirm 自己的票
   const selfStart = await call('account.bindStart', {}, { token: a2.token, rid: rid('bt3') });
   const self = await call('account.bindConfirm', { ticket: selfStart.d.ticket }, { token: a2.token, rid: rid('bt4') });
-  assert.equal(self.c, 2001, '自绑必须被拒，防止把 identity 从自己挪给自己');
+  assert.equal(self.c, 2004, '自绑必须被拒，防止把 identity 从自己挪给自己');
 
   // 4) 无身份可挂：确认方是没有任何 identity 的 player（真实存在于 player 表，但该平台无登录身份）
   const a3 = await login(`no-id-anchor-${Date.now()}`, 'wechat');
@@ -135,7 +135,7 @@ test('AT-2201 失败路径：票据不存在 / 过期 / 自绑 → 2001（非 50
   await insertPlayer(ghostId, 's1');
   const ghostToken = issueToken({ sub: ghostId, region: 's1', plat: 'douyin' });
   const noId = await call('account.bindConfirm', { ticket: t3.d.ticket }, { token: ghostToken, rid: rid('bt6') });
-  assert.equal(noId.c, 2001, '确认方在该平台无 identity 应被拒');
+  assert.equal(noId.c, 2004, '确认方在该平台无 identity 应被拒');
   // 无副作用：失败路径不得消费票据
   const tRow = await findTicket(t3.d.ticket);
   assert.equal(tRow.used_at, null, '失败路径不得消费票据');

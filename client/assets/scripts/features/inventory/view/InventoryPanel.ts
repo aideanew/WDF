@@ -15,11 +15,15 @@
 import { Node, UITransform, Label, Color, Vec3, Graphics } from 'cc';
 import { preload, table } from '../../../services/config';
 import { LocalSave } from '../../../services/save/LocalSave';
+import { invoke } from '../../../services/net/RpcClient';
+import { toUxState } from '../../../generated/contracts/common/ux';
+import type { SellReq, SellRes } from '../../../generated/contracts/economy/index';
 import type { ItemsRow } from '../../../generated/game-core/generated/config-types';
 import type { PanelHandle } from '../../../app/panel-types';
-import { addTitle, addEmptyHint, addLabel } from '../../../app/panel-ui';
+import { addTitle, addEmptyHint, addLabel, addConfirmDialog } from '../../../app/panel-ui';
 import { navigate } from '../../../app/nav';
 import { InventoryModel } from '../model/InventoryModel';
+import { applySell } from '../../economy/index';
 import type { ItemRow } from '../../../generated/game-core/inventory/index';
 
 const MAX_ROWS = 20;
@@ -79,12 +83,39 @@ export function createInventoryPanel(parent: Node): PanelHandle {
   function renderRows(rows: readonly ItemRow[]): void {
     clearBody();
     rows.slice(0, MAX_ROWS).forEach((r, i) => {
+      const y = FIRST_ROW_Y - i * ROW_H;
       addLabel({
         parent: body,
         name: `Row_${i}`,
         text: `${r.name} ×${r.count} | ${categoryLabel(r.category)} | 基准价 ${r.basePrice}`,
-        pos: new Vec3(0, FIRST_ROW_Y - i * ROW_H, 0),
+        pos: new Vec3(-80, y, 0),
         fontSize: 20,
+        width: 480,
+      });
+
+      // 回收按钮
+      const btn = new Node(`Recycle_${i}`);
+      btn.addComponent(UITransform).setContentSize(96, 34);
+      btn.setPosition(new Vec3(260, y, 0));
+      const g = btn.addComponent(Graphics);
+      g.fillColor = new Color(200, 80, 80, 255);
+      g.roundRect(-48, -17, 96, 34, 8);
+      g.fill();
+      const l = btn.addComponent(Label);
+      l.string = '回收';
+      l.fontSize = 18;
+      l.color = new Color(255, 255, 255, 255);
+      l.horizontalAlign = Label.HorizontalAlign.CENTER;
+      l.verticalAlign = Label.VerticalAlign.CENTER;
+      body.addChild(btn);
+
+      btn.on(Node.EventType.TOUCH_END, () => {
+        addConfirmDialog({
+          parent: node,
+          title: '确认回收',
+          text: `确认以基准价回收 1 个 ${r.name} 吗？\n(受当前区域物价影响)`,
+          onConfirm: () => void sellOne(r),
+        });
       });
     });
     const more = rows.length - MAX_ROWS;
@@ -97,6 +128,33 @@ export function createInventoryPanel(parent: Node): PanelHandle {
         fontSize: 18,
         color: new Color(170, 185, 205, 255),
       });
+    }
+  }
+
+  let busy = false;
+  async function sellOne(r: ItemRow): Promise<void> {
+    if (busy) return;
+    busy = true;
+    try {
+      const payload: SellReq = { itemId: r.id, count: 1 };
+      const res = await invoke<SellReq, SellRes>('economy.sell', payload);
+      const save = LocalSave.load() ?? LocalSave.init();
+      LocalSave.save(applySell(save, r.id, 1, res.herbDelta));
+      void load();
+    } catch (e) {
+      const code = (e as { code?: number }).code ?? 4999;
+      const ux = toUxState(code);
+      let text = `回收失败 (${code})`;
+      if (ux.state === 'noPermission') text = '登录已失效，请重新登录';
+      else if (ux.state === 'empty') text = '限购额度已用完';
+      
+      addConfirmDialog({
+        parent: node,
+        text,
+        onConfirm: () => {},
+      });
+    } finally {
+      busy = false;
     }
   }
 
