@@ -74,10 +74,13 @@ export function isOlderThan(cv: string | undefined, min: string): boolean {
   const a = parse(cv);
   const b = parse(min);
   if (!a || !b) return false;
-  for (let i = 0; i < 3; i += 1) {
-    if (a[i] !== b[i]) return a[i] < b[i];
-  }
-  return false;
+  // 元组定长 3；`noUncheckedIndexedAccess` 下 `a[i]` 会退化成 `number | undefined` 且循环内不共享收窄，
+  // 因此解构成具名变量（语义与原来的循环完全等价：首个不等位决定大小，全等返回 false）。
+  const [a0, a1, a2] = a;
+  const [b0, b1, b2] = b;
+  if (a0 !== b0) return a0 < b0;
+  if (a1 !== b1) return a1 < b1;
+  return a2 < b2;
 }
 
 function parse(v?: string): [number, number, number] | null {

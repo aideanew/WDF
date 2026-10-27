@@ -68,8 +68,11 @@ export async function quotaUsed(playerId: string, merchantId: string, day: strin
 
 /** 增加用量（upsert）。返回更新后的用量。 */
 export async function quotaIncrement(playerId: string, merchantId: string, day: string, count: number, cap: number, tx?: unknown): Promise<number> {
+  // 两条分支必须返回**同一形状**（`{ used }[]`）：事务分支原本返回 `{ rows }` 包装，
+  // 与非事务分支（`q<T>` 直接返回数组）不一致，导致 `exec` 成联合类型、`rows[0]` 无法索引。
   const exec = tx
-    ? (sql: string, params: unknown[]) => (tx as { query: (s: string, p: unknown[]) => Promise<{ rows: { used: string }[] }> }).query(sql, params)
+    ? async (sql: string, params: unknown[]) =>
+        (await (tx as { query: (s: string, p: unknown[]) => Promise<{ rows: { used: string }[] }> }).query(sql, params)).rows
     : (sql: string, params: unknown[]) => q<{ used: string }>(sql, params);
   const rows = await exec(
     `INSERT INTO daily_quota (region, day, key, used, cap)

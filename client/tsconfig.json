@@ -6,6 +6,11 @@
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    /* Cocos 引擎自带的 .d.ts（cc.d.ts / jsb.d.ts）在 strict 下自身有 ~102 条错误
+       （TS7010 / TS2304 / TS2307 等，全在 C:/ProgramData/cocos/... 下）。
+       不跳库检查的话，client tsc 永远无法当作门禁使用 —— 那些不是我们的代码。
+       ★ 注意：不能用「管道 grep -v 过滤」来绕过，那会吞掉 tsc 退出码造成假绿。 */
+    "skipLibCheck": true
   }
 }

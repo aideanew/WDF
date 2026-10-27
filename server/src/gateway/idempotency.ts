@@ -15,9 +15,11 @@ export async function findIdempotent(playerId: string, rid: string): Promise<Rpc
     [playerId, rid],
   );
   if (rows.length === 0) return null;
-  const age = Date.now() - new Date(rows[0].created_at).getTime();
+  const first = rows[0];
+  if (!first) return null;
+  const age = Date.now() - new Date(first.created_at).getTime();
   if (age > TTL_MS) return null;
-  return rows[0].response;
+  return first.response;
 }
 
 export async function rememberIdempotent(playerId: string, rid: string, response: RpcResponse): Promise<void> {

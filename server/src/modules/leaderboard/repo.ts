@@ -39,7 +39,11 @@ export async function addIncome(
      RETURNING player_id, season, day, value, flagged`,
     [playerId, season, day, delta, flagged],
   );
-  return rows[0];
+  // INSERT ... RETURNING 必然回一行；这里 throw 是不可达防御 ——
+  // 但它把「契约被破」从"静默返回 undefined"变成"显式崩"，比悄悄坏掉好。
+  const row = rows[0];
+  if (!row) throw new Error(`income_daily upsert 未返回行：player=${playerId} day=${day}`);
+  return row;
 }
 
 export interface TopRow {

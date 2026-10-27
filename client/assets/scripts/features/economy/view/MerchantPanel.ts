@@ -30,8 +30,16 @@ const FIRST_ROW_Y = 60;
 const BTN_W = 196;
 const BTN_H = 58;
 
-/** 卖出请求（D-18：SellReq 尚无 merchantId 字段，此处局部交叉类型，4015 后收敛）。 */
-type SellPayload = SellReq & { merchantId: string };
+/**
+ * 契约 `SellReq.merchantId` 是字面量联合，而配置表 `merchants.id` 是普通 string。
+ * 收窄只在此一处发生，**用三次 `===` 让 TS 自己收窄，不写 `as`**。
+ */
+type MerchantId = NonNullable<SellReq['merchantId']>;
+
+function toMerchantId(v: string): MerchantId | null {
+  if (v === 'merchant_village' || v === 'merchant_wander' || v === 'merchant_black') return v;
+  return null;
+}
 
 export function createMerchantPanel(parent: Node): PanelHandle {
   const node = new Node('MerchantPanel');
@@ -217,11 +225,19 @@ export function createMerchantPanel(parent: Node): PanelHandle {
       repaintStatus('商人数据未就绪');
       return;
     }
+    // 配置里的商人 id 不在契约允许的三个值内 → 中止。
+    // 不能回落到 undefined：缺省 merchantId 等于"渔村"，而流浪/黑市 ±30% 不同价，
+    // 静默回落会按错价成交（比报错更糟）。
+    const merchantId = toMerchantId(m.id);
+    if (!merchantId) {
+      repaintStatus('商人数据异常，已中止出售');
+      return;
+    }
     busy = true;
     repaintStatus('卖出中…');
     try {
-      const payload: SellPayload = { itemId, count: 1, merchantId: m.id };
-      const res = await invoke<SellPayload, SellRes>('economy.sell', payload);
+      const payload: SellReq = { itemId, count: 1, merchantId };
+      const res = await invoke<SellReq, SellRes>('economy.sell', payload);
       const save = LocalSave.load() ?? LocalSave.init();
       LocalSave.save(applySell(save, itemId, 1, res.herbDelta));
       quotaLeft = typeof res.quotaLeft === 'number' ? res.quotaLeft : Math.max(0, quotaLeft - 1);

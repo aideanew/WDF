@@ -6,7 +6,7 @@
  *  - 后续上传：baseRevision 必须等于云端当前 revision，成功则 revision+1；
  *  - 不匹配：**不报错**，返回 `{accepted:false, conflict}`，由客户端决定（S5 的 resolveFork）。
  */
-import type { SavePullRes, SavePushReq, SavePushRes, SaveSummary, ResolveForkReq } from '@wodefa/contracts';
+import type { SavePullRes, SavePushReq, SavePushRes, SaveSummary, ResolveForkReq } from '@wodefa/contracts/src/save/index.ts';
 import { ERR } from '@wodefa/contracts';
 import { computeChecksum } from '@wodefa/game-core/src/save/schema.ts';
 import { withTx } from '../../core/db.ts';
