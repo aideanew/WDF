@@ -31,6 +31,12 @@
       "type": "int",
       "min": 1,
       "note": "D-09 裁决值：全 3 行 size=1（原 enum 改 int）"
+    },
+    "item_id": {
+      "type": "string",
+      "required": true,
+      "ref": "items.id",
+      "note": "D-19 裁决值：对齐背包物品 id"
     }
   }
 }

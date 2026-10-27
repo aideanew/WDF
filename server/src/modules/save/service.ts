@@ -8,6 +8,7 @@
  */
 import type { SavePullRes, SavePushReq, SavePushRes, SaveSummary, ResolveForkReq } from '@wodefa/contracts';
 import { ERR } from '@wodefa/contracts';
+import { computeChecksum } from '@wodefa/game-core/src/save/schema.ts';
 import { withTx } from '../../core/db.ts';
 import { findSnapshot, insertSnapshot, updateSnapshot, countForks, deleteForks, logForkResolved } from './repo.ts';
 
@@ -142,4 +143,53 @@ export async function resolveFork(playerId: string, input: ResolveForkReq, serve
 /** 未决分叉数（供 handler 之外的调用方了解 forkPending 状态，如 AT-2402 e2e）。 */
 export async function pendingForks(playerId: string): Promise<number> {
   return countForks(playerId);
+}
+
+/**
+ * 服务端强制更新存档（开箱、抽奖等"服务器权威发奖"走这里）。
+ *
+ * 两个关键点，都是缺陷修复（F-32 / F-33）：
+ *  1. **updater 拿到 tx**：调用方可以在**同一事务内**写别的表（如 `ledger_entry`）。
+ *     否则会出现"存档改了、账本没写"，或者"先 pull 校验、再单独开事务写回"的 TOCTOU。
+ *  2. **返回 boolean**：无档时返回 false，调用方必须处理。
+ *     旧实现 `if (!current) return;` 让调用方以为更新成功，实际什么都没发生。
+ *
+ * 事务纪律：`withTx` 回调内禁止再用全局 `q()`（PGlite 单连接，会永久死锁）。
+ */
+export async function updateSnapshotServerSide(
+  playerId: string,
+  updater: (
+    body: any,
+    tx: unknown,
+  ) => { body: any; checksum?: number } | Promise<{ body: any; checksum?: number }>,
+  serverNow: number,
+): Promise<boolean> {
+  return withTx(async (tx) => {
+    const current = await findSnapshot(playerId, tx);
+    if (!current) return false;
+
+    const { body, checksum } = await updater(current.body, tx);
+    const schemaVersion = typeof body.schemaVersion === 'number' ? body.schemaVersion : current.schema_version;
+    const configVersion = typeof body.configVersion === 'string' ? body.configVersion : current.config_version;
+    const nextRev = current.revision + 1;
+
+    // ★ 服务端改了 body，checksum 必须重算（F-39）。
+    // 旧实现沿用 `current.checksum`，导致"body 变了、校验和没变"，
+    // 客户端 `verifySave()` 会判定存档损坏 → 玩家开箱后掉档。
+    // 口径与 game-core `sealSave()` 完全一致：对"去掉 checksum 的完整 SaveFile"取
+    // seedFrom(JSON.stringify(...))，且保持原键顺序（展开而非重建）。
+    const { checksum: _dropped, ...rest } = body as Record<string, unknown>;
+    const nextChecksum = typeof checksum === 'number' ? checksum : computeChecksum(rest as never);
+    const sealedBody = { ...rest, checksum: nextChecksum };
+
+    await updateSnapshot(playerId, {
+      revision: nextRev,
+      schemaVersion,
+      configVersion,
+      checksum: nextChecksum,
+      body: sealedBody,
+      savedAt: serverNow,
+    }, tx);
+    return true;
+  });
 }

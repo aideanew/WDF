@@ -44,6 +44,17 @@ export async function recordGain(playerId: string, asset: string, count: number,
   );
 }
 
+/** 写一条扣除流水（delta 为负数）。开箱消耗箱子、活动消耗道具等走这里。 */
+export async function recordLoss(playerId: string, asset: string, count: number, reason: string, tx?: unknown): Promise<void> {
+  const exec = tx
+    ? (sql: string, params: unknown[]) => (tx as { query: (s: string, p: unknown[]) => Promise<unknown> }).query(sql, params)
+    : (sql: string, params: unknown[]) => q(sql, params);
+  await exec(
+    `INSERT INTO ledger_entry (player_id, asset, delta, reason) VALUES ($1, $2, $3, $4)`,
+    [playerId, asset, -count, reason],
+  );
+}
+
 // —— daily_quota（商人日限购）——
 
 /** 查今日已用量（无记录=0）。day 取服务端 Asia/Shanghai 自然日。 */

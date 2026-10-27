@@ -3,7 +3,7 @@ import type { SellReq, SellRes } from '@wodefa/contracts/src/economy/index.ts';
 import { sellValue } from '@wodefa/game-core/src/economy/index.ts';
 import { ERR } from '@wodefa/contracts';
 import { withTx } from '../../core/db.ts';
-import { ledgerSum, recordSell, quotaUsed, quotaIncrement } from './repo.ts';
+import { ledgerSum, recordSell, recordGain, recordLoss, quotaUsed, quotaIncrement } from './repo.ts';
 
 /** 业务错误（携带错误码）。 */
 export class EconomyError extends Error {
@@ -105,4 +105,34 @@ export async function sell(
 
   if (idemKey) idempotencyMap.set(idemKey, res);
   return res;
+}
+
+// —— 跨模块发放 / 扣除入口 ——
+//
+// 守卫「服务端依赖边界」规定：跨模块只能调用对方 service，禁止直接摸对方 repo。
+// 因此 chest / ads / event 等模块要发放或扣除物品，必须经下面两个函数，
+// 由本模块（账本属主）统一写 ledger_entry。
+//
+// 事务纪律（PGlite 单连接，事务内调全局 q() 会永久死锁）：
+// 调用方若已开启事务，**必须**把 tx 传进来。
+
+/** 发放物品（写一条 delta > 0 的流水）。count 必须为正。 */
+export async function grantItem(
+  playerId: string, itemId: string, count: number, reason: string, tx?: unknown,
+): Promise<void> {
+  // 防"负数当扣除用"：负数会写出一条 delta<0 的流水，语义反转，必须显式拒绝
+  if (!Number.isInteger(count) || count <= 0) {
+    throw new EconomyError(ERR.BAD_PAYLOAD, `grantItem count must be a positive integer, got ${count}`);
+  }
+  await recordGain(playerId, itemId, count, reason, tx);
+}
+
+/** 扣除物品（写一条 delta < 0 的流水）。count 必须为正，内部取负。 */
+export async function consumeItem(
+  playerId: string, itemId: string, count: number, reason: string, tx?: unknown,
+): Promise<void> {
+  if (!Number.isInteger(count) || count <= 0) {
+    throw new EconomyError(ERR.BAD_PAYLOAD, `consumeItem count must be a positive integer, got ${count}`);
+  }
+  await recordLoss(playerId, itemId, count, reason, tx);
 }

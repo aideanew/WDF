@@ -10,6 +10,8 @@ import { leaderboardHandlers } from '../modules/leaderboard/handlers.ts';
 import { saveHandlers } from '../modules/save/handlers.ts';
 import { telemetryHandlers } from '../modules/telemetry/handlers.ts';
 
+import { chestHandlers } from '../modules/chest/handlers.ts';
+
 /** 每个请求的上下文。鉴权后的 claims 由网关填好，handler 不再自己解 token。 */
 export interface HandlerCtx {
   /** 原始令牌（未鉴权动作也可能需要，如 account.refresh） */
@@ -40,6 +42,7 @@ export const HANDLERS = {
   'save.push': saveHandlers['save.push'],
   'save.resolveFork': saveHandlers['save.resolveFork'],
   'salvage.claimInfo': todo,
+  'chest.open': chestHandlers['chest.open'],
   'economy.buyQuota': todo,
   'economy.sell': economyHandlers['economy.sell'],
   'leaderboard.report': leaderboardHandlers['leaderboard.report'],

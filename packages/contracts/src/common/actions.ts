@@ -9,6 +9,7 @@ export const ACTIONS = {
   'save.push': { module: 'save', auth: true, idempotent: true, desc: '提交存档（带修订号）' },
   'save.resolveFork': { module: 'save', auth: true, idempotent: true, desc: '玩家选择保留哪份存档' },
   'salvage.claimInfo': { module: 'salvage', auth: true, idempotent: true, desc: '领取沉船信息份数' },
+  'chest.open': { module: 'chest', auth: true, idempotent: true, desc: '开启带锁或无锁箱子并领取保底奖励' },
   'economy.buyQuota': { module: 'economy', auth: true, idempotent: true, desc: '购买区服每日限量物品（如高级开锁工具）' },
   'economy.sell': { module: 'economy', auth: true, idempotent: true, desc: '商人回收物品（影子账本校验，容差=0，ADR-0012）' },
   'leaderboard.report': { module: 'leaderboard', auth: true, idempotent: true, desc: '批量上报联网实时收获' },

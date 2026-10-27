@@ -56,8 +56,8 @@ const ACTIONS = parseActions();
 const TODOS = parseTodos();
 const IMPLEMENTED = Object.keys(ACTIONS).filter((a) => !TODOS.has(a));
 
-test('AT-2401 ACTIONS 全表可解析（21 动作，TASK-4006 增 economy.sell）', () => {
-  assert.equal(Object.keys(ACTIONS).length, 21, `ACTIONS 应为 21 个，实得 ${Object.keys(ACTIONS).length}`);
+test('AT-2401 ACTIONS 全表可解析（22 动作，TASK-4009 增 chest.open）', () => {
+  assert.equal(Object.keys(ACTIONS).length, 22, `ACTIONS 应为 22 个，实得 ${Object.keys(ACTIONS).length}`);
 });
 
 test('AT-2401 已实现动作都有集成测试覆盖（静态检查）', () => {

@@ -41,6 +41,9 @@ export const PAYLOAD_SCHEMAS: Partial<Record<ActionName, z.ZodTypeAny>> = {
 
   // —— 沉船信息 / 经济限购 ——
   'salvage.claimInfo': z.object({ tier: z.enum(['normal', 'advanced', 'exclusive']) }),
+  'chest.open': z.object({
+    itemId: Id,
+  }),
   'economy.buyQuota': z.object({
     itemId: Id,
     count: z.number().int().min(1).max(9999),
