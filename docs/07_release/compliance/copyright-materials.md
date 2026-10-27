@@ -51,3 +51,19 @@ review: 2026-10-30
 - **微信上线不等下证**（微信纯广告一般不要软著），但**软著必须在微信上线前提交**。
 - **抖音提审必须等下证**（M-资质-3）。
 - 全流程与里程碑见 `docs/04_planning/lifecycle.md`；进度登记见 [filings.md](filings.md)。
+
+## 6. 未接入项（提审前必须处理，或如实声明）
+
+> **纪律**：本节任何一条的"状态"都必须能对应到**具体文件与行号**。
+> 对不上代码的说法一律只写「未接入」——申报材料里的虚假陈述属于造假，后果是驳回/补正/账号处罚。
+
+| 项 | 真实状态 | 代码依据 |
+|---|---|---|
+| 实名认证 | **桩**：能登录即视为实名通过 | `server/src/modules/compliance/service.ts:4` |
+| 防沉迷（未成年人时段 / 时长） | **桩**：未成年标志固定 `false`，离线额度 `0` | 同上（ADR-0008 要求必须联网） |
+| 隐私协议弹窗与授权流程 | **未实现**（全仓仅设计文档提及） | `grep -rn "隐私\|privacy"` 只命中两个模块 README |
+| 网关限流 | **未实现**（`gateway/ratelimit.ts` 零引用） | `plan-v009` F-42b |
+| 可玩时长上报（`compliance.check`） | 接口已通，但返回的是桩数据 | `packages/contracts/src/common/actions.ts:7` |
+
+**当前配置版本**：`c6a54f0fb00341c5`（取自 `client/assets/resources/config/_manifest.json`，**不要手写**，改配置就会变）。
+
