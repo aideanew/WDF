@@ -43,6 +43,11 @@ export async function pull(playerId: string): Promise<SavePullRes> {
 
 export async function push(playerId: string, input: SavePushReq, serverNow: number): Promise<SavePushRes> {
   const body = (input.snapshot ?? {}) as SnapshotShape;
+  // ⚠ 静默默认 1 是**已裁决保留的行为**，不是疏漏 —— 见 docs/03_solution/decisions/ADR-0013-save-schema-version.md §7。
+  // 裁决 A「服务端完全不管 sv」：这里不校验 m.sv、不解析版本、不跑迁移，客户端单方负责。
+  // ★ 到期日：`SAVE_SCHEMA_VERSION` 从 1 变成 2 那一刻起，这个默认值会让「不带版本的 v2 档」
+  //   被静默当成 v1 存下来，并可能覆盖云端 v2 档。改版本常量前必须先重开 ADR-0013 §7。
+  // 守护：tests/contract/save-schema-gate.test.mjs（该常量 ≠ 1 会直接红灯）。
   const schemaVersion = typeof body.schemaVersion === 'number' ? body.schemaVersion : 1;
   const configVersion = typeof body.configVersion === 'string' ? body.configVersion : 'unknown';
 
@@ -120,6 +125,7 @@ export async function resolveFork(playerId: string, input: ResolveForkReq, serve
         throw new ForkError(ERR.BAD_PAYLOAD, 'localSnapshot required when keep=local');
       }
       const body = (input.localSnapshot ?? {}) as SnapshotShape & { checksum?: unknown };
+      // ⚠ 同 push()：静默默认 1 是 ADR-0013 §7 裁决保留的行为（服务端不管 sv），不是疏漏。
       const schemaVersion = typeof body.schemaVersion === 'number' ? body.schemaVersion : 1;
       const configVersion = typeof body.configVersion === 'string' ? body.configVersion : 'unknown';
       const checksum = typeof body.checksum === 'number' && Number.isInteger(body.checksum) ? body.checksum : 0;
@@ -169,6 +175,7 @@ export async function updateSnapshotServerSide(
     if (!current) return false;
 
     const { body, checksum } = await updater(current.body, tx);
+    // ⚠ 同 push()：沿用旧值/默认 1 是 ADR-0013 §7 裁决保留的行为（服务端不管 sv），不是疏漏。
     const schemaVersion = typeof body.schemaVersion === 'number' ? body.schemaVersion : current.schema_version;
     const configVersion = typeof body.configVersion === 'string' ? body.configVersion : current.config_version;
     const nextRev = current.revision + 1;

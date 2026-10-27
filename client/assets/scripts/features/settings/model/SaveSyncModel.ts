@@ -182,6 +182,10 @@ export class SaveSyncModel {
         return { state: 'empty', retryable: false };
       }
 
+      // ⚠ 这里**直接报错、不走 game-core 的 migrate()** 是 ADR-0013 §7 裁决保留的行为（G-2），不是疏漏。
+      // 裁决：云档版本比本地旧 → 保持报错，不迁移、不替换本地档。
+      // ★ 到期日：`SAVE_SCHEMA_VERSION` 从 1 变成 2 那一刻起，这条会变成「换设备玩家载入失败」。
+      //   改版本常量前必须先重开 ADR-0013 §7。守护：tests/contract/save-schema-gate.test.mjs。
       if (cloud.schemaVersion !== SAVE_SCHEMA_VERSION) {
         console.warn(`[save] 云端 schemaVersion=${cloud.schemaVersion} 与本地 ${SAVE_SCHEMA_VERSION} 不符，未替换本地档`);
         this.touch();

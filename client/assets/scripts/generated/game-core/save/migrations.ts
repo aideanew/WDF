@@ -9,6 +9,16 @@ const MIGRATIONS: Record<number, Migration> = {
   // 1: (s) => ({ ...s, schemaVersion: 2, modules: { ...s.modules, newPart: {} } }),
 };
 
+/**
+ * 迁移链是否为空。
+ *
+ * 存在的唯一理由：ADR-0013 的裁决前提是「版本恒为 1 且无迁移链」。
+ * `tests/contract/save-schema-gate.test.mjs` 用它做**到期提醒** ——
+ * 一旦有人往 `MIGRATIONS` 里塞函数却没人调用（G-1：`migrate()` 全仓零调用），
+ * 说明代码里躺了一段永远不会执行的逻辑，该回去重开 ADR 了。
+ */
+export const SAVE_MIGRATION_IS_EMPTY = Object.keys(MIGRATIONS).length === 0;
+
 export type MigrateResult =
   | { status: 'ok'; save: SaveFile }
   | { status: 'too-new' }      // 存档比客户端新：提示更新，绝不覆盖
