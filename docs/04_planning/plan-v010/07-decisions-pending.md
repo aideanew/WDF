@@ -22,11 +22,11 @@ related: [PLAN-V010-02, PLAN-V003-09]
 |---|---|---|---|---|
 | D-42 | 35 张空表的数值来源与 v1.0 范围重裁 | ✅ **已裁决 C**（2026-10-28） | S3 全部（11 个模块） | 用户 |
 | D-43 | `items.weight` / `capacity` 真实值 | ✅ **已裁决 B**（2026-10-28） | 扩筏 C2（M-2） | 用户 |
-| D-44 | 微信 `appid` / `secret` 是否具备 | 🔴 BLOCKING | TASK-7011 | **用户** |
-| D-45 | v1.0 提审是否必须"真实名 + 防沉迷" | 🔴 BLOCKING | TASK-7012/7013/7014 的优先级 | **用户** |
-| D-46 | "功能未开放"用哪个错误码 | 🟡 NON_BLOCKING | TASK-7003 | 我 → 用户确认 |
+| D-44 | 微信 `appid` / `secret` 是否具备 | ✅ **已裁决 2**（2026-10-28） | TASK-7011 | 用户 |
+| D-45 | v1.0 提审是否必须"真实名 + 防沉迷" | ✅ **已裁决 B**（2026-10-28） | TASK-7012/7013/7014 的优先级 | 用户 |
+| D-46 | "功能未开放"用哪个错误码 | ✅ **已裁决 A**（2026-10-28） | TASK-7003 | 用户 |
 | D-47 | 塔防是否降级为文字结算 | 🟡 NON_BLOCKING | S3-7033 后 | 用户 |
-| D-48 | 激励视频 `adUnitId` 从哪来 | 🟡 NON_BLOCKING | TASK-7021 | 用户 |
+| D-48 | 激励视频 `adUnitId` 从哪来 | ✅ **已裁决 B**（2026-10-28） | TASK-7021 | 用户 |
 
 ---
 
@@ -105,6 +105,10 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
 
 **需你回答**：A / B / C。
 
+**裁决（2026-10-28，用户）**：选 **B**，**明确标注可调值**（进 `UNKNOWN-TABLES.md` 而非伪装设计源原值）。
+**已接受行为**：`items.weight`/`capacity` 由授权代定一版（容量≈面积/10、物品重量按品类 原料1/工具3/设备10），
+标记为可调值；S3-7031 据此落地。
+
 ---
 
 ## D-44 · 微信 `appid` / `secret` 是否具备 🔴
@@ -121,6 +125,10 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
 
 **我的倾向**：**2**。理由：你 10-23 已定"先本地开发，不用真机、不做认证备案"。
 在这一口径下，真机登录本来就不在关键路径上。**但它必须被显式记录为"未实现"，不能继续装作能用。**
+
+**裁决（2026-10-28，用户）**：选 **2**（没有/不方便给）。
+**已接受行为**：TASK-7011 标记 `UNKNOWN`，v1.0 的 M-9 降级，`WDF_AUTH_MODE` 保持 `dev`；
+登录显式记录为"未实现"，不装作可用（S1-7010 仍接客户端平台 code，服务端 dev 模式不校验）。
 
 ---
 
@@ -149,6 +157,10 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
 
 **需你回答**：A / B / C。
 
+**裁决（2026-10-28，用户）**：选 **B**（v1.0 不提审）。
+**已接受行为**：本版只做本地可玩版；提审作为独立里程碑。合规状态保持桩（`minor=false`），
+TASK-7012（ADR-0015）降级为登记"提审所需"并明确 v1.0 不依赖；TASK-7013/7014 的优先级降为 v1.1 候选。
+
 ---
 
 ## D-46 · "功能未开放"用哪个错误码 🟡
@@ -168,6 +180,10 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
 理由：这 8 个动作在 v1.0 里本来就不该被调用（客户端没有入口）。**为一个不该发生的路径解冻契约，收益为负。**
 
 **需你确认**：A 可否。
+
+**裁决（2026-10-28，用户）**：选 **A**（复用 4999 + 固定 msg `FEATURE_NOT_AVAILABLE`）。
+**已接受行为**：8 个 todo handler 返回 `4999` + `msg='FEATURE_NOT_AVAILABLE'`；客户端 `RpcClient`
+识别该码不重试、走"未开放"态；B（新增 4998）登记为解冻窗口候选。TASK-7003 据此落地。
 
 ---
 
@@ -192,6 +208,10 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
 - C. 服务端下发（`config.manifest` 带）→ 多一次网络，且仍要存
 
 **我的倾向**：**B**。理由：`adUnitId` 泄了也不会被滥用（它绑包名），但放仓库会进 git 历史，删不干净。
+
+**裁决（2026-10-28，用户）**：选 **B**（构建期常量 `ad.config.ts`，gitignore）。
+**已接受行为**：`adUnitId` 走构建期常量文件（不入库、进 gitignore）；TASK-7021 据此实现，
+不改 `ad_placements` schema、不经服务端下发。
 
 ---
 
