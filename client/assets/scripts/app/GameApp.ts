@@ -1,13 +1,13 @@
 /**
- * 依赖装配与启动顺序（唯一入口）：
- * 1 platform → 2 services(time/log/bus/storage/net) → 3 config(默认+热更覆盖) → 4 compliance 检查
- * → 5 save(load) → 6 离线结算(game-core) → 7 进入主场景，后台预下载 b-common/b-shallow
+ * 本类**只做 onHide 注册**（切后台尽力保存的钩子）。真实启动链在 `BootController`：
+ * compliance.check → account.login → 挂 MainView。
  *
- * ⚠ 第 5 步**没有 migrate**（原名写的是 load+migrate，属空头承诺，已按实际改写）。
- *   `packages/game-core/src/save/migrations.ts` 的 `migrate()` 目前**全仓零调用点**，
- *   这是 ADR-0013 §7 裁决接受的后果（G-1）：服务端不管 sv、客户端单方负责，而客户端尚未接。
- *   ★ 到期日：`SAVE_SCHEMA_VERSION` 从 1 变成 2 那一刻起必须接上。
- *   守护：tests/contract/save-schema-gate.test.mjs。
+ * ⚠ 原注释描绘的「7 步启动链」（platform → services → config → compliance → save(load) →
+ * 离线结算(game-core) → 预下载 Bundle）**没有任何一行实现**。其中：
+ * - 离线结算 / Bundle 预下载 / services/save.flush：均未实现，登记为缺口 M-2/S-4（见 plan-v010/02 §4）；
+ * - 第 5 步 migrate：`packages/game-core/src/save/migrations.ts` 的 `migrate()` 全仓零调用点
+ *   （ADR-0013 §7 裁决接受：服务端不管 sv、客户端单方负责而尚未接）。
+ *   ★ 到期日：`SAVE_SCHEMA_VERSION` 从 1 变 2 那刻起必须接上；守护 tests/contract/save-schema-gate.test.mjs。
  */
 import { getPlatform } from '../platform';
 

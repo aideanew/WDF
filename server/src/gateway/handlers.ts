@@ -29,8 +29,12 @@ const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: 'not implement
 
 /**
  * 动作 → 实现。`satisfies` 保证 contracts 里登记的每个动作都有实现，漏了编译失败。
- * 当前已落地 12 件（全部 20 个动作中仅剩 8 个 todo：salvage/economy/event×3/social×2/ads —— 均依赖 E-06 数值）：
- * account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check / save.pull / save.push / save.resolveFork / leaderboard.report / leaderboard.query / telemetry.track / config.manifest。
+ * 实测（2026-10-28）：**22 个动作，已落地 14 件，剩 8 个 todo**。
+ * todo 返回 `ERR.INTERNAL + 'not implemented'`，客户端会当系统错误重试 → 见 TASK-7003 未开放语义：
+ *   todo = salvage.claimInfo / economy.buyQuota / event.start / event.submit / event.result / social.send / social.pull / ads.claim
+ * 已实现 14 件 = account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check /
+ *   save.pull / save.push / save.resolveFork / chest.open / economy.sell / leaderboard.report / leaderboard.query /
+ *   telemetry.track / config.manifest。
  */
 export const HANDLERS = {
   'account.login': accountHandlers['account.login'],

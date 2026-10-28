@@ -30,7 +30,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | 切片 | 卡 | 状态 | 结论 | 证据路径 |
 |---|---|---|---|---|
 | S0 | 7001 空壳清单工具 | ✅ PASS | 独立验收 PASS（3/3） | EVD-7001/ |
-| S0 | 7002 注释去假 + 3101 | 未开始 | — | EVD-7002/ |
+| S0 | 7002 注释去假 + 3101 | ✅ PASS | 独立验收 PASS（4/4） | EVD-7002/ |
 | S0 | 7003 未开放语义 | 未开始（**需 D-46**） | — | EVD-7003/ |
 | S0 | 7004 占位值可区分 | 未开始 | — | EVD-7004/ |
 | S0 | 7005 空 service 处置 | 未开始 | — | EVD-7005/ |
@@ -63,6 +63,16 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体 a48ca793）：**PASS**，完成度 100%；非阻断备注——contracts 层可加显式豁免（v2 拦门禁版）
 - 证据：`docs/06_validation/evidence/EVD-7001/`（shells-table.txt / shells-json.txt / guard.txt / README.md）
 
+### TASK-7002 · 注释去假 + 3101 登记
+- 执行时刻：2026-10-28 / 主控
+- 改动：`server/src/gateway/handlers.ts`（顶注 12/20→14/22+逐列 8 todo）、`server/src/gateway/payload.ts:100`（20→22 动作）、
+  `client/assets/scripts/app/MainView.ts`（:5 6 个 Tab、:57 6 个面板）、`client/assets/scripts/app/GameApp.ts`（头部启动链措辞）、
+  `packages/game-core/src/{hook,raft}/index.ts`（3101 登记注释）+ 同步副本、`docs/03_solution/data/error-catalog.md`（3101 事实码行）
+- 验证：全仓 grep 旧措辞 0 命中；`npm run guard` 9/9；双 `tsc --noEmit` 0；diff 过滤非注释行为空（零逻辑改动）；契约/迁移零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅）
+- 独立验收（子智能体 abe58b78）：**PASS**，完成度 100%（4/4 验收条目全过，无问题）
+- 证据：`docs/06_validation/evidence/EVD-7002/`（acceptance-greps.txt / guard.txt / typecheck-server.txt / typecheck-client.txt / README.md）
+
 ### 记录模板
 
 ```
@@ -90,7 +100,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 
 ## 4. 纪律自检（每卡完成后更新）
 
-- [ ] 每次提交只含单卡改动（`08 §1` 禁止混卡）
-- [ ] 未引入新"自造码""占位当真实""注释说谎"
-- [ ] 未改冻结契约（本版唯一例外 ADR-0015 新表）
-- [ ] 单卡用 L1 定向体检，未跑全量
+- [x] 每次提交只含单卡改动（`08 §1` 禁止混卡；7001、7002 各自独立提交）
+- [x] 未引入新"自造码""占位当真实""注释说谎"（7002 恰好清除 5 处旧"注释说谎"）
+- [x] 未改冻结契约（3101 按 G-1 只登记不改；ADR-0015 新表待 7012）
+- [x] 单卡用 L1 定向体检，未跑全量（7001/7002 均只跑改动模块）

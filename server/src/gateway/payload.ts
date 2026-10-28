@@ -97,7 +97,7 @@ export const PAYLOAD_SCHEMAS: Partial<Record<ActionName, z.ZodTypeAny>> = {
 
 /**
  * 显式豁免清单：登记过但**刻意不校验**的动作，附理由。
- * 目前空——上面的 PAYLOAD_SCHEMAS 已覆盖 ACTIONS 全部 20 个动作。
+ * 目前空——上面的 PAYLOAD_SCHEMAS 已覆盖 ACTIONS 全部 22 个动作。
  * 若未来某个动作要"先放行再补 schema"，在此登记并写清理由，契约测试仍会承认。
  */
 export const EXEMPT: Partial<Record<ActionName, string>> = {};

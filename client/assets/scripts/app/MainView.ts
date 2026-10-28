@@ -2,7 +2,7 @@
  * 主界面（核心 TASK-3101 产出，由核心维护，助手不得编辑）。
  *
  * 职责：
- * - 底部 4 个 Tab（打捞/背包/合成/榜单）用 Graphics 画底栏 + Label，固定尺寸按 `view.getVisibleSize()` 计算；
+ * - 底部 6 个 Tab（打捞/背包/箱子/合成/商人/榜单）用 Graphics 画底栏 + Label，固定尺寸按 `view.getVisibleSize()` 计算；
  * - 切换只 `active` 对应面板节点，不销毁重建（避免重复请求与重建开销）；
  * - 通过 `createXxxPanel` 工厂挂载各 features 面板（助手实现内容）；
  * - 右上角"设"按钮开关设置浮层（不在 PanelKey 内）；
@@ -54,7 +54,7 @@ export class MainView extends Component {
     content.setPosition(new Vec3(0, -TAB_H / 2, 0));
     this.node.addChild(content);
 
-    // 按 PanelKey 分发工厂，挂载 5 个面板
+    // 按 PanelKey 分发工厂，挂载 6 个面板
     const factories: Record<PanelKey, (p: Node) => PanelHandle> = {
       hook: createHookPanel,
       inventory: createInventoryPanel,

@@ -12,7 +12,8 @@ export function remainingBuoyancy(hull: readonly Load[], cargoWeight: number): n
   return cap - w;
 }
 
-/** 建造/装货/招员工前的预检：返回变动后剩余浮力，不足则拒绝并告知差多少。 */
+/** 建造/装货/招员工前的预检：返回变动后剩余浮力，不足则拒绝并告知差多少。
+ * 3101 是事实码，不在 ERR —— 见 docs/03_solution/data/error-catalog.md（plan-v010 TASK-7002）。 */
 export function checkChange(hull: readonly Load[], cargoWeight: number, deltaWeight: number): Result<number> {
   const left = remainingBuoyancy(hull, cargoWeight) - deltaWeight;
   return left >= 0 ? ok(left) : err(3101, `浮力不足，还差 ${-left}`);

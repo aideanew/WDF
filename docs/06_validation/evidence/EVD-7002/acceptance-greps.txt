@@ -1,0 +1,8 @@
+# stale-phrase grep (expect empty)
+(无残留)
+
+# 3101 in error-catalog
+13:> 另有**事实码 `3101`**（不在 ERR，见下）——登记而非新增，因契约冻结期且无客户端消费者。
+34:| 3101 | RULE_REFUSED | RULE | 规则拒绝：承重不足 / 浮力不足。**事实码，不在 ERR**（game-core 本地判定，拒绝信息只用于 UI 文案，无客户端符号消费） | 承重/浮力不足 | hook.pullBack / raft.checkChange |
+47:> **事实码 3101（plan-v010 TASK-7002 / G-1，2026-10-28）**：`3101` 在两处被使用但**不在 ERR**
+48:> （`hook/index.ts` 承重、`raft/index.ts` 浮力）。契约冻结期不新增码：`3101` 无客户端消费者

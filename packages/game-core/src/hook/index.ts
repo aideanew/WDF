@@ -127,7 +127,8 @@ export function resolveHit(path: HookPath, targets: HookTarget[], cfg: HookConfi
   return null;
 }
 
-/** 承重判定：物品重量超过所选绳索上限 → err(3101)。 */
+/** 承重判定：物品重量超过所选绳索上限 → err(3101)。
+ * 3101 是事实码，不在 ERR —— 见 docs/03_solution/data/error-catalog.md（plan-v010 TASK-7002）。 */
 export function pullBack(itemWeight: number, cable: CableTier, cfg: HookConfig): Result<true> {
   const cap = cfg.cables[cable];
   if (itemWeight > cap) return err(3101, `承重不足：${itemWeight} > ${cap}（${cable}）`);

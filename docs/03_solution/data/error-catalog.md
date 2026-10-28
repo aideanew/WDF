@@ -10,6 +10,7 @@ review: 2026-11-26
 # 错误码对照表
 
 > 单一可读来源：本表与 `packages/contracts/src/common/errors.ts` 的 15 个错误码**一一对应**。
+> 另有**事实码 `3101`**（不在 ERR，见下）——登记而非新增，因契约冻结期且无客户端消费者。
 >
 > **落点说明（辩证修正 AT-2001）**：原 AT 计划把错误表写入 `docs/03_solution/data/api-catalog.md`，
 > 但 `api-catalog.md` 由 `tools/gen/catalog.mjs` 第 18 行**整文件覆盖生成**（仅输出动作表），
@@ -30,6 +31,7 @@ review: 2026-11-26
 | 3002 | QUOTA_EXHAUSTED | RULE | 区服每日限量已售罄 | 今日已售罄 | economy.buyQuota |
 | 3201 | EVENT_CLOSED | RULE | 赶海场次未开放（非 20:00-21:00） | 本场赶海已结束 | event.start |
 | 3202 | EVENT_ALREADY_PLAYED | RULE | 当日已参与过赶海 | 今日已参与过赶海 | event.start |
+| 3101 | RULE_REFUSED | RULE | 规则拒绝：承重不足 / 浮力不足。**事实码，不在 ERR**（game-core 本地判定，拒绝信息只用于 UI 文案，无客户端符号消费） | 承重/浮力不足 | hook.pullBack / raft.checkChange |
 | 4001 | RATE_LIMITED | SYSTEM | 触发频率限制：网关 IP 维度固定窗口（`auth:false` 动作，`gateway/ratelimit.ts`）或业务级频控（榜单上报间隔） | 操作过于频繁，请稍后再试 | 全部 `auth:false` 动作 / leaderboard.report / telemetry.track |
 | 4999 | INTERNAL | SYSTEM | 服务端未实现或内部错误（未实现动作也返回此码，见 AT-2401） | 服务暂时不可用 | 全部动作 |
 | 5001 | REVIEW_PENDING | RISK | 内容在审核中 / 复核不一致 | 内容审核中 | event.submit / social.send |
@@ -41,3 +43,8 @@ review: 2026-11-26
 > 建议新增 `2004 BIND_TICKET_INVALID` 精确区分。
 >
 > **缺口解冻（TASK-4015，2026-10-27）**：已新增 `2004 BIND_TICKET_INVALID` 精确区分绑定票据无效的场景。
+>
+> **事实码 3101（plan-v010 TASK-7002 / G-1，2026-10-28）**：`3101` 在两处被使用但**不在 ERR**
+> （`hook/index.ts` 承重、`raft/index.ts` 浮力）。契约冻结期不新增码：`3101` 无客户端消费者
+> （两处都在 game-core 本地判定，拒绝信息只用于 UI 文案），**收益为零、代价为正** → 只登记不改。
+> 若未来解冻契约，建议并入通用「前置条件不足」码（见 plan-v010 `04 §2 G-2`）。
