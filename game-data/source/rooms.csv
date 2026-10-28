@@ -1,1 +1,11 @@
 id,name,note
+room_blacksmith,铁匠,"铁匠房间（熔炉+铁匠员工），DS 5.4/3.5"
+room_farm,农场,"农场房间（农田），DS 8.2/8.3"
+room_barracks,兵营,"兵营房间，DS 8.2/8.3"
+room_kitchen,厨房,"厨房房间（点厨房拿食物），DS 8.2/8.3"
+room_warehouse,大仓库,"大仓库房间（储物+锁柜），DS 8.3"
+room_cargo_hold,货舱,"货舱房间（甲板货物），DS 3.19"
+room_diving_workshop,潜水工坊,"潜水工坊房间，DS 8.2/8.3"
+room_mechanic_workshop,机械工坊,"机械工坊房间，DS 8.2/8.3"
+room_locksmith,锁匠铺,"锁匠铺房间，DS 8.2/8.3"
+room_research,科研部,"科研部/研究台房间（研究结构/加盖前提），DS 5.4"

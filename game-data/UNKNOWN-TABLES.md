@@ -18,6 +18,8 @@
 | merchants | ✅ 已转录（D-01） | 3 | 渔村/流浪/黑市；region_bp + daily_limit |
 | facilities | ✅ 已转录（D-02） | 9 | 熔炉/灶台/锯台/砧台/木炭窑/炼油炉/高炉/锁匠铺/机械工坊；effect_bp=10000、station 取 recipes 原工位串 |
 | buildings | ✅ 已转录（D-03） | 6 | 大仓库/货舱/兵营/厨房/农田/潜水工坊；storage_bp |
+| raft_tiles | ✅ 已转录（D-42=C） | 1 | 船体材料（筏块=item_0072）容量/重量；`capacity`=浮力贡献 50（代定可调，见第三节）、`weight`=10（与 items 品类一致）；设计源给"浮力=船体材料容量之和"但未给数值（DS 3.19） |
+| rooms | ✅ 已转录（D-42=C） | 10 | 室内房间底图类型注册表（铁匠/农场/兵营/厨房/大仓库/货舱/潜水工坊/机械工坊/锁匠铺/科研部），均取自设计源 §8.3/3.19/5.4；类型注册，非数值 |
 | hooks | ✅ 已转录（D-04） | 1 | target_dist=600、angle_deg=15、max_power_bp=10000（等值迁移自 DEFAULT_HOOK_CONFIG） |
 | guide_steps | ✅ 已转录（D-05） | 5 | 出钩→背包→合成→回收→榜单；text + target_panel |
 | ad_placements | ✅ 已转录（D-06） | 3 | hook_cooldown/offline_double/shop_refresh；daily_cap=3 |
@@ -26,11 +28,11 @@
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **35 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **33 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, levels, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, raft_tiles, regions, rooms, seasons, shipwrecks, spawns, throwables, tides, titles, units, unlocks, waves, zones
+bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, levels, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, unlocks, waves, zones
 
-> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
+> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms` 已由 D-42=C 代定/注册（2026-10-28），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
@@ -49,6 +51,8 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 | recipes | `job` | 0/80 填充 | ⚠ 仅影响平衡 | D-10 裁决"保持空"；引用 `jobs.id`，jobs 表为空 → 暂无法填；源表工位串如 `高炉/铁匠` 含职业信息但未拆分 |
 | recipes | `unlock_level` | ✅ 80/80 填充（D-10） | ⚠ 仅影响平衡 | 全 0（schema min 1→0）；所有配方无条件可做 |
 | prices | `recycle_bp` 上限 | — | ✅ 设计源原值 | 10000 → 100000（非留空，属上限放宽；价格值本身取自总表，非占位） |
+| raft_tiles | `capacity` | ✅ 1/1 填充（D-42=C） | ✅ 代定可调（D-42=C） | **已授权代定**：筏块（item_0072）容量/浮力=50；设计源给"浮力=船体材料容量之和"未给数值（DS 3.19/3.22「具体数值配表时定」）；可调，非设计源原值（TASK-7033）；注意区分 `items.capacity`（储物）与 `raft_tiles.capacity`（浮力贡献） |
+| raft_tiles | `weight` | ✅ 1/1 填充（D-42=C） | ✅ 代定一致（D-43=B） | 筏块 weight=10，来源为 items 品类代定（facility=10，D-43=B），非独立新增；与 D-43=B 品类口径一致，非设计源原值 |
 
 > **可用性列口径（plan-v010 TASK-7004）**：❌ 影响计算 = 该值参与浮力/判定等可运行逻辑，D-43 裁决前不得使用；
 > ⚠ 仅影响平衡 = 不影响"能不能跑"，只影响强弱，可暂用；✅ = 数值直接取自设计源，非裁决占位。
@@ -94,8 +98,9 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 
 ## 五、进度
 
-- `npm run gen:config` 通过：**46 张表、327 行**、configVersion=`38fc1faf915f8bbf`（2026-10-27，TASK-4002 转录 D-01~D-10 后）。
-- 较上轮（300 行）新增 27 行（merchants 3 + facilities 9 + buildings 6 + hooks 1 + guide_steps 5 + ad_placements 3）；items/locks/chests/recipes 字段级填充不改行数。
+- `npm run gen:config` 通过：**46 张表、338 行**、configVersion=`b840f54ffe9b13b5`（2026-10-28，TASK-7033 D-42=C 代定/注册 raft_tiles+rooms 后）。
+- 较上轮（327 行，TASK-7031 后）新增 11 行（raft_tiles 1 + rooms 10）；levels/unlocks 仍空（属 TASK-7032，见下）。
 - `npm run sync` 已执行：43 个文件同步至 `client/assets/scripts/generated/`。
-- 空表 35 张（原 41，移出 6 张已转录表），待补来源后转录即可。
+- 空表 33 张（原 41，移出 6 张已转录 + 2 张 D-42=C 代定/注册），待补来源后转录即可。
+- **TASK-7032（levels/unlocks）待执行**：levels 需代定 exp 曲线（D-42=C），unlocks 需按等级解锁表-草案转录/代定。
 - 全部留空待填项已统一登记于本文档第三、四、五节，后续补充时回填并勾销。

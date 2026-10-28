@@ -9,6 +9,6 @@ review: 2026-11-23
 
 # 概率公示（由 game-data 生成，勿手改）
 
-configVersion：`d26435e1a1c772c4`
+configVersion：`b840f54ffe9b13b5`
 
 （drops 表尚无数据）

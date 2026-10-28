@@ -1,0 +1,14 @@
+✔ raft-t 1 恰 1 行（筏块为当前唯一船体材料） (0.4353ms)
+✔ raft-t 2 item 引用存在且为 facility 类（筏块） (0.1137ms)
+✔ raft-t 3 筏块净浮力为正（扩筏可行） (0.0547ms)
+✔ raft-t 4 capacity/weight 非负整数 (0.5862ms)
+✔ raft-t 5 浮力自洽：N 块筏块 + 货重 → 正浮力（复用 remainingBuoyancy） (0.1537ms)
+✔ raft-t 6 rooms 为设计源室内房间类型注册表 (0.1085ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 120.5344

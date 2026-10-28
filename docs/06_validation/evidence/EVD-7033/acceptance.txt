@@ -1,0 +1,27 @@
+EVD-7033 —— TASK-7033：raft_tiles/rooms 落地（D-42=C 代定/注册）
+
+状态：raft_tiles 代定（标记可调）、rooms 类型注册（设计源）
+
+验收条目：
+1. [PASS] raft_tiles 恰 1 行（raft_block，筏块唯一船体材料）（raft-t 1）
+2. [PASS] raft_block.item=item_0072 存在且为 facility 类（raft-t 2）
+3. [PASS] 筏块净浮力为正（capacity 50 > weight 10）（raft-t 3）
+4. [PASS] capacity/weight 非负整数（raft-t 4）
+5. [PASS] 浮力自洽（5 块筏块载 100 货重 → 正浮力，复用 remainingBuoyancy）（raft-t 5）
+6. [PASS] rooms 设计源室内房间注册表（10 个、id 唯一、name 非空、note 含 DS 引用）（raft-t 6）
+7. [PASS] gen:config exit 0，46 表 338 行，configVersion d26435e1→b840f54f
+8. [PASS] UNKNOWN-TABLES 如实标记（raft_tiles 代定可调、rooms 类型注册，非伪装设计源原值）
+
+验证命令：
+- tests/determinism/raft-tiles.test.mjs：exit 0，pass 6 / fail 0
+- npm run guard：exit 0，全部守卫通过
+- npm run gen:config：exit 0，46 表 338 行，configVersion=b840f54ffe9b13b5
+
+变更清单（单卡）：
+- game-data/source/raft_tiles.csv（新增 1 行，代定）
+- game-data/source/rooms.csv（新增 10 行，注册表）
+- game-data/UNKNOWN-TABLES.md（§一/§二/§三/§五 同步）
+- 生成物（raft_tiles/rooms.json、config-types 仅 configVersion、_manifest、_sync-manifest、probability-disclosure.md）
+- tests/determinism/raft-tiles.test.mjs（新增 6 例）
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅ 8✅）
