@@ -1,0 +1,14 @@
+✔ items-w 1 全表 weight ∈ {1,3,10} (0.4331ms)
+✔ items-w 2 品类→weight 映射 (0.1157ms)
+✔ items-w 3 容器 capacity>0 且递增 (0.0824ms)
+✔ items-w 4 非容器 capacity=0 (0.0737ms)
+✔ items-w 5 weight/capacity 非负整数 (0.1127ms)
+✔ items-w 6 浮力自洽：容器装载后可留正浮力 (0.0836ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.2611

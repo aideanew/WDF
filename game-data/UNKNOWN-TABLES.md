@@ -38,8 +38,8 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 
 | 表 | 字段 | 现状 | 可用性 | 备注 |
 |---|---|---|---|---|
-| items | `weight` | ✅ 106/106 填充（D-07） | ❌ 影响计算 | 全 1；扩筏浮力判定依赖它，D-43 裁决前不得进可运行逻辑 |
-| items | `capacity` | ✅ 106/106 填充（D-07） | ❌ 影响计算 | 全 0；浮力恒 0 → 扩筏必然失败，同上 |
+| items | `weight` | ✅ 106/106 填充（D-07） | ✅ 代定可调（D-43=B） | **已授权代定**：按品类 原料1/工具3/设备10（raw/material/food/misc=1、tool/lock/chest=3、equipment/facility=10）；misc/facility 品类内异质（如 misc 含发电机/发动机），为品类级代定的已知局限；可调，非设计源原值（TASK-7031） |
+| items | `capacity` | ✅ 106/106 填充（D-07） | ✅ 代定可调（D-43=B） | **已授权代定**：仅 3 容器（木箱20/铜箱40/铁箱60，chest 类）>0，其余 0；容量≈面积/10 因 items.csv 无面积列而以容器级代定（可调，TASK-7031） |
 | items | `stack` | ✅ 106/106 填充（D-07） | ⚠ 仅影响平衡 | 全 99；所有物品堆叠上限相同 |
 | items | `unlock_level` | ✅ 106/106 填充（D-07） | ⚠ 仅影响平衡 | 全 0（schema min 1→0）；无等级门槛 |
 | locks | `hits_required` | ✅ 5/5 填充（D-08） | ⚠ 仅影响平衡 | none=0/iron=3/copper=5/silver=8/gold=12（schema max 4→12）；v1.0 不做开锁，暂不影响 |

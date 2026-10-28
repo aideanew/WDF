@@ -1,0 +1,5 @@
+
+> wodefa@0.0.0 gen:config
+> node tools/gen/config.mjs
+
+✅ 数值生成完成：46 张表，327 行，configVersion=d26435e1a1c772c4
