@@ -12,6 +12,13 @@ export const CLIENT_VERSION = 'v0.1.0-s1';
 export { CONFIG_VERSION };
 
 /** 开发期强制走 mock，完全跳过网络请求（DevTools 的 wx.request 404 红字就不会再出现）。服务器上线后改 false。 */
+
+/**
+ * 网络失败本地合成码（R-3/FIX-6）：契约 15 码冻结无"网络错误"专用码，且 4999 已被
+ * 未开放信号共享（D-46=A）。客户端本地用 -1 区分"网络不可达"与"真内部错误"，不新增契约码。
+ * toUxState(-1) 走未知码兜底 → error + retryable（不弹"未开放"态）。
+ */
+const NET_CODE_OFFLINE = -1;
 export const FORCE_OFFLINE = false;
 
 /** 运行期可覆盖。开发时走 localhost（预期 404，mock handler 兜底），真机走云函数地址。 */
@@ -123,10 +130,11 @@ export async function invoke<P = unknown, D = unknown>(
     if (nt) return invoke<P, D>(action, params, finalRid, true);
   }
 
-  // 契约冻结 14 码，其中没有专门的"网络错误"码。旧代码写的 ERR.SYSTEM **根本不存在**，
-  // 传进去是 undefined → UX 映射拿到非法码。回落到 INTERNAL(4999)：error + retryable，
-  // 与网络失败语义一致；用 msg 区分来源。（缺专用网络码本身记入契约缺口）
-  if (!resp) throw makeError(ERR.INTERNAL, 'network unreachable');
+  // R-3/FIX-6（2026-10-28）：契约 15 码冻结，无"网络错误"专用码，且 4999(INTERNAL) 已被
+  // 未开放信号（FEATURE_NOT_AVAILABLE）共享（D-46=A）。网络失败不再借用 4999，改用本地
+  // 合成码 NET_CODE_OFFLINE(-1)：toUxState(-1) 走"未知码兜底"→ error + retryable，语义正确，
+  // 与"未开放"态彻底分离。零契约改动（packages/contracts 不变）。
+  if (!resp) throw makeError(NET_CODE_OFFLINE, 'network unreachable');
   if (resp.c === 0) return (resp as { c: 0; d: D }).d;
   throw makeError(resp.c, (resp as { c: number; msg: string }).msg);
 }
