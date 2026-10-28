@@ -1,0 +1,15 @@
+✔ lv 1 levels 恰 49 行且 id 为 1..49 (0.8313ms)
+✔ lv 2 exp_to_next 非负整数且随等级单调不减 (0.1569ms)
+✔ lv 3 经验曲线代定公式 exp_to_next = 100 + 20×(lv−1) (0.0836ms)
+✔ lv 4 里程碑：等级 20 存在（驶出浅海） (0.0734ms)
+✔ lv 5 总经验量级自检（到 49 级累计 ≈27k） (0.0673ms)
+✔ lv 6 unlocks 恰 11 行等级段注册表 (0.0934ms)
+✔ lv 7 unlocks 等级段起点与设计源一致（含 20 级驶出浅海） (0.1124ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 113.4166

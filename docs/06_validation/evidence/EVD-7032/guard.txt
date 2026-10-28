@@ -1,0 +1,15 @@
+
+> wodefa@0.0.0 guard
+> node tools/guard/run-all.mjs
+
+✅ 根目录白名单
+✅ game-core/contracts 纯度
+✅ 客户端依赖边界
+✅ 服务端依赖边界
+✅ 模块清单与目录一致
+✅ Asset Bundle 规则
+✅ 生成物未手改且已同步
+✅ 文档 front matter
+✅ 无空目录
+
+全部守卫通过

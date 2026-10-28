@@ -1,0 +1,28 @@
+EVD-7032 —— TASK-7032：levels/unlocks 落地（D-42=C 代定/转录）
+
+状态：levels exp 曲线代定（标记可调）、unlocks 等级段注册表（段结构已定、内容 Hark 建议）
+
+验收条目：
+1. [PASS] levels 恰 49 行，id 为 1..49 连续无缺号重号（lv 1）
+2. [PASS] exp_to_next 非负整数且随等级单调不减（lv 2）
+3. [PASS] 经验曲线代定公式 exp_to_next = 100+20×(lv−1)（lv 3）
+4. [PASS] 里程碑：等级 20 存在（驶出浅海）（lv 4）
+5. [PASS] 总经验量级自检（到 49 级 ≈27k）（lv 5）
+6. [PASS] unlocks 恰 11 行等级段注册表（id 唯一、name/note 非空）（lv 6）
+7. [PASS] unlocks 等级段起点与设计源一致（1/6/11/16/20/20/25/30/35/40/45，含 20 级驶出浅海）（lv 7）
+8. [PASS] gen:config exit 0，46 表 398 行，configVersion b840f54f→20a313a4
+9. [PASS] UNKNOWN-TABLES 如实标记（levels 代定可调、unlocks 内容 Hark 建议，非伪装设计源原值）
+
+验证命令：
+- tests/determinism/levels-unlocks.test.mjs：exit 0，pass 7 / fail 0
+- npm run guard：exit 0，全部守卫通过
+- npm run gen:config：exit 0，46 表 398 行，configVersion=20a313a478737571
+
+变更清单（单卡）：
+- game-data/source/levels.csv（新增 49 行，exp 曲线代定）
+- game-data/source/unlocks.csv（新增 11 行，等级段注册表）
+- game-data/UNKNOWN-TABLES.md（§一/§二/§三/§五 同步）
+- 生成物（levels/unlocks.json、config-types 仅 configVersion、_manifest、_sync-manifest、probability-disclosure.md）
+- tests/determinism/levels-unlocks.test.mjs（新增 7 例）
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅ 8✅ 9✅）

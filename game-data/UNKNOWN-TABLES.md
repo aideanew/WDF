@@ -20,6 +20,8 @@
 | buildings | ✅ 已转录（D-03） | 6 | 大仓库/货舱/兵营/厨房/农田/潜水工坊；storage_bp |
 | raft_tiles | ✅ 已转录（D-42=C） | 1 | 船体材料（筏块=item_0072）容量/重量；`capacity`=浮力贡献 50（代定可调，见第三节）、`weight`=10（与 items 品类一致）；设计源给"浮力=船体材料容量之和"但未给数值（DS 3.19） |
 | rooms | ✅ 已转录（D-42=C） | 10 | 室内房间底图类型注册表（铁匠/农场/兵营/厨房/大仓库/货舱/潜水工坊/机械工坊/锁匠铺/科研部），均取自设计源 §8.3/3.19/5.4；类型注册，非数值 |
+| levels | ✅ 已转录（D-42=C） | 49 | 等级 1–49（首版上限）；`exp_to_next`=100+20×(lv−1) 代定线性曲线（可调，见第三节）；等级段结构与 20 级驶出浅海为设计源已定（等级解锁表-草案） |
+| unlocks | ✅ 已转录（D-42=C） | 11 | 等级段解锁注册表（1-5/6-10/11-15/16-19/20/20-24/25-29/30-34/35-39/40-44/45-49）；等级段结构与 20 级里程碑为设计源已定，内容为 Hark 建议（见第三节）；无独立数值，不参与平衡计算 |
 | hooks | ✅ 已转录（D-04） | 1 | target_dist=600、angle_deg=15、max_power_bp=10000（等值迁移自 DEFAULT_HOOK_CONFIG） |
 | guide_steps | ✅ 已转录（D-05） | 5 | 出钩→背包→合成→回收→榜单；text + target_panel |
 | ad_placements | ✅ 已转录（D-06） | 3 | hook_cooldown/offline_double/shop_refresh；daily_cap=3 |
@@ -28,11 +30,11 @@
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **33 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **31 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, levels, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, unlocks, waves, zones
+bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
 
-> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms` 已由 D-42=C 代定/注册（2026-10-28），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
+> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
@@ -53,6 +55,8 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 | prices | `recycle_bp` 上限 | — | ✅ 设计源原值 | 10000 → 100000（非留空，属上限放宽；价格值本身取自总表，非占位） |
 | raft_tiles | `capacity` | ✅ 1/1 填充（D-42=C） | ✅ 代定可调（D-42=C） | **已授权代定**：筏块（item_0072）容量/浮力=50；设计源给"浮力=船体材料容量之和"未给数值（DS 3.19/3.22「具体数值配表时定」）；可调，非设计源原值（TASK-7033）；注意区分 `items.capacity`（储物）与 `raft_tiles.capacity`（浮力贡献） |
 | raft_tiles | `weight` | ✅ 1/1 填充（D-42=C） | ✅ 代定一致（D-43=B） | 筏块 weight=10，来源为 items 品类代定（facility=10，D-43=B），非独立新增；与 D-43=B 品类口径一致，非设计源原值 |
+| levels | `exp_to_next` | ✅ 49/49 填充（D-42=C） | ✅ 代定可调（D-42=C） | **已授权代定**：线性 `100+20×(lv−1)`（L1→2=100、L49→50=1060，累计≈27k）；设计源只给"经验来自打捞+建设"未给曲线（DS 1.4）；等级段结构 1-49/20 驶出浅海为设计源已定，仅曲线数值为代定（可调，TASK-7032） |
+| unlocks | 内容（新能力/新可建） | ✅ 11/11 填充（D-42=C） | ⚠ 仅信息/设计源建议 | 等级段结构与 20 级里程碑为设计源【已定】（等级解锁表-草案）；各段具体内容为 **Hark 设计【建议】待用户审**，仅作信息登记，不作数值依据；无独立数值字段，不参与计算 |
 
 > **可用性列口径（plan-v010 TASK-7004）**：❌ 影响计算 = 该值参与浮力/判定等可运行逻辑，D-43 裁决前不得使用；
 > ⚠ 仅影响平衡 = 不影响"能不能跑"，只影响强弱，可暂用；✅ = 数值直接取自设计源，非裁决占位。
@@ -98,9 +102,8 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 
 ## 五、进度
 
-- `npm run gen:config` 通过：**46 张表、338 行**、configVersion=`b840f54ffe9b13b5`（2026-10-28，TASK-7033 D-42=C 代定/注册 raft_tiles+rooms 后）。
-- 较上轮（327 行，TASK-7031 后）新增 11 行（raft_tiles 1 + rooms 10）；levels/unlocks 仍空（属 TASK-7032，见下）。
+- `npm run gen:config` 通过：**46 张表、398 行**、configVersion=`20a313a478737571`（2026-10-28，TASK-7032 D-42=C 代定/转录 levels+unlocks 后）。
+- 较上轮（338 行，TASK-7033 后）新增 60 行（levels 49 + unlocks 11）；D-42=C 核心 4 表（levels/unlocks/raft_tiles/rooms）已全部落地。
 - `npm run sync` 已执行：43 个文件同步至 `client/assets/scripts/generated/`。
-- 空表 33 张（原 41，移出 6 张已转录 + 2 张 D-42=C 代定/注册），待补来源后转录即可。
-- **TASK-7032（levels/unlocks）待执行**：levels 需代定 exp 曲线（D-42=C），unlocks 需按等级解锁表-草案转录/代定。
+- 空表 31 张（原 41，移出 6 张已转录 + 4 张 D-42=C 代定/注册/转录），待补来源后转录即可。
 - 全部留空待填项已统一登记于本文档第三、四、五节，后续补充时回填并勾销。
