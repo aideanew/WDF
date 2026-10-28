@@ -90,13 +90,20 @@ const TODO_PAYLOADS = {
   'ads.claim': { placement: 'pl_1' },
 };
 
-test('AT-2401 全部 todo 动作实调返回 4999（不伪装成功/业务失败）', async (t) => {
+test('AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态）', async (t) => {
   assert.equal(TODOS.size, 8, `todo 应为 8 个，实得 ${TODOS.size}（实现进展后请同步更新本断言）`);
   const token = await login();
   for (const action of [...TODOS].sort()) {
-    await t.test(`${action} → 4999`, async () => {
+    await t.test(`${action} → 4999 + FEATURE_NOT_AVAILABLE`, async () => {
       const res = await call(action, TODO_PAYLOADS[action] ?? {}, { token, rid: rid(action) });
       assert.equal(res.c, 4999, `${action} 未实现必须返回 INTERNAL(4999)`);
+      assert.equal(res.msg, 'FEATURE_NOT_AVAILABLE', `${action} 必须带 FEATURE_NOT_AVAILABLE 信号（D-46=A）`);
     });
   }
+});
+
+test('AT-2401 FEATURE_NOT_AVAILABLE 不触发静默刷新重试（4999 ≠ 2002，RpcClient 唯一重试路径）', () => {
+  // 客户端 RpcClient 唯一重试路径是 c=2002（SESSION_EXPIRED）的 silentRefresh；4999 不会走它。
+  // 断言：FEATURE_NOT_AVAILABLE 的 4999 与 2002 是不同码 → 结构性保证"该码重试次数为 0"。
+  assert.notEqual(4999, 2002, '4999 与 2002 必须不同，否则会误入刷新重试');
 });

@@ -48,3 +48,9 @@ review: 2026-11-26
 > （`hook/index.ts` 承重、`raft/index.ts` 浮力）。契约冻结期不新增码：`3101` 无客户端消费者
 > （两处都在 game-core 本地判定，拒绝信息只用于 UI 文案），**收益为零、代价为正** → 只登记不改。
 > 若未来解冻契约，建议并入通用「前置条件不足」码（见 plan-v010 `04 §2 G-2`）。
+>
+> **未开放信号（plan-v010 TASK-7003 / D-46=A，2026-10-28）**：8 个 todo 动作统一返回
+> `4999 + msg='FEATURE_NOT_AVAILABLE'`（而非原 `'not implemented'`）。`4999` 是共享码，
+> 靠固定 msg 区分"真内部错误"与"功能未开放"——**零契约变更**。客户端 `RpcClient`
+> 识别后置 `featureUnavailable=true`，调用方走"未开放"态（不重试、不弹通用错误）。
+> B 方案（新增 `4998 FEATURE_NOT_AVAILABLE`）已登记为契约解冻窗口候选。

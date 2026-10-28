@@ -24,13 +24,18 @@ export interface HandlerCtx {
 
 export type Handler = (req: RpcRequest, t: number, ctx: HandlerCtx) => Promise<RpcResponse>;
 
-/** 未实现的占位：返回 5xxx 而不是 200，避免客户端把"没写"当成"业务失败"重试。 */
-const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: 'not implemented', t });
+/** 功能未开放信号（D-46=A 裁决，2026-10-28）：8 个 todo 动作统一返回此 msg。
+ * 客户端据 `4999 + FEATURE_NOT_AVAILABLE` 走"未开放"态（不重试），而非当系统错误。
+ * msg 用作协议是坏味道，但本期零契约变更（B 新增 4998 登记为解冻窗口候选）。 */
+export const FEATURE_NOT_AVAILABLE = 'FEATURE_NOT_AVAILABLE';
+
+/** 未实现的占位：返回 4999 + 固定 msg，客户端据此不重试、走"未开放"态。 */
+const todo: Handler = async (_req, t) => ({ c: ERR.INTERNAL, msg: FEATURE_NOT_AVAILABLE, t });
 
 /**
  * 动作 → 实现。`satisfies` 保证 contracts 里登记的每个动作都有实现，漏了编译失败。
  * 实测（2026-10-28）：**22 个动作，已落地 14 件，剩 8 个 todo**。
- * todo 返回 `ERR.INTERNAL + 'not implemented'`，客户端会当系统错误重试 → 见 TASK-7003 未开放语义：
+ * todo 返回 `ERR.INTERNAL + FEATURE_NOT_AVAILABLE`（D-46=A），客户端走"未开放"态不重试 → 见 TASK-7003 未开放语义：
  *   todo = salvage.claimInfo / economy.buyQuota / event.start / event.submit / event.result / social.send / social.pull / ads.claim
  * 已实现 14 件 = account.login / account.refresh / account.bindStart / account.bindConfirm / compliance.check /
  *   save.pull / save.push / save.resolveFork / chest.open / economy.sell / leaderboard.report / leaderboard.query /

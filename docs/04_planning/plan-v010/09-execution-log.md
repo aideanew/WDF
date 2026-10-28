@@ -31,7 +31,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 |---|---|---|---|---|
 | S0 | 7001 空壳清单工具 | ✅ PASS | 独立验收 PASS（3/3） | EVD-7001/ |
 | S0 | 7002 注释去假 + 3101 | ✅ PASS | 独立验收 PASS（4/4） | EVD-7002/ |
-| S0 | 7003 未开放语义 | 未开始（**需 D-46**） | — | EVD-7003/ |
+| S0 | 7003 未开放语义 | ✅ PASS | 独立验收 PASS（3/3） | EVD-7003/ |
 | S0 | 7004 占位值可区分 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7004/ |
 | S0 | 7005 空 service 处置 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7005/ |
 | S1 | 7010 平台登录接线 | 未开始 | — | EVD-7010/ |
@@ -92,6 +92,16 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体 aabc9313）：**PASS**，完成度 100%（3/3 + 边界，含 t 语义一致性核对）
 - 证据：`docs/06_validation/evidence/EVD-7005/`（acceptance.txt / README.md）
 
+### TASK-7003 · 未实现动作改返回"明确未开放"
+- 执行时刻：2026-10-28 / 主控 / D-46=A（复用 4999 + FEATURE_NOT_AVAILABLE）
+- 改动：`server/src/gateway/handlers.ts`（todo → 4999+FEATURE_NOT_AVAILABLE，导出常量）、
+  `client/assets/scripts/services/net/RpcClient.ts`（RpcError.featureUnavailable 标记）、
+  `tests/contract/handlers.test.mjs`（8 todo 断言 msg + 4999≠2002）、`docs/03_solution/data/error-catalog.md`（未开放信号注）
+- 验证：handlers.test.mjs 12/12；payload.test.mjs 2/2；typecheck 双 0；契约零改动；无"not implemented"残留
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅）
+- 独立验收（子智能体 a58f1935）：**PASS**，完成度 100%（3/3 + 边界）
+- 证据：`docs/06_validation/evidence/EVD-7003/`（acceptance.txt / README.md）
+
 ### 记录模板
 
 ```
@@ -110,11 +120,11 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 
 | 卡 | 阻塞项 | 状态 |
 |---|---|---|
-| 7003 | D-46 未开放错误码 | 待用户裁决 |
-| 7011 | D-44 微信 appid/secret | 待用户裁决 |
-| 7012 | D-45 提审是否必须真实名 | 待用户裁决 |
-| 7020 | ADR-0014（我起草）+ D-46 | 待 |
-| 7021 | D-48 adUnitId 来源 | 待用户裁决 |
+| 7003 | D-46 未开放错误码 | ✅ 已裁决 A（4999+FEATURE_NOT_AVAILABLE），**解锁** |
+| 7011 | D-44 微信 appid/secret | ✅ 已裁决 2（无凭据 → 标记 UNKNOWN，M-9 降级） |
+| 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审，ADR-0015 降级登记） |
+| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 待起草 |
+| 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore） |
 | 7032/7033 | D-42=C 授权代定值 | 已授权，执行代定 |
 
 ## 4. 纪律自检（每卡完成后更新）

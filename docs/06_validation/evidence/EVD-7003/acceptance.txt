@@ -1,0 +1,27 @@
+=== 验收1: 8 个 todo 返回 4999 + FEATURE_NOT_AVAILABLE ===
+  ✔ ads.claim → 4999 + FEATURE_NOT_AVAILABLE (1.0971ms)
+  ✔ economy.buyQuota → 4999 + FEATURE_NOT_AVAILABLE (0.8661ms)
+  ✔ event.result → 4999 + FEATURE_NOT_AVAILABLE (0.3021ms)
+  ✔ event.start → 4999 + FEATURE_NOT_AVAILABLE (0.8035ms)
+  ✔ event.submit → 4999 + FEATURE_NOT_AVAILABLE (0.8327ms)
+  ✔ salvage.claimInfo → 4999 + FEATURE_NOT_AVAILABLE (1.8977ms)
+  ✔ social.pull → 4999 + FEATURE_NOT_AVAILABLE (1.2366ms)
+  ✔ social.send → 4999 + FEATURE_NOT_AVAILABLE (1.5322ms)
+ℹ pass 12
+ℹ fail 0
+
+=== 验收2: RpcClient 不重试（4999≠2002，唯一重试路径 silentRefresh）===
+tests/contract/handlers.test.mjs:106:  // 客户端 RpcClient 唯一重试路径是 c=2002（SESSION_EXPIRED）的 silentRefresh；4999 不会走它。
+client/assets/scripts/services/net/RpcClient.ts:121:  if (resp && resp.c === ERR.SESSION_EXPIRED && action !== 'account.refresh' && !attemptedRefresh && getToken()) {
+client/assets/scripts/services/net/RpcClient.ts:122:    const nt = await silentRefresh();
+client/assets/scripts/services/net/RpcClient.ts:139:async function silentRefresh(): Promise<string | null> {
+
+=== 验收3: payload.test.mjs 定向跑通过 ===
+ℹ pass 2
+ℹ fail 0
+
+=== 边界: 无残留 'not implemented'；typecheck 双 0 ===
+OK: 无残留
+---
+server typecheck 0
+client typecheck 0

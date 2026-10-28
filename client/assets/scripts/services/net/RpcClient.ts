@@ -33,10 +33,16 @@ let endpoint = 'http://127.0.0.1:5050/rpc';
 export function setEndpoint(url: string): void { endpoint = url; }
 export function getEndpoint(): string { return endpoint; }
 
+/** 功能未开放信号（D-46=A，与 server/src/gateway/handlers.ts 的 FEATURE_NOT_AVAILABLE 同值）。
+ * 8 个 todo 动作返回 4999+此 msg；客户端据此走"未开放"态而非系统错误重试。 */
+export const FEATURE_NOT_AVAILABLE = 'FEATURE_NOT_AVAILABLE';
+
 export interface RpcError {
   code: number;
   range: ReturnType<typeof errorRange>;
   msg: string;
+  /** 功能未开放（4999 + FEATURE_NOT_AVAILABLE）：调用方应走"未开放"态，不重试、不弹通用错误。 */
+  featureUnavailable?: boolean;
 }
 
 function platOf(p: IPlatform): Platform {
@@ -62,7 +68,7 @@ function uuid(): string {
  * 统一 RPC 客户端：
  *  - 封套 meta（cv / cfg / sv / plat / rid）
  *  - 解析 c != 0，按段分类抛出结构化错误
- *  - 网络失败或 c = 4999（not implemented）时走本地 mock handler
+ *  - 网络失败或 c = 4999（FEATURE_NOT_AVAILABLE，8 个 todo 动作）时走本地 mock handler（若有）
  */
 export async function invoke<P = unknown, D = unknown>(
   action: ActionName,
@@ -148,7 +154,14 @@ async function silentRefresh(): Promise<string | null> {
 }
 
 function makeError(code: number, msg: string): RpcError {
-  return { code, range: errorRange(code), msg };
+  return {
+    code,
+    range: errorRange(code),
+    msg,
+    // 功能未开放：4999 是共享码（真内部错误也是它），靠固定 msg 区分（D-46=A 零契约变更）。
+    // 标记后调用方走"未开放"态（不重试），而不是 INTERNAL 的 retryable 通用错误。
+    featureUnavailable: code === ERR.INTERNAL && msg === FEATURE_NOT_AVAILABLE,
+  };
 }
 
 // ---------- 本地 mock handlers ----------
