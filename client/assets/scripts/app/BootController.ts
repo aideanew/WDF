@@ -4,6 +4,7 @@ const { ccclass } = _decorator;
 import { invoke, setToken } from '../services/net/RpcClient';
 import { getPlatform } from '../platform';
 import { MainView } from './MainView';
+import { GameApp } from './GameApp';
 
 /**
  * Boot 场景控制器（核心 TASK-3101 改写）：
@@ -22,6 +23,9 @@ export class BootController extends Component {
   private ready = false;
 
   async start(): Promise<void> {
+    // W1-1 (FIX-1)：调用 GameApp.start（TASK-7042 注册 onHide 切后台尽力保存）。
+    // 不 await、不阻塞首屏；内部有 started 幂等守卫（GameApp.ts:20）。调用点在下一行 buildUI 之前。
+    void GameApp.start();
     this.buildUI();
     this.setTitle('奖励一颗麻籽');
     this.setStatus('启动中…');
