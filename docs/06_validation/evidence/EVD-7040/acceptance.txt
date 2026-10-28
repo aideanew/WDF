@@ -1,0 +1,22 @@
+EVD-7040 —— TASK-7040：账号面板范围核查（先减后加，三项内容均无 v1.0 需求来源，登记"不做"）
+
+状态：不实现、只登记"不做"，不作虚假承诺；服务端 account 已真实，客户端保持空壳
+
+验收条目：
+1. [PASS] 绑定互通属 v1.1（设计权威：mvp-scope:66 / 立项评审:211 / 设计要点记录:723）
+2. [PASS] 客户端无账号 Tab 入口（MainView 仅 6 Tab，MainView.ts:27-34）
+3. [PASS] 登录已真实（TASK-7010 BootController，已独立验收 PASS）
+4. [PASS] 同步/登录失效态已有承接（SettingsPanel.ts:68）
+5. [PASS] 空壳无入口即无需 UI（02 §7 I-3）
+6. [PASS] 无虚假承诺：只登记"不做"，未造假面板
+7. [PASS] 服务端 account 真实存在（server/src/modules/account/）
+8. [PASS] 客户端 account 保持空壳标注（NB-3）
+
+验证命令：
+- 无（本卡无代码变更；grep 校验设计依据行即可）
+
+变更清单（单卡）：
+- docs/04_planning/plan-v010/02-requirement-inventory.md（§4.2 注记）
+- docs/06_validation/evidence/EVD-7040/
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅ 8✅）
