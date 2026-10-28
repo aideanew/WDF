@@ -1,0 +1,11 @@
+EVD-7014 —— TASK-7014：合规拦截 UI（D-45=B → 推迟 v1.1）
+
+状态：UNKNOWN（D-45=B，非"实现"，未开工）
+
+验收条目：
+1. [PASS] D-45=B 已裁决（v1.0 不提审），已接受行为 = "TASK-7013/7014 优先级降为 v1.1 候选"（07-decisions-pending.md:162）
+2. [PASS] 依赖链：Depends TASK-7010、TASK-7013；TASK-7013 已推迟（D-45=B）→ 本卡随之推迟
+3. [PASS] 零代码改动：client/assets/scripts/features/compliance、client/assets/scripts/app 均无改动
+4. [PASS] 无"装作已实现"假声明：全仓无合规拦截 UI"已实现"声明
+
+结论：UNKNOWN（D-45=B，推迟 v1.1 候选，非缺陷）

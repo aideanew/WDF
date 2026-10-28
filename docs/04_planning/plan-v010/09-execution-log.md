@@ -38,7 +38,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S1 | 7011 code2session | ✅ PASS（D-44=2 → 记录 UNKNOWN） | 独立验收 PASS（4/4） | EVD-7011/ |
 | S1 | 7012 ADR-0015 | ✅ PASS | 独立验收 PASS（100%） | EVD-7012/ |
 | S1 | 7013 compliance 真实化 | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7013/ |
-| S1 | 7014 合规 UI | 未开始（D-45=B → v1.1 候选） | — | EVD-7014/ |
+| S1 | 7014 合规 UI | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7014/ |
 | S2 | 7020 ads.claim | 未开始（**需 ADR-0014**） | — | EVD-7020/ |
 | S2 | 7021 激励视频 | 未开始（D-48 已决 B） | — | EVD-7021/ |
 | S2 | 7022 ADR-0014 | ✅ PASS | 独立验收 PASS（100%） | EVD-7022/ |
@@ -141,6 +141,14 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 结论：**UNKNOWN（D-45=B → v1.1 候选，非缺陷）**（逐条：1✅ 2✅ 3✅ 4✅）
 - 独立验收（子智能体）：**PASS**（见 EVD-7013）
 - 证据：`docs/06_validation/evidence/EVD-7013/`（acceptance.txt / README.md）
+
+### TASK-7014 · 合规拦截 UI（D-45=B → 记录 UNKNOWN，推迟 v1.1）
+- 执行时刻：2026-10-28 / 主控 / D-45=B（v1.0 不提审）
+- 改动：`09-execution-log.md`（7014 记录）；**零代码改动**
+- 验证：D-45=B 已接受行为降 7014 为 v1.1 候选；Depends TASK-7013 已推迟；`client/assets/scripts/features/compliance`、`client/assets/scripts/app` 零改动；无"装作已实现"假声明
+- 结论：**UNKNOWN（D-45=B → v1.1 候选，非缺陷）**（逐条：1✅ 2✅ 3✅ 4✅）
+- 独立验收（子智能体）：**PASS**（见 EVD-7014）
+- 证据：`docs/06_validation/evidence/EVD-7014/`（acceptance.txt / README.md）
 
 ### 记录模板
 
