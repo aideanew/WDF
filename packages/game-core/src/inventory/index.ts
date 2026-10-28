@@ -1,6 +1,7 @@
 /** 存档背包段投影：把 modules.inventory（id→数量）投影成可展示行。纯函数：无 IO / 随机 / 时间。
- * 只取展示必需的四个字段（名称、类别、基准价、数量）—— items 表里其余字段当前 0/106 填充，
- * 读出来只会显示 0，属于伪造数据（MUST-08，字段清单见 EXEC-BRIEF-0002 §3.3）。 */
+ * 只取展示必需的四个字段（名称、类别、基准价、数量）—— items 表其余字段（weight/capacity/unlock_level）
+ * 已按 TASK-7031 转录（weight 三档 {1:53,3:28,10:25}、unlock_level 全 0=门槛未启用），投影不取它们是
+ * "展示不需要"而非"全是 0"（MUST-08，字段清单见 EXEC-BRIEF-0002 §3.3）。 */
 import type { ItemsRow } from '../generated/config-types';
 
 export const MODULE_ID = 'inventory';

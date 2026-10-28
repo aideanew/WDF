@@ -8,7 +8,8 @@
  *  `canCraft` → `consume` → 写回扁平 `modules.inventory` → 剥离旧 checksum → `sealSave` → `revision+1`
  *  → `LocalSave.save()` → 重算计划。材料不足时 `applyToSave` **返回原引用**，本文件据此判定零副作用。
  *
- * 不显示：重量/容量/`station`/`job`/`unlock_level`（G-03，数值未定）。
+ * 不显示：重量/容量/`station`/`job`/`unlock_level`（TASK-7031 已转录 weight 三档，非"数值未定"；
+ *   未显示原因：`station`/`job` 未拆工位串（D-10 保持空）、`unlock_level` 门槛系统未启用、重量/容量暂不展示——见 InventoryPanel 同注）。
  */
 import { Node, UITransform, Color, Vec3, Graphics } from 'cc';
 import { preload, table } from '../../../services/config';
