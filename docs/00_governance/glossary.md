@@ -38,3 +38,8 @@ review: 2026-11-23
 | EVD | Evidence 证据目录（`docs/06_validation/evidence/EVD-*`），每张卡的验收凭据 |
 | FEATURE_NOT_AVAILABLE | 未实现动作的固定 `msg`，随 `4999` 返回（D-46） |
 | `SAVE_SCHEMA_VERSION` | 存档结构版本；**新增 `modules.<key>` 属开放 map 扩展，不递增**（§3.4 裁定） |
+| 五环（v1.0 代码层） | v1.0 的玩法闭环：**捞→包→做→扩→卖**（出钩打捞 → 背包 → 制作 → 扩筏 → 商人回收）；代码层口径（R-6，2026-10-28 用户拍板） |
+| v1.0 代码层 | 五环对应的 10 模块（`hook`/`sea`/`chest`/`inventory`/`crafting`/`raft`/`economy`/`account`/`guide`/`settings`）；**其余 13 个 v1 模块进 v1.1** |
+| 占位值 | 数值表中"全表同值"的字段（如 `items.stack` 106 行全 99、`items.unlock_level` 全 0）；由 `npm run placeholders` 机检（FIX-8） |
+| 机检清单 | 提审清单中本可脚本判定的项（configVersion 一致性 / 主包 ≤4MB / 无锁开箱 / 广告位 ≤9）；由 `npm run release:check` 一键核验（FIX-11），其余项需真机/资质 |
+| 激励视频三效果无载体 | `hook_cooldown`/`offline_double`/`shop_refresh` 的奖励载体（冷却字段/离线结算/商店）均未落地，v1.0 不伪造效果，冻结至 v1.1（D-49） |

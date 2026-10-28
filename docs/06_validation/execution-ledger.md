@@ -114,21 +114,21 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 ## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-13）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
-> 处置拆分见下批派工单 W1~W4；`FIX-1` 已由 `2a9f064` 关闭。
+> 处置拆分见下批派工单 W1~W4；FIX-1/2/3/4/5/6/7/8/11 已由 W1~W3 关闭（见各状态列），FIX-9 未派工，FIX-10 外部依赖不做。
 
 | 号 | P | 缺陷 | 证据坐标 | 状态 |
 |---|---|---|---|---|
 | FIX-1 | P0 | `GameApp.start()` 零调用点 → `lifecycle.onHide` 从未注册 → **切后台保存实际不生效**（违反 C3） | `GameApp.ts:19`；`BootController.ts:24-41` | ✅ `2a9f064` |
-| FIX-2 | P0 | 激励视频**三个位面的奖励载体全不存在**（无冷却字段 / 无离线结算 / 无商店）→ 建入口即假按钮 | `ads/service.ts:16-19,38-46`；`hooks.json` 无 cooldown；客户端 `showRewardedAd` 调用点 0 | 冻结，登记 D-49 |
+| FIX-2 | P0 | 激励视频**三个位面的奖励载体全不存在**（无冷却字段 / 无离线结算 / 无商店）→ 建入口即假按钮 | `ads/service.ts:16-19,38-46`；`hooks.json` 无 cooldown；客户端 `showRewardedAd` 调用点 0 | ✅ W1-2 `a6f4a87`（冻结，登记 D-49） |
 | FIX-3 | P1 | 提审清单 `configVersion` 过期（写 `c6a54f0f…`，实测 `20a313a4…`），并违反清单自身第 7 条 | `review-checklist.md:57` vs `_manifest.json:2` | ✅ W1-3 |
 | FIX-4 | P1 | 同一文件内注释自相矛盾：「8 个 todo」vs 实列 7 个 | `handlers.ts:28` vs `:40` | ✅ W1-3 |
-| FIX-5 | P1 | 5 份 EVD 证据存在但文档索引查不到 | `docs-index.mjs:7` 跳过一切 `README.md` | 待 W2-1 |
-| FIX-6 | P1 | 网络失败 = 内部错误 = 未开放，**三者同码 4999**，靠 msg 字符串区分 | `RpcClient.ts:129,163` | 待 W2-2 |
-| FIX-7 | P1 | 两条 UI 注释的事实已被 TASK-7031 推翻（称 weight/capacity `0/106` 填充，实测 weight `{1:53,3:28,10:25}`） | `InventoryPanel.ts:10`、`CraftingPanel.ts:11` | 待 W1-4 |
-| FIX-8 | P2 | 占位值无任何机检：`items.stack` 106 行全 99、`items.unlock_level` 106 行全 0、`recipes.unlock_level` 80 行全 0、`recipes.station` 32 行空 | `server/generated/config/` | 待 W2-3 |
-| FIX-9 | P2 | 4 个零引用基础服务（`audio`/`pool`/`log` 各 3 行、`time` 30 行，引用数全 0） | `client/assets/scripts/services/` | 待 W2-3 附带 |
+| FIX-5 | P1 | 5 份 EVD 证据存在但文档索引查不到 | `docs-index.mjs:7` 跳过一切 `README.md` | ✅ W2-1 `0c96ec5` |
+| FIX-6 | P1 | 网络失败 = 内部错误 = 未开放，**三者同码 4999**，靠 msg 字符串区分 | `RpcClient.ts:129,163` | ✅ W2-2 `8791ea4` |
+| FIX-7 | P1 | 两条 UI 注释的事实已被 TASK-7031 推翻（称 weight/capacity `0/106` 填充，实测 weight `{1:53,3:28,10:25}`） | `InventoryPanel.ts:10`、`CraftingPanel.ts:11` | ✅ W1-4 `eb16ddd` |
+| FIX-8 | P2 | 占位值无任何机检：`items.stack` 106 行全 99、`items.unlock_level` 106 行全 0、`recipes.unlock_level` 80 行全 0、`recipes.station` 32 行空 | `server/generated/config/` | ✅ W2-3 `f436049`（station 为空串非全表同值，规则不判，属另一类） |
+| FIX-9 | P2 | 4 个零引用基础服务（`audio`/`pool`/`log` 各 3 行、`time` 30 行，引用数全 0） | `client/assets/scripts/services/` | ⏳ 未在 W1~W4 派工（R-4 口径已定"只改 4 服务注释"，待派） |
 | FIX-10 | P2 | `compliance` 恒真桩（`verified = playerExists()`、`minor` 恒 false），而 `mvp-scope.md:57` 列为 v1.0 必做 | `compliance/service.ts:13` | 外部依赖，不做 |
-| FIX-11 | P2 | 提审清单 7 类 17 项**全未勾**，其中 4 项本可机检 | `review-checklist.md` | 待 W3-1 |
+| FIX-11 | P2 | 提审清单 7 类 17 项**全未勾**，其中 4 项本可机检 | `review-checklist.md` | ✅ W3-1 `8009cc4` |
 | FIX-12 | P2 | 47 张表 / 16 有数 / **31 全空**，在"已转录"叙事下不可见 | `server/generated/config/` | 待 W2-3 |
 | FIX-13 | P1 | **启动页标题写的是另一个项目的名字**：`'奖励一颗麻籽'`。全仓仅这一处代码命中，且 `EVD-3101` 把这个错误写成了"验收预期" | `BootController.ts:30`；`EVD-3101/README.md:25` | ✅ 本批修正 |
 
@@ -145,3 +145,16 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
   `EVD-3101/README.md:25` 的预期同步更正并留更正说明，不改写历史结论。
 - **防复发建议（未做，登记）**：启动页/分享文案里的游戏名应从 `docs/01_product/project-charter.md` 或
   `game-data` 的单一常量读取，而不是硬编码字面量。属重构，不进本批。
+
+### R-1~R-6 口径登记（W3-2，2026-10-28 用户拍板）
+
+> 规划者（用户）对 W1~W4 六项裁决的口径，逐条登记如下；**范围变更需用户点头**。
+
+| 号 | 口径 | 内容 |
+|---|---|---|
+| R-1 | 激励视频三效果无载体 | `hook_cooldown`/`offline_double`/`shop_refresh` 的奖励载体（冷却字段/离线结算/商店）未落地 → 冻结至 v1.1，不伪造效果（D-49）。 |
+| R-2 | 占位值机检只报告 | `npm run placeholders` report-only（挂 stage 不挂 verify）；`--strict` 才作门禁。 |
+| R-3 | 网络失败本地合成码 | 契约 15 码冻结不动；客户端网络失败改本地码 `-1`（`NET_CODE_OFFLINE`），与 4999/未开放分离。 |
+| R-4 | 空壳目录处置 | 不删空壳目录；只改 4 个零引用服务的头注释（`audio`/`pool`/`log`/`time`）。 |
+| R-5 | 文档索引规则 | 不改 EVD 文件名；改 `docs-index.mjs` 跳过规则（EVD README 纳入索引，缺 id 显 ⚠缺）。 |
+| R-6 | 代码层 v1.0 = 五环 | 捞→包→做→扩→卖五环（10 模块）；其余 13 个 v1 模块进 v1.1。 |
