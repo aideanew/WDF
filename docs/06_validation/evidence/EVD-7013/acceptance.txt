@@ -1,0 +1,11 @@
+EVD-7013 —— TASK-7013：compliance.check 真实化 + 迁移 0002（D-45=B → 推迟 v1.1）
+
+状态：UNKNOWN（D-45=B，非"实现"，未开工）
+
+验收条目：
+1. [PASS] D-45=B 已裁决（v1.0 不提审），已接受行为 = "TASK-7013/7014 优先级降为 v1.1 候选"（07-decisions-pending.md:162）
+2. [PASS] ADR-0015 §4 明确"禁止建 compliance_state 表、禁止写 0002、禁止把 2101 接任何调用点" —— 本卡不开工
+3. [PASS] 零代码改动：server/db/migrations、server/src/modules/compliance、tests/integration 均无改动
+4. [PASS] 无"装作已实现"假声明：全仓无 compliance 真实化相关"已实现"声明
+
+结论：UNKNOWN（D-45=B，推迟 v1.1 候选，非缺陷）
