@@ -9,6 +9,17 @@ const checkOnly = args.includes('--check');
 const errors = [];
 const E = (t, row, msg) => errors.push(`${t}${row ? ` 第${row}行` : ''}：${msg}`);
 
+// 裁决占位值清单（plan-v010 TASK-7004 / 04 §4，与 UNKNOWN-TABLES.md §3 同步）。
+// 字段为 true ⇒ 该字段当前是"裁决占位值"（D-07~D-10），不是设计源原值。
+// 可用性分级见 UNKNOWN-TABLES.md §3：❌ 影响计算（D-43 裁决前不得进可运行逻辑）/ ⚠ 仅影响平衡 / ✅ 设计源原值。
+// 旁挂文件 _placeholder.json 不进 configVersion（configVersion 只哈希 clean 表数据）。
+const PLACEHOLDER_FIELDS = {
+  items: { weight: true, capacity: true, stack: true, unlock_level: true },
+  locks: { hits_required: true, zone_bp: true },
+  chests: { smashable: true, size: true },
+  recipes: { unlock_level: true, job: true },
+};
+
 const schemas = {};
 for (const f of walk(join(srcDir, 'schemas'), (f) => f.endsWith('.schema.json'))) {
   const s = readJson(f); schemas[s.table] = s;
@@ -83,6 +94,8 @@ for (const [t, rows] of Object.entries(clean)) {
 write(p('client/assets/resources/config/_manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 write(p('server/generated/config/_manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 write(p('game-data/out/_manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+// 占位标记旁挂：只写给客户端（服务端暂无不消费这些字段的校验）；不进 configVersion
+write(p('client/assets/resources/config/_placeholder.json'), JSON.stringify(PLACEHOLDER_FIELDS, null, 2) + '\n');
 
 // 类型
 const ts = { string: 'string', int: 'number', bool: 'boolean' };

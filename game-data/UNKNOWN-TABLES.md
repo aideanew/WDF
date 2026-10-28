@@ -36,19 +36,23 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 
 ## 三、已放松为可选的字段（文档缺值，留空待补）
 
-| 表 | 字段 | 现状 | 备注 |
-|---|---|---|---|
-| items | `weight` | ✅ 106/106 填充（D-07） | 全 1 |
-| items | `capacity` | ✅ 106/106 填充（D-07） | 全 0 |
-| items | `stack` | ✅ 106/106 填充（D-07） | 全 99 |
-| items | `unlock_level` | ✅ 106/106 填充（D-07） | 全 0（schema min 1→0） |
-| locks | `hits_required` | ✅ 5/5 填充（D-08） | none=0/iron=3/copper=5/silver=8/gold=12（schema max 4→12） |
-| locks | `zone_bp` | ✅ 5/5 填充（D-08） | 全 0 |
-| chests | `smashable` | ✅ 3/3 填充（D-09） | 全 true |
-| chests | `size` | ✅ 3/3 填充（D-09） | 全 1（schema enum→int） |
-| recipes | `job` | 0/80 填充 | D-10 裁决"保持空"；引用 `jobs.id`，jobs 表为空 → 暂无法填；源表工位串如 `高炉/铁匠` 含职业信息但未拆分 |
-| recipes | `unlock_level` | ✅ 80/80 填充（D-10） | 全 0（schema min 1→0） |
-| prices | `recycle_bp` 上限 | — | 10000 → 100000（非留空，属上限放宽） |
+| 表 | 字段 | 现状 | 可用性 | 备注 |
+|---|---|---|---|---|
+| items | `weight` | ✅ 106/106 填充（D-07） | ❌ 影响计算 | 全 1；扩筏浮力判定依赖它，D-43 裁决前不得进可运行逻辑 |
+| items | `capacity` | ✅ 106/106 填充（D-07） | ❌ 影响计算 | 全 0；浮力恒 0 → 扩筏必然失败，同上 |
+| items | `stack` | ✅ 106/106 填充（D-07） | ⚠ 仅影响平衡 | 全 99；所有物品堆叠上限相同 |
+| items | `unlock_level` | ✅ 106/106 填充（D-07） | ⚠ 仅影响平衡 | 全 0（schema min 1→0）；无等级门槛 |
+| locks | `hits_required` | ✅ 5/5 填充（D-08） | ⚠ 仅影响平衡 | none=0/iron=3/copper=5/silver=8/gold=12（schema max 4→12）；v1.0 不做开锁，暂不影响 |
+| locks | `zone_bp` | ✅ 5/5 填充（D-08） | ⚠ 仅影响平衡 | 全 0；同上 |
+| chests | `smashable` | ✅ 3/3 填充（D-09） | ⚠ 仅影响平衡 | 全 true；设计源「上锁箱不能砸」无法表达（F-38） |
+| chests | `size` | ✅ 3/3 填充（D-09） | ⚠ 仅影响平衡 | 全 1（schema enum→int）；三种箱子容量相同 |
+| recipes | `job` | 0/80 填充 | ⚠ 仅影响平衡 | D-10 裁决"保持空"；引用 `jobs.id`，jobs 表为空 → 暂无法填；源表工位串如 `高炉/铁匠` 含职业信息但未拆分 |
+| recipes | `unlock_level` | ✅ 80/80 填充（D-10） | ⚠ 仅影响平衡 | 全 0（schema min 1→0）；所有配方无条件可做 |
+| prices | `recycle_bp` 上限 | — | ✅ 设计源原值 | 10000 → 100000（非留空，属上限放宽；价格值本身取自总表，非占位） |
+
+> **可用性列口径（plan-v010 TASK-7004）**：❌ 影响计算 = 该值参与浮力/判定等可运行逻辑，D-43 裁决前不得使用；
+> ⚠ 仅影响平衡 = 不影响"能不能跑"，只影响强弱，可暂用；✅ = 数值直接取自设计源，非裁决占位。
+> 机器可读标记见 `client/assets/resources/config/_placeholder.json`（由 `npm run gen` 生成）。
 
 > **station 字段说明**：recipes.station 已填 48/79（其余为本就无工位的段落，留空正确）。
 > 但部分工位串合并了"工位+职业"，例如 `高炉/铁匠`、`机械工坊/机械师`。当前将整串原样存入 `station`，`job` 字段保持空白。

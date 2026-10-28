@@ -1,0 +1,20 @@
+{
+  "items": {
+    "weight": true,
+    "capacity": true,
+    "stack": true,
+    "unlock_level": true
+  },
+  "locks": {
+    "hits_required": true,
+    "zone_bp": true
+  },
+  "chests": {
+    "smashable": true,
+    "size": true
+  },
+  "recipes": {
+    "unlock_level": true,
+    "job": true
+  }
+}

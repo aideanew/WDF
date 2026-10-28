@@ -32,7 +32,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S0 | 7001 空壳清单工具 | ✅ PASS | 独立验收 PASS（3/3） | EVD-7001/ |
 | S0 | 7002 注释去假 + 3101 | ✅ PASS | 独立验收 PASS（4/4） | EVD-7002/ |
 | S0 | 7003 未开放语义 | 未开始（**需 D-46**） | — | EVD-7003/ |
-| S0 | 7004 占位值可区分 | 未开始 | — | EVD-7004/ |
+| S0 | 7004 占位值可区分 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7004/ |
 | S0 | 7005 空 service 处置 | 未开始 | — | EVD-7005/ |
 | S1 | 7010 平台登录接线 | 未开始 | — | EVD-7010/ |
 | S1 | 7011 code2session | 未开始（**需 D-44**） | — | EVD-7011/ |
@@ -72,6 +72,16 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅）
 - 独立验收（子智能体 abe58b78）：**PASS**，完成度 100%（4/4 验收条目全过，无问题）
 - 证据：`docs/06_validation/evidence/EVD-7002/`（acceptance-greps.txt / guard.txt / typecheck-server.txt / typecheck-client.txt / README.md）
+
+### TASK-7004 · 占位值与真实值可区分
+- 执行时刻：2026-10-28 / 主控
+- 改动：`tools/gen/config.mjs`（PLACEHOLDER_FIELDS 10 组常量 + `_placeholder.json` 旁挂，非 --check 路径）、
+  `game-data/UNKNOWN-TABLES.md`（§3 加「可用性」列 + 口径注）；产物 `client/assets/resources/config/_placeholder.json`
+- 验证：gen 46 表/327 行；configVersion 前后均 `c6a54f0fb00341c5`（旁挂不进 hash）；config 目录只多 _placeholder.json；
+  contract.test.mjs 3/3；game-data/source 与 game-core 零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅）
+- 独立验收（子智能体 ab1e6543）：**PASS**，完成度 100%（3/3 验收 + 边界零违反，无问题）
+- 证据：`docs/06_validation/evidence/EVD-7004/`（acceptance.txt / README.md）
 
 ### 记录模板
 

@@ -1,0 +1,16 @@
+=== 验收1: _placeholder.json 存在且含 items.weight/capacity ===
+items.weight= true items.capacity= true
+
+=== 验收2: 重跑 gen 后 config 目录只多 _placeholder.json ===
+?? client/assets/resources/config/_placeholder.json
+
+=== 验收3: UNKNOWN-TABLES.md 可用性列含 ❌/⚠/✅ ===
+13
+
+=== configVersion 稳定性（旁挂文件不进 hash）===
+  "configVersion": "c6a54f0fb00341c5",
+
+=== contract.test.mjs ===
+ℹ tests 3
+ℹ pass 3
+ℹ fail 0
