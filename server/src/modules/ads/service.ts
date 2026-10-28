@@ -1,4 +1,10 @@
-/** ads · 业务与事务（ADR-0014：只信客户端 + 日限，明确这是可被刷的） */
+/**
+ * ads · 业务与事务（ADR-0014：只信客户端 + 日限，明确这是可被刷的）。
+ *
+ * ⚠ v1.0 效果未落地：hook_cooldown（无冷却字段）/ offline_double（无离线结算）/
+ * shop_refresh（无商店），三个 placement 均为"发一个不存在的效果"。冻结至 v1.1，
+ * 届时需先落地对应载体（R-1 / FIX-2）。
+ */
 import type { AdClaimRes } from '@wodefa/contracts/src/ads/index.ts';
 import { ERR } from '@wodefa/contracts';
 import { withTx } from '../../core/db.ts';

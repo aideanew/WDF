@@ -55,3 +55,9 @@ related: [PLAN-V003-02, PLAN-V003-05, EXEC-BRIEF-0003]
 | **D-16** | 单价显示来源（C-02） | **允许客户端复算，但必须 import `game-core/economy` 的 `sellValue(basePrice, recycleBp, regionBp)` 纯函数**，禁止在面板里重写公式（公式单点在 game-core，符合 G-02 "数值唯一来源"）。单价 = `sellValue(row.base_price, row.recycle_bp, merchant.regionBp)`。 |
 | **D-17** | 额度展示口径（C-03） | 确认助手的方案：**面板顶部显示当前商人的 `quotaLeft / daily_limit`**（来自最近一次 `economy.sell` 响应，首次进入前显示满额度）；**行不参与额度状态**，行只显示单价 + 该商人日上限（同一数值）。 |
 | **D-18** | `SellReq` 缺 `merchantId` 字段 | 前端 TS 类型缺此字段（运行时 zod 已接受、handler 已读）。**归 TASK-4015 补**（契约解冻授权范围内一并处理），4007 期间用局部交叉类型 `SellReq & { merchantId?: string }` 规避。 |
+
+## E. 广告三效果冻结裁决（2026-10-28 主控裁定，W1-2 / R-1 / FIX-2）
+
+| # | 议题 | 裁决 |
+|---|---|---|
+| **D-49** | 激励视频三 placement 的 v1.0 效果载体 | **冻结至 v1.1**：`hook_cooldown`（无冷却字段）/ `offline_double`（无离线结算）/ `shop_refresh`（无商店），三个 placement 当前均为"发一个不存在的效果"。v1.0 期间 `ads.claim` 保留发放（日限口径有效），但**只登记不伪装**——服务端不虚构奖励内容。**v1.1 前置依赖三条**：① hook 冷却字段需先落地（game-core/hook 增 cooldown 语义）；② 离线结算模块需先实现（offline 结算 + 双倍倍率）；③ 商店模块需先实现（shop_refresh 刷新位面）。三条任一未落地，对应 placement 维持冻结，禁止写占位奖励。 |
