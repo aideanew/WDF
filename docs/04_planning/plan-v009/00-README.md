@@ -1,15 +1,23 @@
 ---
 id: PLAN-V009-00
 title: plan-v009 · 闸门可信化与并行写入治理（导航与快照）
-status: active
+status: superseded
 module: planning
 owner: hark
 created: 2026-10-27
 review: 2026-11-10
-related: [PLAN-V008-00, PLAN-V007-00]
+related: [PLAN-V010-00, PLAN-V008-00, PLAN-V007-00]
 ---
 
 # 00 · plan-v009 总导航
+
+> ⛔ **已置 `superseded` —— 现行规划见 [`plan-v010/00-README.md`](../plan-v010/00-README.md)**（2026-10-28 08:56）
+>
+> 本目录 **8 张卡（TASK-6001~6006 + 6007/6008）全部 done 并已推送**（终值 `ea6ad20`），
+> 其结论（F-43 类型检查未入门禁、F-44 合规材料虚假陈述、限流与 cfg 提示落地）**被 v010 全部继承**。
+>
+> **但仍然要读它的一份文件**：`02-fact-corrections.md` —— 那里有 7 条自我否定，
+> 是理解"为什么 v010 要用行为证据而不是结构证据"的前提。
 
 > **本目录自 2026-10-27 20:46 起是本项目唯一现行执行规划。**
 > 取代 `plan-v008`（v008 保留，其缺陷编号 **F-01 ~ F-42 全部继承**；其中 **F-42 在本版被更正**，见 `02-fact-corrections.md`）。

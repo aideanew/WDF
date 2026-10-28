@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 229 篇。⚠ 表示活跃文档已过 review 日期。
+共 237 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -159,6 +159,14 @@ review: 2026-11-23
 | PLAN-V009-03 | plan-v009 · 卡片明细（逐卡的改法与验收） | active | 2026-11-10 | `04_planning/plan-v009/03-cards.md` |
 | PLAN-V009-04 | plan-v009 · 闸门加固设计与事实基线交付物 | active | 2026-11-10 | `04_planning/plan-v009/04-guard-hardening.md` |
 | PLAN-V009-05 | plan-v009 · 待裁决事项 | active | 2026-11-10 | `04_planning/plan-v009/05-pending-decisions.md` |
+| PLAN-V010-01 | plan-v010 · 实测基线（快照 + 命令原文 + 文档/代码不一致清单） | active | 2026-11-11 | `04_planning/plan-v010/01-fact-baseline.md` |
+| PLAN-V010-02 | plan-v010 · 未被实现需求总账（模块 × 五层矩阵） | active | 2026-11-11 | `04_planning/plan-v010/02-requirement-inventory.md` |
+| PLAN-V010-03 | plan-v010 · 自我否定清单（上一版我说错的与我改错的） | active | 2026-11-11 | `04_planning/plan-v010/03-self-negation.md` |
+| PLAN-V010-04 | plan-v010 · 契约与数据模型缺口（含自造码 3101、迁移编排） | active | 2026-11-11 | `04_planning/plan-v010/04-data-contract-gaps.md` |
+| PLAN-V010-05 | plan-v010 · 垂直切片与原子任务卡（TASK-7001~7051） | active | 2026-11-11 | `04_planning/plan-v010/05-slices-and-cards.md` |
+| PLAN-V010-06 | plan-v010 · 依赖 DAG、所有权矩阵、档位与成本预算 | active | 2026-11-11 | `04_planning/plan-v010/06-dag-ownership-budget.md` |
+| PLAN-V010-07 | plan-v010 · 待裁决清单（D-42~D-48） | active | 2026-11-11 | `04_planning/plan-v010/07-decisions-pending.md` |
+| PLAN-V010-08 | plan-v010 · 阶段体检协议与完成定义 | active | 2026-11-11 | `04_planning/plan-v010/08-execution-protocol.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
