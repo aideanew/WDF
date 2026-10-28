@@ -1,3 +1,12 @@
+---
+id: EVD-7033
+title: `raft_tiles`/`rooms` 落地（D-42=C 代定/注册）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7033 —— `raft_tiles`/`rooms` 落地（D-42=C 代定/注册）
 
 - **对应任务**：plan-v010 TASK-7033（`05-slices-and-cards.md` §5 S3）

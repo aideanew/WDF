@@ -1,3 +1,12 @@
+---
+id: EVD-0104
+title: 服务端鉴权与 account.login
+status: accepted
+owner: hark
+created: 2026-10-26
+review: 2026-11-28
+---
+
 # EVD-0104 —— 服务端鉴权与 account.login
 
 - **对应任务**：[TASK-0104](../../../05_execution/tasks/TASK-0104.md)（AT-0104）

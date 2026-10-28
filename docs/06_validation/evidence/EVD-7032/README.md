@@ -1,3 +1,12 @@
+---
+id: EVD-7032
+title: `levels`/`unlocks` 落地（D-42=C 代定/转录）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7032 —— `levels`/`unlocks` 落地（D-42=C 代定/转录）
 
 - **对应任务**：plan-v010 TASK-7032（`05-slices-and-cards.md` §5 S3）

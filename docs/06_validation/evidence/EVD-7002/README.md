@@ -1,3 +1,12 @@
+---
+id: EVD-7002
+title: 注释去假 + 3101 登记
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7002 —— 注释去假 + 3101 登记
 
 - **对应任务**：plan-v010 TASK-7002（`05-slices-and-cards.md`）

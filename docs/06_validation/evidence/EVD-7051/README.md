@@ -1,3 +1,12 @@
+---
+id: EVD-7051
+title: 文档指针与措辞（进入本卡时已就位，无需改动，验收通过）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7051 —— 文档指针与措辞（进入本卡时已就位，无需改动，验收通过）
 
 - **对应任务**：plan-v010 TASK-7051（`05-slices-and-cards.md` §7「文档指针与措辞修正」）

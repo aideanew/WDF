@@ -1,3 +1,12 @@
+---
+id: EVD-0105
+title: compliance.check / config.manifest / 客户端版本闸
+status: accepted
+owner: hark
+created: 2026-10-26
+review: 2026-11-28
+---
+
 # EVD-0105 —— compliance.check / config.manifest / 客户端版本闸
 
 - **对应任务**：[TASK-0105](../../../05_execution/tasks/TASK-0105.md)（AT-0105）

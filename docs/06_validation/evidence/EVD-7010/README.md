@@ -1,3 +1,12 @@
+---
+id: EVD-7010
+title: 客户端平台登录接线（S1）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7010 —— 客户端平台登录接线（S1）
 
 - **对应任务**：plan-v010 TASK-7010（`05-slices-and-cards.md`）

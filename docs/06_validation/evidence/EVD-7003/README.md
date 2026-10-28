@@ -1,3 +1,12 @@
+---
+id: EVD-7003
+title: 未实现动作改返回"明确未开放"
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7003 —— 未实现动作改返回"明确未开放"
 
 - **对应任务**：plan-v010 TASK-7003（`05-slices-and-cards.md`）

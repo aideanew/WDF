@@ -1,3 +1,12 @@
+---
+id: EVD-7004
+title: 占位值与真实值可区分
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7004 —— 占位值与真实值可区分
 
 - **对应任务**：plan-v010 TASK-7004（`05-slices-and-cards.md`）

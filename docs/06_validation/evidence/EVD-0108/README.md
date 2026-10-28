@@ -1,3 +1,12 @@
+---
+id: EVD-0108
+title: Bundle 分包配置生效（E-01 验收）
+status: accepted
+owner: hark
+created: 2026-10-26
+review: 2026-11-28
+---
+
 # EVD-0108 — Bundle 分包配置生效（E-01 验收）
 
 - **日期**：2026-10-26 10:48

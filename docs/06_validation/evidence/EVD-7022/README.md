@@ -1,3 +1,12 @@
+---
+id: EVD-7022
+title: ADR-0014：广告奖励的防作弊与发奖口径（D-48=B）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7022 —— ADR-0014：广告奖励的防作弊与发奖口径（D-48=B）
 
 - **对应任务**：plan-v010 TASK-7022（`05-slices-and-cards.md`）

@@ -1,3 +1,12 @@
+---
+id: EVD-7013
+title: `compliance.check` 真实化 + 迁移 0002（D-45=B → 推迟 v1.1）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7013 —— `compliance.check` 真实化 + 迁移 0002（D-45=B → 推迟 v1.1）
 
 - **对应任务**：plan-v010 TASK-7013（`05-slices-and-cards.md`）

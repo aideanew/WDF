@@ -1,3 +1,12 @@
+---
+id: EVD-7050
+title: `npm run stage` 定向体检（I-4：影响面 + 该模块所有测试，一条命令）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7050 —— `npm run stage` 定向体检（I-4：影响面 + 该模块所有测试，一条命令）
 
 - **对应任务**：plan-v010 TASK-7050（`05-slices-and-cards.md` §7「`npm run stage` 定向体检」）

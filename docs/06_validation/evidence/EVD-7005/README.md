@@ -1,3 +1,12 @@
+---
+id: EVD-7005
+title: 5 个空 service 的处置
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7005 —— 5 个空 service 的处置
 
 - **对应任务**：plan-v010 TASK-7005（`05-slices-and-cards.md`）

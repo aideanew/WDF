@@ -1,3 +1,12 @@
+---
+id: EVD-7020
+title: `ads.claim` 服务端实现（ADR-0014 只信客户端 + 日限）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7020 —— `ads.claim` 服务端实现（ADR-0014 只信客户端 + 日限）
 
 - **对应任务**：plan-v010 TASK-7020（`05-slices-and-cards.md`）

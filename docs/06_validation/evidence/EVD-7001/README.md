@@ -1,3 +1,12 @@
+---
+id: EVD-7001
+title: 空壳清单工具（`npm run shells`）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7001 —— 空壳清单工具（`npm run shells`）
 
 - **对应任务**：plan-v010 TASK-7001（`05-slices-and-cards.md`）

@@ -227,10 +227,10 @@ review: 2026-11-23
 | TASK-4016 | error-catalog / glossary / current-plan / roadmap 四文档对齐 | draft |  | `05_execution/tasks/TASK-4016.md` |
 | TASK-4020 | RpcClient 自动补齐 rid | draft |  | `05_execution/tasks/TASK-4020.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0104/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0105/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0107/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0108/README.md` |
+| EVD-0104 | 服务端鉴权与 account.login | accepted | 2026-11-28 | `06_validation/evidence/EVD-0104/README.md` |
+| EVD-0105 | compliance.check / config.manifest / 客户端版本闸 | accepted | 2026-11-28 | `06_validation/evidence/EVD-0105/README.md` |
+| EVD-0107 | save.pull / save.push 乐观锁与幂等 | accepted | 2026-11-28 | `06_validation/evidence/EVD-0107/README.md` |
+| EVD-0108 | Bundle 分包配置生效（E-01 验收） | accepted | 2026-11-28 | `06_validation/evidence/EVD-0108/README.md` |
 | EVD-3001 | 证据 — UX 态契约落地（common/ux.ts） | active | 2026-11-26 | `06_validation/evidence/EVD-3001/README.md` |
 | EVD-3002 | TASK-3002 configVersion 单一来源 验收证据 | active |  | `06_validation/evidence/EVD-3002/README.md` |
 | EVD-3100 | TASK-3100 客户端配置读取服务 验收证据 | active |  | `06_validation/evidence/EVD-3100/README.md` |
@@ -250,27 +250,27 @@ review: 2026-11-23
 | EVD-4007 | TASK-4007 商人页 UI + 限购（黄金术语统一 / sellValue 复算 / 额度顶部） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4007/README.md` |
 | EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
 | EVD-4016 | TASK-4016 四文档对齐（error-catalog / glossary / current-plan / roadmap） | accepted | 2026-11-28 | `06_validation/evidence/EVD-4016/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7001/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7002/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7003/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7004/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7005/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7010/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7011/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7012/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7013/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7014/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7020/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7021/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7022/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7031/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7032/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7033/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7040/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7041/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7042/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7050/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7051/README.md` |
+| EVD-7001 | 空壳清单工具（`npm run shells`） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7001/README.md` |
+| EVD-7002 | 注释去假 + 3101 登记 | accepted | 2026-11-28 | `06_validation/evidence/EVD-7002/README.md` |
+| EVD-7003 | 未实现动作改返回"明确未开放" | accepted | 2026-11-28 | `06_validation/evidence/EVD-7003/README.md` |
+| EVD-7004 | 占位值与真实值可区分 | accepted | 2026-11-28 | `06_validation/evidence/EVD-7004/README.md` |
+| EVD-7005 | 5 个空 service 的处置 | accepted | 2026-11-28 | `06_validation/evidence/EVD-7005/README.md` |
+| EVD-7010 | 客户端平台登录接线（S1） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7010/README.md` |
+| EVD-7011 | 服务端 platform 模式接 code2session（D-44=2 → 记录 UNKNOWN） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7011/README.md` |
+| EVD-7012 | ADR-0015：合规状态的数据模型（D-45=B → 推迟 v1.1） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7012/README.md` |
+| EVD-7013 | `compliance.check` 真实化 + 迁移 0002（D-45=B → 推迟 v1.1） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7013/README.md` |
+| EVD-7014 | 合规拦截 UI（D-45=B → 推迟 v1.1） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7014/README.md` |
+| EVD-7020 | `ads.claim` 服务端实现（ADR-0014 只信客户端 + 日限） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7020/README.md` |
+| EVD-7021 | 激励视频适配器真实现（D-48=B：adUnitId 构建期常量） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7021/README.md` |
+| EVD-7022 | ADR-0014：广告奖励的防作弊与发奖口径（D-48=B） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7022/README.md` |
+| EVD-7031 | `items.weight`/`capacity` 真实值（D-43=B 授权代定） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7031/README.md` |
+| EVD-7032 | `levels`/`unlocks` 落地（D-42=C 代定/转录） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7032/README.md` |
+| EVD-7033 | `raft_tiles`/`rooms` 落地（D-42=C 代定/注册） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7033/README.md` |
+| EVD-7040 | 账号面板范围核查（先减后加：三项内容均无 v1.0 需求来源，登记"不做"） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7040/README.md` |
+| EVD-7041 | 面板统一六态提示（`ux-hint` 纯映射 + `panel-ui.renderUxState`） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7041/README.md` |
+| EVD-7042 | 启动链真实化（`save.flush` 接入 onHide，其余两项登记"不做"） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7042/README.md` |
+| EVD-7050 | `npm run stage` 定向体检（I-4：影响面 + 该模块所有测试，一条命令） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7050/README.md` |
+| EVD-7051 | 文档指针与措辞（进入本卡时已就位，无需改动，验收通过） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7051/README.md` |
 | EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |

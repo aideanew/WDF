@@ -1,3 +1,12 @@
+---
+id: EVD-7014
+title: 合规拦截 UI（D-45=B → 推迟 v1.1）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7014 —— 合规拦截 UI（D-45=B → 推迟 v1.1）
 
 - **对应任务**：plan-v010 TASK-7014（`05-slices-and-cards.md`）

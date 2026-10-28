@@ -1,3 +1,12 @@
+---
+id: EVD-7042
+title: 启动链真实化（`save.flush` 接入 onHide，其余两项登记"不做"）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7042 —— 启动链真实化（`save.flush` 接入 onHide，其余两项登记"不做"）
 
 - **对应任务**：plan-v010 TASK-7042（`05-slices-and-cards.md` §6 S4）

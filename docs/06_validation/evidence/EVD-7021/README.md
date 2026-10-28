@@ -1,3 +1,12 @@
+---
+id: EVD-7021
+title: 激励视频适配器真实现（D-48=B：adUnitId 构建期常量）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7021 —— 激励视频适配器真实现（D-48=B：adUnitId 构建期常量）
 
 - **对应任务**：plan-v010 TASK-7021（`05-slices-and-cards.md`）

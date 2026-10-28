@@ -1,3 +1,12 @@
+---
+id: EVD-7012
+title: ADR-0015：合规状态的数据模型（D-45=B → 推迟 v1.1）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7012 —— ADR-0015：合规状态的数据模型（D-45=B → 推迟 v1.1）
 
 - **对应任务**：plan-v010 TASK-7012（`05-slices-and-cards.md`）

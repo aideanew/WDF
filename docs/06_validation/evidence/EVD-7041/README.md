@@ -1,3 +1,12 @@
+---
+id: EVD-7041
+title: 面板统一六态提示（`ux-hint` 纯映射 + `panel-ui.renderUxState`）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7041 —— 面板统一六态提示（`ux-hint` 纯映射 + `panel-ui.renderUxState`）
 
 - **对应任务**：plan-v010 TASK-7041（`05-slices-and-cards.md` §6 S4）

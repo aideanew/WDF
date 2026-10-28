@@ -1,3 +1,12 @@
+---
+id: EVD-0107
+title: save.pull / save.push 乐观锁与幂等
+status: accepted
+owner: hark
+created: 2026-10-26
+review: 2026-11-28
+---
+
 # EVD-0107 —— save.pull / save.push 乐观锁与幂等
 
 - **对应任务**：[TASK-0107](../../../05_execution/tasks/TASK-0107.md)（AT-0107）

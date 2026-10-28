@@ -1,3 +1,12 @@
+---
+id: EVD-7011
+title: 服务端 platform 模式接 code2session（D-44=2 → 记录 UNKNOWN）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7011 —— 服务端 platform 模式接 code2session（D-44=2 → 记录 UNKNOWN）
 
 - **对应任务**：plan-v010 TASK-7011（`05-slices-and-cards.md`）

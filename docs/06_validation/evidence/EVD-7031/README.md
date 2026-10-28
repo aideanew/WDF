@@ -1,3 +1,12 @@
+---
+id: EVD-7031
+title: `items.weight`/`capacity` 真实值（D-43=B 授权代定）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-28
+---
+
 # EVD-7031 —— `items.weight`/`capacity` 真实值（D-43=B 授权代定）
 
 - **对应任务**：plan-v010 TASK-7031（`05-slices-and-cards.md`）
