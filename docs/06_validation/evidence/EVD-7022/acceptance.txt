@@ -1,0 +1,30 @@
+=== 验收: front matter + 三选项 + 明确可被刷 ===
+---
+id: ADR-0014
+title: 广告奖励的防作弊与发奖口径（服务端不复核广告是否真看完）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-11
+related: [PLAN-V010-07, ADR-0012, D-48]
+---
+...
+3
+可被刷声明:
+13:> **状态 `accepted`（2026-10-28）：选 A（只信客户端完成 + 日限），明确这是可被刷的。**
+20:- **诚实声明**：这是**可被刷的**——作弊者可直接调 `ads.claim` 伪造"看完"，服务端无法分辨。
+45:- 因此选 A 并**如实写明"可被刷"**，不美化；封号/风控留给未来（若微信未来提供服务端确认，再升 B'）。
+
+=== F-1 事实：无服务端回调（现有桩 + SDK API 面）===
+11:  async showRewardedAd(_placement: string): Promise<AdResult> { return 'no-fill'; /* TODO: createRewardedVideoAd 复用实例 */ }
+
+=== F-3: ad_placements 无 adUnitId ===
+id,name,daily_cap,note
+hook_cooldown,出钩冷却广告,3,DS-D-06
+offline_double,离线双倍广告,3,DS-D-06
+shop_refresh,商店刷新广告,3,DS-D-06
+
+=== 索引含 ADR-0014 ===
+61:| ADR-0014 | 广告奖励的防作弊与发奖口径（服务端不复核广告是否真看完） | accepted | 2026-11-11 | `03_solution/decisions/ADR-0014-ad-reward-verification.md` |
+
+=== 禁止项：零代码改动 ===

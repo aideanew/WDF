@@ -41,7 +41,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S1 | 7014 合规 UI | 未开始（D-45=B → v1.1 候选） | — | EVD-7014/ |
 | S2 | 7020 ads.claim | 未开始（**需 ADR-0014**） | — | EVD-7020/ |
 | S2 | 7021 激励视频 | 未开始（D-48 已决 B） | — | EVD-7021/ |
-| S2 | 7022 ADR-0014 | 未开始（**需 D-48**） | — | EVD-7022/ |
+| S2 | 7022 ADR-0014 | ✅ PASS | 独立验收 PASS（100%） | EVD-7022/ |
 | S3 | 7031 扩筏数值 | 未开始（D-43 已裁决 B） | — | EVD-7031/ |
 | S3 | 7032 levels/unlocks | 未开始 | — | EVD-7032/ |
 | S3 | 7033 raft_tiles/rooms | 未开始 | — | EVD-7033/ |
@@ -126,6 +126,14 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体 ac9ec42f）：**PASS**，完成度 100%
 - 证据：`docs/06_validation/evidence/EVD-7012/`（acceptance.txt / README.md）
 
+### TASK-7022 · ADR-0014：广告奖励的防作弊与发奖口径（D-48=B）
+- 执行时刻：2026-10-28 / 主控 / D-48=B（构建期常量）
+- 改动：`docs/03_solution/decisions/ADR-0014-ad-reward-verification.md`（新增）、`docs/00_governance/document-index.md`（gen:docs 登记 ADR-0014 行）
+- 验证：ADR-0014 front matter 齐全；§2 三选项各带代价；"可被刷"3 处直陈；F-2 桩 / F-3 无 adUnitId / F-4 todo 可核；§4 到期/回访；`server/src`、`client/assets/scripts`、`packages/contracts`、`tools/gen` 零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅ 5✅）
+- 独立验收（子智能体 abafe43d）：**PASS**，完成度 100%（3 条非阻断备注：F-1 未核官方文档/状态 accepted 惯例/F-3 措辞微瑕）
+- 证据：`docs/06_validation/evidence/EVD-7022/`（acceptance.txt / README.md）
+
 ### 记录模板
 
 ```
@@ -147,7 +155,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | 7003 | D-46 未开放错误码 | ✅ 已裁决 A（4999+FEATURE_NOT_AVAILABLE），**解锁** |
 | 7011 | D-44 微信 appid/secret | ✅ 已裁决 2（无凭据 → 标记 UNKNOWN，M-9 降级） |
 | 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审），ADR-0015 **已落账** |
-| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 待起草（7022） |
+| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 **已落账**（7022 PASS），**解锁** |
 | 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore） |
 | 7032/7033 | D-42=C 授权代定值 | 已授权，执行代定 |
 
