@@ -1,0 +1,115 @@
+
+> wodefa@0.0.0 stage
+> node tools/dev/stage.mjs chest
+
+
+# stage chest：模块 chest → 6 个测试文件
+
+[db] 迁移已执行：0001_init.sql
+✔ AT-2401 ACTIONS 全表可解析（22 动作，TASK-4009 增 chest.open） (0.7686ms)
+✔ AT-2401 已实现动作都有集成测试覆盖（静态检查） (1.2668ms)
+▶ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态）
+  ✔ economy.buyQuota → 4999 + FEATURE_NOT_AVAILABLE (1.8658ms)
+  ✔ event.result → 4999 + FEATURE_NOT_AVAILABLE (0.2997ms)
+  ✔ event.start → 4999 + FEATURE_NOT_AVAILABLE (0.7176ms)
+  ✔ event.submit → 4999 + FEATURE_NOT_AVAILABLE (1.3032ms)
+  ✔ salvage.claimInfo → 4999 + FEATURE_NOT_AVAILABLE (0.7326ms)
+  ✔ social.pull → 4999 + FEATURE_NOT_AVAILABLE (0.3124ms)
+  ✔ social.send → 4999 + FEATURE_NOT_AVAILABLE (0.8577ms)
+✔ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态） (15.1339ms)
+✔ AT-2401 FEATURE_NOT_AVAILABLE 不触发静默刷新重试（4999 ≠ 2002，RpcClient 唯一重试路径） (0.0874ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1291.4733
+✔ 投影：只列背包里 count > 0 的箱子，顺序与配置表一致 (0.929ms)
+✔ 投影：四种锁不是箱子，永不出现（锁是独立物品） (0.0945ms)
+✔ 投影：背包里没有箱子 → 空数组（面板走 empty 态） (0.0587ms)
+✔ 投影：脏数据不崩溃、不误判为可开（负数 / 字符串 / 缺段 / 非法段） (0.1312ms)
+✔ 投影：数量向下取整（1.9 个箱子显示为 1） (0.0851ms)
+✔ 投影：lock !== none 时 openable=false（v1.1 开锁前不得静默当可开箱） (0.0703ms)
+✔ 投影：配置缺 item_id 的行被跳过（旧产物缺陷，不猜） (0.0736ms)
+✔ 文案兜底：未知材质/锁档回落到原值，不上屏 undefined (0.0552ms)
+✔ 真实配置自检：3 箱 item_id 全在 items 表内、lock 全 none (0.114ms)
+✔ applyOpen：扣 1 箱 + 发奖 + revision+1，verifySave 通过，入参不变 (0.3051ms)
+✔ applyOpen：最后一个箱子被完全移除，不留 0 值字段 (0.0814ms)
+✔ applyOpen：奖励为空数组 → 只扣箱（服务端返回什么就落什么） (0.0621ms)
+✔ applyOpen：多件奖励累加，同 id 多次出现累加而非覆盖 (0.1506ms)
+✔ 杀进程重启（JSON 往返）后可继续开第二个箱子 (0.1618ms)
+✔ ChestModel：project 刷新脏标记，countOf 反映当前持有数 (0.149ms)
+(node:35364) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/chest/model/ChestModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 144.8071
+✔ 开锁状态机：连中达标开锁；失误重置连续但不减已中数 (0.4749ms)
+✔ 开锁状态机：工具耗尽终止（用一次断一根） (0.0961ms)
+✔ isHit：指针落在命中区内（半开区间） (0.0706ms)
+✔ 确定性：同输入同输出（attempt 不修改入参） (0.3924ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 116.5105
+✔ rng：同种子同序列（前后端一致的基础） (1.0319ms)
+✔ 存档：校验和能发现篡改；迁移拒绝比客户端新的版本 (0.1593ms)
+✔ 浮力：整船浮力 ≥ 总重量，不足时给出差额 (0.1036ms)
+✔ 开锁期望：公式与边界 (0.0689ms)
+✔ 潮汐：每 6 小时一波、持续 10 分钟 (0.0709ms)
+✔ 塔防：反向 BFS 距离场；堵死入口能被检测 (0.1841ms)
+✔ 经济：回收价 = 原价 × 50%，地区 ±30% 截断 (0.0793ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.7364
+✔ items-w 1 全表 weight ∈ {1,3,10} (0.444ms)
+✔ items-w 2 品类→weight 映射 (0.123ms)
+✔ items-w 3 容器 capacity>0 且递增 (0.0829ms)
+✔ items-w 4 非容器 capacity=0 (0.075ms)
+✔ items-w 5 weight/capacity 非负整数 (0.0906ms)
+✔ items-w 6 浮力自洽：容器装载后可留正浮力 (0.084ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.2672
+[db] 迁移已执行：0001_init.sql
+✔ chest.open 正常开箱：扣 1 个箱子、得保底奖励、写两条账本 (18.1752ms)
+✔ chest.open 箱子不足：报 1001，且存档与账本均无变化 (6.3546ms)
+✔ chest.open 幂等重放：同 rid 返回首次结果，不重复扣除 (5.3134ms)
+✔ chest.open 非箱子物品：报 1001，不消耗物品 (3.8698ms)
+✔ chest.open 把四种锁当箱子：全部报 1001 (5.1658ms)
+✔ chest.open 账本一致性：开箱后奖励物立即可回收（F-29） (9.4715ms)
+✔ chest.open 无存档：报 2001，不再静默成功 (2.0393ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1289.5594
+
+# stage chest 汇总：6 个文件，失败 0 个
+

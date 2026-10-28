@@ -1,0 +1,23 @@
+EVD-7050 —— TASK-7050：npm run stage 定向体检（影响面 + 该模块所有测试）
+
+状态：stage.mjs 实现，chest 跑 6 文件、fishing 打印"无测试"；未触碰 tools/guard、tools/runtime
+
+验收条目：
+1. [PASS] npm run stage chest 跑 ≥4 个测试文件（实际 6 个）
+2. [PASS] npm run stage fishing 打印"无测试"（明确、不静默成功）
+3. [PASS] 串行跑 + 逐文件汇总（6 文件 失败 0）
+4. [PASS] 映射覆盖文件名前缀 + 联动测试
+5. [PASS] npm run guard 全过
+6. [PASS] 禁止修改项未触碰（tools/guard/*、tools/runtime/*）
+
+验证命令：
+- npm run stage chest：exit 0，6 文件
+- npm run stage fishing：exit 0，打印"该模块无测试"
+- npm run guard：exit 0，全部守卫通过
+
+变更清单（单卡）：
+- tools/dev/stage.mjs（新增）
+- package.json（新增 stage script）
+- docs/04_planning/plan-v010/09-execution-log.md
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅）

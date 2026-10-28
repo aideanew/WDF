@@ -1,0 +1,7 @@
+
+> wodefa@0.0.0 stage
+> node tools/dev/stage.mjs fishing
+
+
+# stage fishing：命中模块 fishing，但该模块无测试（tests/{determinism,integration,contract}/ 无引用）
+
