@@ -5,6 +5,8 @@
  * 避免每个面板重复数十行 Graphics/Label 样板。位于 `app/`，不依赖任何 feature。
  */
 import { Node, UITransform, Label, Color, Vec3, Graphics } from 'cc';
+import type { UxView } from '../generated/contracts/common/ux';
+import { uxHintPlan, UX_NEXT_LABEL, type UxHintTexts } from './ux-hint';
 
 export interface LabelOpts {
   parent: Node;
@@ -56,6 +58,48 @@ export function addEmptyHint(parent: Node, text: string): Label {
     color: new Color(200, 210, 225, 255),
     width: 640,
   });
+}
+
+export interface RenderUxStateOpts {
+  /** 各态文案覆盖（error 态可归因，§4.2：网络/服务/客户端 bug 由调用方提供类别文案）。 */
+  texts?: UxHintTexts;
+  /** 点"下一步/重试"按钮的回调；省略时按钮显示但无动作（仅提示）。 */
+  onNext?: (next: NonNullable<UxView['next']>) => void;
+  /** 提示垂直位置（默认 0，覆盖 addEmptyHint 的默认）。 */
+  y?: number;
+}
+
+/**
+ * 统一六态中的 empty/error/noPermission 提示（TASK-7041 六态落地）。
+ * 依据 `ux-hint.uxHintPlan`（DESIGN-0001 §4）：
+ *  - empty：提示 + 下一步（若有 next）；
+ *  - error：可归因文案 + 重试按钮（若 retryable）；
+ *  - noPermission：提示 + 出口按钮（next 必带，§4.3）。
+ * `loading`/`success`/`conflict` 返回 null（由调用方处理骨架/成功内容/二选一弹窗）。
+ */
+export function renderUxState(parent: Node, view: UxView, opts: RenderUxStateOpts = {}): Label | null {
+  const plan = uxHintPlan(view, opts.texts);
+  if (!plan) return null;
+  const label = addLabel({
+    parent,
+    name: 'UxHint',
+    text: plan.text,
+    pos: new Vec3(0, opts.y ?? 0, 0),
+    fontSize: 22,
+    color: new Color(200, 210, 225, 255),
+    width: 640,
+  });
+  if (plan.next) {
+    addButton({
+      parent,
+      name: 'UxNext',
+      text: UX_NEXT_LABEL[plan.next],
+      pos: new Vec3(0, (opts.y ?? 0) - 90, 0),
+      disabled: !opts.onNext,
+      onClick: () => { if (opts.onNext && plan.next) opts.onNext(plan.next); },
+    });
+  }
+  return label;
 }
 
 // ——————————————————————————————————————————————————————————

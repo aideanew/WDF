@@ -1,0 +1,26 @@
+EVD-7041 —— TASK-7041：面板统一六态提示（empty/error/noPermission 纯映射 + renderUxState）
+
+状态：uxHintPlan 纯映射 + panel-ui.renderUxState 渲染；loading/success/conflict 由调用方处理
+
+验收条目：
+1. [PASS] empty → 提示 + 透传 next、不可重试
+2. [PASS] error → 可归因文案覆盖 + 仅 view.retryable 决定重试按钮
+3. [PASS] noPermission → 提示 + 透传 next、不可重试（铁律 3）
+4. [PASS] loading/success/conflict → null（调用方处理）
+5. [PASS] 六种 UxNext 出口都有按钮文案
+6. [PASS] renderUxState 复用 addLabel/addButton，无重复样板
+7. [PASS] typecheck:client exit 0
+8. [PASS] ux-hint 测试 exit 0，pass 8 / fail 0
+9. [PASS] npm run guard 全过
+
+验证命令：
+- tests/determinism/ux-hint.test.mjs：exit 0，pass 8 / fail 0
+- npm run typecheck:client：exit 0
+- npm run guard：exit 0，全部守卫通过
+
+变更清单（单卡）：
+- client/assets/scripts/app/ux-hint.ts（新增：纯映射 + 六出口文案）
+- client/assets/scripts/app/panel-ui.ts（新增 renderUxState；复用 addLabel/addButton）
+- tests/determinism/ux-hint.test.mjs（新增 8 例）
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅ 8✅ 9✅）

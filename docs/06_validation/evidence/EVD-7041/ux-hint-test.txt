@@ -1,0 +1,20 @@
+✔ ux 1 empty 透传 next + 不可重试 (0.5288ms)
+✔ ux 2 empty 无 next → 无按钮 (0.079ms)
+✔ ux 3 error 透传 retryable 与 next (0.0636ms)
+✔ ux 4 error 文案可归因覆盖（§4.2） (0.0735ms)
+✔ ux 5 noPermission 透传 next + 不可重试 (0.0645ms)
+✔ ux 6 loading/success/conflict → null（调用方处理） (0.0465ms)
+✔ ux 7 缺省兜底文案 (0.0964ms)
+✔ ux 8 六种 UxNext 出口都有按钮文案 (0.9907ms)
+(node:46484) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/app/ux-hint.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 137.6913

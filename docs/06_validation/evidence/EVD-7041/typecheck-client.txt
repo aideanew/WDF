@@ -1,0 +1,4 @@
+
+> wodefa@0.0.0 typecheck:client
+> tsc -p client/tsconfig.json --noEmit
+
