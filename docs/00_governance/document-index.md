@@ -271,7 +271,7 @@ review: 2026-11-23
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7042/README.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7050/README.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7051/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/README.md` |
+| EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |

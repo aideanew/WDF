@@ -9,7 +9,13 @@ for (const f of walk(p('docs'), (f) => f.endsWith('.md'))) {
   // FIX-5/R-5（2026-10-28）：原先跳过一切 README.md（仅放行 governance），导致 EVD 证据 README
   // 进不了索引。收窄为：只跳过"非 evidence 且非 governance"的 README.md —— EVD README 始终纳入，
   // 若缺 id 则显示 ⚠缺（不静默丢弃，可被突变测试检出）。
-  if (r.endsWith('README.md') && !r.startsWith('docs/06_validation/evidence/') && !r.startsWith('docs/00_governance/README.md')) continue;
+  // FIX-15（W5-1，2026-10-28）：evidence 目录**自己的落地页** evidence/README.md 不是证据，
+  // 精确排除（其余 EVD-*/README.md 仍纳入）。用独立单行跳过（不能并进下面的 AND 链——
+  // 该链对"在 evidence/ 内的 README"本就不跳过，`!==` 项是死代码）。
+  if (r === 'docs/06_validation/evidence/README.md') continue;
+  if (r.endsWith('README.md')
+    && !r.startsWith('docs/06_validation/evidence/')
+    && !r.startsWith('docs/00_governance/README.md')) continue;
   if (['docs/01_product/design-source/', 'docs/08_knowledge/sources/', 'docs/09_archive/superseded/design-history/'].some((x) => r.startsWith(x))) continue;
   if (r.includes('/templates/') || r.endsWith('document-index.md') || r.endsWith('task-index.md')) continue;
   docs.push({ path: r, ...(fm ?? {}) });
