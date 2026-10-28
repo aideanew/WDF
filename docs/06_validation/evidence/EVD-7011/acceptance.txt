@@ -1,0 +1,20 @@
+=== M-9 状态（02 §4.1）：应为 UNKNOWN（D-44=2）===
+102:| M-9 | 真机可登录 | 微信真机点击"进入主界面"拿到真实 `token`（非 mock） | ⚠ **UNKNOWN（D-44=2，2026-10-28）**：无 appid/secret，`WDF_AUTH_MODE` 保持 `dev`；客户端已接平台真实 code（TASK-7010），服务端 `platform` 模式明确抛错不伪装（`service.ts:41-43`），真机登录标记为未实现、不装作可用 |
+149:| B-3 | 微信 `appid` / `secret` 是否具备 | 真机登录的唯一前置 | 有 → 做 `code2session`；无 → M-9 降级为 UNKNOWN |
+
+=== 01 基线 微信真机登录：应为 UNKNOWN ===
+131:其余 35 张 0 行（清单见 game-data/UNKNOWN-TABLES.md §二）
+183:| 微信真机登录 | 无 appid/secret、无真机（**D-44=2，2026-10-28**） | M-9 降级为 **UNKNOWN**：`WDF_AUTH_MODE` 保持 `dev`；客户端已接平台真实 code（TASK-7010），服务端 `platform` 模式明确抛错不伪装；真机登录标记为未实现 |
+
+=== 服务端 platform 模式：明确抛错不伪装（无 code2session 假实现）===
+41:  if (process.env.WDF_AUTH_MODE === 'platform') {
+43:    throw new Error('platform auth mode 尚未接入，设置 WDF_AUTH_MODE=dev 使用本地登录');
+129:    if (!row) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket not found');
+130:    if (row.used_at) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket already used');
+131:    if (new Date(row.expires_at).getTime() < t) throw new BindError(ERR.BIND_TICKET_INVALID, 'bind ticket expired');
+135:      throw new BindError(ERR.BIND_TICKET_INVALID, 'cannot bind a player to itself');
+139:    if (moved === 0) throw new BindError(ERR.BIND_TICKET_INVALID, 'no identity to bind on this platform');
+
+=== 客户端已接平台真实 code（7010 已提交）===
+55:      const { code } = await getPlatform().login();
+57:      const plat = p.name === 'web' ? 'app' : p.name;

@@ -180,7 +180,7 @@ export async function check(playerId: string): Promise<ComplianceRes> {
 | 项 | 原因 | 影响 |
 |---|---|---|
 | Cocos 运行时行为（录屏类验收） | 沙箱无 Cocos 编辑器 | UI 任务只能人工验收，本版不排"UI 自动化测试" |
-| 微信真机登录 | 无 appid/secret、无真机 | `account.login` 真实链路为 BLOCKING |
+| 微信真机登录 | 无 appid/secret、无真机（**D-44=2，2026-10-28**） | M-9 降级为 **UNKNOWN**：`WDF_AUTH_MODE` 保持 `dev`；客户端已接平台真实 code（TASK-7010），服务端 `platform` 模式明确抛错不伪装；真机登录标记为未实现 |
 | `client/temp/tsconfig.cocos.json` | 由编辑器生成、被 gitignore | 类型检查须在有编辑器的机器上跑（本项目已知，见 v009） |
 
 ## 6. 本基线的自我限制

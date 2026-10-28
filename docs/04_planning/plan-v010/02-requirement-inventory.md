@@ -99,7 +99,7 @@ related: [PLAN-V010-01, PLAN-V010-07]
 | M-6 | 激励视频 | 客户端 `showRewardedAd` 返回真实 `completed/closed`，服务端按 `daily_cap=3` 计数并拒绝超额 | ❌ 未实现（客户端恒 `'no-fill'`） |
 | M-7 | 商人回收不超发 | 同一 `rid` 重放 → 只加一次灵草 | ✅ 完成 |
 | M-8 | 战斗/塔防整片 | v1.0 允许"第 3 周末不稳就改成文字结算"（`mvp-scope.md:52`） | ❌ 未实现，**允许降级** |
-| M-9 | 真机可登录 | 微信真机点击"进入主界面"拿到真实 `token`（非 mock） | ❌ 未实现（`code:'mock-code'`） |
+| M-9 | 真机可登录 | 微信真机点击"进入主界面"拿到真实 `token`（非 mock） | ⚠ **UNKNOWN（D-44=2，2026-10-28）**：无 appid/secret，`WDF_AUTH_MODE` 保持 `dev`；客户端已接平台真实 code（TASK-7010），服务端 `platform` 模式明确抛错不伪装（`service.ts:41-43`），真机登录标记为未实现、不装作可用 |
 
 ### 4.2 SHOULD
 

@@ -35,7 +35,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S0 | 7004 占位值可区分 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7004/ |
 | S0 | 7005 空 service 处置 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7005/ |
 | S1 | 7010 平台登录接线 | ✅ PASS | 独立验收 PASS（3/3 + 静态人工项） | EVD-7010/ |
-| S1 | 7011 code2session | 未开始（**需 D-44**） | — | EVD-7011/ |
+| S1 | 7011 code2session | ✅ PASS（D-44=2 → 记录 UNKNOWN） | 独立验收 PASS（4/4） | EVD-7011/ |
 | S1 | 7012 ADR-0015 | 未开始（**需 D-45**） | — | EVD-7012/ |
 | S1 | 7013 compliance 真实化 | 未开始 | — | EVD-7013/ |
 | S1 | 7014 合规 UI | 未开始 | — | EVD-7014/ |
@@ -109,6 +109,14 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 结论：**PASS**（逐条：1✅ 2✅ 3✅；4 静态 PASS 待人工）
 - 独立验收（子智能体 adeafdeb）：**PASS**，完成度 100%
 - 证据：`docs/06_validation/evidence/EVD-7010/`（acceptance.txt / README.md）
+
+### TASK-7011 · 服务端 platform 模式接 code2session（D-44=2 → 记录 UNKNOWN）
+- 执行时刻：2026-10-28 / 主控 / D-44=2（无凭据）
+- 改动：`02-requirement-inventory.md`（M-9 → UNKNOWN）、`01-fact-baseline.md`（微信真机登录 → UNKNOWN）；**零代码改动**
+- 验证：service.ts:41-43 platform 模式抛错不伪装、不静默回落；全仓无"登录已实现"假声明；server/src 零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅）
+- 独立验收（子智能体 ad65d610）：**PASS**，完成度 100%
+- 证据：`docs/06_validation/evidence/EVD-7011/`（acceptance.txt / README.md）
 
 ### 记录模板
 
