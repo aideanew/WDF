@@ -92,7 +92,7 @@ review: 2026-11-23
 | PLAN-V002-11 | 自检结果（逐条对照 long-text §12） | active |  | `04_planning/plan-v002/11-self-check.md` |
 | PLAN-V002-12 | 第一刀与启动顺序（建议） | active |  | `04_planning/plan-v002/12-first-cut.md` |
 | PLAN-V002-13 | 执行过程记录（2026-10-26 启动） | active |  | `04_planning/plan-v002/13-execution-log.md` |
-| PLAN-V003-00 | 快照与索引（v1.0 冲刺规划） | active |  | `04_planning/plan-v003/00-snapshot.md` |
+| PLAN-V003-00 | 快照与索引（v1.0 冲刺规划） | superseded |  | `04_planning/plan-v003/00-snapshot.md` |
 | PLAN-V003-01 | 事实基线（2026-10-27，commit 13e6b68） | active |  | `04_planning/plan-v003/01-fact-baseline.md` |
 | PLAN-V003-02 | 范围复核与裁决清单（v1.0） | active |  | `04_planning/plan-v003/02-scope-and-decisions.md` |
 | PLAN-V003-03 | 垂直切片 S11~S16（含排序理由） | active |  | `04_planning/plan-v003/03-slices.md` |
@@ -105,7 +105,7 @@ review: 2026-11-23
 | PLAN-V003-10 | 风险 · 未决 · 待裁决 | active |  | `04_planning/plan-v003/10-risks.md` |
 | PLAN-V003-11 | 自检结果（对照 standing 规划 §12） | active |  | `04_planning/plan-v003/11-self-check.md` |
 | PLAN-V003-DS | 裁决表（D-01~D-14，已全部裁决） | accepted |  | `04_planning/plan-v003/decision-sheet.md` |
-| PLAN-V004-00 | 快照与索引（v1.0 最终冲刺与闭环规划） | active |  | `04_planning/plan-v004/00-snapshot.md` |
+| PLAN-V004-00 | 快照与索引（v1.0 最终冲刺与闭环规划） | superseded |  | `04_planning/plan-v004/00-snapshot.md` |
 | PLAN-V004-01 | 事实基线（2026-10-27，commit 3c1add1） | active |  | `04_planning/plan-v004/01-fact-baseline.md` |
 | PLAN-V004-02 | 需求基线复核 | active |  | `04_planning/plan-v004/02-requirements-baseline.md` |
 | PLAN-V004-03 | 契约冻结包与解冻计划 | active |  | `04_planning/plan-v004/03-contracts-freeze.md` |

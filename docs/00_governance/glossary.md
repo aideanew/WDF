@@ -28,3 +28,13 @@ review: 2026-11-23
 | Asset Bundle | Cocos 的资源模块；本项目以 `b-` 前缀命名，只装资源 |
 | rid | 请求 ID，写操作幂等去重用 |
 | 票据 (ticket) | 绑定/合服流程中签发的一次性、有时效的身份验证凭证 |
+| 金币 | v1.0 唯一货币（设计权威 v5.5 L614）；商人只付金币，不做多货币 |
+| `modules.wallet` | 存档里的本地金币镜像 `{ gold: number }`；**非权威**，权威在服务端 `ledger_entry`（D-15） |
+| `herbDelta` | `economy.sell` 响应里的本次卖出所得金币数（字段名为历史遗留，语义已统一为金币，D-15） |
+| 影子账本 | 服务端只追加流水 `ledger_entry`，卖出时校验"卖出 ≤ 累计获得 − 已卖出"，容差 0（ADR-0012） |
+| 回收基数 `recycle_bp` | `prices` 表字段，语义是**回收价绝对值**（≈ 原价 50%），不是万分比系数；回收价 = `floor(recycle_bp × region_bp / 10000)`（D-01 2026-10-27 修正） |
+| PanelKey | 主界面 Tab 类型：`hook/inventory/crafting/merchant/leaderboard`；设置与引导走浮层不进此类型 |
+| UX 态 | 六态契约 `loading/empty/error/noPermission/success/conflict`，由 `toUxState(code)` 统一映射（DESIGN-0001） |
+| EVD | Evidence 证据目录（`docs/06_validation/evidence/EVD-*`），每张卡的验收凭据 |
+| FEATURE_NOT_AVAILABLE | 未实现动作的固定 `msg`，随 `4999` 返回（D-46） |
+| `SAVE_SCHEMA_VERSION` | 存档结构版本；**新增 `modules.<key>` 属开放 map 扩展，不递增**（§3.4 裁定） |

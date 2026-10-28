@@ -33,7 +33,7 @@ review: 2026-11-26
 | 3202 | EVENT_ALREADY_PLAYED | RULE | 当日已参与过赶海 | 今日已参与过赶海 | event.start |
 | 3101 | RULE_REFUSED | RULE | 规则拒绝：承重不足 / 浮力不足。**事实码，不在 ERR**（game-core 本地判定，拒绝信息只用于 UI 文案，无客户端符号消费） | 承重/浮力不足 | hook.pullBack / raft.checkChange |
 | 4001 | RATE_LIMITED | SYSTEM | 触发频率限制：网关 IP 维度固定窗口（`auth:false` 动作，`gateway/ratelimit.ts`）或业务级频控（榜单上报间隔） | 操作过于频繁，请稍后再试 | 全部 `auth:false` 动作 / leaderboard.report / telemetry.track |
-| 4999 | INTERNAL | SYSTEM | 服务端未实现或内部错误（未实现动作也返回此码，见 AT-2401） | 服务暂时不可用 | 全部动作 |
+| 4999 | INTERNAL | SYSTEM | 服务端内部错误；**未实现动作固定返回 `4999` + `msg=FEATURE_NOT_AVAILABLE`**（D-46 裁决，TASK-7003；客户端据此显示"功能暂未开放"而非"服务器故障"） | 服务暂时不可用 / 功能暂未开放 | 全部动作 |
 | 5001 | REVIEW_PENDING | RISK | 内容在审核中 / 复核不一致 | 内容审核中 | event.submit / social.send |
 | 9001 | CLIENT_TOO_OLD | UPGRADE | 客户端版本过低需更新 | 请更新到最新版本 | config.manifest / 全部动作 |
 
@@ -43,6 +43,10 @@ review: 2026-11-26
 > 建议新增 `2004 BIND_TICKET_INVALID` 精确区分。
 >
 > **缺口解冻（TASK-4015，2026-10-27）**：已新增 `2004 BIND_TICKET_INVALID` 精确区分绑定票据无效的场景。
+>
+> **仍登记未解冻的缺口（D-14，2026-10-27 裁决 B）**：无专用"网络不可达/超时"错误码。
+> 客户端 `RpcClient` 在网络失败时回落 `ERR.INTERNAL(4999)`，与"服务端内部错误"共用一码，
+> 用户侧文案无法区分"断网"与"服务器挂了"。下次契约解冻窗口建议新增 `4002 NETWORK`（SYSTEM 段，可重试）。
 >
 > **事实码 3101（plan-v010 TASK-7002 / G-1，2026-10-28）**：`3101` 在两处被使用但**不在 ERR**
 > （`hook/index.ts` 承重、`raft/index.ts` 浮力）。契约冻结期不新增码：`3101` 无客户端消费者

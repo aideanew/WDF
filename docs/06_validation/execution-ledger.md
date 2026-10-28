@@ -19,7 +19,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | 类型 | 位置 | 内容 | 可信度 |
 |---|---|---|---|
 | 代码变更 | `git log`（10-26 起 80+ 提交） | 每个提交带卡号/缺陷号 | 最高（不可篡改） |
-| 自动化验收 | `tests/**/*.test.mjs`（174 例） | 契约/确定性/集成/e2e | 高（可复跑） |
+| 自动化验收 | `tests/**/*.test.mjs`（219 例） | 契约/确定性/集成/e2e | 高（可复跑） |
 | 门禁 | `npm run guard` / `npm run verify` | 9 项守卫 + gen/test/typecheck | 高（可复跑） |
 | 卡级证据 | `docs/06_validation/evidence/EVD-*/` | 实测记录、截图、measure.json | 中（人工产出） |
 | 工作日志 | `.workbuddy/memory/YYYY-MM-DD.md`（832 行） | 逐时段决策与实测发现 | 中（含自我纠错） |
@@ -32,21 +32,21 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 |---|---|---|---|---|
 | 4002 | 数值转录（六表清欠 46 行） | ✅ PASS | `c0c3c35` | `EVD-4002/`、`tools/gen/transcribe.mjs`、configVersion `38fc1faf` |
 | 4003 | HookView 接 hooks 表（缺行回落） | ✅ PASS | `d84851c` | 代码走查（回落分支 + warn） |
-| 4004 | 新手引导 5 步浮层 | ✅ PASS | `10126af` | `features/guide/**`、`modules.guide.done` |
+| 4004 | 新手引导 5 步浮层 | ✅ PASS | `10126af` | `features/guide/**`、`modules.guide.done`、`tests/determinism/guide-flow.test.mjs` 8 例（2026-10-28 补） |
 | 4005 | ADR-0012 影子账本成文 | ✅ PASS | `8dc787f` | `ADR-0012-authoritative-inventory.md` |
 | 4006 | economy.sell（影子校验/限购/幂等） | ✅ PASS | `23ee575`+`9d22859` | `tests/integration/economy-sell.test.mjs` 5 例、`tests/determinism/economy.test.mjs` 8 例 |
 | 4007 | 商人页 UI | ✅ PASS | `470436e` | `features/economy/{model,view}`、`tests/determinism/merchant-flow.test.mjs` 8 例 |
 | 4008 | 背包回收入口 + 确认弹窗 | ✅ PASS | `f3fa3e0` | `InventoryPanel.ts:96-134`、`panel-ui.addConfirmDialog` |
-| 4009 | 开锁交互 + salvage.claimInfo | ❌ 未完成 | — | `handlers.ts:48` 仍为 `todo` |
+| 4009 | 开锁交互 + salvage.claimInfo | ⊘ v1.1 推迟 | `246d0f0` | 用户 2026-10-28 拍板：开锁交互已落地（`ChestPanel.ts:364`）；`salvage.claimInfo` 维持 `todo`（`handlers.ts:48`），不写占位码 |
 | 4010 | 四面板真机录屏 | ⏸ BLOCKED | — | 缺真机环境 |
 | 4011 | 首钩命中率采样 | ⏸ BLOCKED | — | 缺真机用户 |
 | 4012 | 包体基线 2.913MB/4MB | ✅ PASS | `8908704` | `EVD-4012/baseline.md`、`measure.json` |
 | 4013 | 合规材料清单 | ⚠ 部分 | `8a13b0f` | `docs/07_release/compliance/` 5 份（虚假陈述已删、未接入已登记） |
 | 4014 | 瘦身 | ⊘ 关闭 | — | 4012 实测 ≤4MB，条件不成立（`3c1add1` 裁定） |
 | 4015 | 契约解冻（2004） | ✅ PASS | `f3fa3e0` | `errors.ts:19 BIND_TICKET_INVALID: 2004`、`error-catalog.md` |
-| 4016 | 四文档对齐 | ❌ 未完成 | — | `current-plan.md` 仍指向 plan-v001/v002 口径 |
+| 4016 | 四文档对齐 | ✅ PASS | 本批 | `EVD-4016/README.md`：`error-catalog` / `glossary` / `current-plan` / `roadmap` 四处 + plan-v003/v004 标 `superseded` |
 
-**统计：9 PASS / 1 部分 / 2 BLOCKED / 2 未完成 / 1 关闭。**
+**统计（15 卡）：10 PASS / 1 部分（4013）/ 2 BLOCKED（4010·4011）/ 1 推迟 v1.1（4009）/ 1 关闭（4014）。**
 
 ## 3. 关键时间线（按日，完整链见 `git log --since="2026-10-26"`）
 
@@ -69,7 +69,8 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | 10-27 07:47（M1 收官） | 9/9 | 107/107 | 0 | 修 7 个类型错误后 |
 | 10-27 11:51（4006 完成后） | 9/9 | 119/119 | 0 | 新增 economy 8+5 例 |
 | 10-27 14:37（4007 完成后） | 9/9 | 127/127 | 0 | 新增 merchant 8 例 |
-| 复跑命令 | `npm run guard` | `npm test` | `npx -p typescript@5.8 tsc -p client/tsconfig.json --noEmit 2>&1 \| grep -v "^C:/"` | — |
+| 10-28 14:25（4016 收官 + 4004 补测后） | 9/9 | **219/219** | 0 | determinism 128 / 契约 27 / 集成 63 / e2e 1 |
+| 复跑命令 | `npm run guard` | `npm test` | `npm run typecheck`（裸跑，不过滤） | — |
 
 
 ## 6. plan-v010 的 20 卡（2026-10-28，另一路执行）
@@ -95,14 +96,17 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | 4010 四面板真机录屏 | ⏸ BLOCKED | 缺真机环境，证据缺口 |
 | 4011 首钩命中率采样 | ⏸ BLOCKED | 缺真机用户，手感无基线 |
 | 4013 合规材料清单 | ⚠ 部分 | 虚假陈述已删，清单未闭环 |
-| 4016 四文档对齐 | ❌ 未做 | `current-plan.md` 仍指向 plan-v001/v002；plan 谱系 v003~v010 未标唯一现行 |
-| TASK-4004 单测 | ❌ 缺 | `GuideModel` 三例可自动化未写 |
+| 4016 四文档对齐 | ✅ **已完成（2026-10-28）** | 见 `EVD-4016/README.md`；plan 谱系 v003/v004 补标 `superseded` |
+| TASK-4004 单测 | ✅ **已补（2026-10-28）** | `tests/determinism/guide-flow.test.mjs` 8 例全通过，缺口关闭 |
 
-> 两套规划的关系：**plan-v003**（数值清欠/权威背包/商人页/契约解冻）+ **plan-v010**（空壳显性化/登录真实化/广告闭环/数值解锁/UI 六态/体检工具）。二者交付物不重叠，合并后才构成 v1.0 全貌；上表 6 项是两套规划并集之后**仍然缺的部分**。
+> 两套规划的关系：**plan-v003**（数值清欠/权威背包/商人页/契约解冻）+ **plan-v010**（空壳显性化/登录真实化/广告闭环/数值解锁/UI 六态/体检工具）。二者交付物不重叠，合并后才构成 v1.0 全貌；上表剩余 3 项（4010/4011/4013）**全部是外部依赖或材料缺口，没有一项是代码待写**。
 
 ## 8. 已知记录缺口（诚实登记，不粉饰）
 
-1. ~~4003/4004/4006/4007 没有独立 EVD 文件~~ → **已补齐（2026-10-28，commit 见 git log）**：新增 `EVD-4003/4004/4006/4007/README.md`，各含目标、交付、VERIFY 复跑数字与 G-07 局限登记。剩余真实缺口：**TASK-4004 缺独立单测**（`GuideModel` 可自动化三例未写，已登记在 EVD-4004 §5）。
+1. ~~4003/4004/4006/4007 没有独立 EVD 文件~~ → **已补齐（2026-10-28）**：新增 `EVD-4003/4004/4006/4007/4016/README.md`，各含目标、交付、VERIFY 复跑数字与 G-07 局限登记。~~剩余真实缺口：TASK-4004 缺独立单测~~ → **已由 `tests/determinism/guide-flow.test.mjs`（8 例）关闭**。
 2. **助手每卡的上报报文只存在于对话中**（STATUS/DIFF/VERIFY 模板），未落盘。可追溯靠 git 提交 + 测试复跑，但"谁在什么时间报了什么"没有独立档案。
-3. **口径冲突已纠正一次**：主控 10-28 曾误判"4008 未做"，实际 `f3fa3e0`（10-27 15:46）已完成；本台账第 2 节为核实后的准确状态。
-4. **plan 谱系多版本并存**（v003~v010），只有 `plan-v010` 是现行（`docs/04_planning/current-plan.md` 尚未对齐，属 4016 未完成项）。
+3. **口径冲突已纠正两次**：① 主控 10-28 曾误判"4008 未做"，实际 `f3fa3e0`（10-27 15:46）已完成；② 本轮 current-plan 曾按"174+8=182"预估写入测试数，实测为 **219**（plan-v010 执行中还新增了若干用例），已按实跑数更正。**教训：文档里的数字必须来自当场复跑，不能由前值推算。**
+4. ~~plan 谱系多版本并存未标现行~~ → **已修（4016）**：`plan-v003`/`plan-v004` 的 `00-snapshot.md` 已由 `status: active` 改为 `superseded`，`current-plan.md` 指针唯一指向 `plan-v010`。
+5. **★新发现（2026-10-28）：EVD 目录下的 `README.md` 不会进文档索引。** `tools/gen/docs-index.mjs:7` 明确跳过所有 `README.md`（只放行 `docs/00_governance/README.md`），而 plan-v005 §10.5 的"五要素"规范又**要求**证据文件必须叫 `EVD-xxxx/README.md` —— 两条规则直接冲突，结果是 `EVD-4003/4004/4006/4007/4016` 五份证据**存在但索引里查不到**（`EVD-4012/baseline.md` 因为不叫 README 反而能查到）。
+   - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
+   - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。

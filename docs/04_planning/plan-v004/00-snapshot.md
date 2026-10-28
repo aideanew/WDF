@@ -1,7 +1,7 @@
 ---
 id: PLAN-V004-00
 title: 快照与索引（v1.0 最终冲刺与闭环规划）
-status: active
+status: superseded
 module: planning
 owner: hark
 created: 2026-10-27

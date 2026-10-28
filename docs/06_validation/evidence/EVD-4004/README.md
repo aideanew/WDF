@@ -41,8 +41,17 @@ step_1 出钩 / step_2 背包 / step_3 合成 / step_4 回收 / step_5 榜单
 | b) 5 步完成后不再出现 | PASS（代码走查） | `GuideModel.isFinished`（`currentStep >= totalSteps`）→ 浮层不激活 |
 | c) 失败不阻塞主界面 | PASS | `readDone` 全分支容错；存档读写包 try/catch |
 | d) 存档封印可验 | PASS（间接） | 复用 `sealSave`，同函数在 `merchant-flow` 单测中被 `verifySave` 验证为 true |
-| e) 类型检查 | PASS | tsc 过滤式 0 行 |
+| e) 类型检查 | PASS | `npm run typecheck` 裸跑 0 错（2026-10-28 复跑；旧「过滤式」口径已作废） |
+| f) 纯逻辑自动化 | PASS（8/8） | `tests/determinism/guide-flow.test.mjs`（见 §5） |
 
-## 5. 局限（诚实登记）
+## 5. 后补单测（2026-10-28，缺口已关闭）
 
-**本卡没有独立自动化测试**：`GuideModel` 虽是纯逻辑（不依赖 cc），但引导的"首启出现/逐步推进/完成不再现"依赖 `GuideOverlay` 的节点激活与 `MainView` 挂载时序，Node 侧无法覆盖；且当时未补 `GuideModel` 单测（`readDone` 容错、`setSteps` 推进、封印可验三例本可自动化）。**记为缺口**：建议在 4016 收尾时补 `tests/determinism/guide-flow.test.mjs`（≥3 例），当前运行时表现按 G-07 记 **UNKNOWN**，需真机或编辑器预览人工走查一次。
+`tests/determinism/guide-flow.test.mjs`，**8 例全通过**：
+
+```
+# tests 8 / # pass 8 / # fail 0
+```
+
+覆盖：`readDone` 四分支容错（缺键 / 类型错 / 非数组 / 正常）+ `hydrate` 三种推进态（首启 / 中途 / 全完成）+ `applyDone` 落盘（`modules.guide.done` 追加、`revision+1`、`sealSave` 后 `verifySave` 为 true）+ 全完成返回同一引用（不产生多余写）× 入参不可变 + JSON 往返后重进不再出现。
+
+**仍存局限**：单测只锁 `GuideModel` 纯逻辑；`GuideOverlay` 的节点激活与 `MainView` 挂载时序依赖 `'cc'`，Node 侧覆盖不到 → 该部分按 G-07 记 **UNKNOWN**，需编辑器预览或真机人工走查一次。
