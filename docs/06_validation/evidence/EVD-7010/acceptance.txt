@@ -1,0 +1,18 @@
+=== 验收1/2: mock-code / plat:'wechat' 残留 ===
+OK: 无残留
+
+=== 验收3: typecheck:client ===
+client exit 0
+
+=== 验收4前提: 服务端 dev 模式接受任意 code（web 假 code 可登录）===
+7: * 接真机/生产时只改 resolveOpenId()：换 `integrations/wechat/code2session`（已留目录）。
+40:function resolveOpenId(plat: Platform, code: string): string {
+41:  if (process.env.WDF_AUTH_MODE === 'platform') {
+46:  return `dev_${h}`;
+50:  const openId = resolveOpenId(input.plat, input.code);
+
+=== 新登录路径 ===
+11: * - 进入主界面：点击"进入主界面" → account.login（mock）→ setToken → 挂载 MainView；
+55:      const { code } = await getPlatform().login();
+57:      const plat = p.name === 'web' ? 'app' : p.name;
+58:      const l = await invoke<unknown, { token: string; playerId: string; isNew: boolean }>('account.login', { code, plat });

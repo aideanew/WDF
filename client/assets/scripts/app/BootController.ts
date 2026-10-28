@@ -2,6 +2,7 @@ import { _decorator, Component, Label, Button, Color, Vec3, Node, UITransform, G
 const { ccclass } = _decorator;
 
 import { invoke, setToken } from '../services/net/RpcClient';
+import { getPlatform } from '../platform';
 import { MainView } from './MainView';
 
 /**
@@ -49,7 +50,12 @@ export class BootController extends Component {
     this.setButtonEnabled(false);
     this.setStatus('登录中…');
     try {
-      const l = await invoke<unknown, { token: string; playerId: string; isNew: boolean }>('account.login', { code: 'mock-code', plat: 'wechat' });
+      // TASK-7010：不再硬编码假 code/wechat，改用平台真实 code（D-44=2 无 secret，服务端 dev 模式不校验 code）。
+      // web 平台返回假 code 'dev'（编辑器预览），dev 模式下服务端放行；plat 的 web→app 映射与 RpcClient.platOf 一致。
+      const { code } = await getPlatform().login();
+      const p = getPlatform();
+      const plat = p.name === 'web' ? 'app' : p.name;
+      const l = await invoke<unknown, { token: string; playerId: string; isNew: boolean }>('account.login', { code, plat });
       setToken(l.token);
       this.setStatus(`登录 OK player=${l.playerId} isNew=${l.isNew}`);
       this.enterMain();
