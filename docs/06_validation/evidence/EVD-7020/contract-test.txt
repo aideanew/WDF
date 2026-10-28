@@ -1,0 +1,26 @@
+✔ 契约动作表 ↔ 服务端 handlers 一一对应 (1.0382ms)
+✔ 数值校验器：坏数据必须报错（主键重复/外键缺失/概率合计≠10000/类型错误） (61.515ms)
+✔ 数值校验器：好数据通过 (68.6716ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2401 ACTIONS 全表可解析（22 动作，TASK-4009 增 chest.open） (0.6632ms)
+✔ AT-2401 已实现动作都有集成测试覆盖（静态检查） (1.1689ms)
+▶ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态）
+  ✔ economy.buyQuota → 4999 + FEATURE_NOT_AVAILABLE (1.0834ms)
+  ✔ event.result → 4999 + FEATURE_NOT_AVAILABLE (0.2813ms)
+  ✔ event.start → 4999 + FEATURE_NOT_AVAILABLE (0.6825ms)
+  ✔ event.submit → 4999 + FEATURE_NOT_AVAILABLE (0.644ms)
+  ✔ salvage.claimInfo → 4999 + FEATURE_NOT_AVAILABLE (0.5816ms)
+  ✔ social.pull → 4999 + FEATURE_NOT_AVAILABLE (0.3119ms)
+  ✔ social.send → 4999 + FEATURE_NOT_AVAILABLE (0.6786ms)
+✔ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态） (11.2421ms)
+✔ AT-2401 FEATURE_NOT_AVAILABLE 不触发静默刷新重试（4999 ≠ 2002，RpcClient 唯一重试路径） (0.0931ms)
+✔ E-07 每个动作都有 payload schema 或显式豁免 (0.4778ms)
+✔ E-07 已知 schema 能正确放行/拒绝 (2.1859ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1245.0897

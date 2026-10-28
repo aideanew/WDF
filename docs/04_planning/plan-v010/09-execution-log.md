@@ -39,7 +39,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S1 | 7012 ADR-0015 | ✅ PASS | 独立验收 PASS（100%） | EVD-7012/ |
 | S1 | 7013 compliance 真实化 | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7013/ |
 | S1 | 7014 合规 UI | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7014/ |
-| S2 | 7020 ads.claim | 未开始（**需 ADR-0014**） | — | EVD-7020/ |
+| S2 | 7020 ads.claim | ✅ PASS | 独立验收 PASS（100%） | EVD-7020/ |
 | S2 | 7021 激励视频 | 未开始（D-48 已决 B） | — | EVD-7021/ |
 | S2 | 7022 ADR-0014 | ✅ PASS | 独立验收 PASS（100%） | EVD-7022/ |
 | S3 | 7031 扩筏数值 | 未开始（D-43 已裁决 B） | — | EVD-7031/ |
@@ -150,6 +150,15 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体）：**PASS**（见 EVD-7014）
 - 证据：`docs/06_validation/evidence/EVD-7014/`（acceptance.txt / README.md）
 
+### TASK-7020 · `ads.claim` 服务端实现（ADR-0014 A：只信客户端 + 日限）
+- 执行时刻：2026-10-28 / 主控
+- 改动：`server/src/modules/ads/{service,repo,handlers}.ts`（6 行空壳 → 实现）、`server/src/gateway/handlers.ts`（`'ads.claim': todo` → 真实 handler + 注释 14→15）、`tests/integration/ads.test.mjs`（新增 5 例）、`tests/contract/handlers.test.mjs`（todo 8→7 同步）
+- 验证：ads.test.mjs 5/5；handlers+contract+payload 16/16；typecheck:server 0 错
+- 阻塞条件裁决：**不触发**（三位置发效果非物品，无 ad_placements 奖励字段；asset=placement 遵循卡内"按 placement 决定"，未自编奖励）
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅ 5✅）
+- 独立验收（子智能体 aa16a2aa）：**PASS**，完成度 100%（6/6；非阻断备注：证据文件引用名已修正）
+- 证据：`docs/06_validation/evidence/EVD-7020/`（ads-test.txt / contract-test.txt / typecheck-server.txt / README.md）
+
 ### 记录模板
 
 ```
@@ -171,8 +180,8 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | 7003 | D-46 未开放错误码 | ✅ 已裁决 A（4999+FEATURE_NOT_AVAILABLE），**解锁** |
 | 7011 | D-44 微信 appid/secret | ✅ 已裁决 2（无凭据 → 标记 UNKNOWN，M-9 降级） |
 | 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审），ADR-0015 **已落账** |
-| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 **已落账**（7022 PASS），**解锁** |
-| 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore） |
+| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 已落账（7022 PASS）；**7020 已实现 PASS** |
+| 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore），**可开工** |
 | 7032/7033 | D-42=C 授权代定值 | 已授权，执行代定 |
 
 ## 4. 纪律自检（每卡完成后更新）

@@ -87,11 +87,10 @@ const TODO_PAYLOADS = {
   'event.result': { sessionId: 's_x' },
   'social.send': { channel: 'world', phraseId: 'ph_1' },
   'social.pull': { channel: 'world' },
-  'ads.claim': { placement: 'pl_1' },
 };
 
 test('AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态）', async (t) => {
-  assert.equal(TODOS.size, 8, `todo 应为 8 个，实得 ${TODOS.size}（实现进展后请同步更新本断言）`);
+  assert.equal(TODOS.size, 7, `todo 应为 7 个，实得 ${TODOS.size}（TASK-7020 落地 ads.claim，实现进展后请同步更新本断言）`);
   const token = await login();
   for (const action of [...TODOS].sort()) {
     await t.test(`${action} → 4999 + FEATURE_NOT_AVAILABLE`, async () => {

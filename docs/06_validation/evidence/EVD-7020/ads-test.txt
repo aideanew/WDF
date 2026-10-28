@@ -1,0 +1,14 @@
+[db] 迁移已执行：0001_init.sql
+✔ ads-1 正常 claim：granted=true，remainingToday 递减 (12.0538ms)
+✔ ads-2 达上限：第 cap+1 次 → 3002，remainingToday=0 口径由 3002 表达 (6.9926ms)
+✔ ads-3 未知 placement：→ 1001，零副作用 (2.2681ms)
+✔ ads-4 跨日重置：昨天耗尽 cap，未来 serverNow 计数归零可再 claim (7.6679ms)
+✔ ads-5 同 rid 重放：同 rid 返回上次结果，不重复计数 (5.538ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1331.6324
