@@ -21,6 +21,7 @@
     "guard": "node tools/guard/run-all.mjs",
     "shells": "node tools/guard/shells.mjs",
     "placeholders": "node tools/guard/placeholders.mjs",
+    "release:check": "node tools/release/check.mjs",
     "impact": "node tools/guard/impact.mjs",
     "stage": "node tools/dev/stage.mjs",
     "test": "node --import ./tools/runtime/register.mjs --test \"tests/**/*.test.mjs\"",
