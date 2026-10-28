@@ -25,7 +25,7 @@ export interface HandlerCtx {
 
 export type Handler = (req: RpcRequest, t: number, ctx: HandlerCtx) => Promise<RpcResponse>;
 
-/** 功能未开放信号（D-46=A 裁决，2026-10-28）：8 个 todo 动作统一返回此 msg。
+/** 功能未开放信号（D-46=A 裁决，2026-10-28）：7 个 todo 动作统一返回此 msg。
  * 客户端据 `4999 + FEATURE_NOT_AVAILABLE` 走"未开放"态（不重试），而非当系统错误。
  * msg 用作协议是坏味道，但本期零契约变更（B 新增 4998 登记为解冻窗口候选）。 */
 export const FEATURE_NOT_AVAILABLE = 'FEATURE_NOT_AVAILABLE';

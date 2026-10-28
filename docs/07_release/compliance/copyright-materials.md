@@ -65,5 +65,5 @@ review: 2026-10-30
 | 网关限流 | **已实现**（IP 维度固定窗口，覆盖全部 `auth:false` 动作，默认 10 QPS） | `server/src/gateway/ratelimit.ts`；`tests/integration/ratelimit.test.mjs` |
 | 可玩时长上报（`compliance.check`） | 接口已通，但返回的是桩数据 | `packages/contracts/src/common/actions.ts` |
 
-**当前配置版本**：`c6a54f0fb00341c5`（取自 `client/assets/resources/config/_manifest.json`，**不要手写**，改配置就会变）。
+**当前配置版本**：`20a313a478737571`（取自 `client/assets/resources/config/_manifest.json`，**不要手写**，改配置就会变）。
 

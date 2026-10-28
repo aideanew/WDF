@@ -51,5 +51,5 @@ review: 2026-11-23
 ## 7. 配置与版本一致性
 
 - [ ] 提审材料里写的 `configVersion` 与 `client/assets/resources/config/_manifest.json` **一致**。
-      当前值：`c6a54f0fb00341c5`（**不要手写，改配置就会变；抄之前先 `cat` 一遍**）。
+      当前值：`20a313a478737571`（**不要手写，改配置就会变；抄之前先 `cat` 一遍**）。
 - [ ] `npm run verify` 全绿（含类型检查 —— 2026-10-27 起才真正包含，见 `plan-v009` F-43）。

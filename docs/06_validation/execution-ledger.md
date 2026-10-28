@@ -120,8 +120,8 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 |---|---|---|---|---|
 | FIX-1 | P0 | `GameApp.start()` 零调用点 → `lifecycle.onHide` 从未注册 → **切后台保存实际不生效**（违反 C3） | `GameApp.ts:19`；`BootController.ts:24-41` | ✅ `2a9f064` |
 | FIX-2 | P0 | 激励视频**三个位面的奖励载体全不存在**（无冷却字段 / 无离线结算 / 无商店）→ 建入口即假按钮 | `ads/service.ts:16-19,38-46`；`hooks.json` 无 cooldown；客户端 `showRewardedAd` 调用点 0 | 冻结，登记 D-49 |
-| FIX-3 | P1 | 提审清单 `configVersion` 过期（写 `c6a54f0f…`，实测 `20a313a4…`），并违反清单自身第 7 条 | `review-checklist.md:57` vs `_manifest.json:2` | 待 W1-3 |
-| FIX-4 | P1 | 同一文件内注释自相矛盾：「8 个 todo」vs 实列 7 个 | `handlers.ts:28` vs `:40` | 待 W1-3 |
+| FIX-3 | P1 | 提审清单 `configVersion` 过期（写 `c6a54f0f…`，实测 `20a313a4…`），并违反清单自身第 7 条 | `review-checklist.md:57` vs `_manifest.json:2` | ✅ W1-3 |
+| FIX-4 | P1 | 同一文件内注释自相矛盾：「8 个 todo」vs 实列 7 个 | `handlers.ts:28` vs `:40` | ✅ W1-3 |
 | FIX-5 | P1 | 5 份 EVD 证据存在但文档索引查不到 | `docs-index.mjs:7` 跳过一切 `README.md` | 待 W2-1 |
 | FIX-6 | P1 | 网络失败 = 内部错误 = 未开放，**三者同码 4999**，靠 msg 字符串区分 | `RpcClient.ts:129,163` | 待 W2-2 |
 | FIX-7 | P1 | 两条 UI 注释的事实已被 TASK-7031 推翻（称 weight/capacity `0/106` 填充，实测 weight `{1:53,3:28,10:25}`） | `InventoryPanel.ts:10`、`CraftingPanel.ts:11` | 待 W1-4 |
