@@ -9,11 +9,12 @@
 //   node tools/sample/hook-hitrate.mjs --from <jsonl>      # 从导出的 jsonl 读（每行 {actor,detail}）
 // 输出：可直接粘进 metrics.md 的 Markdown 表 + 一行 采样口径。
 // 纪律（W7-2）：绝不编造数字；样本 0 时输出"样本 0，无法计算"而非崩溃。
-// 单写锁：postmaster.pid 为活 PID 时明确报错（提示先停 dev:server）；陈旧锁由
-// PGlite 自身判锁兜底——打不开即报错，不许静默失败。
+// 无锁（FIX-20，2026-10-28）：PGlite 是 WASM 单进程，不起 postmaster 进程，
+// 数据目录无 postmaster.pid；本脚本不做并发防护——与 dev:server 抢写由
+// PGlite 自身单写锁兜底，打不开即报错，不许静默失败。
 import { PGlite } from '@electric-sql/pglite';
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -43,21 +44,12 @@ function parseArgs() {
   }
   return a;
 }
-function resolve2(p) { return join(ROOT, p); }
+/** 路径解析：绝对路径原样用（FIX-19），相对路径相对仓库根解析。 */
+function resolve2(p) { return isAbsolute(p) ? p : resolve(ROOT, p); }
 
 async function openDb(dbDir) {
-  // 预检：postmaster.pid 首字段若为活 PID → 明确报错（陈旧哨兵如 -42 或死 PID 不拦）
-  const pidFile = join(dbDir, 'postmaster.pid');
-  if (existsSync(pidFile)) {
-    const first = readFileSync(pidFile, 'utf8').trim().split(/\s+/)[0];
-    const pid = parseInt(first, 10);
-    if (Number.isFinite(pid) && pid > 0) {
-      let alive = false;
-      try { process.kill(pid, 0); alive = true; } catch { alive = false; }
-      if (alive) fail(`数据目录 ${dbDir} 被进程 PID ${pid} 占用——PGlite 单写锁，请先停 dev:server（Ctrl+C）再跑聚合。`);
-    }
-  }
-  // 权威判锁：PGlite 自身单写锁，打不开即占用
+  // 无锁（FIX-20）：PGlite 是 WASM 单进程，数据目录无 postmaster.pid，本脚本不做并发防护。
+  // 与 dev:server 抢写由 PGlite 自身单写锁判定——打不开即报错，绝不静默失败。
   try { return new PGlite(dbDir); }
   catch (e) { fail(`数据目录 ${dbDir} 打不开（可能被 dev:server 占用）——请先停 dev:server（Ctrl+C）。${e.message}`); }
 }
