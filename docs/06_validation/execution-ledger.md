@@ -111,10 +111,12 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
 
-## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-13）
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-16）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
 > 处置拆分见下批派工单 W1~W4；FIX-1/2/3/4/5/6/7/8/11 已由 W1~W3 关闭（见各状态列），FIX-9 未派工，FIX-10 外部依赖不做。
+>
+> **W5 复核更正（2026-10-28）**：提交 `408b036` 信息写"12 项缺陷收口"系**高估**——W4 实际收口 **10 项**（FIX-1~8、FIX-11、FIX-13）。此后：FIX-9 于 W5-4 复核后收口（仅 `audio`/`pool`/`log` 3 个零引用，`time` 属实实现移出）；FIX-10 外部依赖不做；FIX-12 由 W5-3 收口（空表报告）；FIX-14 由 W5-4 收口（过期注释）；FIX-15 由 W5-1 收口（索引落地页排除）；FIX-16 新登记（time 来源）。
 
 | 号 | P | 缺陷 | 证据坐标 | 状态 |
 |---|---|---|---|---|
@@ -129,8 +131,11 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-9 | P3 | 3 个零引用基础服务（`audio`/`pool`/`log` 各 3 行，引用数全 0）；`time` **非**零引用——30 行真实实现已接线（`RpcClient.ts:2,109` `syncFromResponse`） | `client/assets/scripts/services/` | ✅ 已收口（W5-4，2026-10-28）：复核更正——仅 3 个零引用（R-4 口径：改头注释），`time` 属实实现，移出 |
 | FIX-10 | P2 | `compliance` 恒真桩（`verified = playerExists()`、`minor` 恒 false），而 `mvp-scope.md:57` 列为 v1.0 必做 | `compliance/service.ts:13` | 外部依赖，不做 |
 | FIX-11 | P2 | 提审清单 7 类 17 项**全未勾**，其中 4 项本可机检 | `review-checklist.md` | ✅ W3-1 `8009cc4` |
-| FIX-12 | P2 | 47 张表 / 16 有数 / **31 全空**，在"已转录"叙事下不可见 | `server/generated/config/` | 待 W2-3 |
+| FIX-12 | P2 | 47 张表 / 16 有数 / **31 全空**，在"已转录"叙事下不可见 | `server/generated/config/` | ✅ W5-3 `e653edc`（空表报告 + `--all` 小表段） |
 | FIX-13 | P1 | **启动页标题写的是另一个项目的名字**：`'奖励一颗麻籽'`。全仓仅这一处代码命中，且 `EVD-3101` 把这个错误写成了"验收预期" | `BootController.ts:30`；`EVD-3101/README.md:25` | ✅ 本批修正 |
+| FIX-14 | P1 | 两处 UI 注释仍描述 W2-2 之前的旧行为（"ERR.SYSTEM 造错、code 可能 undefined"），实际已是 `NET_CODE_OFFLINE=-1`、code 恒 number | `LeaderboardModel.ts:84-85`、`SaveSyncModel.ts:224` | ✅ W5-4 `a1b662c` |
+| FIX-15 | P2 | W2-1 收窄 README 跳过规则后，evidence 目录自己的落地页 `evidence/README.md`（无 front matter id）被纳入索引并显 ⚠缺 | `docs-index.mjs:12` | ✅ W5-1 `4fecfd9`（精确排除） |
+| FIX-16 | P2 | `time` 时间源：客户端经 `RpcClient` 每次真实响应 `syncFromResponse` 校准服务器偏移（`RpcClient.ts:2,109`），但时间消费侧是否统一走该偏移的**口径未成文**，登记追踪 | `client/assets/scripts/services/time/`；`RpcClient.ts:2,109` | 📋 已登记（W5-5，未关闭） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 

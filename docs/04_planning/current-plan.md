@@ -20,6 +20,8 @@ review: 2026-11-23
 
 **收口后仍不在 v1.0 的**（已裁定，不作虚假承诺）：开锁交互与 `salvage.claimInfo`（推迟 v1.1）、防沉迷真实化与合规拦截 UI（D-45=B）、账号面板（无需求来源）、真机录屏与命中率采样（缺环境）。
 
+> **合规真实化依赖（FIX-10，W5-5 登记）**：`compliance` 恒真桩（`verified = playerExists()`、`minor` 恒 false）的解除依赖微信平台 **appid + appsecret + 主体资质**（`WDF_AUTH_MODE=platform` 需真机 code2session），属外部资质链，**非代码待写**。
+
 **代码层 v1.0 口径（R-6，2026-10-28 用户拍板，W3-2）**：**v1.0 = 捞→包→做→扩→卖五环**（`hook`/`sea`/`chest` → `inventory` → `crafting` → `raft` → `economy`，另含 `account` 登录 / `guide` 引导 / `settings` 设置，共 10 模块）；**其余 13 个 v1 模块进 v1.1**（`compliance`、`salvage`、`fishing`、`crew`、`power`、`island`、`defense`、`leaderboard`、`event`、`social`、`ads`、`telemetry`、`progression`，模块目录 `module-catalog.json` 为权威）。
 **激励视频三效果无载体（R-1/FIX-2）**：`hook_cooldown`/`offline_double`/`shop_refresh` 三 placement 的奖励载体（冷却字段/离线结算/商店）均未落地，v1.0 只发"日限内可领取"的登记、不伪造效果，冻结至 v1.1（D-49）。
 
