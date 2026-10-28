@@ -230,7 +230,7 @@ export class HookView extends Component {
       events: [{
         name: outcome.hit ? 'hook.hit' : 'hook.miss',
         at: Date.now(),
-        props: { powerBp: outcome.powerBp, targetDist: outcome.targetDist, angleDeg: outcome.angleDeg },
+        props: { powerBp: outcome.powerBp, targetDist: outcome.targetDist, angleDeg: outcome.angleDeg, chargeMs: outcome.chargeMs },
       }],
     }).catch(() => { /* 埋点可丢 */ });
   }

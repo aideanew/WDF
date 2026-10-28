@@ -28,6 +28,8 @@ export interface HookOutcome {
   powerBp: number;
   angleDeg: number;
   targetDist: number;
+  /** 蓄力时长（ms），供 4011 命中率采样（W7-1，2026-10-28）。 */
+  chargeMs: number;
   /** 表现层结算标记：收回后入包只执行一次（View 写，Model 不读）。 */
   settled?: boolean;
 }
@@ -88,6 +90,7 @@ export class HookModel {
       powerBp,
       angleDeg,
       targetDist,
+      chargeMs: nowMs - this.chargeStartMs,
     };
     this.touch();
     return this.outcome;
