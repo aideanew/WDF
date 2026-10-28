@@ -1,0 +1,26 @@
+EVD-7021 —— TASK-7021：激励视频适配器真实现（D-48=B：adUnitId 构建期常量）
+
+状态：实现（非占位）
+
+验收条目：
+1. [PASS] 四种返回值可被构造（rewardedAd.ts：onClose isEnded→completed/!isEnded→closed；onError→error；无 adUnitId 或 show 失败→no-fill）
+2. [PASS] 实例复用（rewardedAd.ts entries.get(placement) 命中直接复用，仅首次 create）
+3. [PASS] 不 import 'cc'（四个改动文件 grep from 'cc'/import 'cc' 无命中）
+4. [PASS] 抖音同构（DouyinPlatform 同 WechatPlatform，仅 tt. 注入）
+5. [PASS] D-48=B 一致性（git check-ignore ad.config.ts 命中；git ls-files 无 ad.config.ts → 不入库）
+6. [PASS] typecheck:client（exit 0，0 错）
+
+D-48=B 落地：
+- ad.config.ts（gitignored）导出 AD_UNIT_IDS（wechat/douyin）；ad.config.example.ts（committed 模板）说明本地复制填写
+- 未填写的位面 → no-fill（不假装有广告）；.gitignore 增 ad.config.ts + ad.config.ts.meta
+- 新 .ts 带 .meta（Cocos typescript importer，uuid 新生成）
+
+变更清单（单卡）：
+- client/assets/scripts/platform/{rewardedAd.ts, ad.config.example.ts}（新增）+ .meta
+- client/assets/scripts/platform/wechat/WechatPlatform.ts、douyin/DouyinPlatform.ts（showRewardedAd 实现）
+- .gitignore（ad.config.ts + ad.config.ts.meta）
+
+验证命令：
+- npm run typecheck:client：exit 0，0 错
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅）

@@ -28,3 +28,7 @@ server/generated/
 .env
 *.pem
 *.key
+
+# —— 广告位 ID（D-48=B：构建期常量，本地填写，不入库）——
+client/assets/scripts/platform/ad.config.ts
+client/assets/scripts/platform/ad.config.ts.meta

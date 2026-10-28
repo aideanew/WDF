@@ -40,7 +40,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S1 | 7013 compliance 真实化 | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7013/ |
 | S1 | 7014 合规 UI | ⏸ 推迟（D-45=B） | UNKNOWN → v1.1 候选（独立验收 PASS） | EVD-7014/ |
 | S2 | 7020 ads.claim | ✅ PASS | 独立验收 PASS（100%） | EVD-7020/ |
-| S2 | 7021 激励视频 | 未开始（D-48 已决 B） | — | EVD-7021/ |
+| S2 | 7021 激励视频 | ✅ PASS | 独立验收 PASS（100%） | EVD-7021/ |
 | S2 | 7022 ADR-0014 | ✅ PASS | 独立验收 PASS（100%） | EVD-7022/ |
 | S3 | 7031 扩筏数值 | 未开始（D-43 已裁决 B） | — | EVD-7031/ |
 | S3 | 7032 levels/unlocks | 未开始 | — | EVD-7032/ |
@@ -159,6 +159,15 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体 aa16a2aa）：**PASS**，完成度 100%（6/6；非阻断备注：证据文件引用名已修正）
 - 证据：`docs/06_validation/evidence/EVD-7020/`（ads-test.txt / contract-test.txt / typecheck-server.txt / README.md）
 
+### TASK-7021 · 激励视频适配器真实现（D-48=B：adUnitId 构建期常量）
+- 执行时刻：2026-10-28 / 主控 / D-48=B
+- 改动：`client/assets/scripts/platform/{rewardedAd.ts, ad.config.example.ts}`（新增 + .meta）、`platform/wechat/WechatPlatform.ts`、`platform/douyin/DouyinPlatform.ts`（showRewardedAd 实现）、`.gitignore`（ad.config.ts + ad.config.ts.meta）
+- 验证：typecheck:client 0 错；四种返回值可构造；实例复用；不 import 'cc'；抖音同构；ad.config.ts gitignored 不入库
+- D-48=B 落地：ad.config.ts（gitignored）导出 AD_UNIT_IDS；ad.config.example.ts（committed 模板）本地复制填写；未填位面 → no-fill
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅ 5✅ 6✅）
+- 独立验收（子智能体 a68cfc54）：**PASS**，完成度 100%（7/7 + .meta 附加核查；备注：Cocos 运行时不可测/无真实 adUnitId/无调用点）
+- 证据：`docs/06_validation/evidence/EVD-7021/`（typecheck-client.txt / README.md / acceptance.txt）
+
 ### 记录模板
 
 ```
@@ -181,7 +190,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | 7011 | D-44 微信 appid/secret | ✅ 已裁决 2（无凭据 → 标记 UNKNOWN，M-9 降级） |
 | 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审），ADR-0015 **已落账** |
 | 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 已落账（7022 PASS）；**7020 已实现 PASS** |
-| 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore），**可开工** |
+| 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore）；**7021 已实现 PASS** |
 | 7032/7033 | D-42=C 授权代定值 | 已授权，执行代定 |
 
 ## 4. 纪律自检（每卡完成后更新）

@@ -1,14 +1,20 @@
 import type { IPlatform, AdResult } from '../contracts/IPlatform';
+import { RewardedAdController } from '../rewardedAd';
+import { AD_UNIT_IDS } from '../ad.config';
 
 declare const tt: any;
 
 /** douyin 适配器：本目录是唯一允许直接调用 `tt.` 的地方。 */
 export class DouyinPlatform implements IPlatform {
   readonly name = 'douyin' as const;
+  /** 激励视频（D-48=B：adUnitId 构建期常量 ad.config.ts；无 ID → no-fill）。 */
+  private rewardedAd = new RewardedAdController((adUnitId) => tt.createRewardedVideoAd({ adUnitId }));
   login(): Promise<{ code: string }> {
     return new Promise((resolve, reject) => tt.login({ success: (r: any) => resolve({ code: r.code }), fail: reject }));
   }
-  async showRewardedAd(_placement: string): Promise<AdResult> { return 'no-fill'; /* TODO: createRewardedVideoAd 复用实例 */ }
+  showRewardedAd(placement: string): Promise<AdResult> {
+    return this.rewardedAd.show(placement, AD_UNIT_IDS.douyin[placement]);
+  }
   share(p: { title: string; imageUrl?: string; query?: string }): void { tt.shareAppMessage(p); }
   storage = {
     get: (k: string): string | null => { try { const v = tt.getStorageSync(k); return v === '' ? null : v; } catch { return null; } },
