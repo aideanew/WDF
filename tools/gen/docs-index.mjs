@@ -5,10 +5,13 @@ const today = new Date().toISOString().slice(0, 10);
 const docs = [];
 for (const f of walk(p('docs'), (f) => f.endsWith('.md'))) {
   const r = rel(f);
-  if (r.endsWith('README.md') && !r.startsWith('docs/00_governance/README.md')) continue;
+  const fm = frontMatter(read(f));
+  // FIX-5/R-5（2026-10-28）：原先跳过一切 README.md（仅放行 governance），导致 EVD 证据 README
+  // 进不了索引。收窄为：只跳过"非 evidence 且非 governance"的 README.md —— EVD README 始终纳入，
+  // 若缺 id 则显示 ⚠缺（不静默丢弃，可被突变测试检出）。
+  if (r.endsWith('README.md') && !r.startsWith('docs/06_validation/evidence/') && !r.startsWith('docs/00_governance/README.md')) continue;
   if (['docs/01_product/design-source/', 'docs/08_knowledge/sources/', 'docs/09_archive/superseded/design-history/'].some((x) => r.startsWith(x))) continue;
   if (r.includes('/templates/') || r.endsWith('document-index.md') || r.endsWith('task-index.md')) continue;
-  const fm = frontMatter(read(f));
   docs.push({ path: r, ...(fm ?? {}) });
 }
 docs.sort((a, b) => a.path.localeCompare(b.path));

@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 241 篇。⚠ 表示活跃文档已过 review 日期。
+共 285 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -227,7 +227,51 @@ review: 2026-11-23
 | TASK-4016 | error-catalog / glossary / current-plan / roadmap 四文档对齐 | draft |  | `05_execution/tasks/TASK-4016.md` |
 | TASK-4020 | RpcClient 自动补齐 rid | draft |  | `05_execution/tasks/TASK-4020.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0104/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0105/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0107/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-0108/README.md` |
+| EVD-3001 | 证据 — UX 态契约落地（common/ux.ts） | active | 2026-11-26 | `06_validation/evidence/EVD-3001/README.md` |
+| EVD-3002 | TASK-3002 configVersion 单一来源 验收证据 | active |  | `06_validation/evidence/EVD-3002/README.md` |
+| EVD-3100 | TASK-3100 客户端配置读取服务 验收证据 | active |  | `06_validation/evidence/EVD-3100/README.md` |
+| EVD-3101 | TASK-3101 主界面 Tab 导航 + 四面板桩 验收证据 | active |  | `06_validation/evidence/EVD-3101/README.md` |
+| EVD-3102 | TASK-3102 背包列表页 验收证据 | active |  | `06_validation/evidence/EVD-3102/README.md` |
+| EVD-3103 | TASK-3103 合成面板 验收证据 | active |  | `06_validation/evidence/EVD-3103/README.md` |
+| EVD-3104 | TASK-3104 排行榜页 验收证据 | active |  | `06_validation/evidence/EVD-3104/README.md` |
+| EVD-3105 | TASK-3105 云存档分叉 UI 验收证据 | active |  | `06_validation/evidence/EVD-3105/README.md` |
+| EVD-3201 | TASK-3201 crafting 可制作判定 验收证据 | active |  | `06_validation/evidence/EVD-3201/README.md` |
+| EVD-3202 | TASK-3202 inventory 存档段投影 验收证据 | active |  | `06_validation/evidence/EVD-3202/README.md` |
+| EVD-3301 | TASK-3301 守卫同步校验（范围重定：换行规范化）验收证据 | active |  | `06_validation/evidence/EVD-3301/README.md` |
+| EVD-3302 | TASK-3302 存档封印回归测试 验收证据 | active |  | `06_validation/evidence/EVD-3302/README.md` |
+| EVD-4002 | TASK-4002 数值转录 验收证据 | active |  | `06_validation/evidence/EVD-4002/README.md` |
+| EVD-4003 | TASK-4003 HookView 接 hooks 表（缺行回落） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4003/README.md` |
+| EVD-4004 | TASK-4004 新手引导 5 步浮层 | accepted | 2026-11-27 | `06_validation/evidence/EVD-4004/README.md` |
+| EVD-4006 | TASK-4006 economy.sell 商人回收（影子账本 + 限购 + 幂等） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4006/README.md` |
+| EVD-4007 | TASK-4007 商人页 UI + 限购（黄金术语统一 / sellValue 复算 / 额度顶部） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4007/README.md` |
 | EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
+| EVD-4016 | TASK-4016 四文档对齐（error-catalog / glossary / current-plan / roadmap） | accepted | 2026-11-28 | `06_validation/evidence/EVD-4016/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7001/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7002/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7003/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7004/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7005/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7010/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7011/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7012/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7013/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7014/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7020/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7021/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7022/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7031/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7032/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7033/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7040/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7041/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7042/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7050/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7051/README.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
