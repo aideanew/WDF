@@ -33,7 +33,7 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S0 | 7002 注释去假 + 3101 | ✅ PASS | 独立验收 PASS（4/4） | EVD-7002/ |
 | S0 | 7003 未开放语义 | 未开始（**需 D-46**） | — | EVD-7003/ |
 | S0 | 7004 占位值可区分 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7004/ |
-| S0 | 7005 空 service 处置 | 未开始 | — | EVD-7005/ |
+| S0 | 7005 空 service 处置 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7005/ |
 | S1 | 7010 平台登录接线 | 未开始 | — | EVD-7010/ |
 | S1 | 7011 code2session | 未开始（**需 D-44**） | — | EVD-7011/ |
 | S1 | 7012 ADR-0015 | 未开始（**需 D-45**） | — | EVD-7012/ |
@@ -82,6 +82,15 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 结论：**PASS**（逐条：1✅ 2✅ 3✅）
 - 独立验收（子智能体 ab1e6543）：**PASS**，完成度 100%（3/3 验收 + 边界零违反，无问题）
 - 证据：`docs/06_validation/evidence/EVD-7004/`（acceptance.txt / README.md）
+
+### TASK-7005 · 5 个空 service 的处置
+- 执行时刻：2026-10-28 / 主控
+- 改动：`services/time/index.ts`（实现 4 导出）、`services/net/RpcClient.ts`（import + 真实响应 sync）、
+  `services/{audio,pool,log}/index.ts`（@unimplemented 头注释）、`services/bus/`（整目录删除）
+- 验证：typecheck:client exit 0；bus 源码 0 引用；time 4 导出被 RpcClient 引用；platform/features/app 零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅）
+- 独立验收（子智能体 aabc9313）：**PASS**，完成度 100%（3/3 + 边界，含 t 语义一致性核对）
+- 证据：`docs/06_validation/evidence/EVD-7005/`（acceptance.txt / README.md）
 
 ### 记录模板
 

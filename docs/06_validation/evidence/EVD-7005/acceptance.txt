@@ -1,0 +1,19 @@
+=== 验收1: time 4 导出 + RpcClient 引用 ===
+time 导出函数数: 4
+RpcClient 引用: 
+2:import { syncFromResponse } from '../time';
+96:        syncFromResponse(resp.t); // 每次真实响应都校准服务器时间偏移
+
+=== 验收2: bus 删除后源码 0 引用 + typecheck:client ===
+OK: bus 源码 0 引用
+---
+typecheck:client exit 0
+
+=== 验收3: 剩余空壳 @unimplemented 头注释 ===
+audio: /** @unimplemented v1.1：无音频资源，v1.0 不做 —— 见 plan-v010/02 */
+pool: /** @unimplemented v1.1：无性能基线前不优化（N-6）—— 见 plan-v010/02 */
+log: /** @unimplemented v1.1：telemetry 模块未接客户端 —— 见 plan-v010/02 §2 */
+
+=== 边界: services 不在 module-catalog（shells 不覆盖，验收3 的 shells 识别 N/A）===
+module-catalog services 命中: 0
+shells.mjs 扫描面: features/ game-core/src/ server/src/modules/ 

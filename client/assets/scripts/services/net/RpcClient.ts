@@ -1,4 +1,5 @@
 import { getPlatform, type IPlatform } from '../../platform';
+import { syncFromResponse } from '../time';
 import type { ActionName } from '../../generated/contracts/common/actions';
 import type { RpcRequest, RpcResponse, RequestMeta, Platform } from '../../generated/contracts/common/envelope';
 import { ERR, errorRange } from '../../generated/contracts/common/errors';
@@ -92,6 +93,7 @@ export async function invoke<P = unknown, D = unknown>(
       const { status, data } = await platform.request(endpoint, { ...req, token }, 8000);
       if (status >= 200 && status < 300 && data && typeof data === 'object') {
         resp = data as RpcResponse<D>;
+        syncFromResponse(resp.t); // 每次真实响应都校准服务器时间偏移
       }
     } catch {
       // 网络错误，走 mock
