@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 238 篇。⚠ 表示活跃文档已过 review 日期。
+共 239 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -226,6 +226,7 @@ review: 2026-11-23
 | TASK-4020 | RpcClient 自动补齐 rid | draft |  | `05_execution/tasks/TASK-4020.md` |
 | VAL-0002 | 测试机型 | active | 2026-11-23 | `06_validation/device-matrix.md` |
 | EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
+| EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
 | VAL-0001 | 验证计划 | active | 2026-11-23 | `06_validation/validation-plan.md` |
 | CMP-anti-addiction | 防沉迷方案 | draft | 2026-11-23 | `07_release/compliance/anti-addiction.md` |
