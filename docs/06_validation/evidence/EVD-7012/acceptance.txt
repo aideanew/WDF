@@ -1,0 +1,27 @@
+=== 验收: front matter 齐全 ===
+---
+id: ADR-0015
+title: 实名/未成年人合规状态存哪（v1.0 不提审 → 推迟 v1.1）
+status: accepted
+owner: hark
+created: 2026-10-28
+review: 2026-11-11
+related: [PLAN-V010-04, PLAN-V010-07, REQ-C-0001, ADR-0010]
+---
+
+=== 验收: 三选项各有代价/风险 ===
+3
+
+=== 验收: 含到期日/回访条件 ===
+47:## 4. 到期/回访条件
+49:- **触发**：当"提审"被重新排入某版本（独立里程碑），或微信要求小游戏上线需实名（监管变化）。
+50:- **回访动作**：重开本 ADR，从 §2 三选项中选一，然后才写迁移 `0002_compliance.sql` + 实现 `check()`。
+
+=== F-1 恒真桩（minor:false）===
+14:    verified: await playerExists(playerId),
+15:    minor: false,
+
+=== 索引含 ADR-0015 ===
+61:| ADR-0015 | 实名/未成年人合规状态存哪（v1.0 不提审 → 推迟 v1.1） | accepted | 2026-11-11 | `03_solution/decisions/ADR-0015-compliance-state.md` |
+
+=== 零代码改动（本卡不建表不改代码）===

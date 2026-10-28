@@ -36,12 +36,12 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S0 | 7005 空 service 处置 | ✅ PASS | 独立验收 PASS（3/3 + 边界） | EVD-7005/ |
 | S1 | 7010 平台登录接线 | ✅ PASS | 独立验收 PASS（3/3 + 静态人工项） | EVD-7010/ |
 | S1 | 7011 code2session | ✅ PASS（D-44=2 → 记录 UNKNOWN） | 独立验收 PASS（4/4） | EVD-7011/ |
-| S1 | 7012 ADR-0015 | 未开始（**需 D-45**） | — | EVD-7012/ |
-| S1 | 7013 compliance 真实化 | 未开始 | — | EVD-7013/ |
-| S1 | 7014 合规 UI | 未开始 | — | EVD-7014/ |
-| S2 | 7020 ads.claim | 未开始 | — | EVD-7020/ |
-| S2 | 7021 激励视频 | 未开始（**需 D-48**） | — | EVD-7021/ |
-| S2 | 7022 ADR-0014 | 未开始 | — | EVD-7022/ |
+| S1 | 7012 ADR-0015 | ✅ PASS | 独立验收 PASS（100%） | EVD-7012/ |
+| S1 | 7013 compliance 真实化 | 未开始（D-45=B → v1.1 候选） | — | EVD-7013/ |
+| S1 | 7014 合规 UI | 未开始（D-45=B → v1.1 候选） | — | EVD-7014/ |
+| S2 | 7020 ads.claim | 未开始（**需 ADR-0014**） | — | EVD-7020/ |
+| S2 | 7021 激励视频 | 未开始（D-48 已决 B） | — | EVD-7021/ |
+| S2 | 7022 ADR-0014 | 未开始（**需 D-48**） | — | EVD-7022/ |
 | S3 | 7031 扩筏数值 | 未开始（D-43 已裁决 B） | — | EVD-7031/ |
 | S3 | 7032 levels/unlocks | 未开始 | — | EVD-7032/ |
 | S3 | 7033 raft_tiles/rooms | 未开始 | — | EVD-7033/ |
@@ -118,6 +118,14 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 - 独立验收（子智能体 ad65d610）：**PASS**，完成度 100%
 - 证据：`docs/06_validation/evidence/EVD-7011/`（acceptance.txt / README.md）
 
+### TASK-7012 · ADR-0015：合规状态的数据模型（D-45=B → 推迟 v1.1）
+- 执行时刻：2026-10-28 / 主控 / D-45=B（v1.0 不提审）
+- 改动：`docs/03_solution/decisions/ADR-0015-compliance-state.md`（新增）、`docs/00_governance/document-index.md`（gen:docs 登记 ADR-0015 行）
+- 验证：ADR-0015 front matter 齐全；§2 三选项各带代价；F-1 恒真桩 / F-2 无表 / F-3 2101 零调用可核；§4 到期/回访条件；`server/src`、`client/assets/scripts`、`packages/contracts`、`tools/gen` 零改动
+- 结论：**PASS**（逐条：1✅ 2✅ 3✅ 4✅ 5✅）
+- 独立验收（子智能体 ac9ec42f）：**PASS**，完成度 100%
+- 证据：`docs/06_validation/evidence/EVD-7012/`（acceptance.txt / README.md）
+
 ### 记录模板
 
 ```
@@ -138,8 +146,8 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 |---|---|---|
 | 7003 | D-46 未开放错误码 | ✅ 已裁决 A（4999+FEATURE_NOT_AVAILABLE），**解锁** |
 | 7011 | D-44 微信 appid/secret | ✅ 已裁决 2（无凭据 → 标记 UNKNOWN，M-9 降级） |
-| 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审，ADR-0015 降级登记） |
-| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 待起草 |
+| 7012 | D-45 提审是否必须真实名 | ✅ 已裁决 B（v1.0 不提审），ADR-0015 **已落账** |
+| 7020 | ADR-0014（我起草）+ D-46 | ✅ D-46 已决；ADR-0014 待起草（7022） |
 | 7021 | D-48 adUnitId 来源 | ✅ 已裁决 B（构建期常量，gitignore） |
 | 7032/7033 | D-42=C 授权代定值 | 已授权，执行代定 |
 

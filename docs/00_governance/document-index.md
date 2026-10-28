@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 239 篇。⚠ 表示活跃文档已过 review 日期。
+共 241 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -58,6 +58,8 @@ review: 2026-11-23
 | ADR-0011 | 契约缺口与解冻申请（回收动作 / 绑定票据错误码 / 赶海 ops 载体） | accepted | 2026-11-09 | `03_solution/decisions/ADR-0011-contract-gaps.md` |
 | ADR-0012 | 权威背包：服务端影子账本（容差=0） | accepted | 2026-11-27 | `03_solution/decisions/ADR-0012-authoritative-inventory.md` |
 | ADR-0013 | 存档 schema 版本（m.sv）由谁负责——服务端校验范围与客户端迁移接线 | accepted | 2026-11-10 | `03_solution/decisions/ADR-0013-save-schema-version.md` |
+| ADR-0014 | 广告奖励的防作弊与发奖口径（服务端不复核广告是否真看完） | accepted | 2026-11-11 | `03_solution/decisions/ADR-0014-ad-reward-verification.md` |
+| ADR-0015 | 实名/未成年人合规状态存哪（v1.0 不提审 → 推迟 v1.1） | accepted | 2026-11-11 | `03_solution/decisions/ADR-0015-compliance-state.md` |
 | DESIGN-0001 | UX 态契约（六份契约之⑥：空/加载/错误/无权限/成功/冲突） | active | 2026-11-26 | `03_solution/design/DESIGN-0001-ux-states.md` |
 | UI-0003 | Cocos 编辑器英文界面中英对照（本项目专用） | active | 2026-11-23 | `03_solution/ui/cocos-editor-glossary.md` |
 | UI-0002 | 界面清单 | active | 2026-11-23 | `03_solution/ui/screen-inventory.md` |
