@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 285 篇。⚠ 表示活跃文档已过 review 日期。
+共 286 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -248,6 +248,7 @@ review: 2026-11-23
 | EVD-4004 | TASK-4004 新手引导 5 步浮层 | accepted | 2026-11-27 | `06_validation/evidence/EVD-4004/README.md` |
 | EVD-4006 | TASK-4006 economy.sell 商人回收（影子账本 + 限购 + 幂等） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4006/README.md` |
 | EVD-4007 | TASK-4007 商人页 UI + 限购（黄金术语统一 / sellValue 复算 / 额度顶部） | accepted | 2026-11-27 | `06_validation/evidence/EVD-4007/README.md` |
+| EVD-4011 | 4011 首钩命中率采样（工具就绪，等人打 20 钩） | active | 2026-11-28 | `06_validation/evidence/EVD-4011/README.md` |
 | EVD-4012 | TASK-4012 主包体积基线（wechatgame） | accepted |  | `06_validation/evidence/EVD-4012/baseline.md` |
 | EVD-4016 | TASK-4016 四文档对齐（error-catalog / glossary / current-plan / roadmap） | accepted | 2026-11-28 | `06_validation/evidence/EVD-4016/README.md` |
 | EVD-7001 | 空壳清单工具（`npm run shells`） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7001/README.md` |
