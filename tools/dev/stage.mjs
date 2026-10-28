@@ -71,5 +71,8 @@ for (const f of sorted) {
   });
   if (r.status !== 0) fail++;
 }
+// R-2/FIX-8（2026-10-28 W2-3）：定向体检时附带跑占位值机检清单（report-only，exit 恒 0，不挂 verify、不影响 stage 退出码）。
+console.log(`\n# stage ${kw}：附带占位值机检（npm run placeholders，report-only）\n`);
+spawnSync(process.execPath, ['tools/guard/placeholders.mjs'], { stdio: 'inherit', cwd: ROOT });
 console.log(`\n# stage ${kw} 汇总：${sorted.length} 个文件，失败 ${fail} 个\n`);
 process.exit(fail ? 1 : 0);
