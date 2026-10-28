@@ -19,6 +19,7 @@
     "gen:docs": "node tools/gen/docs-index.mjs",
     "sync": "node tools/sync/to-client.mjs",
     "guard": "node tools/guard/run-all.mjs",
+    "shells": "node tools/guard/shells.mjs",
     "impact": "node tools/guard/impact.mjs",
     "test": "node --import ./tools/runtime/register.mjs --test \"tests/**/*.test.mjs\"",
     "typecheck:client": "tsc -p client/tsconfig.json --noEmit",

@@ -60,7 +60,9 @@ related: [PLAN-V010-02, PLAN-V010-06, PLAN-V010-07]
 
 **验收标准**
 - [ ] `npm run shells` 输出中 `features/fishing` 判为 `shell`、`features/chest` 判为 `ok`
-- [ ] 输出总数与 `02-requirement-inventory.md §2.1` 一致：客户端 shell = 15、服务端 = 4（不含 ops）、game-core = 8
+- [ ] 输出总数与实测一致：客户端 shell = 15、服务端 = 4（不含 ops）、**game-core 纯空壳 = 7**
+      （crew/event/fishing/island/power/progression/salvage；`raft`/`sea`/`defense` 有函数但输入为占位值，
+      属 `02 §3` 第三类，**非纯空壳**，由 TASK-7004 与人工复核处理——本卡定义性判断的诚实修正）
 - [ ] 退出码恒 0（第一版不拦门禁）
 
 **验证命令**

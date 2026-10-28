@@ -1,0 +1,1097 @@
+[
+  {
+    "id": "account",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/account/index.ts",
+      "client/assets/scripts/features/account/model/AccountModel.ts",
+      "client/assets/scripts/features/account/view/AccountView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "AccountModel",
+      "AccountView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "account",
+    "layer": "server",
+    "files": [
+      "server/src/modules/account/handlers.ts",
+      "server/src/modules/account/repo.ts",
+      "server/src/modules/account/service.ts"
+    ],
+    "effectiveLines": 256,
+    "verdict": "ok",
+    "exports": [
+      "accountHandlers",
+      "IdentityRow",
+      "PlayerRow",
+      "BindTicketRow",
+      "SaveSnapshotRow",
+      "LoginInput",
+      "LoginOutput",
+      "BindError"
+    ],
+    "evidence": [
+      "有效行 256；导出：accountHandlers, IdentityRow, PlayerRow, BindTicketRow, SaveSnapshotRow, LoginInput"
+    ]
+  },
+  {
+    "id": "account",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/account/index.ts"
+    ],
+    "effectiveLines": 7,
+    "verdict": "ok",
+    "exports": [
+      "LoginReq",
+      "LoginRes",
+      "BindStartRes",
+      "BindConfirmReq",
+      "BindConfirmRes",
+      "RefreshRes"
+    ],
+    "evidence": [
+      "有效行 7；导出：LoginReq, LoginRes, BindStartRes, BindConfirmReq, BindConfirmRes, RefreshRes"
+    ]
+  },
+  {
+    "id": "compliance",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/compliance/index.ts",
+      "client/assets/scripts/features/compliance/model/ComplianceModel.ts",
+      "client/assets/scripts/features/compliance/view/ComplianceView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "ComplianceModel",
+      "ComplianceView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "compliance",
+    "layer": "server",
+    "files": [
+      "server/src/modules/compliance/handlers.ts",
+      "server/src/modules/compliance/repo.ts",
+      "server/src/modules/compliance/service.ts"
+    ],
+    "effectiveLines": 21,
+    "verdict": "ok",
+    "exports": [
+      "complianceHandlers",
+      "MODULE"
+    ],
+    "evidence": [
+      "有效行 21；导出：complianceHandlers, MODULE"
+    ]
+  },
+  {
+    "id": "compliance",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/compliance/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "ok",
+    "exports": [
+      "ComplianceRes"
+    ],
+    "evidence": [
+      "有效行 1；导出：ComplianceRes"
+    ]
+  },
+  {
+    "id": "progression",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/progression/index.ts",
+      "client/assets/scripts/features/progression/model/ProgressionModel.ts",
+      "client/assets/scripts/features/progression/view/ProgressionView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "ProgressionModel",
+      "ProgressionView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "progression",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/progression/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "hook",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/hook/index.ts",
+      "client/assets/scripts/features/hook/model/HookModel.ts",
+      "client/assets/scripts/features/hook/view/HookPanel.ts",
+      "client/assets/scripts/features/hook/view/HookView.ts"
+    ],
+    "effectiveLines": 302,
+    "verdict": "ok",
+    "exports": [
+      "HookModel",
+      "HookView",
+      "HookPhase",
+      "HOOK_DEMO_ITEM_ID",
+      "HookOutcome",
+      "createHookPanel"
+    ],
+    "evidence": [
+      "有效行 302；导出：HookModel, HookView, HookPhase, HOOK_DEMO_ITEM_ID, HookOutcome, createHookPanel"
+    ]
+  },
+  {
+    "id": "hook",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/hook/index.ts"
+    ],
+    "effectiveLines": 99,
+    "verdict": "ok",
+    "exports": [
+      "MODULE_ID",
+      "HookConfig",
+      "CableTier",
+      "HookPoint",
+      "HookPath",
+      "HookTarget",
+      "HitResult",
+      "DEFAULT_HOOK_CONFIG"
+    ],
+    "evidence": [
+      "有效行 99；导出：MODULE_ID, HookConfig, CableTier, HookPoint, HookPath, HookTarget"
+    ]
+  },
+  {
+    "id": "sea",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/sea/index.ts",
+      "client/assets/scripts/features/sea/model/SeaModel.ts",
+      "client/assets/scripts/features/sea/view/SeaView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "SeaModel",
+      "SeaView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "sea",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/sea/index.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "ok",
+    "exports": [
+      "TIDE_PERIOD_MS",
+      "TIDE_DURATION_MS",
+      "tideState",
+      "MAX_FLOATING_ON_SCREEN"
+    ],
+    "evidence": [
+      "有效行 14；导出：TIDE_PERIOD_MS, TIDE_DURATION_MS, tideState, MAX_FLOATING_ON_SCREEN"
+    ]
+  },
+  {
+    "id": "salvage",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/salvage/index.ts",
+      "client/assets/scripts/features/salvage/model/SalvageModel.ts",
+      "client/assets/scripts/features/salvage/view/SalvageView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "SalvageModel",
+      "SalvageView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "salvage",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/salvage/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "salvage",
+    "layer": "server",
+    "files": [
+      "server/src/modules/salvage/handlers.ts",
+      "server/src/modules/salvage/repo.ts",
+      "server/src/modules/salvage/service.ts"
+    ],
+    "effectiveLines": 3,
+    "verdict": "shell",
+    "exports": [
+      "MODULE"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE"
+    ]
+  },
+  {
+    "id": "salvage",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/salvage/index.ts"
+    ],
+    "effectiveLines": 2,
+    "verdict": "ok",
+    "exports": [
+      "ClaimInfoReq",
+      "ClaimInfoRes"
+    ],
+    "evidence": [
+      "有效行 2；导出：ClaimInfoReq, ClaimInfoRes"
+    ]
+  },
+  {
+    "id": "fishing",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/fishing/index.ts",
+      "client/assets/scripts/features/fishing/model/FishingModel.ts",
+      "client/assets/scripts/features/fishing/view/FishingView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "FishingModel",
+      "FishingView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "fishing",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/fishing/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "chest",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/chest/index.ts",
+      "client/assets/scripts/features/chest/model/ChestModel.ts",
+      "client/assets/scripts/features/chest/view/ChestPanel.ts",
+      "client/assets/scripts/features/chest/view/ChestView.ts"
+    ],
+    "effectiveLines": 443,
+    "verdict": "ok",
+    "exports": [
+      "ChestModel",
+      "materialText",
+      "lockText",
+      "ChestRow",
+      "projectChests",
+      "applyOpen",
+      "createChestPanel",
+      "ChestView"
+    ],
+    "evidence": [
+      "有效行 443；导出：ChestModel, materialText, lockText, ChestRow, projectChests, applyOpen"
+    ]
+  },
+  {
+    "id": "chest",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/chest/index.ts"
+    ],
+    "effectiveLines": 38,
+    "verdict": "ok",
+    "exports": [
+      "LockTier",
+      "LOCK_HITS",
+      "expectedAttempts",
+      "isHit",
+      "LockSession",
+      "createSession",
+      "attempt"
+    ],
+    "evidence": [
+      "有效行 38；导出：LockTier, LOCK_HITS, expectedAttempts, isHit, LockSession, createSession"
+    ]
+  },
+  {
+    "id": "chest",
+    "layer": "server",
+    "files": [
+      "server/src/modules/chest/handlers.ts",
+      "server/src/modules/chest/repo.ts",
+      "server/src/modules/chest/service.ts"
+    ],
+    "effectiveLines": 94,
+    "verdict": "ok",
+    "exports": [
+      "chestHandlers",
+      "ChestsRow",
+      "findChestByItemId",
+      "allChests",
+      "invalidateChestCache",
+      "ChestError"
+    ],
+    "evidence": [
+      "有效行 94；导出：chestHandlers, ChestsRow, findChestByItemId, allChests, invalidateChestCache, ChestError"
+    ]
+  },
+  {
+    "id": "chest",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/chest/index.ts"
+    ],
+    "effectiveLines": 12,
+    "verdict": "ok",
+    "exports": [
+      "MODULE_ID",
+      "ChestOpenReq",
+      "ChestReward",
+      "ChestOpenRes"
+    ],
+    "evidence": [
+      "有效行 12；导出：MODULE_ID, ChestOpenReq, ChestReward, ChestOpenRes"
+    ]
+  },
+  {
+    "id": "inventory",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/inventory/index.ts",
+      "client/assets/scripts/features/inventory/model/InventoryModel.ts",
+      "client/assets/scripts/features/inventory/view/InventoryPanel.ts",
+      "client/assets/scripts/features/inventory/view/InventoryView.ts"
+    ],
+    "effectiveLines": 235,
+    "verdict": "ok",
+    "exports": [
+      "InventoryModel",
+      "createInventoryPanel",
+      "InventoryView"
+    ],
+    "evidence": [
+      "有效行 235；导出：InventoryModel, createInventoryPanel, InventoryView"
+    ]
+  },
+  {
+    "id": "inventory",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/inventory/index.ts"
+    ],
+    "effectiveLines": 37,
+    "verdict": "ok",
+    "exports": [
+      "MODULE_ID",
+      "ItemRow",
+      "ListRowsResult",
+      "listRows"
+    ],
+    "evidence": [
+      "有效行 37；导出：MODULE_ID, ItemRow, ListRowsResult, listRows"
+    ]
+  },
+  {
+    "id": "raft",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/raft/index.ts",
+      "client/assets/scripts/features/raft/model/RaftModel.ts",
+      "client/assets/scripts/features/raft/view/RaftView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "RaftModel",
+      "RaftView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "raft",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/raft/index.ts"
+    ],
+    "effectiveLines": 13,
+    "verdict": "ok",
+    "exports": [
+      "Load",
+      "remainingBuoyancy",
+      "checkChange"
+    ],
+    "evidence": [
+      "有效行 13；导出：Load, remainingBuoyancy, checkChange"
+    ]
+  },
+  {
+    "id": "crafting",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/crafting/index.ts",
+      "client/assets/scripts/features/crafting/model/CraftingModel.ts",
+      "client/assets/scripts/features/crafting/view/CraftingPanel.ts",
+      "client/assets/scripts/features/crafting/view/CraftingView.ts"
+    ],
+    "effectiveLines": 284,
+    "verdict": "ok",
+    "exports": [
+      "CraftingModel",
+      "PlanRow",
+      "RecipeSet",
+      "CraftPlan",
+      "createCraftingPanel",
+      "CraftingView"
+    ],
+    "evidence": [
+      "有效行 284；导出：CraftingModel, PlanRow, RecipeSet, CraftPlan, createCraftingPanel, CraftingView"
+    ]
+  },
+  {
+    "id": "crafting",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/crafting/index.ts"
+    ],
+    "effectiveLines": 65,
+    "verdict": "ok",
+    "exports": [
+      "MODULE_ID",
+      "RecipeInput",
+      "RecipeShape",
+      "InventoryShape",
+      "ParseResult",
+      "MissingItem",
+      "CanCraftResult",
+      "parseInputs"
+    ],
+    "evidence": [
+      "有效行 65；导出：MODULE_ID, RecipeInput, RecipeShape, InventoryShape, ParseResult, MissingItem"
+    ]
+  },
+  {
+    "id": "crew",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/crew/index.ts",
+      "client/assets/scripts/features/crew/model/CrewModel.ts",
+      "client/assets/scripts/features/crew/view/CrewView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "CrewModel",
+      "CrewView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "crew",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/crew/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "power",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/power/index.ts",
+      "client/assets/scripts/features/power/model/PowerModel.ts",
+      "client/assets/scripts/features/power/view/PowerView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "PowerModel",
+      "PowerView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "power",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/power/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "island",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/island/index.ts",
+      "client/assets/scripts/features/island/model/IslandModel.ts",
+      "client/assets/scripts/features/island/view/IslandView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "IslandModel",
+      "IslandView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "island",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/island/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "defense",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/defense/index.ts",
+      "client/assets/scripts/features/defense/model/DefenseModel.ts",
+      "client/assets/scripts/features/defense/view/DefenseView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "DefenseModel",
+      "DefenseView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "defense",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/defense/index.ts"
+    ],
+    "effectiveLines": 24,
+    "verdict": "ok",
+    "exports": [
+      "distanceField",
+      "allEntrancesReachable"
+    ],
+    "evidence": [
+      "有效行 24；导出：distanceField, allEntrancesReachable"
+    ]
+  },
+  {
+    "id": "economy",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/economy/index.ts",
+      "client/assets/scripts/features/economy/model/EconomyModel.ts",
+      "client/assets/scripts/features/economy/view/EconomyView.ts",
+      "client/assets/scripts/features/economy/view/MerchantPanel.ts"
+    ],
+    "effectiveLines": 357,
+    "verdict": "ok",
+    "exports": [
+      "EconomyModel",
+      "applySell",
+      "merchantOptions",
+      "unitPrice",
+      "SellableRow",
+      "sellableRows",
+      "goldOf",
+      "quotaText"
+    ],
+    "evidence": [
+      "有效行 357；导出：EconomyModel, applySell, merchantOptions, unitPrice, SellableRow, sellableRows"
+    ]
+  },
+  {
+    "id": "economy",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/economy/index.ts"
+    ],
+    "effectiveLines": 19,
+    "verdict": "ok",
+    "exports": [
+      "recyclePrice",
+      "sellPrice",
+      "sellValue"
+    ],
+    "evidence": [
+      "有效行 19；导出：recyclePrice, sellPrice, sellValue"
+    ]
+  },
+  {
+    "id": "economy",
+    "layer": "server",
+    "files": [
+      "server/src/modules/economy/handlers.ts",
+      "server/src/modules/economy/repo.ts",
+      "server/src/modules/economy/service.ts"
+    ],
+    "effectiveLines": 176,
+    "verdict": "ok",
+    "exports": [
+      "economyHandlers",
+      "LedgerSum",
+      "EconomyError"
+    ],
+    "evidence": [
+      "有效行 176；导出：economyHandlers, LedgerSum, EconomyError"
+    ]
+  },
+  {
+    "id": "economy",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/economy/index.ts"
+    ],
+    "effectiveLines": 8,
+    "verdict": "ok",
+    "exports": [
+      "BuyQuotaReq",
+      "BuyQuotaRes",
+      "SellReq",
+      "SellRes"
+    ],
+    "evidence": [
+      "有效行 8；导出：BuyQuotaReq, BuyQuotaRes, SellReq, SellRes"
+    ]
+  },
+  {
+    "id": "leaderboard",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/leaderboard/index.ts",
+      "client/assets/scripts/features/leaderboard/model/LeaderboardModel.ts",
+      "client/assets/scripts/features/leaderboard/view/LeaderboardPanel.ts",
+      "client/assets/scripts/features/leaderboard/view/LeaderboardView.ts"
+    ],
+    "effectiveLines": 232,
+    "verdict": "ok",
+    "exports": [
+      "LeaderboardModel",
+      "DEFAULT_LIMIT",
+      "RATE_LIMIT_COOLDOWN_MS",
+      "LeaderboardScope",
+      "createLeaderboardPanel",
+      "LeaderboardView"
+    ],
+    "evidence": [
+      "有效行 232；导出：LeaderboardModel, DEFAULT_LIMIT, RATE_LIMIT_COOLDOWN_MS, LeaderboardScope, createLeaderboardPanel, LeaderboardView"
+    ]
+  },
+  {
+    "id": "leaderboard",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/leaderboard/index.ts"
+    ],
+    "effectiveLines": 3,
+    "verdict": "ok",
+    "exports": [
+      "exceedsHourlyCap"
+    ],
+    "evidence": [
+      "有效行 3；导出：exceedsHourlyCap"
+    ]
+  },
+  {
+    "id": "leaderboard",
+    "layer": "server",
+    "files": [
+      "server/src/modules/leaderboard/handlers.ts",
+      "server/src/modules/leaderboard/repo.ts",
+      "server/src/modules/leaderboard/service.ts"
+    ],
+    "effectiveLines": 211,
+    "verdict": "ok",
+    "exports": [
+      "leaderboardHandlers",
+      "IncomeRow",
+      "TopRow",
+      "SnapshotRow",
+      "RateError"
+    ],
+    "evidence": [
+      "有效行 211；导出：leaderboardHandlers, IncomeRow, TopRow, SnapshotRow, RateError"
+    ]
+  },
+  {
+    "id": "leaderboard",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/leaderboard/index.ts"
+    ],
+    "effectiveLines": 6,
+    "verdict": "ok",
+    "exports": [
+      "IncomeEvent",
+      "ReportReq",
+      "ReportRes",
+      "QueryReq",
+      "RankRow",
+      "QueryRes"
+    ],
+    "evidence": [
+      "有效行 6；导出：IncomeEvent, ReportReq, ReportRes, QueryReq, RankRow, QueryRes"
+    ]
+  },
+  {
+    "id": "event",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/event/index.ts",
+      "client/assets/scripts/features/event/model/EventModel.ts",
+      "client/assets/scripts/features/event/view/EventView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "EventModel",
+      "EventView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "event",
+    "layer": "core",
+    "files": [
+      "packages/game-core/src/event/index.ts"
+    ],
+    "effectiveLines": 1,
+    "verdict": "shell",
+    "exports": [
+      "MODULE_ID"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE_ID"
+    ]
+  },
+  {
+    "id": "event",
+    "layer": "server",
+    "files": [
+      "server/src/modules/event/handlers.ts",
+      "server/src/modules/event/repo.ts",
+      "server/src/modules/event/service.ts"
+    ],
+    "effectiveLines": 3,
+    "verdict": "shell",
+    "exports": [
+      "MODULE"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE"
+    ]
+  },
+  {
+    "id": "event",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/event/index.ts"
+    ],
+    "effectiveLines": 6,
+    "verdict": "ok",
+    "exports": [
+      "EventStartReq",
+      "EventStartRes",
+      "EventOp",
+      "EventSubmitReq",
+      "EventSubmitRes",
+      "EventResultRes"
+    ],
+    "evidence": [
+      "有效行 6；导出：EventStartReq, EventStartRes, EventOp, EventSubmitReq, EventSubmitRes, EventResultRes"
+    ]
+  },
+  {
+    "id": "social",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/social/index.ts",
+      "client/assets/scripts/features/social/model/SocialModel.ts",
+      "client/assets/scripts/features/social/view/SocialView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "SocialModel",
+      "SocialView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "social",
+    "layer": "server",
+    "files": [
+      "server/src/modules/social/handlers.ts",
+      "server/src/modules/social/repo.ts",
+      "server/src/modules/social/service.ts"
+    ],
+    "effectiveLines": 3,
+    "verdict": "shell",
+    "exports": [
+      "MODULE"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE"
+    ]
+  },
+  {
+    "id": "social",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/social/index.ts"
+    ],
+    "effectiveLines": 4,
+    "verdict": "ok",
+    "exports": [
+      "SendReq",
+      "ChatMsg",
+      "PullReq",
+      "PullRes"
+    ],
+    "evidence": [
+      "有效行 4；导出：SendReq, ChatMsg, PullReq, PullRes"
+    ]
+  },
+  {
+    "id": "ads",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/ads/index.ts",
+      "client/assets/scripts/features/ads/model/AdsModel.ts",
+      "client/assets/scripts/features/ads/view/AdsView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "AdsModel",
+      "AdsView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "ads",
+    "layer": "server",
+    "files": [
+      "server/src/modules/ads/handlers.ts",
+      "server/src/modules/ads/repo.ts",
+      "server/src/modules/ads/service.ts"
+    ],
+    "effectiveLines": 3,
+    "verdict": "shell",
+    "exports": [
+      "MODULE"
+    ],
+    "evidence": [
+      "导出仅限常量：MODULE"
+    ]
+  },
+  {
+    "id": "ads",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/ads/index.ts"
+    ],
+    "effectiveLines": 2,
+    "verdict": "ok",
+    "exports": [
+      "AdClaimReq",
+      "AdClaimRes"
+    ],
+    "evidence": [
+      "有效行 2；导出：AdClaimReq, AdClaimRes"
+    ]
+  },
+  {
+    "id": "guide",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/guide/index.ts",
+      "client/assets/scripts/features/guide/model/GuideModel.ts",
+      "client/assets/scripts/features/guide/view/GuideOverlay.ts",
+      "client/assets/scripts/features/guide/view/GuideView.ts"
+    ],
+    "effectiveLines": 164,
+    "verdict": "ok",
+    "exports": [
+      "GuideModel",
+      "createGuideOverlay",
+      "type GuideHandle",
+      "GuideHandle",
+      "GuideView"
+    ],
+    "evidence": [
+      "有效行 164；导出：GuideModel, createGuideOverlay, type GuideHandle, GuideHandle, GuideView"
+    ]
+  },
+  {
+    "id": "settings",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/settings/index.ts",
+      "client/assets/scripts/features/settings/model/SaveSyncModel.ts",
+      "client/assets/scripts/features/settings/model/SettingsModel.ts",
+      "client/assets/scripts/features/settings/view/SettingsPanel.ts",
+      "client/assets/scripts/features/settings/view/SettingsView.ts"
+    ],
+    "effectiveLines": 326,
+    "verdict": "ok",
+    "exports": [
+      "SettingsModel",
+      "KeepChoice",
+      "SyncStatus",
+      "SaveSyncModel",
+      "SettingsHandle",
+      "createSettingsPanel",
+      "SettingsView"
+    ],
+    "evidence": [
+      "有效行 326；导出：SettingsModel, KeepChoice, SyncStatus, SaveSyncModel, SettingsHandle, createSettingsPanel"
+    ]
+  },
+  {
+    "id": "telemetry",
+    "layer": "client",
+    "files": [
+      "client/assets/scripts/features/telemetry/index.ts",
+      "client/assets/scripts/features/telemetry/model/TelemetryModel.ts",
+      "client/assets/scripts/features/telemetry/view/TelemetryView.ts"
+    ],
+    "effectiveLines": 14,
+    "verdict": "shell",
+    "exports": [
+      "TelemetryModel",
+      "TelemetryView"
+    ],
+    "evidence": [
+      "有效行 14 < 15"
+    ]
+  },
+  {
+    "id": "telemetry",
+    "layer": "server",
+    "files": [
+      "server/src/modules/telemetry/handlers.ts",
+      "server/src/modules/telemetry/repo.ts",
+      "server/src/modules/telemetry/service.ts"
+    ],
+    "effectiveLines": 50,
+    "verdict": "ok",
+    "exports": [
+      "telemetryHandlers",
+      "TelemetryError",
+      "TrackOutput"
+    ],
+    "evidence": [
+      "有效行 50；导出：telemetryHandlers, TelemetryError, TrackOutput"
+    ]
+  },
+  {
+    "id": "telemetry",
+    "layer": "contracts",
+    "files": [
+      "packages/contracts/src/telemetry/index.ts"
+    ],
+    "effectiveLines": 2,
+    "verdict": "ok",
+    "exports": [
+      "TrackEvent",
+      "TrackReq"
+    ],
+    "evidence": [
+      "有效行 2；导出：TrackEvent, TrackReq"
+    ]
+  }
+]

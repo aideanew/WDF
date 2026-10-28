@@ -1,0 +1,38 @@
+
+## client（23 声明 / 15 空壳）
+  🅾 account  有效行 14  有效行 14 < 15
+  🅾 compliance  有效行 14  有效行 14 < 15
+  🅾 progression  有效行 14  有效行 14 < 15
+  🅾 sea  有效行 14  有效行 14 < 15
+  🅾 salvage  有效行 14  有效行 14 < 15
+  🅾 fishing  有效行 14  有效行 14 < 15
+  🅾 raft  有效行 14  有效行 14 < 15
+  🅾 crew  有效行 14  有效行 14 < 15
+  🅾 power  有效行 14  有效行 14 < 15
+  🅾 island  有效行 14  有效行 14 < 15
+  🅾 defense  有效行 14  有效行 14 < 15
+  🅾 event  有效行 14  有效行 14 < 15
+  🅾 social  有效行 14  有效行 14 < 15
+  🅾 ads  有效行 14  有效行 14 < 15
+  🅾 telemetry  有效行 14  有效行 14 < 15
+  ✅ 有行为：hook, chest, inventory, crafting, economy, leaderboard, guide, settings
+
+## server（10 声明 / 4 空壳）
+  🅾 salvage  有效行 3  导出仅限常量：MODULE
+  🅾 event  有效行 3  导出仅限常量：MODULE
+  🅾 social  有效行 3  导出仅限常量：MODULE
+  🅾 ads  有效行 3  导出仅限常量：MODULE
+  ✅ 有行为：account, compliance, chest, economy, leaderboard, telemetry
+
+## contracts（10 声明 / 0 空壳）
+  ✅ 有行为：account, compliance, salvage, chest, economy, leaderboard, event, social, ads, telemetry
+
+## core（16 声明 / 7 空壳）
+  🅾 progression  有效行 1  导出仅限常量：MODULE_ID
+  🅾 salvage  有效行 1  导出仅限常量：MODULE_ID
+  🅾 fishing  有效行 1  导出仅限常量：MODULE_ID
+  🅾 crew  有效行 1  导出仅限常量：MODULE_ID
+  🅾 power  有效行 1  导出仅限常量：MODULE_ID
+  🅾 island  有效行 1  导出仅限常量：MODULE_ID
+  🅾 event  有效行 1  导出仅限常量：MODULE_ID
+  ✅ 有行为：hook, sea, chest, inventory, raft, crafting, defense, economy, leaderboard
