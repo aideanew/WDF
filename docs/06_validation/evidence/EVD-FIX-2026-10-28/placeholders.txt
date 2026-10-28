@@ -1,0 +1,10 @@
+
+> wodefa@0.0.0 placeholders
+> node tools/guard/placeholders.mjs
+
+⚠ 占位值嫌疑 5 项（rows>3 且全表同值；--strict 时作门禁）：
+  facilities.effect_bp = 10000  (rows 9)
+  items.stack = 99  (rows 106)
+  items.unlock_level = 0  (rows 106)
+  locks.zone_bp = 0  (rows 5)
+  recipes.unlock_level = 0  (rows 80)

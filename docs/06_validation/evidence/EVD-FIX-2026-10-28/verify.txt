@@ -1,0 +1,312 @@
+
+> wodefa@0.0.0 verify
+> npm run gen && npm run guard && npm run test && npm run typecheck
+
+
+> wodefa@0.0.0 gen
+> node tools/gen/config.mjs && node tools/sync/to-client.mjs && node tools/gen/catalog.mjs && node tools/gen/docs-index.mjs
+
+✅ 数值生成完成：46 张表，398 行，configVersion=20a313a478737571
+✅ 已同步 43 个文件到 client/assets/scripts/generated/（清理 0 个失效产物；.meta 未触碰）
+✅ 模块总览 28 个模块；接口目录 22 个动作
+✅ 文档索引 285 篇，任务 52 个
+
+> wodefa@0.0.0 guard
+> node tools/guard/run-all.mjs
+
+✅ 根目录白名单
+✅ game-core/contracts 纯度
+✅ 客户端依赖边界
+✅ 服务端依赖边界
+✅ 模块清单与目录一致
+✅ Asset Bundle 规则
+✅ 生成物未手改且已同步
+✅ 文档 front matter
+✅ 无空目录
+
+全部守卫通过
+
+> wodefa@0.0.0 test
+> node --import ./tools/runtime/register.mjs --test "tests/**/*.test.mjs"
+
+✔ 契约动作表 ↔ 服务端 handlers 一一对应 (1.45ms)
+✔ 数值校验器：坏数据必须报错（主键重复/外键缺失/概率合计≠10000/类型错误） (137.5801ms)
+✔ 数值校验器：好数据通过 (165.456ms)
+✔ 带 id 的 EVD README 正常进索引（FIX-5 五份不再缺失） (0.8284ms)
+✔ 缺 id 的 EVD README 显示 ⚠缺 而非被丢弃 (0.1567ms)
+✔ governance README 仍纳入 (0.1052ms)
+✔ 全部带 README.md 的 EVD 目录都在索引中（无遗漏；EVD-4012 用 baseline.md 除外） (1.8471ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2401 ACTIONS 全表可解析（22 动作，TASK-4009 增 chest.open） (1.9663ms)
+✔ AT-2401 已实现动作都有集成测试覆盖（静态检查） (3.9459ms)
+▶ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态）
+  ✔ economy.buyQuota → 4999 + FEATURE_NOT_AVAILABLE (4.6533ms)
+  ✔ event.result → 4999 + FEATURE_NOT_AVAILABLE (0.9604ms)
+  ✔ event.start → 4999 + FEATURE_NOT_AVAILABLE (3.6363ms)
+  ✔ event.submit → 4999 + FEATURE_NOT_AVAILABLE (8.1002ms)
+  ✔ salvage.claimInfo → 4999 + FEATURE_NOT_AVAILABLE (3.2137ms)
+  ✔ social.pull → 4999 + FEATURE_NOT_AVAILABLE (1.3033ms)
+  ✔ social.send → 4999 + FEATURE_NOT_AVAILABLE (2.4982ms)
+✔ AT-2401 全部 todo 动作实调返回 4999 + FEATURE_NOT_AVAILABLE（D-46=A：不伪装成功，客户端走未开放态） (50.7929ms)
+✔ AT-2401 FEATURE_NOT_AVAILABLE 不触发静默刷新重试（4999 ≠ 2002，RpcClient 唯一重试路径） (0.221ms)
+[db] 迁移已执行：0001_init.sql
+✔ sv-门禁 1【到期提醒】：SAVE_SCHEMA_VERSION 必须仍为 1 (3.553ms)
+✔ sv-门禁 2【到期提醒】：MIGRATIONS 链为空（没有 v1→v2 就说明现在切版本等于裸奔） (0.3409ms)
+✔ sv-门禁 3：migrate() 三态可用（能力在，只是没人接 —— 这是 G-1 的事实基线） (0.431ms)
+✔ sv-门禁 4：服务端**不校验** m.sv（裁决 A 的事实锁定；传离谱的 sv 也照常放行） (41.9006ms)
+✔ sv-门禁 5：缺 schemaVersion 的存档被**静默按 1 存**（已裁决行为，不是疏漏） (30.7381ms)
+✔ 15 个错误码全覆盖，且逐行与 DESIGN-0001 §2 一致 (2.8988ms)
+✔ code===0 → success，不携带出口 (0.1639ms)
+✔ 2004 BIND_TICKET_INVALID → noPermission / 不可重试 / 回登录（D-12 解冻） (0.1218ms)
+✔ 幂等回放 3001 是 success（绝不可当冲突/错误） (0.1047ms)
+✔ 三类典型态：售罄=empty、封禁=noPermission、超频=可重试 (0.9324ms)
+✔ noPermission 一律不可重试，且必须给出下一步出口 (0.2056ms)
+✔ 未知错误码 → error 可重试，绝不静默当成功 (0.133ms)
+✔ 只有 accepted:false 算冲突，accepted:true 不算 (0.1463ms)
+✔ 投影：只列背包里 count > 0 的箱子，顺序与配置表一致 (1.8051ms)
+✔ 投影：四种锁不是箱子，永不出现（锁是独立物品） (0.2106ms)
+✔ 投影：背包里没有箱子 → 空数组（面板走 empty 态） (0.1287ms)
+✔ 投影：脏数据不崩溃、不误判为可开（负数 / 字符串 / 缺段 / 非法段） (0.2744ms)
+✔ 投影：数量向下取整（1.9 个箱子显示为 1） (0.1574ms)
+✔ 投影：lock !== none 时 openable=false（v1.1 开锁前不得静默当可开箱） (0.12ms)
+✔ 投影：配置缺 item_id 的行被跳过（旧产物缺陷，不猜） (0.1612ms)
+✔ 文案兜底：未知材质/锁档回落到原值，不上屏 undefined (0.1237ms)
+✔ 真实配置自检：3 箱 item_id 全在 items 表内、lock 全 none (0.2126ms)
+✔ applyOpen：扣 1 箱 + 发奖 + revision+1，verifySave 通过，入参不变 (0.6559ms)
+✔ applyOpen：最后一个箱子被完全移除，不留 0 值字段 (0.2554ms)
+✔ applyOpen：奖励为空数组 → 只扣箱（服务端返回什么就落什么） (0.2148ms)
+✔ applyOpen：多件奖励累加，同 id 多次出现累加而非覆盖 (0.2283ms)
+✔ 杀进程重启（JSON 往返）后可继续开第二个箱子 (0.2458ms)
+✔ ChestModel：project 刷新脏标记，countOf 反映当前持有数 (0.3836ms)
+(node:18620) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/chest/model/ChestModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 开锁状态机：连中达标开锁；失误重置连续但不减已中数 (1.1603ms)
+✔ 开锁状态机：工具耗尽终止（用一次断一根） (0.2149ms)
+✔ isHit：指针落在命中区内（半开区间） (0.1696ms)
+✔ 确定性：同输入同输出（attempt 不修改入参） (0.6535ms)
+✔ S-10.6 材料足够 → 扣材料 + 产出 + revision+1，verifySave 通过 (2.4708ms)
+✔ S-10.7 材料不足 → 原样返回同一引用（零副作用，不落盘） (0.3917ms)
+✔ S-10.7 空存档（无 inventory 段）→ 同样零副作用 (1.21ms)
+✔ 杀进程重启（JSON 往返）后 revision 与库存保留，可继续合成 (0.9449ms)
+✔ S-10.5 分组：可制作 / 材料不足，缺料文案按 inputs 顺序 (1.6924ms)
+✔ S-10.3 invalid 输入串配方被剔除并计数，不进任何分组 (0.3483ms)
+✔ 产物 id 不在 items 表的配方被剔除并计数（不显示空名字） (0.2274ms)
+✔ output_count 非法值兜底为 1（不显示 ×0 或 ×NaN） (0.1411ms)
+✔ 真实 80 条配方全部可解析：skippedInvalid === 0（校正任务卡"21 条"的错误前提） (0.8346ms)
+✔ 非法 section 兜底：不崩溃、全部材料不足 (0.3399ms)
+(node:31888) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/crafting/model/CraftingModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ crafting：MODULE_ID 保留（守卫 catalogConsistency 依赖模块目录导出） (1.9823ms)
+✔ parseInputs：单输入 → ok，missing 为空 (2.204ms)
+✔ parseInputs：缺 1 个材料 → missing 精确含该 id，need/have 分别取配方值与库存值 (0.3095ms)
+✔ parseInputs：真实存在的 3 输入配方（recipe_0043） (0.2334ms)
+✔ parseInputs：真实存在的 4 输入配方（recipe_0078） (0.4027ms)
+✔ parseInputs：非法片段收集进 invalid，不抛异常 (0.3502ms)
+✔ canCraft：空库存 → 全部材料缺，ok=false (0.7232ms)
+✔ consume：不改入参（同对象调两次结果相同 = 未改入参） (0.6417ms)
+✔ consume：库存不足时夹到 0 而非负数 (0.2404ms)
+✔ 确定性：canCraft 与 parseInputs 连续两次调用深比较相等 (0.3465ms)
+✔ 真实数据：80 条配方全部可解析，且输入串分布为 单31/双44/三2/四3 (0.6271ms)
+✔ 渔村 region_bp=10000：sellValue = recycle_bp（等价 50% 原价） (1.288ms)
+✔ 流浪 region_bp=8500：sellValue = floor(recycle_bp × 0.85) (0.1991ms)
+✔ 黑市 region_bp=13000：sellValue = floor(recycle_bp × 1.3) (0.1353ms)
+✔ 与既有 recyclePrice 等价（bp = regionBp - 10000） (1.6979ms)
+✔ 负数/0 防御：返回 0 (0.2553ms)
+✔ 非有限数防御：返回 0 (0.1846ms)
+✔ 向下取整验证 (0.1456ms)
+✔ F-40 ①：区域系数钳在 +30%（填 20000 不得突破） (0.1516ms)
+✔ F-40 ①：区域系数钳在 -30%（填 1 不得低于 -30%） (0.1605ms)
+✔ F-40 ②：回收价不得超过原价（填错 recycle_bp 不得买低卖高） (0.2525ms)
+✔ F-40 ③：原价 0 = 不可回收（设定：海水 原价 0 / 不收） (0.1187ms)
+✔ F-40 ④：区域系数 0 = 未配置/不收，不得被钳成 -30% 照付 (0.0603ms)
+✔ F-40 ⑤：真实 106 行价格表——加守卫后行为零变化 (1.6483ms)
+✔ rng：同种子同序列（前后端一致的基础） (3.5321ms)
+✔ 存档：校验和能发现篡改；迁移拒绝比客户端新的版本 (0.6726ms)
+✔ 浮力：整船浮力 ≥ 总重量，不足时给出差额 (0.437ms)
+✔ 开锁期望：公式与边界 (0.3029ms)
+✔ 潮汐：每 6 小时一波、持续 10 分钟 (0.3702ms)
+✔ 塔防：反向 BFS 距离场；堵死入口能被检测 (1.2179ms)
+✔ 经济：回收价 = 原价 × 50%，地区 ±30% 截断 (0.2231ms)
+✔ readDone 容错：null / 缺键 / 非数组 / 混入非字符串 (2.4514ms)
+✔ hydrate：无完成 → 第 0 步，未结束 (0.3046ms)
+✔ hydrate：已完成 2 步 → 当前指向第 3 步 (0.0978ms)
+✔ hydrate：全部完成 → isFinished 且无当前步 (0.0918ms)
+✔ applyDone：追加完成态 + revision+1 + 封印可验 + 保留身份字段 (0.5486ms)
+✔ applyDone：全部完成时返回同一引用（零副作用） (0.2379ms)
+✔ applyDone 不改入参（不可变） (0.2263ms)
+✔ JSON 往返后恢复：已完成的步骤不再出现（首启→重启闭环） (0.3398ms)
+(node:45204) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/guide/model/GuideModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 确定性：同输入同输出（深度相等） (3.7361ms)
+✔ powerAt：三角波往返，0 起点 / 600 峰值 / 1200 回起点 / 1800 再峰值 (2.2145ms)
+✔ cast 几何：reach 随力度与角度确定 (0.383ms)
+✔ resolveHit：穿过判定区命中，偏离 > hitRadius 为 null (0.3164ms)
+✔ pullBack：承重不足返回 err(3101)，足够返回 ok (0.4238ms)
+✔ chargeAndCast：边界 powerBp=0/10000 与命中半径单调不减 (5.2305ms)
+✔ inventory：MODULE_ID 保留（守卫 catalogConsistency 依赖模块目录导出） (1.9737ms)
+✔ listRows：3 个已知 + 1 个未知 id → known 3 行，unknownIds 保留原顺序 (4.2738ms)
+✔ listRows：各种非法 section 一律返回空结果，不抛异常 (0.683ms)
+✔ listRows：数量 ≤0 或非整数不出现在 known (0.4044ms)
+✔ listRows：基准价降序，同价按 id 升序（确定性排序） (0.5582ms)
+✔ listRows：两次调用结果深比较相等（确定性，不依赖对象键顺序） (0.3673ms)
+✔ listRows：不改入参 (0.3265ms)
+✔ listRows：真实存档段（HookModel 写入的扁平结构）能全部解析 (0.3064ms)
+✔ items-w 1 全表 weight ∈ {1,3,10} (1.7111ms)
+✔ items-w 2 品类→weight 映射 (0.4511ms)
+✔ items-w 3 容器 capacity>0 且递增 (0.3391ms)
+✔ items-w 4 非容器 capacity=0 (0.3546ms)
+✔ items-w 5 weight/capacity 非负整数 (0.3883ms)
+✔ items-w 6 浮力自洽：容器装载后可留正浮力 (0.3549ms)
+✔ lv 1 levels 恰 49 行且 id 为 1..49 (2.1198ms)
+✔ lv 2 exp_to_next 非负整数且随等级单调不减 (0.5089ms)
+✔ lv 3 经验曲线代定公式 exp_to_next = 100 + 20×(lv−1) (0.1737ms)
+✔ lv 4 里程碑：等级 20 存在（驶出浅海） (0.1251ms)
+✔ lv 5 总经验量级自检（到 49 级累计 ≈27k） (0.1313ms)
+✔ lv 6 unlocks 恰 11 行等级段注册表 (0.1662ms)
+✔ lv 7 unlocks 等级段起点与设计源一致（含 20 级驶出浅海） (0.2072ms)
+✔ 单价只经 sellValue：三档区域与既有回收语义一致（D-16） (1.7993ms)
+✔ 可卖列表：过滤无回收价/零持有/未知 id，排序确定 (1.59ms)
+✔ applySell：背包 −count + 金币 +herbDelta + revision+1，且封印可验 (0.8531ms)
+✔ applySell：卖光删除键，金币按 herbDelta 累加 (0.3114ms)
+✔ applySell 不改入参（不可变） (0.3105ms)
+✔ JSON 往返后状态保留（模拟杀进程重载） (0.3973ms)
+✔ goldOf 容错：null / 缺键 / 非法值 → 0 (0.4036ms)
+✔ merchantOptions 与 quotaText（D-17 顶部额度文案） (0.3139ms)
+(node:13736) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/economy/model/EconomyModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ raft-t 1 恰 1 行（筏块为当前唯一船体材料） (2.0767ms)
+✔ raft-t 2 item 引用存在且为 facility 类（筏块） (0.7961ms)
+✔ raft-t 3 筏块净浮力为正（扩筏可行） (0.3675ms)
+✔ raft-t 4 capacity/weight 非负整数 (0.435ms)
+✔ raft-t 5 浮力自洽：N 块筏块 + 货重 → 正浮力（复用 remainingBuoyancy） (0.4695ms)
+✔ raft-t 6 rooms 为设计源室内房间类型注册表 (0.4203ms)
+✔ flush 1 剥离旧 checksum 重封印 → verifySave 通过 (2.5156ms)
+✔ flush 2 重封印保留 schemaVersion (0.4172ms)
+✔ flush 3 重封印刷新 savedAt（≥ 原值） (0.4905ms)
+✔ flush 4 重封印内容不丢（revision/saveId/configVersion 不变） (0.2937ms)
+✔ flush 5 反例：不剥离旧 checksum 直接 seal → verifySave 为 false（剥离是必要前提） (0.3392ms)
+✔ 封印 1：sealSave → JSON 往返（模拟落盘/读盘）→ verifySave 为 true (1.9211ms)
+✔ 封印 2（反例）：把已封印对象直接再 sealSave → verifySave 为 false（不剥离旧 checksum 必坏） (0.4052ms)
+✔ 封印 3（正解）：先解构剥离旧 checksum 再 sealSave → verifySave 为 true (0.3557ms)
+✔ 封印 4：改 modules 任一字段而不重封印 → verifySave 为 false（篡改必被发现） (0.3307ms)
+✔ 封印 5：checksum 为非整数（字符串/浮点/缺失）→ verifySave 为 false 且不抛异常 (0.4259ms)
+✔ 封印 6：负数 checksum 仍判 false，且合法整数 checksum 才通过 (0.1544ms)
+✔ ux 1 empty 透传 next + 不可重试 (1.0836ms)
+✔ ux 2 empty 无 next → 无按钮 (0.1978ms)
+✔ ux 3 error 透传 retryable 与 next (0.1489ms)
+✔ ux 4 error 文案可归因覆盖（§4.2） (0.135ms)
+✔ ux 5 noPermission 透传 next + 不可重试 (0.3143ms)
+✔ ux 6 loading/success/conflict → null（调用方处理） (0.3126ms)
+✔ ux 7 缺省兜底文案 (1.6362ms)
+✔ ux 8 六种 UxNext 出口都有按钮文案 (1.424ms)
+(node:33328) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/app/ux-hint.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[db] 迁移已执行：0001_init.sql
+✔ e2e 骨架：login → telemetry → push → pull 闭环 (89.3051ms)
+[db] 迁移已执行：0001_init.sql
+✔ ads-1 正常 claim：granted=true，remainingToday 递减 (51.6981ms)
+✔ ads-2 达上限：第 cap+1 次 → 3002，remainingToday=0 口径由 3002 表达 (25.6159ms)
+✔ ads-3 未知 placement：→ 1001，零副作用 (10.3812ms)
+✔ ads-4 跨日重置：昨天耗尽 cap，未来 serverNow 计数归零可再 claim (23.0855ms)
+✔ ads-5 同 rid 重放：同 rid 返回上次结果，不重复计数 (23.6011ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-0104 令牌签发与鉴权口径 (37.372ms)
+✔ AT-0104 account.login 身份复用与参数校验 (18.167ms)
+✔ AT-0105 account.refresh 刷新会话（过期令牌也可） (5.1074ms)
+✔ AT-0105 compliance.check (8.8753ms)
+✔ AT-0107 save.push 乐观锁与幂等 (38.2068ms)
+✔ 未实现动作返回 4999，不伪装成业务失败 (11.5339ms)
+✔ 未知动作返回 1002 (0.3574ms)
+✔ AT-0105 config.manifest 与版本闸 (18.2265ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2201 bindStart 签发一次性票据 (56.4382ms)
+✔ AT-2201 bindStart 幂等：同 rid 回放同一票据，不重复签发 (19.7742ms)
+✔ AT-2201 两平台身份合并后 playerId 相同（核心验收） (39.636ms)
+✔ AT-2201 bindConfirm 幂等：同 rid 回放首次结果；换 rid 重放已用票据被拒 (36.5176ms)
+✔ AT-2201 失败路径：票据不存在 / 过期 / 自绑 → 2004（非 500） (44.1513ms)
+✔ AT-2201 forkPending：确认方已有存档 → true 并登记 save_fork；重复合并不再登记 (42.7088ms)
+[db] 迁移已执行：0001_init.sql
+✔ cfg 1：attachCfgHint 三条分支（失败不修饰 / 一致不修饰 / 服务端无版本不修饰） (3.2645ms)
+✔ cfg 2：客户端 cfg 与当前一致 → 响应里没有 cfg 字段 (9.6129ms)
+✔ cfg 3：客户端 cfg 过期 → 响应附带最新 cfg，且 c 仍为 0（只提示，不拒请求） (3.1352ms)
+✔ cfg 4：失败响应不带 cfg（优先暴露真实错误，不混入版本提示） (2.3277ms)
+✔ cfg 5（决定性）：幂等缓存里不含 hint —— 改版本后重放，hint 必须是新版本 (48.427ms)
+[db] 迁移已执行：0001_init.sql
+✔ chest.open 正常开箱：扣 1 个箱子、得保底奖励、写两条账本 (63.6256ms)
+✔ chest.open 箱子不足：报 1001，且存档与账本均无变化 (15.1076ms)
+✔ chest.open 幂等重放：同 rid 返回首次结果，不重复扣除 (13.73ms)
+✔ chest.open 非箱子物品：报 1001，不消耗物品 (9.4053ms)
+✔ chest.open 把四种锁当箱子：全部报 1001 (13.1308ms)
+✔ chest.open 账本一致性：开箱后奖励物立即可回收（F-29） (27.1431ms)
+✔ chest.open 无存档：报 2001，不再静默成功 (7.1775ms)
+[db] 迁移已执行：0001_init.sql
+✔ sell-1 正常卖：herbDelta 按 D-01 公式，quotaLeft 递减 (49.5763ms)
+✔ sell-2 影子不一致（超卖）：available=0 时卖 → 1001，零副作用 (6.6885ms)
+✔ sell-3 重复 rid：幂等重放返回相同结果，不重复扣账 (13.9146ms)
+✔ sell-4 限购尽：merchant_black 卖满 5 次后第 6 次 → 3002 (30.365ms)
+✔ sell-5 失败零副作用（V-406.c）：前后快照相等 (11.6211ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2202 push 冲突分叉 → keep=local 收敛到本地档 (45.0707ms)
+✔ AT-2202 bind 分叉 → keep=cloud 保留锚定档并清空 fork (30.4128ms)
+✔ AT-2202 bind 分叉 → keep=local 收敛到被合并方旧档 (28.7141ms)
+✔ AT-2202 失败路径：缺 localSnapshot → 1001；缺 rid → 1001；同 rid 幂等回放 (22.471ms)
+✔ AT-2202 裁决留痕：audit_log 有 resolve_fork 记录 (25.875ms)
+✔ AT-2103 命中 → 物品 +1、revision 递增、checksum 有效 (1.9393ms)
+✔ AT-2103 脱钩 → 存档原样（revision/物品不变） (0.3874ms)
+✔ AT-2103 杀进程重启（JSON 往返）后物品与 revision 保留 (0.4795ms)
+✔ AT-2103 存档被篡改 → verifySave 拒绝（损坏走云端档的前置） (0.2615ms)
+(node:44056) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///E:/Demo/WDF/client/assets/scripts/features/hook/model/HookModel.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to E:\Demo\WDF\client\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2203 report 3 人 → query 排序正确 + me 定位 (106.6967ms)
+✔ AT-2203 report 非法事件剔除；seq 回退幂等返回当前进度 (20.2487ms)
+✔ AT-2203 超频 → 4001（同 player 间隔过短） (9.4785ms)
+✔ AT-2203 收益超 cap → flagged 且不入榜 (11.8879ms)
+✔ AT-2203 province 快照未产出 → 空榜（契约合法） (2.3811ms)
+✔ E-07 每个动作都有 payload schema 或显式豁免 (1.0996ms)
+✔ E-07 已知 schema 能正确放行/拒绝 (9.1598ms)
+[db] 迁移已执行：0001_init.sql
+✔ 限流 1/2/3：窗口内放行 limit 次，第 limit+1 次拒绝；retryAfterMs 指向窗口末；窗口滚过重新计数 (1.1819ms)
+✔ 限流 4：不同 key 互相独立（同 IP 不同动作、不同 IP 同动作都不互相吃配额） (0.1036ms)
+✔ 桶数量有界：打 20k+ 个不同 key 后不超过上限（防内存被稀疏 IP 打爆） (182.4924ms)
+✔ 限流 5：优先级 动作级 env > 全局 env > 内置动作默认 > 内置默认 (0.5829ms)
+✔ 限流 6：env 写非法值必须回落默认，绝不静默关掉防护（Number("abc")=NaN / Number("  ")=0 陷阱） (0.4423ms)
+✔ 限流 7：只有显式写 0 才是关闭限流 (0.1885ms)
+✔ 限流 8：同 IP 超限 → 4001；不同 IP 不受影响（config.manifest 是 auth:false） (6.3911ms)
+✔ 限流 9：无 IP 不限流（不误杀）；有令牌的动作不受 IP 维度限流 (24.6032ms)
+[db] 迁移已执行：0001_init.sql
+✔ AT-2204 正常上报入库（audit_log，actor=IP）+ 空批次零副作用 (17.3643ms)
+✔ AT-2204 超批量上限 → 4001（明确码，非 500） (10.3062ms)
+✔ AT-2204 无令牌可上报（auth:false）+ 主流程不受影响 (12.7848ms)
+ℹ tests 223
+ℹ suites 0
+ℹ pass 223
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8598.8844
+
+> wodefa@0.0.0 typecheck
+> npm run typecheck:client && npm run typecheck:server
+
+
+> wodefa@0.0.0 typecheck:client
+> tsc -p client/tsconfig.json --noEmit
+
+
+> wodefa@0.0.0 typecheck:server
+> tsc -p server/tsconfig.json --noEmit
+

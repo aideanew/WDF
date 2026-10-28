@@ -1,0 +1,14 @@
+
+> wodefa@0.0.0 release:check
+> node tools/release/check.mjs
+
+
+## release:check（提审可机检项）
+
+  ✅ configVersion 一致性  ——  20a313a478737571（manifest 实测，与两份提审文档一致）
+  ✅ 微信主包 ≤ 4MB  ——  2.913MB / 4MB 预算
+  ✅ chests.csv 3 行全无锁  ——  3 行，lock=[none,none,none]
+  ✅ 广告位每日上限合计 ≤ 9  ——  3 个位面 × 合计 9 / 上限 9
+
+✅ 全部通过
+
