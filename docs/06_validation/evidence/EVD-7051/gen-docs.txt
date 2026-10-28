@@ -1,0 +1,5 @@
+
+> wodefa@0.0.0 gen:docs
+> node tools/gen/docs-index.mjs
+
+✅ 文档索引 241 篇，任务 52 个

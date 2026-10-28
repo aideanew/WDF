@@ -1,0 +1,21 @@
+EVD-7051 —— TASK-7051：文档指针与措辞（进入本卡时已就位，无需改动，复核确认）
+
+状态：指针→v010、v009 superseded、活动措辞=实测口径，均已于进入本卡前完成；本卡零改动
+
+验收条目：
+1. [PASS] 指针唯一指向 v010（current-plan.md:14,25）
+2. [PASS] v009 状态 superseded（plan-v009/00-README.md:4）
+3. [PASS] 不含"收口"作为活动状态（实测口径表 :30-35 + 禁止语句 :38；:52,74 冻结历史）
+4. [PASS] npm run gen:docs 通过（241 篇 / 52 任务）
+5. [PASS] grep plan-v010 current-plan.md 命中（4 处）
+6. [PASS] roadmap 标"现在，plan-v010"（roadmap.md:19）
+7. [PASS] 未改动 3 文件之外任何内容
+
+验证命令：
+- npm run gen:docs：exit 0
+- grep -n "plan-v010" docs/04_planning/current-plan.md：4 处命中
+
+变更清单（单卡）：
+- docs/06_validation/evidence/EVD-7051/（复核确认，无源码/文档改动）
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅）

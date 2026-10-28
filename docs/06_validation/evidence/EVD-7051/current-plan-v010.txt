@@ -1,0 +1,4 @@
+14:> **唯一现行执行规划 = [`plan-v010/00-README.md`](plan-v010/00-README.md)**（9 份，卡片 TASK-7001~7051）。
+25:> | **`plan-v010`** | **唯一现行** |
+27:> **接手第一步不是读本节以下内容，而是读 [`plan-v010/02-requirement-inventory.md`](plan-v010/02-requirement-inventory.md)**
+39:> （见 `plan-v010/03-self-negation.md` N-4）。"收口"会让人按"收尾"的心态排期，必然崩。
