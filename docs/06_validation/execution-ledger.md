@@ -91,7 +91,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 
 | 项 | 状态 | 影响 |
 |---|---|---|
-| **4009 开锁交互 + `salvage.claimInfo`** | ❌ `handlers.ts:54` 仍 `todo` | **唯一还断着的玩法链**（开箱/打捞领取走不通） |
+| **4009 开锁交互 + `salvage.claimInfo`** | ⊘ **v1.1 推迟（用户 2026-10-28 拍板）** | 开锁交互（`chest.open`）已落地（服务端+客户端 `ChestPanel.ts:364` 已接）；`salvage.claimInfo` 按 plan-v005 `03:174` 裁决**维持 `todo` → v1.1 沉船玩法**（用户确认，不覆盖；salvage 表 `drops/shipwrecks/oil/explore` 全 0 行，仅 D-27 保底 `item_0020` 口径可落地，故维持推迟不写占位码）。**「领取」断环登记为 v1.1 阻塞** |
 | 4010 四面板真机录屏 | ⏸ BLOCKED | 缺真机环境，证据缺口 |
 | 4011 首钩命中率采样 | ⏸ BLOCKED | 缺真机用户，手感无基线 |
 | 4013 合规材料清单 | ⚠ 部分 | 虚假陈述已删，清单未闭环 |
