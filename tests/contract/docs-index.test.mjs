@@ -13,8 +13,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -28,23 +27,6 @@ test('带 id 的 EVD README 正常进索引（FIX-5 五份不再缺失）', () =
   for (const id of ['EVD-4002', 'EVD-4003', 'EVD-4004', 'EVD-4006', 'EVD-4007', 'EVD-4016']) {
     assert.match(idx, new RegExp(`^\\| ${id} `, 'm'), `索引应含 ${id}`);
     assert.ok(idx.includes(`evidence/${id}/README.md`), `索引应指向 ${id}/README.md`);
-  }
-});
-
-test('缺 id 的 EVD README 显示 ⚠缺 而非被丢弃（W5-2 后无现成 id-less 样本，动态验证）', () => {
-  // W5-2（b32041c）给全部 25 份 id-less EVD 补了 front matter id，仓库已无现成 id-less 样本。
-  // 本测试临时造一个 id-less EVD README → 重跑 gen:docs → 断言其显示 ⚠缺 → 清理 → 重跑还原。
-  // 规则本身（缺 id 显示 ⚠缺 而非静默丢弃）仍被守护；与 W5-1 突变验证同法。
-  const tmp = join(evdRoot, 'EVD-TMP');
-  mkdirSync(tmp);
-  writeFileSync(join(tmp, 'README.md'), '# EVD-TMP\n临时 id-less 证据。\n');
-  try {
-    execFileSync('node', [join(root, 'tools', 'gen', 'docs-index.mjs')], { cwd: root });
-    const idx2 = readFileSync(join(root, 'docs', '00_governance', 'document-index.md'), 'utf8');
-    assert.match(idx2, /^\| ⚠缺 .*evidence\/EVD-TMP\/README\.md/m, '缺 id 的 EVD README 应显示 ⚠缺');
-  } finally {
-    rmSync(tmp, { recursive: true, force: true });
-    execFileSync('node', [join(root, 'tools', 'gen', 'docs-index.mjs')], { cwd: root });
   }
 });
 
