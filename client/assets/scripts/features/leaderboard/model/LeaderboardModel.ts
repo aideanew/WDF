@@ -80,8 +80,9 @@ export class LeaderboardModel {
         ? { state: 'success', code: 0, retryable: false }
         : { state: 'empty', retryable: false };
     } catch (e) {
-      // `RpcClient` 在网络不可达时用 `ERR.SYSTEM` 造错，而 `ERR` 里没有 SYSTEM ——
-      // 于是 code 可能是 undefined。这里兜成 INTERNAL，避免 undefined 混进契约映射。
+      // FIX-14（W5-4，2026-10-28）：`RpcClient` 网络不可达时用本地合成码
+      // `NET_CODE_OFFLINE = -1`（FIX-6/R-3，W2-2），不再用契约里不存在的系统错误码。
+      // code 恒为 number；兜成 INTERNAL 仅为防御未来契约漂移。
       const code = typeof (e as RpcError | null)?.code === 'number'
         ? (e as RpcError).code
         : ERR.INTERNAL;

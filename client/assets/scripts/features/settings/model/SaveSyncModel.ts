@@ -221,7 +221,7 @@ export class SaveSyncModel {
   }
 }
 
-/** 把 RpcError 折成界面态。`RpcClient` 在网络不可达时用不存在的 `ERR.SYSTEM` 造错，code 可能是 undefined。 */
+/** 把 RpcError 折成界面态。`RpcClient` 网络不可达时用本地合成码 `NET_CODE_OFFLINE = -1`（FIX-6/R-3，W2-2）；code 恒为 number，typeof 守卫仅防御契约漂移。 */
 function uxOf(e: unknown): UxView {
   const code = typeof (e as RpcError | null)?.code === 'number' ? (e as RpcError).code : ERR.INTERNAL;
   return toUxState(code);

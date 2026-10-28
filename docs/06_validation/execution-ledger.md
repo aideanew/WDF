@@ -126,7 +126,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-6 | P1 | 网络失败 = 内部错误 = 未开放，**三者同码 4999**，靠 msg 字符串区分 | `RpcClient.ts:129,163` | ✅ W2-2 `8791ea4` |
 | FIX-7 | P1 | 两条 UI 注释的事实已被 TASK-7031 推翻（称 weight/capacity `0/106` 填充，实测 weight `{1:53,3:28,10:25}`） | `InventoryPanel.ts:10`、`CraftingPanel.ts:11` | ✅ W1-4 `eb16ddd` |
 | FIX-8 | P2 | 占位值无任何机检：`items.stack` 106 行全 99、`items.unlock_level` 106 行全 0、`recipes.unlock_level` 80 行全 0、`recipes.station` 32 行空 | `server/generated/config/` | ✅ W2-3 `f436049`（station 为空串非全表同值，规则不判，属另一类） |
-| FIX-9 | P2 | 4 个零引用基础服务（`audio`/`pool`/`log` 各 3 行、`time` 30 行，引用数全 0） | `client/assets/scripts/services/` | ⏳ 未在 W1~W4 派工（R-4 口径已定"只改 4 服务注释"，待派） |
+| FIX-9 | P3 | 3 个零引用基础服务（`audio`/`pool`/`log` 各 3 行，引用数全 0）；`time` **非**零引用——30 行真实实现已接线（`RpcClient.ts:2,109` `syncFromResponse`） | `client/assets/scripts/services/` | ✅ 已收口（W5-4，2026-10-28）：复核更正——仅 3 个零引用（R-4 口径：改头注释），`time` 属实实现，移出 |
 | FIX-10 | P2 | `compliance` 恒真桩（`verified = playerExists()`、`minor` 恒 false），而 `mvp-scope.md:57` 列为 v1.0 必做 | `compliance/service.ts:13` | 外部依赖，不做 |
 | FIX-11 | P2 | 提审清单 7 类 17 项**全未勾**，其中 4 项本可机检 | `review-checklist.md` | ✅ W3-1 `8009cc4` |
 | FIX-12 | P2 | 47 张表 / 16 有数 / **31 全空**，在"已转录"叙事下不可见 | `server/generated/config/` | 待 W2-3 |
