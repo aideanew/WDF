@@ -1,0 +1,13 @@
+✔ flush 1 剥离旧 checksum 重封印 → verifySave 通过 (0.5062ms)
+✔ flush 2 重封印保留 schemaVersion (0.1078ms)
+✔ flush 3 重封印刷新 savedAt（≥ 原值） (0.1309ms)
+✔ flush 4 重封印内容不丢（revision/saveId/configVersion 不变） (0.2685ms)
+✔ flush 5 反例：不剥离旧 checksum 直接 seal → verifySave 为 false（剥离是必要前提） (0.1361ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.3209

@@ -27,6 +27,9 @@ function loadSaveId(): string {
   return id;
 }
 
+/** 最近一次写入的存档（内存缓存，供切后台 flush 重新落盘）。 */
+let lastSave: SaveFile | null = null;
+
 /** 本地存档服务：写入时自动 seal，读取时自动 verify。 */
 export const LocalSave = {
   getSaveId(): string { return loadSaveId(); },
@@ -56,8 +59,19 @@ export const LocalSave = {
 
   /** 写入；成功返回 true。必须剥离旧 checksum 再 seal，否则旧值混入校验和导致 load 永远失败。 */
   save(file: SaveFile): boolean {
+    lastSave = file;
+    return LocalSave.flush();
+  },
+
+  /**
+   * 切后台尽力保存（TASK-7042 真实化）：把最近一次写入的存档重新落盘并刷新 savedAt。
+   * 说明：各玩法动作已即时 save()，本方法只做"最后一次写入的重新持久化"，无独立待刷队列；
+   * 本会话尚未写入过任何存档时返回 false（无可刷内容，诚实不假装成功）。
+   */
+  flush(): boolean {
+    if (!lastSave) return false;
     const platform = getPlatform();
-    const { checksum: _stale, ...body } = file;
+    const { checksum: _stale, ...body } = lastSave;
     const sealed = sealSave({ ...body, savedAt: Date.now(), schemaVersion: SAVE_SCHEMA_VERSION });
     return platform.storage.set(STORAGE_KEY, JSON.stringify(sealed));
   },

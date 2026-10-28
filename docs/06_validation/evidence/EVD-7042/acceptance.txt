@@ -1,0 +1,25 @@
+EVD-7042 —— TASK-7042：启动链真实化（save.flush 接入 onHide，其余两项登记"不做"）
+
+状态：save.flush 真实实现；离线结算/S-4 与 Bundle 预下载不实现、只登记
+
+验收条目：
+1. [PASS] GameApp.onHide 调用 LocalSave.flush()（非空注释）
+2. [PASS] LocalSave.flush() 剥离旧 checksum、以新 savedAt 重 seal
+3. [PASS] 本会话无写入时 flush 返回 false（诚实不假装成功）
+4. [PASS] 离线结算 / Bundle 预下载登记"不做"（02 §4.2 注释）
+5. [PASS] typecheck:client exit 0
+6. [PASS] save-flush 测试 exit 0，pass 5 / fail 0
+7. [PASS] npm run guard 全过
+
+验证命令：
+- tests/determinism/save-flush.test.mjs：exit 0，pass 5 / fail 0
+- npm run typecheck:client：exit 0
+- npm run guard：exit 0，全部守卫通过
+
+变更清单（单卡）：
+- client/assets/scripts/services/save/LocalSave.ts（新增 flush() + lastSave 缓存）
+- client/assets/scripts/app/GameApp.ts（onHide → LocalSave.flush()；头注释更新）
+- docs/04_planning/plan-v010/02-requirement-inventory.md（§4.2 处置注释）
+- tests/determinism/save-flush.test.mjs（新增 5 例）
+
+结论：PASS（逐条 1✅ 2✅ 3✅ 4✅ 5✅ 6✅ 7✅）
