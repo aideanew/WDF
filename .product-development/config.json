@@ -1,0 +1,43 @@
+{
+  "schema": "product-development/config@2",
+  "project": "wdf-my-raft",
+  "paths": {
+    "rules": "AGENTS.md",
+    "decision_index": "docs/03_solution/decisions/decision-index.json",
+    "decision_dir": "docs/03_solution/decisions",
+    "master_plan": "docs/04_planning/current-plan.md",
+    "task_index": ".product-development/task-index.json",
+    "task_cards": "docs/05_execution/tasks",
+    "test_ledger": "docs/06_validation/pd/test-ledger.json",
+    "evidence": "docs/06_validation/evidence",
+    "run_logs": ".product-development/runs",
+    "prompts": ".product-development/prompts",
+    "contracts": "packages/contracts",
+    "migrations": "server/db/migrations"
+  },
+  "roles": {
+    "planner": "Claude（全局规划、规划更新、裁决）",
+    "executor": "DeepSeek 等执行助手（实现 + 定向测试）",
+    "tester": "测试助手（门禁、阶段体检、回归、测试台账）"
+  },
+  "dependency_satisfied_by": [
+    "DONE",
+    "VERIFIED"
+  ],
+  "git": {
+    "main_branch": "master",
+    "task_branch_pattern": "task/{id}",
+    "auto_commit_each_task": true,
+    "auto_push_task_branch": false,
+    "push_main": true
+  },
+  "testing": {
+    "executor_scope": "targeted",
+    "phase_review_by": "tester",
+    "final_regression_by": "tester",
+    "reuse_unchanged": true
+  },
+  "replan": {
+    "max_commits_since_baseline": 30
+  }
+}

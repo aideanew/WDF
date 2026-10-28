@@ -1,0 +1,1757 @@
+{
+  "plan_version": "PLAN-R1",
+  "baseline_commit": "d35b74e",
+  "tasks": [
+    {
+      "id": "TASK-0101",
+      "title": "Cocos 工程初始化与 Bundle 配置（【人工】）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0101.md",
+      "objective": "历史卡：Cocos 工程初始化与 Bundle 配置（【人工】）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0101.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-0103",
+      "title": "契约类型补缺（G-06 / G-07 / 命名核对）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0103.md",
+      "objective": "历史卡：契约类型补缺（G-06 / G-07 / 命名核对）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0103.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0104",
+      "title": "服务端鉴权与 account.login 真实实现",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0104.md",
+      "objective": "历史卡：服务端鉴权与 account.login 真实实现",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0104.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-0105",
+      "title": "compliance.check 与 config.manifest 真实实现",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0105.md",
+      "objective": "历史卡：compliance.check 与 config.manifest 真实实现",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0105.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-0106",
+      "title": "本地存档读写与校验（杀进程可恢复）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0106.md",
+      "objective": "历史卡：本地存档读写与校验（杀进程可恢复）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0106.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0107",
+      "title": "save.push / save.pull 真实落库（含幂等与版本冲突返回）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0107.md",
+      "objective": "历史卡：save.push / save.pull 真实落库（含幂等与版本冲突返回）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0107.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-0108",
+      "title": "Boot 场景控制器 + 统一 RPC 客户端 + 错误展示",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0108.md",
+      "objective": "历史卡：Boot 场景控制器 + 统一 RPC 客户端 + 错误展示",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0108.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0201",
+      "title": "game-core/hook 蓄力与轨迹规则（确定性）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0201.md",
+      "objective": "历史卡：game-core/hook 蓄力与轨迹规则（确定性）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0201.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-0202",
+      "title": "HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0202.md",
+      "objective": "历史卡：HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0202.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0802",
+      "title": "赶海 ops 复算计分（v1.1）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0802.md",
+      "objective": "历史卡：赶海 ops 复算计分（v1.1）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0802.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0803",
+      "title": "赶海 21:05 结算与发奖（v1.1）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0803.md",
+      "objective": "历史卡：赶海 21:05 结算与发奖（v1.1）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0803.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0902",
+      "title": "赶海分组榜（v1.1）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0902.md",
+      "objective": "历史卡：赶海分组榜（v1.1）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0902.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-0903",
+      "title": "排行榜压测（决定是否引入 Redis）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-0903.md",
+      "objective": "历史卡：排行榜压测（决定是否引入 Redis）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-0903.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1301",
+      "title": "称号展示（榜单位 + 个人信息区）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1301.md",
+      "objective": "历史卡：称号展示（榜单位 + 个人信息区）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1301.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1401",
+      "title": "开新区 + 封号（脚本 / SQL 级，不做后台）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1401.md",
+      "objective": "历史卡：开新区 + 封号（脚本 / SQL 级，不做后台）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1401.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1502",
+      "title": "drops（箱子内容）填数——只转录，不设计",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1502.md",
+      "objective": "历史卡：drops（箱子内容）填数——只转录，不设计",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1502.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1503",
+      "title": "34 张占位表补列结构（列由设计文档推导，数字不编）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1503.md",
+      "objective": "历史卡：34 张占位表补列结构（列由设计文档推导，数字不编）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 active），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1503.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1601",
+      "title": "契约测试自动生成 + 数值表非空断言（登记，暂不实施）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1601.md",
+      "objective": "历史卡：契约测试自动生成 + 数值表非空断言（登记，暂不实施）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1601.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-1602",
+      "title": "密钥扫描守卫（第 10 项 guard，登记，暂不实施）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-1602.md",
+      "objective": "历史卡：密钥扫描守卫（第 10 项 guard，登记，暂不实施）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 proposed），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-1602.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {}
+    },
+    {
+      "id": "TASK-2001",
+      "title": "契约补缺（chest 业务类型 + 错误路径对照表）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2001.md",
+      "objective": "历史卡：契约补缺（chest 业务类型 + 错误路径对照表）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2001.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2101",
+      "title": "game-core/hook 蓄力+轨迹+命中（确定性）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2101.md",
+      "objective": "历史卡：game-core/hook 蓄力+轨迹+命中（确定性）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2101.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2102",
+      "title": "HookView 程序化表现（力度条/飞行/回手）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2102.md",
+      "objective": "历史卡：HookView 程序化表现（力度条/飞行/回手）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2102.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2103",
+      "title": "出钩接线（命中→入包→存档）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2103.md",
+      "objective": "历史卡：出钩接线（命中→入包→存档）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2103.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2201",
+      "title": "account.bindStart / bindConfirm（账号合并）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2201.md",
+      "objective": "历史卡：account.bindStart / bindConfirm（账号合并）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2201.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2202",
+      "title": "save.resolveFork（存档分叉裁决）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2202.md",
+      "objective": "历史卡：save.resolveFork（存档分叉裁决）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2202.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2203",
+      "title": "leaderboard.report / query（总收益榜）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2203.md",
+      "objective": "历史卡：leaderboard.report / query（总收益榜）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2203.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2204",
+      "title": "telemetry.track（批量埋点）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2204.md",
+      "objective": "历史卡：telemetry.track（批量埋点）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2204.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2401",
+      "title": "handler 契约测试补强",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2401.md",
+      "objective": "历史卡：handler 契约测试补强",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2401.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2402",
+      "title": "e2e 骨架 1 条",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2402.md",
+      "objective": "历史卡：e2e 骨架 1 条",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2402.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-2501",
+      "title": "文档一致性返工",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-2501.md",
+      "objective": "历史卡：文档一致性返工",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-2501.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3001",
+      "title": "UX 态契约落地（common/ux.ts + 契约测试）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3001.md",
+      "objective": "历史卡：UX 态契约落地（common/ux.ts + 契约测试）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3001.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3002",
+      "title": "configVersion 单一来源（消除客户端两处硬编码）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3002.md",
+      "objective": "历史卡：configVersion 单一来源（消除客户端两处硬编码）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3002.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3100",
+      "title": "客户端配置表读取服务（services/config 实现 + 面板接口对齐）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3100.md",
+      "objective": "历史卡：客户端配置表读取服务（services/config 实现 + 面板接口对齐）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3100.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3101",
+      "title": "主界面 Tab 导航 + 四个面板桩（纯代码 UI）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3101.md",
+      "objective": "历史卡：主界面 Tab 导航 + 四个面板桩（纯代码 UI）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3101.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3102",
+      "title": "背包列表页（读 106 行真实物品）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3102.md",
+      "objective": "历史卡：背包列表页（读 106 行真实物品）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3102.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3103",
+      "title": "合成面板（80 条真实配方 + 材料判定）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3103.md",
+      "objective": "历史卡：合成面板（80 条真实配方 + 材料判定）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3103.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3104",
+      "title": "排行榜页（接已实现的 leaderboard.query）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3104.md",
+      "objective": "历史卡：排行榜页（接已实现的 leaderboard.query）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3104.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3105",
+      "title": "云存档同步与分叉裁决 UI（conflict 态唯一出口）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3105.md",
+      "objective": "历史卡：云存档同步与分叉裁决 UI（conflict 态唯一出口）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3105.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3201",
+      "title": "game-core/crafting 可制作判定（canCraft / consume）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3201.md",
+      "objective": "历史卡：game-core/crafting 可制作判定（canCraft / consume）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3201.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3202",
+      "title": "game-core/inventory 存档段投影（listRows）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3202.md",
+      "objective": "历史卡：game-core/inventory 存档段投影（listRows）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3202.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3301",
+      "title": "守卫第 10 项：源 ↔ generated 双向同步校验",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3301.md",
+      "objective": "历史卡：守卫第 10 项：源 ↔ generated 双向同步校验",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3301.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3302",
+      "title": "game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3302.md",
+      "objective": "历史卡：game-core/save 封印回归测试（覆盖旧 checksum 混入缺陷）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3302.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-3401",
+      "title": "计划 / 路线图 / 任务索引对齐（本轮收口）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-3401.md",
+      "objective": "历史卡：计划 / 路线图 / 任务索引对齐（本轮收口）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 done），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-3401.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "no_change_reason": "历史卡（原索引 done），提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
+    },
+    {
+      "id": "TASK-4007",
+      "title": "商人页 UI + 限购（buyQuota 接真数值）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4007.md",
+      "objective": "历史卡：商人页 UI + 限购（buyQuota 接真数值）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4007.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "470436e"
+        ]
+      },
+      "source_note": "台账 §2：4007 PASS（商人页 UI）"
+    },
+    {
+      "id": "TASK-4008",
+      "title": "背包页回收入口 + 确认弹窗组件",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4008.md",
+      "objective": "历史卡：背包页回收入口 + 确认弹窗组件",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4008.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "f3fa3e0"
+        ]
+      },
+      "source_note": "台账 §2：4008 PASS（背包回收入口）"
+    },
+    {
+      "id": "TASK-4009",
+      "title": "开锁交互（chest+locks 接表）+ chest.open 动作",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4009.md",
+      "objective": "历史卡：开锁交互（chest+locks 接表）+ chest.open 动作",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4009.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {},
+      "source_note": "台账 §2：⊘ v1.1 推迟（chest.open 已落地；salvage.claimInfo 维持 todo→v1.1，用户 2026-10-28 拍板）"
+    },
+    {
+      "id": "TASK-4010",
+      "title": "四面板真机录屏 + 6 态走查",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4010.md",
+      "objective": "历史卡：四面板真机录屏 + 6 态走查",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4010.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {},
+      "blocked_reason": "缺真机环境（四面板真机录屏 + 6 态走查）"
+    },
+    {
+      "id": "TASK-4011",
+      "title": "首钩命中率采样脚本 + 采样记录",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4011.md",
+      "objective": "历史卡：首钩命中率采样脚本 + 采样记录",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4011.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "d35b74e"
+        ]
+      },
+      "blocked_reason": "缺真机用户打 20 钩（脚本已就绪 W7-2，d35b74e）"
+    },
+    {
+      "id": "TASK-4013",
+      "title": "合规材料清单落 docs/07_release",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4013.md",
+      "objective": "历史卡：合规材料清单落 docs/07_release",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4013.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {},
+      "source_note": "台账 §2：⚠ 部分（合规材料清单落 docs/07_release，虚假陈述已删、未接入已登记）"
+    },
+    {
+      "id": "TASK-4015",
+      "title": "契约解冻执行（2004 码等）",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4015.md",
+      "objective": "历史卡：契约解冻执行（2004 码等）",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4015.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "f3fa3e0"
+        ]
+      },
+      "source_note": "台账 §2：4015 PASS（契约解冻 2004）"
+    },
+    {
+      "id": "TASK-4016",
+      "title": "error-catalog / glossary / current-plan / roadmap 四文档对齐",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4016.md",
+      "objective": "历史卡：error-catalog / glossary / current-plan / roadmap 四文档对齐",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4016.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "4ff9396"
+        ]
+      },
+      "source_note": "台账 §2：4016 PASS（四文档对齐）"
+    },
+    {
+      "id": "TASK-4020",
+      "title": "RpcClient 自动补齐 rid",
+      "phase": "LEGACY",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 99,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/05_execution/tasks/TASK-4020.md",
+      "objective": "历史卡：RpcClient 自动补齐 rid",
+      "allowed_paths": [],
+      "forbidden_paths": [],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "历史卡（原索引状态 draft），验收见原卡",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/05_execution/tasks/TASK-4020.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {},
+      "source_note": "原索引 draft（RpcClient 自动补齐 rid，未完成）"
+    }
+  ]
+}

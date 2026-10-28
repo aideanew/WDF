@@ -1,0 +1,60 @@
+{
+  "entries": [
+    {
+      "id": "SNAP-M1",
+      "target": "LEGACY-M1",
+      "result": "PASS",
+      "commit": "13e6b68",
+      "fingerprint": "sha256:68e020a8abbac145aacf08f53974f7d1",
+      "at": "2026-10-27T07:47:19+08:00",
+      "cmd": "npm run verify",
+      "covers_paths": [
+        "tests"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md#4",
+      "note": "M1 收官：guard 9/9，tests 107/107，tsc 0"
+    },
+    {
+      "id": "SNAP-4006",
+      "target": "LEGACY-4006",
+      "result": "PASS",
+      "commit": "9d22859",
+      "fingerprint": "sha256:8683a5fa65d606cad98c63080a045815",
+      "at": "2026-10-27T11:51:27+08:00",
+      "cmd": "npm run verify",
+      "covers_paths": [
+        "tests"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md#4",
+      "note": "4006 完成：guard 9/9，tests 119/119，tsc 0（economy 8+5 例）"
+    },
+    {
+      "id": "SNAP-4007",
+      "target": "LEGACY-4007",
+      "result": "PASS",
+      "commit": "470436e",
+      "fingerprint": "sha256:83be0d2100a349325e915dcc58a8e37f",
+      "at": "2026-10-27T14:37:45+08:00",
+      "cmd": "npm run verify",
+      "covers_paths": [
+        "tests"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md#4",
+      "note": "4007 完成：guard 9/9，tests 127/127，tsc 0（merchant 8 例）"
+    },
+    {
+      "id": "SNAP-4016",
+      "target": "LEGACY-4016",
+      "result": "PASS",
+      "commit": "4ff9396",
+      "fingerprint": "sha256:f9c3c548db73be79e7098f05acdc7c5e",
+      "at": "2026-10-28T14:28:06+08:00",
+      "cmd": "npm run verify",
+      "covers_paths": [
+        "tests"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md#4",
+      "note": "4016 收官+4004 补测：guard 9/9，tests 219/219，tsc 0（determinism 128/契约 27/集成 63/e2e 1）"
+    }
+  ]
+}
