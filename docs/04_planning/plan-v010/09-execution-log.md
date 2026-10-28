@@ -42,14 +42,14 @@ related: [PLAN-V010-00, PLAN-V010-05, PLAN-V010-06, PLAN-V010-08]
 | S2 | 7020 ads.claim | ✅ PASS | 独立验收 PASS（100%） | EVD-7020/ |
 | S2 | 7021 激励视频 | ✅ PASS | 独立验收 PASS（100%） | EVD-7021/ |
 | S2 | 7022 ADR-0014 | ✅ PASS | 独立验收 PASS（100%） | EVD-7022/ |
-| S3 | 7031 扩筏数值 | 未开始（D-43 已裁决 B） | — | EVD-7031/ |
-| S3 | 7032 levels/unlocks | 未开始 | — | EVD-7032/ |
-| S3 | 7033 raft_tiles/rooms | 未开始 | — | EVD-7033/ |
+| S3 | 7031 扩筏数值 | ✅ PASS（D-43=B 代定） | a654c76 | EVD-7031/ |
+| S3 | 7032 levels/unlocks | ✅ PASS | 7d9c97d | EVD-7032/ |
+| S3 | 7033 raft_tiles/rooms | ✅ PASS | e5ce6a1 | EVD-7033/ |
 | S4 | 7040 账号面板 | ✅ PASS（范围核查：登记不做） | cdba5d7 | EVD-7040/ |
 | S4 | 7041 panel-ui 六态 | ✅ PASS | f288ff0 | EVD-7041/ |
-| S4 | 7042 启动链真实化 | 未开始 | — | EVD-7042/ |
+| S4 | 7042 启动链真实化 | ✅ PASS | 08341ca | EVD-7042/ |
 | S5 | 7050 stage 体检 | ✅ PASS | 41b3609 | EVD-7050/ |
-| S5 | 7051 文档指针 | 未开始 | — | EVD-7051/ |
+| S5 | 7051 文档指针 | 独立验收中（进入时已就位，零改动） | — | EVD-7051/ |
 
 > 7030 已被 D-42=C 取代（35 张分批裁决不再执行），不再单列。
 
