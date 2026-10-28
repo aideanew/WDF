@@ -110,3 +110,38 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 5. **★新发现（2026-10-28）：EVD 目录下的 `README.md` 不会进文档索引。** `tools/gen/docs-index.mjs:7` 明确跳过所有 `README.md`（只放行 `docs/00_governance/README.md`），而 plan-v005 §10.5 的"五要素"规范又**要求**证据文件必须叫 `EVD-xxxx/README.md` —— 两条规则直接冲突，结果是 `EVD-4003/4004/4006/4007/4016` 五份证据**存在但索引里查不到**（`EVD-4012/baseline.md` 因为不叫 README 反而能查到）。
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
+
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-13）
+
+> 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
+> 处置拆分见下批派工单 W1~W4；`FIX-1` 已由 `2a9f064` 关闭。
+
+| 号 | P | 缺陷 | 证据坐标 | 状态 |
+|---|---|---|---|---|
+| FIX-1 | P0 | `GameApp.start()` 零调用点 → `lifecycle.onHide` 从未注册 → **切后台保存实际不生效**（违反 C3） | `GameApp.ts:19`；`BootController.ts:24-41` | ✅ `2a9f064` |
+| FIX-2 | P0 | 激励视频**三个位面的奖励载体全不存在**（无冷却字段 / 无离线结算 / 无商店）→ 建入口即假按钮 | `ads/service.ts:16-19,38-46`；`hooks.json` 无 cooldown；客户端 `showRewardedAd` 调用点 0 | 冻结，登记 D-49 |
+| FIX-3 | P1 | 提审清单 `configVersion` 过期（写 `c6a54f0f…`，实测 `20a313a4…`），并违反清单自身第 7 条 | `review-checklist.md:57` vs `_manifest.json:2` | 待 W1-3 |
+| FIX-4 | P1 | 同一文件内注释自相矛盾：「8 个 todo」vs 实列 7 个 | `handlers.ts:28` vs `:40` | 待 W1-3 |
+| FIX-5 | P1 | 5 份 EVD 证据存在但文档索引查不到 | `docs-index.mjs:7` 跳过一切 `README.md` | 待 W2-1 |
+| FIX-6 | P1 | 网络失败 = 内部错误 = 未开放，**三者同码 4999**，靠 msg 字符串区分 | `RpcClient.ts:129,163` | 待 W2-2 |
+| FIX-7 | P1 | 两条 UI 注释的事实已被 TASK-7031 推翻（称 weight/capacity `0/106` 填充，实测 weight `{1:53,3:28,10:25}`） | `InventoryPanel.ts:10`、`CraftingPanel.ts:11` | 待 W1-4 |
+| FIX-8 | P2 | 占位值无任何机检：`items.stack` 106 行全 99、`items.unlock_level` 106 行全 0、`recipes.unlock_level` 80 行全 0、`recipes.station` 32 行空 | `server/generated/config/` | 待 W2-3 |
+| FIX-9 | P2 | 4 个零引用基础服务（`audio`/`pool`/`log` 各 3 行、`time` 30 行，引用数全 0） | `client/assets/scripts/services/` | 待 W2-3 附带 |
+| FIX-10 | P2 | `compliance` 恒真桩（`verified = playerExists()`、`minor` 恒 false），而 `mvp-scope.md:57` 列为 v1.0 必做 | `compliance/service.ts:13` | 外部依赖，不做 |
+| FIX-11 | P2 | 提审清单 7 类 17 项**全未勾**，其中 4 项本可机检 | `review-checklist.md` | 待 W3-1 |
+| FIX-12 | P2 | 47 张表 / 16 有数 / **31 全空**，在"已转录"叙事下不可见 | `server/generated/config/` | 待 W2-3 |
+| FIX-13 | P1 | **启动页标题写的是另一个项目的名字**：`'奖励一颗麻籽'`。全仓仅这一处代码命中，且 `EVD-3101` 把这个错误写成了"验收预期" | `BootController.ts:30`；`EVD-3101/README.md:25` | ✅ 本批修正 |
+
+### FIX-13 详情（2026-10-28 用户提问触发）
+
+- **用户问题**：「为什么会出现 `this.setTitle('奖励一颗麻籽')`，这是一个项目吗？」
+- **核实结论**：是**一个**项目（本仓 `README.md:1` = 《我的筏不可能这么大》），这一行是**串项目的文案残留**。
+  `奖励一颗麻籽` 全仓只有 2 处命中：`BootController.ts:30`（代码）与 `EVD-3101/README.md:25`（证据描述），
+  其余 0 处；本仓产品文档中 `麻籽` / `星辉` 亦**零命中**（三币制在本项目的正式名称走 `灵草`）。
+- **为什么算 P1 而非 P3**：`copyright-materials.md:13` 要求「软件名称与小游戏名一致：我的筏不可能这么大」，
+  启动页打出别的名字会直接出现在**提审截图**里；且 `EVD-3101` 把错误当预期写进了证据，
+  等于**用证据固化 bug**——与「修注释前先问这句话描述的对象存在吗」同类。
+- **修正**：文案改为 `'我的筏不可能这么大'`（取 `project-charter.md:16`），并加注释指向权威源；
+  `EVD-3101/README.md:25` 的预期同步更正并留更正说明，不改写历史结论。
+- **防复发建议（未做，登记）**：启动页/分享文案里的游戏名应从 `docs/01_product/project-charter.md` 或
+  `game-data` 的单一常量读取，而不是硬编码字面量。属重构，不进本批。

@@ -27,7 +27,9 @@ export class BootController extends Component {
     // 不 await、不阻塞首屏；内部有 started 幂等守卫（GameApp.ts:20）。调用点在下一行 buildUI 之前。
     void GameApp.start();
     this.buildUI();
-    this.setTitle('奖励一颗麻籽');
+    // 启动页标题 = 项目正式名（`docs/01_product/project-charter.md:16`；软著/小游戏名一致，不得写别的名字）。
+    // 历史 bug：此处曾写 '奖励一颗麻籽'（另一个项目的名字），全仓仅此一处代码命中。
+    this.setTitle('我的筏不可能这么大');
     this.setStatus('启动中…');
 
     try {
