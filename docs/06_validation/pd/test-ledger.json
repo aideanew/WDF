@@ -84,6 +84,27 @@
         "PD1-04"
       ],
       "tester": "tester"
+    },
+    {
+      "id": "TR-20261029011052-PD4-01",
+      "at": "2026-10-29T01:10:52Z",
+      "scope": "final",
+      "kind": "final-regression",
+      "target": "PD4-01",
+      "result": "PARTIAL-AUTOMATED",
+      "commit": "73a4177f91639325a7330855ae0d7a4519741a9d",
+      "dirty": false,
+      "covers_paths": [],
+      "fingerprint": "sha256:653f6494511f717e",
+      "commands": [
+        "npm run verify && node tools/guard/run-all.mjs && node tools/guard/placeholders.mjs && node tools/sample/hook-hitrate.mjs --db .local/pg"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md#4",
+      "covers_tasks": [
+        "PD4-01"
+      ],
+      "tester": "tester",
+      "note": "自动化回归全绿（guard 10/10、tests 231/231、typecheck 0、placeholders baseline 内、hook-hitrate EXIT=0）；**PARTIAL**——三项 BLOCKED-HUMAN 证据（PD2-01 真机 20 钩、PD2-02 真机 4 个 MP4、PD2-03 微信资质）仍需用户物理动作，非自动化可覆盖"
     }
   ]
 }
