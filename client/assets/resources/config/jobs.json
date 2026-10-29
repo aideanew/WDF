@@ -1,1 +1,1 @@
-[]
+[{"id":"soldier","name":"士兵"},{"id":"cook","name":"厨师"},{"id":"smith","name":"铁匠","produces":"item_0031;item_0032;item_0033"},{"id":"carpenter","name":"木匠"},{"id":"mechanic","name":"机械师","produces":"item_0036;item_0037;item_0034;item_0035"},{"id":"researcher","name":"研究员"},{"id":"worker","name":"工人"}]

@@ -1,1 +1,1 @@
-[]
+[{"id":"consumer_auto_dredge","name":"自动打捞装置","note":"高级设备要持续耗电（§6:470）；耗电值无源（§6:481 待定），待补"},{"id":"consumer_electric_filter","name":"电动海水过滤器","note":"耗电（§6:470）；耗电值无源（§6:481 待定），待补"},{"id":"consumer_fridge","name":"冰箱","note":"耗电（§6:470）；耗电值无源（§6:481 待定），待补"},{"id":"consumer_power_purifier","name":"电力净水器","note":"耗电（§6:478）；耗电值无源（§6:481 待定），待补"},{"id":"consumer_lamp","name":"灯","note":"耗电，提升夜间产出或幸福感（§6:479）；耗电值无源（§6:481 待定），待补"}]

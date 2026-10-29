@@ -1,1 +1,1 @@
-[]
+[{"id":"happiness_income","name":"收益","max_value":25,"step":5,"note":"幸福感分项：金币工资，按时发会提升；每周结算，员工等级越高工资越多（§5.3:461）"},{"id":"happiness_food","name":"食物","max_value":25,"step":5,"note":"幸福感分项：好饭提升，但光靠吃饭有上限（§5.3:462）"},{"id":"happiness_work","name":"工作和休息","max_value":25,"step":5,"note":"幸福感分项：工作强度太高、没有娱乐活动会降低（§5.3:463）"},{"id":"happiness_other","name":"其他","max_value":25,"step":5,"note":"幸福感分项：超过1年老员工没媳妇儿会降低；惊喜礼物会提高（§5.3:464）"}]
