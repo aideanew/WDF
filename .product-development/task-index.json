@@ -2716,7 +2716,7 @@
       "title": "REPLAN 落盘 PLAN-R3（FIX-35 ADR 状态 + 18 项定案）",
       "phase": "P5",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 21,
@@ -2770,7 +2770,17 @@
         ]
       },
       "legacy_ids": [],
-      "source": "FIX-35 + REPLAN 18 项定案"
+      "source": "FIX-35 + REPLAN 18 项定案",
+      "execution": {
+        "commits": [
+          "bf07e8e"
+        ],
+        "evidence": "docs/03_solution/decisions/decision-index.json（ADR-0001/0009 → DECIDED，PROPOSED 归零）；.product-development/task-index.json（plan_version=PLAN-R3，replans 第 4 条，8 张 SUPERSEDED → superseded_by=PD3-01）；docs/06_validation/execution-ledger.md §9 FIX-35/FIX-36；.product-development/tasks/PD3-01.md（接管卡说明）",
+        "note": "PLAN-R2→PLAN-R3 落盘完成。18 项定案：7 张范围移出 + TASK-4009 共 8 张转 SUPERSEDED；1601/1602 保持 BLOCKED（v1.1 backlog）；4010/4011/4013/PD2-01/02/03 保持 BLOCKED-HUMAN（D-51 口径，不是延期）；P3 缺 tester 体检卡裁定不补卡（W5-1~W5-4 已覆盖，补卡只会再造空壳）。关键修正 FIX-36：superseded_by 由 D-50 改指 PD3-01——决策是依据不是接替者，pd.mjs 的 taskMap 只含任务，填决策必然 8 错。实测：health 8 错误 → 0 错误（体检通过 45 提醒）；status 61 张有效任务/完成 52/阻塞 8/已替代 9/失败 0。",
+        "pushed": false,
+        "remote_branch": "",
+        "pushed_head": ""
+      }
     }
   ],
   "replans": [
