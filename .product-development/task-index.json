@@ -2233,12 +2233,15 @@
       "areas": [],
       "priority": 10,
       "requirements": [],
-      "decisions": [],
+      "decisions": [
+        "D-51",
+        "D-52"
+      ],
       "depends_on": [
         "PD1-01"
       ],
       "card": ".product-development/tasks/PD2-01.md",
-      "objective": "拿到 ≥20 钩真实采样并出「首钩命中率 / 前 10 钩 / chargeMs」三表",
+      "objective": "拿到 ≥20 钩真实采样并出「首钩命中率 / 前 10 钩 / chargeMs」三表（**机制侧已由 PD2-04 交付，本卡只剩真人手感数据**）",
       "allowed_paths": [
         "docs/06_validation/evidence/EVD-4011/**"
       ],
@@ -2480,6 +2483,69 @@
         ]
       },
       "source": "D-51；SKILL §6 最终回归卡"
+    },
+    {
+      "id": "PD2-04",
+      "title": "4011 机制侧分析：命中窗口扫描 + SIMULATED 20 钩（D-52）",
+      "phase": "P2",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 15,
+      "requirements": [],
+      "decisions": [
+        "D-52"
+      ],
+      "depends_on": [
+        "PD1-01"
+      ],
+      "card": ".product-development/tasks/PD2-04.md",
+      "objective": "用 game-core 判定算出命中蓄力窗口与均匀零假设下的 20 钩命中率，口径明确标 SIMULATED",
+      "allowed_paths": [
+        "tools/sample/hook-window.mjs",
+        "docs/06_validation/evidence/EVD-4011/**"
+      ],
+      "forbidden_paths": [
+        "packages/game-core/**（不得改判定公式凑结果）",
+        "server/generated/config/hooks.json（不得改数值）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "分析器可复跑且退出码 0",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs tools/sample/hook-window.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "输出含「命中窗口 348–852 ms」「42.1%」「SIMULATED 口径声明」三项",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/06_validation/evidence/EVD-4011/README.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node --import ./tools/runtime/register.mjs tools/sample/hook-window.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "source": "D-52（4011 一分为二）",
+      "execution": {
+        "commits": [
+          "acc9398"
+        ],
+        "evidence": [
+          "docs/06_validation/evidence/EVD-4011/README.md"
+        ],
+        "deliverable": "tools/sample/hook-window.mjs；窗口 348–852ms / 42.1% / 下沿 5800bp；SIM20 12/20=60%",
+        "scope": "mechanism-only",
+        "caliber": "SIMULATED"
+      }
     }
   ],
   "replans": [

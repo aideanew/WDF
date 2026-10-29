@@ -135,6 +135,58 @@
         "PD2-02",
         "PD2-03"
       ]
+    },
+    {
+      "id": "TR-20261029092700-PD2-04",
+      "at": "2026-10-29T09:27:00+08:00",
+      "scope": "task",
+      "kind": "mechanism-analysis",
+      "target": "PD2-04",
+      "result": "PASS",
+      "scope_limit": "mechanism-only",
+      "caliber": "SIMULATED",
+      "commit": "acc9398",
+      "dirty": false,
+      "covers_paths": [
+        "tools/sample/hook-window.mjs"
+      ],
+      "commands": [
+        "node --import ./tools/runtime/register.mjs tools/sample/hook-window.mjs"
+      ],
+      "evidence": "docs/06_validation/evidence/EVD-4011/README.md",
+      "covers_tasks": [
+        "PD2-04"
+      ],
+      "tester": "planner",
+      "note": "机制侧分析可复跑（种子固定）：命中窗口 348–852ms / 42.1% / 下沿 5800bp；SIM20 12/20=60%。SIMULATED 口径，不等于真人数据（真人仍 PD2-01 BLOCKED-HUMAN）。"
+    },
+    {
+      "id": "TR-20261028000000-PD0-04",
+      "at": "2026-10-29T09:30:00+08:00",
+      "scope": "phase",
+      "kind": "bootstrap-health",
+      "target": "PD0-04",
+      "result": "PASS",
+      "commit": "642e602",
+      "dirty": false,
+      "covers_paths": [
+        ".product-development/config.json",
+        ".product-development/task-index.json",
+        "docs/03_solution/decisions/decision-index.json",
+        "docs/06_validation/pd/test-ledger.json"
+      ],
+      "commands": [
+        "node <skill>/scripts/pd.mjs health ."
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md",
+      "covers_tasks": [
+        "PD0-01",
+        "PD0-02",
+        "PD0-03",
+        "PD0-04"
+      ],
+      "tester": "tester",
+      "note": "P0 治理阶段体检：pd.mjs health 体检通过（0 错误，52 条提醒均为历史卡 E1 来源缺失，属登记事实非缺陷）。2026-10-29 复跑；补录 PD2-04 后再次通过。"
     }
   ]
 }
