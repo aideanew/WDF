@@ -568,6 +568,50 @@
         },
         "release_scope": "PD4-01 的 PASS 只覆盖自动化范围；3 项人工项标 UNKNOWN，禁止写「完整 PASS」。v1.0 结案以本口径为准。"
       }
+    },
+    {
+      "id": "D-52",
+      "title": "4011「20 钩」一分为二：机制侧 SIMULATED 已交付（PD2-04），手感侧维持 BLOCKED-HUMAN（PD2-01）",
+      "status": "DECIDED",
+      "decided_by": "planner",
+      "decided_at": "2026-10-29",
+      "kind": "product",
+      "file": "docs/04_planning/plan-v003/decision-sheet.md",
+      "source": "docs/04_planning/plan-v003/decision-sheet.md#D-52",
+      "applies_to": [
+        "PD2-01",
+        "PD2-04"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "mechanism": {
+          "tool": "tools/sample/hook-window.mjs",
+          "window_ms": [
+            348,
+            852
+          ],
+          "window_ratio": 0.421,
+          "lower_power_bp": 5800,
+          "sim20": {
+            "hit": 12,
+            "n": 20,
+            "seed": 20261029,
+            "model": "蓄力时长 [0,1200) 均匀分布，角度固定 15°"
+          },
+          "caliber": "SIMULATED"
+        },
+        "human": {
+          "stays": "PD2-01 BLOCKED-HUMAN",
+          "needs": "真机 20 钩真实埋点 → hook-hitrate.mjs"
+        },
+        "red_lines": [
+          "SIMULATED 不得写入 metrics.md 当作 4011 验收",
+          "不得据此宣称 C1 首钩 ≥45% 已达标",
+          "不得据此调 target_dist / hitRadius（D-04 等值迁移）"
+        ]
+      }
     }
   ]
 }
