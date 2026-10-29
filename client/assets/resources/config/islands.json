@@ -1,1 +1,1 @@
-[]
+[{"id":"isl_highland","name":"高地岛","template":"高地岛","landing_zones":2,"has_reef_cliff":"礁石+悬崖","note":"岛屿模板（DS §7.2:530）；登陆口 2-3 个；面积待定（无源），待补"},{"id":"isl_double_bay","name":"双港湾岛","template":"双港湾岛","landing_zones":3,"has_reef_cliff":"礁石+悬崖","note":"岛屿模板（DS §7.2:530）；登陆口 2-3 个；面积待定（无源），待补"},{"id":"isl_ridge","name":"岩脊岛","template":"岩脊岛","landing_zones":2,"has_reef_cliff":"礁石+悬崖","note":"岛屿模板（DS §7.2:530）；登陆口 2-3 个；面积待定（无源），待补"},{"id":"isl_mineral","name":"矿产岛","template":"矿产岛","landing_zones":3,"has_reef_cliff":"礁石+悬崖","note":"岛屿模板（DS §7.2:530）；登陆口 2-3 个；面积待定（无源），待补"}]
