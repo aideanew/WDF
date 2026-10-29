@@ -643,6 +643,78 @@
         ],
         "current_code": "server/src/modules/account/repo.ts:47-49（写死 process.env.WDF_DEFAULT_REGION ?? 's1'）"
       }
+    },
+    {
+      "id": "D-54",
+      "title": "扩筏归属与浮力口径：v1.0 出货是否含扩筏 UI + items.capacity 是否参与浮力（待用户裁决）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v011/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-54",
+      "applies_to": [
+        "PD7-01",
+        "PD7-03"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "blocking": true,
+        "question_1": "v1.0 含不含扩筏 UI：A 不含（五环改四环，A 阶段降级 v1.1）/ B 含（本规划默认）",
+        "question_2": "浮力怎么算：A 只看 raft_tiles.capacity / B = items.capacity 之和 + raft_tiles 加成（需补 36 类物项容量，无源）/ C 只把 chest 的 20/40/60 归 0",
+        "evidence": "glossary.md:41 定义五环含扩；decision-index D-50.detail.modules_v11 无 raft；client/assets/scripts/features/raft 共 18 行；MainView.ts:27-34 六 Tab 无筏体；items.csv capacity=0 共 103 行、非零 3 行全为 chest"
+      }
+    },
+    {
+      "id": "D-55",
+      "title": "本版推送目标与凭据：nevermeetagain/WDF 的写权限 PAT（本次 git fetch 缺凭据失败）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v011/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-55",
+      "applies_to": [],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "blocking": false,
+        "need": "对 nevermeetagain/WDF 有写权限的 fine-grained PAT，或确认凭据管理器已可用",
+        "fallback": "按用户指令输出 zip 规划包并说明未推送",
+        "evidence": "git fetch origin → fatal: could not read Username for 'https://github.com'；origin/master HEAD = 4e572fa 与本地同 SHA"
+      }
+    },
+    {
+      "id": "D-56",
+      "title": "C 阶段是否解绑 C1 手感闸门（mvp-scope:19「C1 未达标前不扩展新系统」）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v011/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-56",
+      "applies_to": [
+        "PD7-10",
+        "PD7-11",
+        "PD7-14",
+        "PD7-15",
+        "PD7-16"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "blocking": true,
+        "options": [
+          "A 严格守闸门（C 阶段停摆等真机）",
+          "B 只解绑数据类与不改手感参数的模块（建议；13 个模块均不改 hook 参数）",
+          "C 完全解绑（闸门作废）"
+        ],
+        "evidence": "mvp-scope.md:15/19 要求真机真人命中率；D-52.red_lines 禁止用 SIMULATED 60% 冒充"
+      }
     }
   ]
 }

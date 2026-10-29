@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 288 篇。⚠ 表示活跃文档已过 review 日期。
+共 303 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -170,6 +170,21 @@ review: 2026-11-23
 | PLAN-V010-07 | plan-v010 · 待裁决清单（D-42~D-48） | active | 2026-11-11 | `04_planning/plan-v010/07-decisions-pending.md` |
 | PLAN-V010-08 | plan-v010 · 阶段体检协议与完成定义 | active | 2026-11-11 | `04_planning/plan-v010/08-execution-protocol.md` |
 | PLAN-V010-09 | plan-v010 · 执行过程记录（S0~S5，逐卡） | active | 2026-11-11 | `04_planning/plan-v010/09-execution-log.md` |
+| PLAN-V011-01 | plan-v011 · 01 规划快照（本规划钉在哪个状态上） | active | 2026-11-12 | `04_planning/plan-v011/01-snapshot.md` |
+| PLAN-V011-02 | plan-v011 · 02 事实基线（实测 + 文档/代码不一致 I-01~I-12） | active | 2026-11-12 | `04_planning/plan-v011/02-fact-baseline.md` |
+| PLAN-V011-03 | plan-v011 · 03 需求基线复核（MUST/SHOULD/COULD/MUST NOT + 冲突 + 未知 + 隐含） | active | 2026-11-12 | `04_planning/plan-v011/03-requirement-baseline.md` |
+| PLAN-V011-04 | plan-v011 · 04 契约冻结包（六份，含缺口与自检） | active | 2026-11-12 | `04_planning/plan-v011/04-contract-freeze.md` |
+| PLAN-V011-05 | plan-v011 · 05 数据模型基线（表/存档/迁移编排） | active | 2026-11-12 | `04_planning/plan-v011/05-data-model-baseline.md` |
+| PLAN-V011-06 | plan-v011 · 06 垂直切片清单（排序、理由、可并行判定） | active | 2026-11-12 | `04_planning/plan-v011/06-slices.md` |
+| PLAN-V011-07 | plan-v011 · 07 依赖 DAG 与所有权矩阵（含重叠处置） | active | 2026-11-12 | `04_planning/plan-v011/07-dag-ownership.md` |
+| PLAN-V011-08 | plan-v011 · 08 档位分配、成本预算与阶段体检协议 | active | 2026-11-12 | `04_planning/plan-v011/08-budget.md` |
+| PLAN-V011-09 | plan-v011 · 09 基线指标（含首次测量值与"尚无基线"清单） | active | 2026-11-12 | `04_planning/plan-v011/09-baseline-metrics.md` |
+| PLAN-V011-10 | plan-v011 · 10 风险 / 未决 / 待裁决（D-54~D-56） | active | 2026-11-12 | `04_planning/plan-v011/10-risks-pending.md` |
+| PLAN-V011-11 | plan-v011 · 11 落盘清单、自检结果、局限、第一刀 | active | 2026-11-12 | `04_planning/plan-v011/11-selfcheck.md` |
+| PLAN-V011-A | plan-v011 · 阶段 A（v1.0 合口）· 5 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-a-v10-close/00-stage.md` |
+| PLAN-V011-B | plan-v011 · 阶段 B（v1.1 数据解锁）· 4 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-b-v11-data/00-stage.md` |
+| PLAN-V011-C | plan-v011 · 阶段 C（v1.1 模块）· 7 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-c-v11-modules/00-stage.md` |
+| PLAN-V011-D | plan-v011 · 阶段 D（v1.2 运营）· 1 张原子任务卡 + 二版登记 | active | 2026-11-12 | `04_planning/plan-v011/stage-d-v12-registry/00-stage.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
