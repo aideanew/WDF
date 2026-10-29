@@ -20,6 +20,25 @@
     "name": {
       "type": "string",
       "required": true
+    },
+    "produces": {
+      "type": "string",
+      "note": "产出物 item id，`;` 分隔多值（§5.3:437 铁匠/机械师有源，其余岗位产出物不固定留空）"
+    },
+    "rate": {
+      "type": "int",
+      "min": 0,
+      "note": "产出速率（每小时）；无源（§5.3:435 无具体倍率）留空待补"
+    },
+    "food_consumption": {
+      "type": "int",
+      "min": 0,
+      "note": "食物消耗；无源（§5.2:416 无每人速率）留空待补"
+    },
+    "job_level": {
+      "type": "int",
+      "min": 0,
+      "note": "岗位等级；无源（§5.3:435 等级无数值）留空待补"
     }
   }
 }

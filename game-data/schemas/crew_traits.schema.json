@@ -11,9 +11,19 @@
     "name": {
       "type": "string"
     },
+    "max_value": {
+      "type": "int",
+      "min": 0,
+      "note": "幸福感分项上限（§5.3:460 每项最高 25，有源）"
+    },
+    "step": {
+      "type": "int",
+      "min": 0,
+      "note": "每次升降幅度（§5.3:460 每次升降 5，有源）"
+    },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 crew）抽取"
+  "todo": "字段待从 v5.5（模块 crew）抽取；max_value/step 由 PD7-07 按 §5.3:460 补"
 }

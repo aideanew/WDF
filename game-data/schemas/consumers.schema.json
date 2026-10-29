@@ -11,9 +11,14 @@
     "name": {
       "type": "string"
     },
+    "power_draw": {
+      "type": "int",
+      "min": 0,
+      "note": "耗电；无源（§6:481 各设备耗电待定）留空待补"
+    },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 power）抽取"
+  "todo": "字段待从 v5.5（模块 power）抽取；power_draw 由 PD7-07 补（无源留空）"
 }

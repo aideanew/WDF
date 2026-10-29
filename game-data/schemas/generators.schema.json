@@ -11,9 +11,18 @@
     "name": {
       "type": "string"
     },
+    "output_ratio": {
+      "type": "int",
+      "min": 0,
+      "note": "标称出力相对比例（§6:481 太阳能:电鳗:石油 = 1:3:10，有源）"
+    },
+    "fuel": {
+      "type": "string",
+      "note": "燃料类型（§6:472-474 太阳能免费/电鳗喂鱼/石油消耗，概念无速率）"
+    },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 power）抽取"
+  "todo": "字段待从 v5.5（模块 power）抽取；output_ratio/fuel 由 PD7-07 按 §6:471-481 补"
 }

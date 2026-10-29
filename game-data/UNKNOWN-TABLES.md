@@ -25,16 +25,21 @@
 | hooks | ✅ 已转录（D-04） | 1 | target_dist=600、angle_deg=15、max_power_bp=10000（等值迁移自 DEFAULT_HOOK_CONFIG） |
 | guide_steps | ✅ 已转录（D-05） | 5 | 出钩→背包→合成→回收→榜单；text + target_panel |
 | ad_placements | ✅ 已转录（D-06） | 3 | hook_cooldown/offline_double/shop_refresh；daily_cap=3 |
+| jobs | ✅ 已转录结构（PD7-07） | 7 | 士兵/厨师/铁匠/木匠/机械师/研究员/工人（§5.3:421-430）；`produces` 有源仅铁匠/机械师（§5.3:437），其余留空；`rate/food_consumption/job_level` 无源留空（见第三节） |
+| foods | ✅ 已转录结构（PD7-07） | 6 | 烤鱼/鱼汤/烤土豆/面包/炒菜/鱼饵（§5.2:413）；id 用 items 食物项；营养/保质期无源（§5.2:418，无列，见第三节） |
+| crew_traits | ✅ 已转录（PD7-07） | 4 | 幸福感 4 项（§5.3:460-464）；每项 max_value=25/step=5（设计同值） |
+| generators | ✅ 已转录（PD7-07） | 3 | 太阳能/电鳗/石油（§6:471-474）；output_ratio 1:3:10（§6:481）；fuel 免费/喂鱼/消耗 |
+| consumers | ✅ 已转录结构（PD7-07） | 5 | 自动打捞装置/电动海水过滤器/冰箱/电力净水器/灯（§6:470,478,479）；`power_draw` 无源留空（见第三节） |
 
 ---
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **30 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **25 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, limits, lines, lockpick_tools, oil, phrases, protection_cards, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
+bait, blueprints, defenses, drops, event_drops, events, explore, fish, islands, limits, lines, lockpick_tools, oil, phrases, protection_cards, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
 
-> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节；`quality` 已由 PD7-06 转录 3 档（2026-10-29），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
+> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节；`quality` 已由 PD7-06 转录 3 档（2026-10-29），移出本节；`jobs`/`foods`/`crew_traits`/`generators`/`consumers` 已由 PD7-07 转录结构（2026-10-29），移出本节（数值字段有源者已填，无源者见第三节）。`fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
@@ -91,6 +96,25 @@ bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, 
 
 - **来源有**：DS §5.5:459「品质三档：粗糙 / 普通 / 精良（价值 ×0.7 / ×1 / ×1.5），只用于打造的工具和熟食」。
 - **本卡不进表**：`quality.schema.json` 无该列（D3 拍板），`quality.csv` 只落 `id/name/note` 3 档；倍率待后续 crafting 平衡卡补列时回填。已登记此处，附锚点 DS §5.5:459、材料与工具总表 §品质:185。
+
+---
+
+---
+
+## 三之三、PD7-07 登记的来源未明字段（生产簇，2026-10-29）
+
+**铁律 B-L5：设计文档里没有的 → 登记，不编。**
+
+| 表 | 字段 | 现状 | 可用性 | 备注 |
+|---|---|---|---|---|
+| jobs | `rate` | 0/7（**留空**，PD7-07） | ⚠ 仅影响平衡 | **无源**：DS §5.3:442-445【待定】产出速率/耗时，未给数值；保留列位，待源 |
+| jobs | `food_consumption` | 0/7（**留空**，PD7-07） | ⚠ 仅影响平衡 | **无源**：DS §5.3:442-449【待定】食物消耗，未给数值；保留列位，待源 |
+| jobs | `job_level` | 0/7（**留空**，PD7-07） | ⚠ 仅影响平衡 | **无源**：DS §5.3:442-449【待定】等级门槛，未给数值；保留列位，待源 |
+| jobs | `produces`（士兵/厨师/木匠/研究员/工人） | 0/5 留空 | ⚠ 仅影响平衡 | 职责描述（§5.3:422-430）未给固定产出物；仅铁匠/机械师有源（§5.3:437），其余留空 |
+| foods | 营养值 / 保质期 | 无此列 | ⚠ 仅影响平衡 | **无源**：DS §5.2:418【待定】食物营养/保质期，未给数值；schema 无列，暂不新增，待源 |
+| consumers | `power_draw` | 0/5（**留空**，PD7-07） | ⚠ 仅影响平衡 | **无源**：DS §6:481【待定】耗电值，未给数值；保留列位，待源 |
+
+> 以上字段设计源均以【待定】标注或仅给结构未给数值，按 B-L5 留空登记，不编造。
 
 ---
 

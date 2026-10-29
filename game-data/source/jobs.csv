@@ -1,1 +1,8 @@
-id,name
+id,name,produces,rate,food_consumption,job_level
+soldier,士兵,,,,,
+cook,厨师,,,,,
+smith,铁匠,item_0031;item_0032;item_0033,,,
+carpenter,木匠,,,,,
+mechanic,机械师,item_0036;item_0037;item_0034;item_0035,,,
+researcher,研究员,,,,,
+worker,工人,,,,,
