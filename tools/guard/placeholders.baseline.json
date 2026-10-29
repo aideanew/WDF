@@ -1,9 +1,10 @@
 {
-  "comment": "占位值/空表基线（FIX-21/R-7，2026-10-28 PD1-02）。记录 v1.0 当前实测债务：5 项同值 + 31 张空表。规则：命中在 baseline 内只报告不阻断；出现 baseline 外的新命中即红（exit 1）。改动本文件需单独提交并附实测依据。",
-  "recorded_at": "2026-10-28",
+  "comment": "占位值/空表基线（FIX-21/R-7，2026-10-28 PD1-02；2026-10-29 PD7-01 更新）。记录 v1.0 当前实测债务：6 项同值 + 31 张空表。规则：命中在 baseline 内只报告不阻断；出现 baseline 外的新命中即红（exit 1）。改动本文件需单独提交并附实测依据。PD7-01 将 items.capacity 归 0（D-54 Q2=A：该列不参与浮力，保留列位），故新增该同值条目。",
+  "recorded_at": "2026-10-29",
   "captured_by": "node tools/guard/placeholders.mjs（实测输出）",
   "same_value_hits": [
     { "table": "facilities", "field": "effect_bp", "value": "10000", "rows": 9 },
+    { "table": "items", "field": "capacity", "value": "0", "rows": 106 },
     { "table": "items", "field": "stack", "value": "99", "rows": 106 },
     { "table": "items", "field": "unlock_level", "value": "0", "rows": 106 },
     { "table": "locks", "field": "zone_bp", "value": "0", "rows": 5 },
