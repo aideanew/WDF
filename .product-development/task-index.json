@@ -2787,7 +2787,7 @@
       "title": "浮力口径落账与船体数据补全",
       "phase": "P7",
       "role": "planner",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [
         "data",
@@ -2857,7 +2857,17 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "commits": [
+          "1f3238e",
+          "99f57cb"
+        ],
+        "evidence": "docs/06_validation/evidence/EVD-7101/README.md（D-54 Q2=A 原文 + 验收 6 条复跑 + 提交）；game-data/source/items.csv（capacity 3 行置 0）；docs/03_solution/data/config-tables.md（口径句）；game-data/UNKNOWN-TABLES.md（误填判定）；tests/determinism/raft-tiles.test.mjs（raft-t 7/8）；tools/guard/placeholders.baseline.json（99f57cb 单独）",
+        "note": "D-54 Q2=A 浮力口径落账：items.capacity 归 0（不参与浮力，保留列位），chest 20/40/60 判定误填。raft-tiles 测试 8/8 PASS；placeholders 0 baseline 外新增（items.capacity=0 已入 baseline，单独提交 99f57cb）；A4 raft_tiles.csv 未动；A5 无 items.capacity 命中；A6 capacity 列全 0。gen 后 configVersion=e68ce0ba2ba20957。未推送（token 轮换待用户，就绪前不推）。",
+        "pushed": false,
+        "remote_branch": "",
+        "pushed_head": ""
+      }
     },
     {
       "id": "PD7-02",
