@@ -2,18 +2,47 @@
   "table": "defenses",
   "module": "defense",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "note": {
-      "type": "string"
+      "type": "string",
+      "description": "溯源注解"
+    },
+    "category": {
+      "type": "string",
+      "description": "防御建筑类别（箭塔/投石机/弓弩车）"
+    },
+    "recipe": {
+      "type": "string",
+      "description": "配方（DS §7.2:520），如 木板×10+木棍×10"
+    },
+    "level_max": {
+      "type": "int",
+      "min": 1,
+      "description": "可升级上限（弓弩车 1/2/3 级，DS §7.2:522）"
+    },
+    "damage": {
+      "type": "int",
+      "min": 0,
+      "description": "数值待定（DS §7.2:522），无源留空"
+    },
+    "range": {
+      "type": "int",
+      "min": 0,
+      "description": "数值待定（DS §7.2:522），无源留空"
+    },
+    "hp": {
+      "type": "int",
+      "min": 1,
+      "description": "数值待定（DS §7.2:522），无源留空"
     }
-  },
-  "todo": "字段待从 v5.5（模块 defense）抽取"
+  }
 }

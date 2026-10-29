@@ -2,18 +2,37 @@
   "table": "islands",
   "module": "island",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "note": {
-      "type": "string"
+      "type": "string",
+      "description": "溯源注解"
+    },
+    "template": {
+      "type": "string",
+      "description": "岛屿模板：高地岛/双港湾岛/岩脊岛/矿产岛（DS §7.2:530）"
+    },
+    "landing_zones": {
+      "type": "int",
+      "min": 2,
+      "description": "登陆口数（每岛 2-3 个，DS §7.2:530）"
+    },
+    "has_reef_cliff": {
+      "type": "string",
+      "description": "固定礁石/悬崖（DS §7.2:530）"
+    },
+    "area": {
+      "type": "int",
+      "min": 1,
+      "description": "面积待定，无源留空"
     }
-  },
-  "todo": "字段待从 v5.5（模块 island）抽取"
+  }
 }

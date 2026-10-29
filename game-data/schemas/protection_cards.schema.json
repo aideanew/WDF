@@ -2,18 +2,34 @@
   "table": "protection_cards",
   "module": "island",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "note": {
-      "type": "string"
+      "type": "string",
+      "description": "溯源注解"
+    },
+    "duration_hours": {
+      "type": "int",
+      "min": 1,
+      "required": true,
+      "description": "保护时长（30 天/7 天/24 小时，DS §4.4:355）"
+    },
+    "source": {
+      "type": "string",
+      "description": "获取途径（新手送 7 天/月活动送 7 天/付费 30 天/商人 24h 卡 3% 概率，DS §4.4:358-362）"
+    },
+    "price": {
+      "type": "int",
+      "min": 0,
+      "description": "价格待定（DS §4.4:367），无源留空"
     }
-  },
-  "todo": "字段待从 v5.5（模块 island）抽取"
+  }
 }

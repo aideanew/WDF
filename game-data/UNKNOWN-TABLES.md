@@ -30,16 +30,22 @@
 | crew_traits | ✅ 已转录（PD7-07） | 4 | 幸福感 4 项（§5.3:460-464）；每项 max_value=25/step=5（设计同值） |
 | generators | ✅ 已转录（PD7-07） | 3 | 太阳能/电鳗/石油（§6:471-474）；output_ratio 1:3:10（§6:481）；fuel 免费/喂鱼/消耗 |
 | consumers | ✅ 已转录结构（PD7-07） | 5 | 自动打捞装置/电动海水过滤器/冰箱/电力净水器/灯（§6:470,478,479）；`power_draw` 无源留空（见第三节） |
+| units | ✅ 已转录结构（PD7-08） | 3 | v1.0 三兵种（轻步兵/弓箭兵/重骑兵，U-02 每类取解锁最低）；兵种数值待定留空（§7.2:517，见三之四） |
+| defenses | ✅ 已转录结构（PD7-08） | 3 | 箭塔/投石机/弓弩车（§7.2:520）；配方有源，数值待定留空（§7.2:522，见三之四） |
+| throwables | ✅ 已转录结构（PD7-08） | 2 | 烟雾罐/火罐（§7.3:538）；配方有源，时长可调留空（§7.3:540，见三之四） |
+| islands | ✅ 已转录结构（PD7-08） | 4 | 高地岛/双港湾岛/岩脊岛/矿产岛（§7.2:530）；登陆口 2-3、固定礁石+悬崖；面积待定留空（见三之四） |
+| protection_cards | ✅ 已转录（PD7-08） | 3 | 30 天/7 天/24 小时保护卡（§4.4:355）；时长定值有源，价格待定留空（§4.4:367，见三之四） |
 
 ---
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **25 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **20 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-bait, blueprints, defenses, drops, event_drops, events, explore, fish, islands, limits, lines, lockpick_tools, oil, phrases, protection_cards, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
+bait, blueprints, drops, event_drops, events, explore, fish, limits, lines, lockpick_tools, oil, phrases, regions, seasons, shipwrecks, spawns, tides, titles, zones
 
-> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节；`quality` 已由 PD7-06 转录 3 档（2026-10-29），移出本节；`jobs`/`foods`/`crew_traits`/`generators`/`consumers` 已由 PD7-07 转录结构（2026-10-29），移出本节（数值字段有源者已填，无源者见第三节）。`fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
+> 注 1：`waves` 已由 PD7-08 **BLOCKED**（设计源无波次数值，DS §7 无「第几波几个」），仍为 0 行，见「三之四」。
+> 注 2：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节；`quality` 已由 PD7-06 转录 3 档（2026-10-29），移出本节；`jobs`/`foods`/`crew_traits`/`generators`/`consumers` 已由 PD7-07 转录结构（2026-10-29），移出本节；`units`/`defenses`/`throwables`/`islands`/`protection_cards` 已由 PD7-08 转录结构（2026-10-30），移出本节（数值字段有源者已填，无源者见「三之四」）。`fish/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
@@ -115,6 +121,45 @@ bait, blueprints, defenses, drops, event_drops, events, explore, fish, islands, 
 | consumers | `power_draw` | 0/5（**留空**，PD7-07） | ⚠ 仅影响平衡 | **无源**：DS §6:481【待定】耗电值，未给数值；保留列位，待源 |
 
 > 以上字段设计源均以【待定】标注或仅给结构未给数值，按 B-L5 留空登记，不编造。
+
+---
+
+## 三之四、PD7-08 登记的来源未明字段 + BLOCKED（战斗簇，2026-10-30）
+
+**铁律 B-L5：设计文档里没有的 → 登记，不编。**
+
+### 1. 无源数值字段（留空待补）
+
+| 表 | 字段 | 现状 | 可用性 | 备注 |
+|---|---|---|---|---|
+| units | `hp/speed/attack/range` | 0/3（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：DS §7.2:517 兵种具体数值与升级消耗待定；保留列位，待源 |
+| units | `unlock_level` | 0/3（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：U-02「每类取解锁等级最低」但设计源未给兵种解锁等级；保留列位，待源 |
+| defenses | `damage/range/hp` | 0/3（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：DS §7.2:522 弓弩车数值待定（箭塔/投石机同）；保留列位，待源 |
+| throwables | `duration_sec` | 0/2（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：DS §7.3:540 烟雾约 3 秒散（**数值可调**，非定值）；保留列位，待源 |
+| islands | `area` | 0/4（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：岛屿面积/资源/坐标设计源未给；保留列位，待源 |
+| protection_cards | `price` | 0/3（**留空**，PD7-08） | ⚠ 仅影响平衡 | **无源**：DS §4.4:367 24 小时卡价格待定（其余卡同）；保留列位，待源 |
+
+### 2. waves 整表 BLOCKED（无波次数值，卡已预判）
+
+- **现状**：`waves.csv` 0 行（**BLOCKED**）。
+- **依据**：设计源 §7（野人袭击/塔防）**没有「第几波来几个敌人、波次间隔」数值**。§7.1:491 只给「窝点每周刷新、1-2 个、规模随岛等级增长」；§7.2:348 只给「第一波调成一座箭塔+一颗烟雾必胜」（定性，无数值）。
+- **卡阻塞条件**：`设计源没有"波次"数值 → waves 留空 + BLOCKED 上报（没有波次就没有塔防，不许自己编）`。
+- **影响**：PD7-08 目标「30 行骨架跑完 1 波」的**波次部分无法达成**（无波次数据）；骨架（distanceField 寻路）本身已可测确定性（df 8 PASS）。待设计源补波次数值后回填。
+
+### 3. A4：v1.1 补齐的 6 兵种（登记为 v1.2，不落表）
+
+- **已定**（DS §7.2:746 + 设计要点记录.md:791）：v1.0 先做 3 兵种；**剩余 6 个 + 弩车放 v1.1**（合计仍 9 个）。
+- **现状**：`units.csv` 只落 v1.0 的 3 个（轻步兵/弓箭兵/重骑兵）。其余 6 兵种 **登记为 v1.2（本卡口径：不填）**，待 v1.1/v1.2 卡建实体后回填。
+
+### 4. buildings.storage_bp 4 行为 0（非占位，卡步骤 6 核实）
+
+- **现状**：`buildings.csv` 兵营/厨房/农田/潜水工坊 `storage_bp=0`（D-03 已转录）。
+- **核实**：这 4 个建筑为**功能建筑**（§5.3:533 设施规划），**不提供仓储**；仓储仅大仓库（50）/货舱（20）。**0 是设计语义**（该建筑不提供仓储），非占位符，不改。
+
+### 5. 设计同值误报（islands.has_reef_cliff，守卫会标「新增」但非占位）
+
+- `islands.has_reef_cliff="礁石+悬崖"` 全 4 模板同值 → placeholders 守卫标「新增」。
+- **判定**：DS §7.2:530「每岛固定礁石 / 悬崖」——所有岛模板**设计上都有**礁石+悬崖，是设计真实值，非占位。守卫默认 exit 0 不阻断。待 PD7-09 更新 baseline 时统一处理（同 crew_traits.max_value/step）。
 
 ---
 

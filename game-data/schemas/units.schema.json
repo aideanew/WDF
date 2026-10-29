@@ -12,24 +12,40 @@
       "type": "string",
       "required": true
     },
+    "category": {
+      "type": "string",
+      "enum": ["melee", "ranged", "tank"],
+      "required": true,
+      "description": "近战/远程/坦克（U-02：v1.0 各取 1 类）"
+    },
     "hp": {
       "type": "int",
       "min": 1,
-      "required": true
+      "description": "兵种数值待定（DS §7.2:517），无源留空"
     },
     "speed": {
       "type": "int",
       "min": 1,
-      "required": true
+      "description": "兵种数值待定（DS §7.2:517），无源留空"
     },
     "attack": {
       "type": "int",
       "min": 0,
-      "required": true
+      "description": "兵种数值待定（DS §7.2:517），无源留空"
     },
     "range": {
       "type": "int",
-      "min": 0
+      "min": 0,
+      "description": "兵种数值待定（DS §7.2:517），无源留空"
+    },
+    "unlock_level": {
+      "type": "int",
+      "min": 1,
+      "description": "解锁等级设计源未给（U-02 每类取解锁最低，但无等级数据），无源留空"
+    },
+    "note": {
+      "type": "string",
+      "description": "溯源注解"
     }
   }
 }

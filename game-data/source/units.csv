@@ -1,1 +1,4 @@
-id,name,hp,speed,attack,range
+id,name,category,hp,speed,attack,range,unlock_level,note
+unit_infantry,轻步兵,melee,"","","","","",近战兵种（U-02：v1.0 近战取解锁等级最低）；兵种数值待定（§7.2:517），待补；解锁等级设计源未给，待补
+unit_archer,弓箭兵,ranged,"","","","","",远程兵种（U-02：v1.0 远程取解锁等级最低）；兵种数值待定（§7.2:517），待补；解锁等级设计源未给，待补
+unit_cavalry,重骑兵,tank,"","","","","",坦克兵种（U-02：v1.0 坦克取解锁等级最低）；兵种数值待定（§7.2:517），待补；解锁等级设计源未给，待补

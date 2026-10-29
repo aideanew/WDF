@@ -2,18 +2,28 @@
   "table": "throwables",
   "module": "defense",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "note": {
-      "type": "string"
+      "type": "string",
+      "description": "溯源注解"
+    },
+    "recipe": {
+      "type": "string",
+      "description": "配方（DS §7.3:538），如 木炭+布×2"
+    },
+    "duration_sec": {
+      "type": "int",
+      "min": 1,
+      "description": "持续时长数值可调（DS §7.3:540，约 3 秒），无源留空"
     }
-  },
-  "todo": "字段待从 v5.5（模块 defense）抽取"
+  }
 }
