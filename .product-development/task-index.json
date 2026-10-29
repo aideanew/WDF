@@ -3348,8 +3348,8 @@
       "title": "战斗簇数据（islands/units/waves/defenses/throwables/protection_cards/buildings）",
       "phase": "P7",
       "role": "executor",
-      "status": "TODO",
-      "detail": "READY",
+      "status": "BLOCKED",
+      "detail": "waves 无源（设计源无波次数值），卡预判 BLOCKED；结构表已转录，待设计源补波次后回填",
       "areas": [
         "data"
       ],
@@ -3419,7 +3419,12 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "status": "BLOCKED",
+        "completed_at": "2026-10-30",
+        "note": "PD7-08 战斗簇：units 3 兵种（轻步兵/弓箭兵/重骑兵，U-02 每类取解锁最低，代定推断）、defenses 3 防御建筑（箭塔/投石机/弓弩车，配方有源 §7.2:520）、throwables 2 投掷物（烟雾罐/火罐 §7.3:538）、islands 4 模板（§7.2:530）、protection_cards 3 卡（时长 720/168/24 有源 §4.4:355）。waves **BLOCKED**（设计源无波次数值，卡预判：waves 留空+BLOCKED 上报，不许编）。buildings.storage_bp 4 行 0 核实为非占位（功能建筑不仓储）。无源字段登记 UNKNOWN-TABLES 三之四；6 兵种+弩车登记 v1.2（A4）。defense 测试 8/8 PASS（含 A3 确定性 distanceField）。placeholders EXIT=0（空表 25→20，waves 仍空 BLOCKED；islands.has_reef_cliff 为设计同值误报待 PD7-09）。gen configVersion=83c9ea8ca7a806aa（46 表/512 行）。3 兵种具体为代定推断（用户未指名，U-02 只给原则）——待用户确认可改。未推送。",
+        "evidence": "docs/06_validation/evidence/EVD-7108/"
+      }
     },
     {
       "id": "PD7-09",
