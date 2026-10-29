@@ -2649,7 +2649,7 @@
       "title": "架构文档与 schema 对账（FIX-34 设计意向写成已建表）",
       "phase": "P5",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 21,
@@ -2693,7 +2693,15 @@
         ]
       },
       "legacy_ids": [],
-      "source": "FIX-34"
+      "source": "FIX-34",
+      "execution": {
+        "commits": [
+          "9dce9886e9eac64d2acab39abecc29f06d2af79b"
+        ],
+        "pushed": true,
+        "remote_branch": "origin/HEAD -> origin/master",
+        "pushed_head": "9dce9886e9eac64d2acab39abecc29f06d2af79b"
+      }
     },
     {
       "id": "PD5-03",
