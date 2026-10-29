@@ -1,5 +1,5 @@
 {
-  "plan_version": "PLAN-R2",
+  "plan_version": "PLAN-R3",
   "baseline_commit": "bf0fe75",
   "tasks": [
     {
@@ -317,7 +317,7 @@
       "title": "赶海 ops 复算计分（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -343,14 +343,15 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）"
+      "superseded_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-0803",
       "title": "赶海 21:05 结算与发奖（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -376,14 +377,15 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）"
+      "superseded_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-0902",
       "title": "赶海分组榜（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -409,14 +411,15 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块"
+      "superseded_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-0903",
       "title": "排行榜压测（决定是否引入 Redis）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -442,14 +445,15 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块"
+      "superseded_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-1301",
       "title": "称号展示（榜单位 + 个人信息区）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -475,7 +479,8 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：titles/title_award 属 D-50 的 31 张 v1.1 空表（2026-10-29 规划者裁决）"
+      "superseded_reason": "范围移出：titles/title_award 属 D-50 的 31 张 v1.1 空表（2026-10-29 规划者裁决）",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-1401",
@@ -525,7 +530,7 @@
       "title": "drops（箱子内容）填数——只转录，不设计",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -551,14 +556,15 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：drops 属 D-50 的 31 张 v1.1 空表"
+      "superseded_reason": "范围移出：drops 属 D-50 的 31 张 v1.1 空表",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-1503",
       "title": "34 张占位表补列结构（列由设计文档推导，数字不编）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -584,7 +590,8 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "范围移出：34 张占位表补列属 D-50 的 31 张 v1.1 空表"
+      "superseded_reason": "范围移出：34 张占位表补列属 D-50 的 31 张 v1.1 空表",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-1601",
@@ -617,7 +624,7 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "未排期：原卡自述「登记，暂不实施」（proposed）"
+      "blocked_reason": "v1.1 backlog（原卡自述登记暂不实施）"
     },
     {
       "id": "TASK-1602",
@@ -650,7 +657,7 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "未排期：原卡自述「登记，暂不实施」（proposed）"
+      "blocked_reason": "v1.1 backlog（原卡自述登记暂不实施）"
     },
     {
       "id": "TASK-2001",
@@ -1547,7 +1554,7 @@
       "title": "开锁交互（chest+locks 接表）+ chest.open 动作",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "BLOCKED",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -1574,7 +1581,8 @@
       "legacy_ids": [],
       "execution": {},
       "source_note": "台账 §2：⊘ v1.1 推迟（chest.open 已落地；salvage.claimInfo 维持 todo→v1.1，用户 2026-10-28 拍板）",
-      "blocked_reason": "范围移出：开锁交互 + salvage.claimInfo 经用户 2026-10-28 拍板推迟 v1.1"
+      "superseded_reason": "范围移出：开锁交互 + salvage.claimInfo 经用户 2026-10-28 拍板推迟 v1.1",
+      "superseded_by": "PD3-01"
     },
     {
       "id": "TASK-4010",
@@ -2794,6 +2802,17 @@
       "changed": [
         "确认 P3 不设 tester 体检卡，理由登记于此",
         "D-50 的 13 模块 / 31 空表名单 = placeholders.baseline 实测名单"
+      ]
+    },
+    {
+      "at": "2026-10-29",
+      "after_phase": "P6",
+      "reason": "v1.0 代码侧清零（pd.mjs next 无就绪卡）。8 张范围移出卡（0802/0803/0902/0903/1301/1502/1503/4009，D-50 的 v1.1 模块 + 用户 2026-10-28 拍板 TASK-4009）由 BLOCKED 改 SUPERSEDED，纠正状态语义（BLOCKED=外部条件未到可能解除，而范围移出是永久）；余 8 张 BLOCKED 全部有明确外部 owner（6 张 BLOCKED-HUMAN 等真机/用户操作/平台资质 + 2 张 v1.1 backlog 1601/1602）。P3 缺 tester 体检卡已由 W5-1~W5-4 复核覆盖，不补卡以免造空壳卡。",
+      "changed": [
+        "8 张范围移出卡由 BLOCKED 转 SUPERSEDED（superseded_by=PD3-01「v1.1 范围登记」接管卡；依据 D-50 保留在 superseded_reason 中——决策是依据不是接替者，FIX-36）；原 blocked_reason 移至 superseded_reason",
+        "1601/1602 的 blocked_reason 改「v1.1 backlog（原卡自述登记暂不实施）」",
+        "ADR-0001/0009 由 PROPOSED 转 DECIDED（FIX-35）",
+        "plan_version PLAN-R2 → PLAN-R3"
       ]
     }
   ]

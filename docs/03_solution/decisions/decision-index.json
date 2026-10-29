@@ -3,16 +3,19 @@
     {
       "id": "ADR-0001",
       "title": "引擎：Cocos Creator 3.8 LTS",
-      "status": "PROPOSED",
-      "decided_by": null,
-      "decided_at": null,
+      "status": "DECIDED",
+      "decided_by": "planner",
+      "decided_at": "2026-10-29",
       "kind": "architecture",
       "file": "docs/03_solution/decisions/ADR-0001-engine-cocos-3-8.md",
       "source": "docs/03_solution/decisions/ADR-0001-engine-cocos-3-8.md",
       "applies_to": [],
       "legacy_ids": [],
       "supersedes": null,
-      "superseded_by": null
+      "superseded_by": null,
+      "detail": {
+        "rule": "Cocos Creator 3.8 LTS 已定（10-23 11:18 Hark 代定，四步版本锁定流程）。3.8.x 具体补丁号以编辑器 Help→About 为准（用户侧填，不阻塞本决策）。"
+      }
     },
     {
       "id": "ADR-0002",
@@ -115,16 +118,19 @@
     {
       "id": "ADR-0009",
       "title": "运行时校验采用 zod（前后端同构）",
-      "status": "PROPOSED",
-      "decided_by": null,
-      "decided_at": null,
+      "status": "DECIDED",
+      "decided_by": "planner",
+      "decided_at": "2026-10-29",
       "kind": "architecture",
       "file": "docs/03_solution/decisions/ADR-0009-runtime-validation-zod.md",
       "source": "docs/03_solution/decisions/ADR-0009-runtime-validation-zod.md",
       "applies_to": [],
       "legacy_ids": [],
       "supersedes": null,
-      "superseded_by": null
+      "superseded_by": null,
+      "detail": {
+        "evidence": "server/package.json:16 zod ^4.6.7；server/src/gateway/payload.ts:10 import { z }（校验失败统一返 BAD_PAYLOAD 1001）"
+      }
     },
     {
       "id": "ADR-0010",

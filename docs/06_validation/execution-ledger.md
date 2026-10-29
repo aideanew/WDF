@@ -112,7 +112,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
 
-## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-34）
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-36）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
 > 处置拆分见下批派工单 W1~W4。**本节状态以 §9 表格为准**（下方 W5 更正段已覆盖初版口径：
@@ -156,6 +156,8 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-32 | P2 | **证据陈旧**（病症⑤用证据固化 bug）：`EVD-1401/README.md:28` 标题写「4 例」（表格实际 7 行）；`TASK-1401.md:85` 验收写「4/4、235/235」；`task-index.json` 的 `TASK-1401.execution.evidence` 写「（4 例）」、`note` 写「4/4、235/235」——证据数字比实际**少**，按证据对账会以为只覆盖 4 例 | `EVD-1401/README.md:28`；`TASK-1401.md:85`；`task-index.json` TASK-1401 | ✅ PD5-01（订正为 7/7、238/238；TASK-1401.md 保留 P5 时点原文，文末补 P6 补验节） |
 | FIX-33 | P2 | **PUSHED 记录说谎**：`TASK-1401.execution.pushed_head = 1d34fc6`，而 `commits[]` 已含 `7c587cf`、HEAD 已 `48031e7`；`pushed:true` 让 `pd.mjs status` 不报「未同步」——记录不是缺失，是**停在旧 commit**，比缺失更难发现 | `task-index.json` TASK-1401 | ✅ PD5-01（pushed_head → `48031e7` 全哈希，commits 补 `48031e7`） |
 | FIX-34 | P2 | **架构文档与 schema DIVERGED**：`architecture-overview.md:127` §5.3 列 20 张「主要表」，其中 7 张不存在（income_event/season/title_award/event_result/chat_message/report/ban），且**不含 regions**；实测迁移建 14 张——文档把「设计意向」写成了「已建表」 | `architecture-overview.md:127`；`server/db/migrations/*.sql` | ✅ PD5-02（拆成已建 14 / 未建 7，已建以迁移为唯一事实源，未建标注 D-50 v1.1；已建清单与 `create table` 逐字一致） |
+| FIX-35 | P3 | **ADR 状态与事实不符**：health 每次固定报「待裁决决策：ADR-0001、ADR-0009」。ADR-0009 有硬证据（`server/package.json:16` `zod ^4.6.7`、`gateway/payload.ts:10` `import { z }`）；ADR-0001 只有「是 Cocos 工程」证据（36 个文件 `import 'cc'`），仓库内无 3.8.x 补丁号硬证据——长期噪音会掩盖真正有争议的决策 | `decision-index.json`；`server/package.json:16`；`server/src/gateway/payload.ts:10` | ✅ PD5-03（ADR-0001/0009 → DECIDED，zero 待裁决；ADR-0001 detail 注「3.8.x 补丁号以编辑器 Help→About 为准，用户侧填不阻塞」） |
+| FIX-36 | P2 | **`superseded_by` 被填成决策 ID**：规划指令让 8 张范围移出卡写 `superseded_by:"D-50"`，而 `pd.mjs` 校验该字段必须指向**任务**（`taskMap` 只含任务）→ health 8 个错误、无法 exit 0。根因是**语义越界**：`superseded_by` 是「接替者」，决策是「依据」不是接替者；硬填 D-50 等于让闸门失去区分力。正解=指向接管卡 `PD3-01`（「v1.1 范围正式登记为决策 D-50」），D-50 保留在 `superseded_reason` 文本中。**不改 pd.mjs**：它在 `~/.claude/skills/` 是跨项目共享技能，为其改一次数据需要动全局工具，且技能升级（install.ps1）会覆盖改动 | `task-index.json` 8 条 SUPERSEDED；`pd.mjs` health 校验 | ✅ PD5-03（8 条 `superseded_by` → `PD3-01`；`superseded_reason` 原样保留 D-50 引用；health 8 错 → 0 错） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 
