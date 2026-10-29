@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 304 篇。⚠ 表示活跃文档已过 review 日期。
+共 305 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -289,6 +289,7 @@ review: 2026-11-23
 | EVD-7050 | `npm run stage` 定向体检（I-4：影响面 + 该模块所有测试，一条命令） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7050/README.md` |
 | EVD-7051 | 文档指针与措辞（进入本卡时已就位，无需改动，验收通过） | accepted | 2026-11-28 | `06_validation/evidence/EVD-7051/README.md` |
 | EVD-7101 | PD7-01 浮力口径落账（D-54 Q2=A：items.capacity 归 0 不参与浮力） | active | 2026-11-29 | `06_validation/evidence/EVD-7101/README.md` |
+| EVD-7106-SRC | PD7-06 来源清单（B-L1：每个字段「取自哪份文档哪一节/哪一行」） | active |  | `06_validation/evidence/EVD-7106/source-list.md` |
 | EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |

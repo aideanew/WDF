@@ -3195,7 +3195,7 @@
       "title": "成长簇数据（levels/unlocks/quality + 两个 unlock_level 列）",
       "phase": "P7",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [
         "data"
@@ -3257,7 +3257,16 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "commits": [
+          "c257766"
+        ],
+        "evidence": "docs/06_validation/evidence/EVD-7106/README.md（来源清单 + 验收 4 条复跑 + 提交）；docs/06_validation/evidence/EVD-7106/source-list.md（B-L1 逐字段锚点）；game-data/source/unlocks.csv（82 行方案B）；game-data/schemas/unlocks.schema.json（level/kind/target_id）；game-data/source/quality.csv（3 档）；game-data/source/items.csv（stack/unlock_level 留空）；game-data/source/recipes.csv（unlock_level 留空）；game-data/UNKNOWN-TABLES.md（无源/无实体登记）",
+        "note": "PD7-06 成长簇数据落账：unlocks 方案B 展开 82 行每行一目标（level/kind/target_id，D2）；quality 3 档（D3，倍率暂不进表）；items.stack、items/recipes.unlock_level 留空登记（D4/D5，设计源无堆叠条文、§5.4:453 待定）；6 个无实体/陈旧目标登记不落表（房间框架/勘测杆/升高地形/发动机机位/投石机/电工房）。levels-unlocks 测试 9/9 PASS；placeholders 占位命中 6→3（stack/unlock_level 出列）；空表 31→30。A4 levels 未动仅 unlocks 单向。gen configVersion=4f267a07b03ff932。未推送（token 轮换待用户，就绪前不推）。",
+        "pushed": false,
+        "remote_branch": "",
+        "pushed_head": ""
+      }
     },
     {
       "id": "PD7-07",
