@@ -70,6 +70,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | 10-27 11:51（4006 完成后） | 9/9 | 119/119 | 0 | 新增 economy 8+5 例 |
 | 10-27 14:37（4007 完成后） | 9/9 | 127/127 | 0 | 新增 merchant 8 例 |
 | 10-28 14:25（4016 收官 + 4004 补测后） | 9/9 | **219/219** | 0 | determinism 128 / 契约 27 / 集成 63 / e2e 1 |
+| 10-28（PLAN-R1 复跑） | 9/9 | **231/231** | 0 | verify EXIT=0，工作树干净 |
 | 复跑命令 | `npm run guard` | `npm test` | `npm run typecheck`（裸跑，不过滤） | — |
 
 
@@ -111,7 +112,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
 
-## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-16）
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-23）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
 > 处置拆分见下批派工单 W1~W4。**本节状态以 §9 表格为准**（下方 W5 更正段已覆盖初版口径：
@@ -137,6 +138,13 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-14 | P1 | 两处 UI 注释仍描述 W2-2 之前的旧行为（"ERR.SYSTEM 造错、code 可能 undefined"），实际已是 `NET_CODE_OFFLINE=-1`、code 恒 number | `LeaderboardModel.ts:84-85`、`SaveSyncModel.ts:224` | ✅ W5-4 `a1b662c` |
 | FIX-15 | P2 | W2-1 收窄 README 跳过规则后，evidence 目录自己的落地页 `evidence/README.md`（无 front matter id）被纳入索引并显 ⚠缺 | `docs-index.mjs:12` | ✅ W5-1 `4fecfd9`（精确排除） |
 | FIX-16 | P2 | `time` 时间源：客户端经 `RpcClient` 每次真实响应 `syncFromResponse` 校准服务器偏移（`RpcClient.ts:2,109`），但时间消费侧是否统一走该偏移的**口径未成文**，登记追踪 | `client/assets/scripts/services/time/`；`RpcClient.ts:2,109` | 📋 已登记（W5-5，未关闭） |
+| FIX-17 | P1 | W5-5 的 docs-index 突变测试直接写仓库（动态建/删 EVD-TMP），违反测试纯净性 | `tests/contract/docs-index.test.mjs` | ✅ W6-1 `8524298`（改纯函数测试，测试不再写仓库） |
+| FIX-18 | P2 | 台账 §9 自相矛盾：正文称「FIX-9 未派工」，表格又给「已收口」；标题 FIX-1~FIX-16 与实收口数不符 | `execution-ledger.md` §9 | ✅ W6-2 `09eb30d`（矛盾行改历史注记并作废，标题更正） |
+| FIX-19 | P2 | `hook-hitrate.mjs` `resolve2` 用 `join(ROOT, p)`，绝对路径被拆坏 | `tools/sample/hook-hitrate.mjs:46` | ✅ PD1-01 `c030904`（改 `isAbsolute ? p : resolve(ROOT, p)`，实测 `--from E:/tmp/s.jsonl` EXIT=0） |
+| FIX-20 | P3 | `hook-hitrate.mjs` 两处注释宣称 postmaster.pid「在保护」，实际该文件不存在（PGlite WASM 单进程），分支永不触发 | `tools/sample/hook-hitrate.mjs:12,49-50` | ✅ PD1-01 `c030904`（删死代码段，注释改「无锁：PGlite 单进程 WASM，本脚本不做并发防护」） |
+| FIX-21 | P2 | `placeholders` 不在 `verify` 链内 → 占位值回归永远不红，违反「不在 verify 里就不是闸门」铁律 | `package.json` `verify` vs `placeholders` | ✅ PD1-02 `c3cc89e`（并入 run-all 成为第 10 项守卫 + baseline 白名单；未直接塞 verify shell 链，符合 R-7） |
+| FIX-22 | P2 | 台账 §4 门禁快照停在 `219`，实测 `231`；三份文档互相对不上 | `execution-ledger.md:72` | ✅ 本卡（§4 追加 PLAN-R1 复跑 `231/231` 快照） |
+| FIX-23 | P1 | FIX-17~20 四条缺陷未写入任何权威文件，只存在于提交信息，违反 pds 底线 2「行为留痕」 | 全仓 grep `FIX-17/18/19/20` 在 `docs/` 零命中 | ✅ 本卡（§9 追加 FIX-17~23 七行） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 
