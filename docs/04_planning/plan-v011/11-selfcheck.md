@@ -121,9 +121,12 @@ related: [PLAN-V011-00, PLAN-V011-10]
 ```bash
 git status --porcelain         # 只应有 docs/04_planning/plan-v011/**、.product-development/task-index.json、
                                # docs/03_solution/decisions/decision-index.json、docs/04_planning/current-plan.md、
-                               # docs/00_governance/document-index.md（生成物）
+                               # docs/00_governance/document-index.md（生成物）  → 实测 20 个文件，全部合规
 pd.mjs health .                # → 体检通过（45 个提醒，0 错误）
 pd.mjs status .                # → 待裁决决策：D-54；D-55；D-56
+node tools/gen/docs-index.mjs  # → 文档索引 303 篇，任务 52 个
+docsFrontMatter() / everyDirExplained()（定向调用）  # → 0 / 0
+git push                       # → 4e572fa..79b0930 HEAD -> master（aideanew/WDF，远端回读一致）
 ```
 
 **未跑的检查（如实说明）**：`npm run verify`（用户明确"拒绝全量回归/门禁"）、`npm run test`、
@@ -147,7 +150,7 @@ pd.mjs status .                # → 待裁决决策：D-54；D-55；D-56
 | L-3 | 无真机 → 6 项性能指标无基线 | `09 §4 M-1`：因此不排优化任务 |
 | L-4 | 契约第 4 项自检为否 | 见 §14 契约表的诚实说明 |
 | L-5 | B 阶段不能"演示给玩家看" | `06 §5` |
-| L-6 | 本次未推送（凭据缺失） | `10 §D-55`；按指令将输出 zip |
+| L-6 | 本次**已推送**到 `aideanew/WDF`（`79b0930`），但 `origin` 仍指向不可达的 `nevermeetagain/WDF` | `10 §D-55`：本地 `origin/master` 引用已过期，接手者若以它为"双端一致"依据会被误导 |
 
 ## §16 建议的第一刀与启动顺序
 

@@ -684,7 +684,16 @@
         "blocking": false,
         "need": "对 nevermeetagain/WDF 有写权限的 fine-grained PAT，或确认凭据管理器已可用",
         "fallback": "按用户指令输出 zip 规划包并说明未推送",
-        "evidence": "git fetch origin → fatal: could not read Username for 'https://github.com'；origin/master HEAD = 4e572fa 与本地同 SHA"
+        "evidence": "git fetch origin → fatal: could not read Username for 'https://github.com'；origin/master HEAD = 4e572fa 与本地同 SHA",
+        "investigation": {
+          "at": "2026-10-29",
+          "nevermeetagain_anon": "fatal: could not read Username（非公开）",
+          "nevermeetagain_with_pat": "remote: Repository not found（给定 PAT 看不到）",
+          "aideanew_public": "ls-remote 返回 4e572fa…（公开且可写）",
+          "pushed_to": "aideanew/WDF master 4e572fa..79b0930，远端回读 = 79b0930",
+          "origin_url_unchanged": "origin 仍指 nevermeetagain/WDF；本地 origin/master 引用（4e572fa）已过期",
+          "token_persisted": "否（grep .git/config .product-development → 0 命中）"
+        }
       }
     },
     {

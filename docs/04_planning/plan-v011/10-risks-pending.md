@@ -51,6 +51,21 @@ Q2 选 A 是唯一**不需要补任何新数值**就能自洽的口径，其余�
 **需要你给**：一个对 `nevermeetagain/WDF` 有写权限的 fine-grained PAT（或确认已有凭据管理器可用）。
 **若拿不到**：按你的指令"无法连接到 Github 则输出 zip 规划包"，我会把 `docs/04_planning/plan-v011/` + 17 份卡面打包成 zip 交付，并说明未推送。
 
+#### 已做的探测（2026-10-29 实测，三条命令逐条给结果）
+
+| # | 探测 | 结果 | 含义 |
+|---|---|---|---|
+| 1 | `git ls-remote https://github.com/nevermeetagain/WDF.git`（匿名） | `fatal: could not read Username`（要求凭据） | 该仓库**非公开**（私有或不存在） |
+| 2 | `git ls-remote https://oauth2:<你的PAT>@github.com/nevermeetagain/WDF.git` | `remote: Repository not found` | 该 PAT（aideanew 账号）**看不到**该仓库 |
+| 3 | `git ls-remote https://github.com/aideanew/WDF.git`（匿名 + 该 PAT） | 均返回 `4e572fa…` | **aideanew/WDF 公开且可写** |
+
+#### 本规划的处置（不擅自改 `origin` 指向）
+
+- **已推送到 aideanew/WDF**：`4e572fa..79b0930 HEAD -> master`，远端 `refs/heads/master` = `79b0930`（回读确认）。
+- **`origin` 仍指向 `nevermeetagain/WDF`，未改**（改 remote = 改仓库配置，需你确认哪个才是权威）。
+  副作用：本地 `origin/master` 引用（= `4e572fa`）已**不是**最新远端状态，下一步接手者看它会被误导 → 本条已登记。
+- **令牌未落盘**：`grep -rl "github_pat_" .git/config .product-development` → 0 命中；推送用的是命令行内联 URL。
+
 ---
 
 ### D-56 · C 阶段是否可绕过 C1 手感闸门（**BLOCKING，影响 C 阶段开工**）
