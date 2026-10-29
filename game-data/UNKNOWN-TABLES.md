@@ -10,11 +10,11 @@
 
 | 表 | 状态 | 行数 | 说明 |
 |---|---|---|---|
-| items | ✅ 已转录 | 106 | id 用 `item_NNNN` 稳定序号；`name/category/base_price` 取自总表；`craftable` 由总表"不可打造"标注推导（10 个 false）；`weight/capacity/stack/unlock_level` 由 D-07 填充（见第三节） |
+| items | ✅ 已转录 | 106 | id 用 `item_NNNN` 稳定序号；`name/category/base_price` 取自总表；`craftable` 由总表"不可打造"标注推导（10 个 false）；`weight/capacity` 由 D-07 填充（见第三节）；`stack/unlock_level` 由 PD7-06 留空登记（无源，见第三节） |
 | prices | ✅ 已转录 | 106 | `base_price/recycle_bp` 取自总表；`recycle_bp` schema 上限已由 10000 放宽至 100000（金锭/古董等最高 15000） |
 | locks | ✅ 已转录 | 5 | none/iron/copper/silver/gold；`hits_required/zone_bp` 由 D-08 填充（见第三节） |
 | chests | ✅ 已转录 | 3 | wood/copper/iron；`lock` 默认 none；`smashable/size` 由 D-09 填充（见第三节） |
-| recipes | ✅ 已转录 | 80 | 总表二~十一段配方列解析；21 条特殊/设施类跳过（见第五节）；`unlock_level` 由 D-10 填充 0；`job` 保持空（见第三节）；名称映射 `简易过滤器→简易海水过滤器` 已补（原误跳 1 条已修复） |
+| recipes | ✅ 已转录 | 80 | 总表二~十一段配方列解析；21 条特殊/设施类跳过（见第五节）；`unlock_level` 由 PD7-06 留空登记（无源，见第三节）；`job` 保持空（见第三节）；名称映射 `简易过滤器→简易海水过滤器` 已补（原误跳 1 条已修复） |
 | merchants | ✅ 已转录（D-01） | 3 | 渔村/流浪/黑市；region_bp + daily_limit |
 | facilities | ✅ 已转录（D-02） | 9 | 熔炉/灶台/锯台/砧台/木炭窑/炼油炉/高炉/锁匠铺/机械工坊；effect_bp=10000、station 取 recipes 原工位串 |
 | buildings | ✅ 已转录（D-03） | 6 | 大仓库/货舱/兵营/厨房/农田/潜水工坊；storage_bp |
@@ -30,11 +30,11 @@
 
 ## 二、无数值来源的空表（维持空，不得编造）
 
-以下 **31 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
+以下 **30 张表**在 `docs/01_product/design-source/` 现有文档中**没有任何数值**，全部留空（0 行，不参与校验）：
 
-bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, limits, lines, lockpick_tools, oil, phrases, protection_cards, quality, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
+bait, blueprints, consumers, crew_traits, defenses, drops, event_drops, events, explore, fish, foods, generators, islands, jobs, limits, lines, lockpick_tools, oil, phrases, protection_cards, regions, seasons, shipwrecks, spawns, throwables, tides, titles, units, waves, zones
 
-> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
+> 注：ad_placements/buildings/facilities/guide_steps/hooks/merchants 已由 D-01~D-06 裁决值转录（2026-10-27），移出本节；`raft_tiles`/`rooms`（7033）、`levels`/`unlocks`（7032）已由 D-42=C 代定/注册（2026-10-28），移出本节；`quality` 已由 PD7-06 转录 3 档（2026-10-29），移出本节。`foods/fish/islands/events/tides/…` 玩法上确实存在，但当前设计文档未给数值。若后续补文档，优先从这些表开始。
 
 ---
 
