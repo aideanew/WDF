@@ -62,29 +62,43 @@ related: [PLAN-V011-06, PLAN-V011-07]
 - 前置状态：`npm run gen` 可跑通
 
 ## 输出
-- `game-data/source/raft_tiles.csv`（补到**至少 2 种地块**，见步骤 4）
-- `game-data/source/items.csv`（**仅 `capacity` 列** → 全部置 `0`）
-- `game-data/UNKNOWN-TABLES.md`（登记 capacity 语义的裁决出处 = D-54）
+- `game-data/source/items.csv`（**仅 `capacity` 列** → 3 行 chest 的 20/40/60 全部置 `0`）
+- `game-data/UNKNOWN-TABLES.md`（登记 capacity 语义的裁决出处 = D-54；并登记「`chest` 的 20/40/60 判定为误填」）
 - `docs/03_solution/data/config-tables.md`（一行口径说明）
 - `tests/determinism/raft-tiles.test.mjs`（**已存在**，补断言）
 - `tools/guard/placeholders.baseline.json`（**单独一个提交**，见步骤 7）
 
+> **`raft_tiles.csv` 本卡不动**。原稿要求"补到至少 2 种地块"，经复核属我自编的设计偏好
+> （见 `10 §C-54.4 的自我否定`）：`remainingBuoyancy` 每加一格 `raft_block` 净浮力 +40，
+> 1 种地块已构成真实机制。**保持 1 行，本卡零新增数值。**
+
 ## Execution Steps
 1. [ ] 读 `decision-index.json` 的 `D-54.detail.q2` 原文，抄进 `config-tables.md` 的口径段落（**不写自己的解释、不改措辞**）
-2. [ ] `items.capacity` 全列置 `0`（**不删列**，保 schema 稳定），并在 `UNKNOWN-TABLES.md` 写一句：「该列不参与浮力（D-54 Q2=A），保留列位以免破坏 schema 与 gen 流程」
-3. [ ] `grep -rn "capacity" client/assets/scripts server/src packages/game-core/src` → 逐条确认**没有**任何代码把 `items.capacity` 当浮力用；有命中就先记进卡片 `review`，**改代码留给 PD7-02/03**
-4. [ ] 补 `raft_tiles.csv`：至少 2 种地块，第 2 种的 `capacity` 与建造成本**必须能在 D-54 或设计源里找到出处**；找不到 → **停**，写进 `UNKNOWN-TABLES.md` 并回上裁决（不许自编数值）
-5. [ ] `npm run gen`
-6. [ ] 在 `raft-tiles.test.mjs` 加断言：「给定 1 个 `raft_block`（capacity 50 / weight 10），`remainingBuoyancy()` 返回 `50 - 10 - cargoWeight`」；并加一条**反证断言**：把某个 `items` 的 `capacity` 设成 100，`remainingBuoyancy()` 结果**不变**
-7. [ ] `node tools/guard/placeholders.mjs` → 预期**新增同值命中**（`capacity` 从"部分非零"变"全 0"）→ 更新 baseline，**单独 `git add` + 单独 commit**
-8. [ ] 跑定向测试
+2. [ ] `items.capacity` 的 3 行非零（`item_0065`/`item_0066`/`item_0067`，均为 `chest` 类，20/40/60）全部置 `0`
+      （**不删列**，保 schema 稳定），并在 `UNKNOWN-TABLES.md` 写：「该列不参与浮力（D-54 Q2=A）；`chest` 的
+      20/40/60 判定为误填（箱子凭什么提供浮力，设计源无此条文），保留列位以免破坏 schema 与 gen 流程」
+3. [ ] `grep -rn "\.capacity" client/assets/scripts server/src packages/game-core/src` → 逐条确认**没有**任何代码把
+      `items.capacity` 当浮力用（预期命中只有 `Load.capacity` 与 `raft_tiles` 投影）；有异常命中先记进 `review`，
+      **改代码留给 PD7-02/03**
+4. [ ] `npm run gen`
+5. [ ] 在 `raft-tiles.test.mjs` 加两条断言：
+      - 正算：「1 个 `raft_block`（capacity 50 / weight 10），`remainingBuoyancy()` 返回 `50 - 10 - cargoWeight`」
+      - **反证**：「把任一 `items` 的 `capacity` 临时设成 100，`remainingBuoyancy()` 结果**不变**」
+        （用内存构造的 `Load[]`，不读 `items.csv`；这两条断言验的是**公式不含 items.capacity**，
+        不是验数据文件 —— 数据文件由步骤 2 负责）
+6. [ ] `node tools/guard/placeholders.mjs` → 预期**新增同值命中**（`capacity` 从"3 行非零"变"全 0"）→ 更新 baseline，
+      **单独 `git add` + 单独 commit**
+7. [ ] 跑定向测试
+
+> **步骤 4 已消除**：原稿的"补 `raft_tiles` 第 2 种地块"被撤销，因此本卡**不再有任何需要向用户索要的数值**。
 
 ## 验收标准
 - [ ] A1 `command`：`npm run gen && node --import ./tools/runtime/register.mjs --test tests/determinism/raft-tiles.test.mjs` → 全 PASS
-- [ ] A2 `command`：`node tools/guard/placeholders.mjs` → **无 baseline 外新增命中**（步骤 7 已更新 baseline 且单独提交）
+- [ ] A2 `command`：`node tools/guard/placeholders.mjs` → **无 baseline 外新增命中**（步骤 6 已更新 baseline 且单独提交）
 - [ ] A3 `file`：`docs/03_solution/data/config-tables.md` 里能搜到"浮力 = "开头的唯一口径句
-- [ ] A4 `review`：`raft_tiles.csv` 每一行都能在 D-54 或设计源里找到出处
-- [ ] A5 `command`：`grep -rn "\.capacity" client/assets/scripts packages/game-core/src` → 命中全部与 `raft_tiles` 有关，**无** `items.capacity`（对应 `10 §R-1'`）
+- [ ] A4 `review`：`raft_tiles.csv` **未被修改**（`git diff --stat game-data/source/raft_tiles.csv` 为空）
+- [ ] A5 `command`：`grep -rn "\.capacity" client/assets/scripts packages/game-core/src` → 命中全部与 `Load.capacity` / `raft_tiles` 投影有关，**无** `items.capacity`（对应 `10 §R-1'`）
+- [ ] A6 `command`：`awk -F, 'NR>1 && $6!="0"' game-data/source/items.csv` → **无输出**（capacity 列已全 0）
 
 ## 验证命令
 ```bash
@@ -98,7 +112,7 @@ grep -rn "\.capacity" client/assets/scripts packages/game-core/src
 `docs/06_validation/evidence/EVD-7101/`（D-54 原文摘录 + gen 输出 + 测试输出 + placeholders 前后对比 + A5 的 grep 输出）
 
 ## 允许修改
-- `game-data/source/raft_tiles.csv`、`game-data/source/items.csv`（**仅 capacity 列**）
+- `game-data/source/items.csv`（**仅 capacity 列**；`raft_tiles.csv` **不在本卡范围内**）
 - `game-data/UNKNOWN-TABLES.md`、`tools/guard/placeholders.baseline.json`（需单独提交）
 - `docs/03_solution/data/config-tables.md`、`tests/determinism/raft-tiles.test.mjs`
 
@@ -110,7 +124,7 @@ grep -rn "\.capacity" client/assets/scripts packages/game-core/src
 ## 依赖与阻塞
 - Depends on：无（**D-54 已裁**）
 - Blocks：PD7-02、PD7-03、PD7-04
-- 残余阻塞：仅步骤 4 若"第 2 种地块的数值找不到出处"→ 局部 `BLOCKED`，其余步骤照常完成
+- 残余阻塞：**无**。原稿的"第 2 种地块缺数值"已随 C-54.4 撤销而消失 → 本卡是全 A 段**唯一零外部输入**的卡
 
 ## 建议执行档位
 `opus`　理由：改的是语义口径不是代码，错一次全链返工。
@@ -150,10 +164,15 @@ grep -rn "\.capacity" client/assets/scripts packages/game-core/src
 
 ## Execution Steps
 1. [ ] 读 `save/schema.ts` 现状，确认 `modules` 是开放 map（`glossary.md:40`）
-2. [ ] 在 `raft/index.ts` 加 `canBuild(tiles, gold, price, capacity, weight)` → `Result<{ goldAfter, tilesAfter }>`，**复用 `common/result` 的 `ok/err`**
-3. [ ] 加 `applyBuild(save)`：校验 → 扣金币 → `tiles+1`（**纯函数，不改外部状态，返回新对象**）
+2. [ ] 在 `raft/index.ts` 加 `canBuild` → `Result<{ tilesAfter }>`，**复用 `common/result` 的 `ok/err`**。
+      签名按 **D-57** 而定（**D-57 仍是 `PROPOSED`，执行前必须先拿到裁决**）：
+      - 若 D-57 = A（建议）→ `canBuild(hull: readonly Load[], cargoWeight: number, ownedTiles: number)`
+        —— 只判浮力与持有量，不涉及金币
+      - 若 D-57 = B → `canBuild(hull, cargoWeight, gold, price)`，`price` 取 `prices.item_0072.base_price = 38`
+      **两种签名下 `remainingBuoyancy` 都不改**（`raft/index.ts:7-12` 保持原样）
+3. [ ] 加 `applyBuild(save)`：校验 → `tiles+1`（**纯函数，不改外部状态，返回新对象**）；消耗项按 D-57 落
 4. [ ] `schema.ts` 加可选字段；`migrations.ts` 加默认值补齐分支
-5. [ ] 写 `raft.test.mjs`：三种情形（金币够/金币不够/浮力不够）各一条
+5. [ ] 写 `raft.test.mjs`：三种情形（可建 / 浮力不够 / 持有不足或金币不够，取决于 D-57）各一条
 6. [ ] 跑定向测试 + `npm run typecheck:client`
 
 ## 验收标准
@@ -184,9 +203,10 @@ node tools/guard/run-all.mjs        # 只关心 game-core 纯度与 generated �
 ## 依赖与阻塞
 - Depends on：PD7-01
 - Blocks：PD7-03、PD7-04
-- 阻塞条件：无。D-54 已裁（Q2=A → 浮力只看 `raft_tiles.capacity`），`canBuild` 的签名直接用
-  `(tiles, gold, price, capacity, weight)`；建一格的价格取 `prices` 表 `item_0072` 的 `base_price`
-  （NB-1 假设，尚未被裁决覆盖 → **在卡面与 `UNKNOWN-TABLES.md` 同时注明这是假设**，见 `10 §U-1`）
+- **残余阻塞：D-57（PROPOSED）** —— 「建一格」是消耗 1× 筏块还是扣 38 金币。它只卡住**步骤 2 的签名**，
+  步骤 1/4/5 的结构部分可先写。若不裁，`canBuild` 的参数就是猜的（本项目已因"猜签名"返工过一次）。
+  建议选项 A（消耗筏块），证据见 `10 §3.1`。
+- 阻塞条件写明：**D-57 未裁 → 步骤 2 只写 `remainingBuoyancy` 的调用与拒绝分支，不实现扣减项**
 
 ## 建议执行档位
 `sonnect`　理由：纯函数 + 存档扩展，`raft/index.ts` 与 `crafting` 都有范式可抄。

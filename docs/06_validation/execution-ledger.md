@@ -278,3 +278,22 @@ grep -rl "github_pat_" .git/config .product-development
 | `git push` | 用户明令「在你吊销/换凭证前，我不推送、不落盘任何 token」 | 用户吊销 3 个 token 并把新 token 经非对话渠道写入 `~/.git-pat`（600）后告知"就绪" |
 | `npm run verify` / `guard` / `test` 全量 | 本轮只改 `docs/**` + `.product-development/task-index.json` + `decision-index.json`，未触被这三者覆盖的 `.ts`/`.csv`/`.sql`；按用户"单卡只跑它改到的测试、全量只在阶段出口"的原则不跑 | A 阶段出口时跑一次全量 |
 | PD7-01 的实际执行 | 属执行侧；本轮只做"解阻塞 + 卡面具体化" | 用户按卡开工 |
+
+### 11.4 落账后新增的一条待裁（D-57，2026-10-29 同批）
+
+落账 D-54 之后核对 PD7-02 需要的数值，发现**本版原有的 NB-1 假设站不住**，遂新开 D-57（`PROPOSED`）：
+
+| 数据行（逐字） | 若「建一格扣金币」，怎么解释 |
+|---|---|
+| `raft_tiles.csv`：`raft_block,item_0072,50,10`（第二列叫 `item`） | 这一列无用途 = 死列 |
+| `recipes.csv`：`recipe_0056,item_0072,1,item_0019*2;item_0004*1,,,0` | 筏块有完整生产链，扣金币则配方永无消费者 = 死配方 |
+| `items.csv`：`item_0072,筏块,facility,38,10,0,99,true,0`（`craftable=true`、`stack=99`） | 按可叠加物品设计，不是按价格标签设计 |
+
+建议改为**消耗 1× `item_0072`**（零新增数值，三条数据同时成立，且 C2「捞→做→扩」真的串起来）。
+**这是我自己推翻自己的假设**，原 `03 §4.2 NB-1` 已随之改写。
+
+同时撤销我自己编的一条要求（C-54.4「`raft_tiles` 必须至少 2 种地块」）：`remainingBuoyancy` 每加一格
+`raft_block` 净浮力 +40（`raft/index.ts:7-12` 实测公式），1 种地块已构成真实机制。该要求属**把设计偏好
+伪装成裁决后果**，违反 `03 §2.4 N-4`，已删除。副作用：PD7-01 变为**零外部输入**的卡。
+
+复跑：`pd.mjs health .` → 0 错误；`pd.mjs status .` → 待裁决决策：**D-57**。

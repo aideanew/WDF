@@ -2876,7 +2876,8 @@
       ],
       "decisions": [
         "D-07",
-        "ADR-0013"
+        "ADR-0013",
+        "D-57"
       ],
       "depends_on": [
         "PD7-01"
@@ -2960,7 +2961,8 @@
         "mvp-scope.md#C2(§1)"
       ],
       "decisions": [
-        "D-54"
+        "D-54",
+        "D-57"
       ],
       "depends_on": [
         "PD7-02"

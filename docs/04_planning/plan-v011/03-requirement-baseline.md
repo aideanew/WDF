@@ -126,7 +126,7 @@ mvp-scope.md 条款号  →  设计源 v5.5 章节  →  决策 ID（D-xx / ADR-
 
 | # | 未知 | 假设 | 依据 |
 |---|---|---|---|
-| NB-1 | 扩筏的经济来源（金币 or 材料） | 假设**扣金币**，价格取 `prices` 中 `item_0072` 的 `base_price` | ADR-0012 金币是唯一货币；`raft_tiles.item = item_0072` |
+| NB-1 | 扩筏的经济来源（金币 or 材料） | ~~假设**扣金币**，价格取 `prices` 中 `item_0072` 的 `base_price`~~ → **已升级为 D-57 正式裁决**：建议改为**消耗 1× `item_0072`（筏块）**，理由见 `10 §3.1`（扣金币会让 `recipe_0056` 与 `raft_tiles.item` 变死数据） | `raft_tiles.item=item_0072`；`recipes: recipe_0056` 产出筏块；`items.item_0072.craftable=true` |
 | NB-2 | 扩筏的上限 | 假设**不设硬上限**，只受浮力与金币约束 | 设计源无地块上限条文；设上限=自编数值（N-4） |
 | NB-3 | 每日重置时区 | `Asia/Shanghai` 自然日（D-11 已定） | `decision-sheet.md:40` |
 | NB-4 | 广告是否服务端复核 | 不复核（微信流量主无服务端回调），只信客户端 `completed` + 日限 | 平台能力限制；ADR-0014 已记录 |

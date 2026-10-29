@@ -726,6 +726,38 @@
         "gate_still_open": "C1 真机命中率仍无数据（D-52 禁止用 SIMULATED 60% 冒充），闸门对「新增钩/捞玩法」依然生效，对「不改手感的系统补齐」解绑。",
         "evidence": "mvp-scope.md:15/19；D-52.red_lines 第 2 条；game-data/source/hooks.csv 单行 hook_default 全程不改"
       }
+    },
+    {
+      "id": "D-57",
+      "title": "「建一格」的经济来源：消耗 1× item_0072（筏块），不扣金币",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v011/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v011/10-risks-pending.md#U-1",
+      "applies_to": [
+        "PD7-02",
+        "PD7-03"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "why_this_exists": "plan-v011 的 NB-1 假设「建一格扣金币，价取 prices.item_0072.base_price」在核对数据时与三处既有数据冲突。这不是设计偏好问题，是数据自洽问题，必须裁一次。",
+        "evidence_conflict": [
+          "raft_tiles.csv 只有一列 item，值 item_0072 —— 若「建一格」只花钱，这一列没有任何用途",
+          "recipes.csv: recipe_0056 = item_0072 (output_count 1) ← item_0019*2 + item_0004*1 —— 筏块是合成产物，有完整生产链",
+          "items.csv: item_0072 的 craftable=true、stack=99 —— 按可叠加物品设计，不是按「价格标签」设计",
+          "若扣金币：recipe_0056 产出的筏块永无消耗方 → 该配方成为死数据；同时 raft_tiles.item 成为死列"
+        ],
+        "option_a": "消耗 1× item_0072（从背包扣）。C2「捞→做→扩」三环真实串联：打捞材料 → 合成筏块 → 建格扩筏。零新增数值，全部引用已有行。",
+        "option_b": "扣金币（原 NB-1）。需要解释 recipe_0056 与 raft_tiles.item 的存在意义；若靠「商人能买筏块」补全链路，则 economy.buy 未实现（handlers.ts 里 economy 只有 sell）",
+        "option_c": "两者都要：消耗筏块 + 收建造费（金币）。等于新增一个设计输入（建造费数值无源）→ 违反 N-4",
+        "recommendation": "A。理由：它是唯一不需要新增任何数值、且能让三条既有数据（raft_tiles.item / recipe_0056 / craftable=true）同时成立的口径；B 会让其中两条变死数据，C 需要自编建造费。",
+        "impact_if_not_decided": "PD7-02 的 canBuild 签名与测试用例无法定稿。PD7-01 不受影响（本卡不碰经济链路）。",
+        "answer_needed_by": "PD7-02 步骤 2 之前（即 PD7-01 执行期间任何时候）"
+      }
     }
   ]
 }
