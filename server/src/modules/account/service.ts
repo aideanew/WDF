@@ -22,6 +22,7 @@ import {
   moveIdentity,
   findSnapshot,
   insertFork,
+  recordAudit,
 } from './repo.ts';
 
 export interface LoginInput {
@@ -46,13 +47,37 @@ function resolveOpenId(plat: Platform, code: string): string {
   return `dev_${h}`;
 }
 
-export async function login(input: LoginInput): Promise<LoginOutput> {
+/** 登录流程的业务错误：携带错误码，handler 层据此转 RpcResponse（同 BindError 范式）。 */
+export class LoginError extends Error {
+  readonly code: number;
+  constructor(code: number, message: string) {
+    super(message);
+    this.name = 'LoginError';
+    this.code = code;
+  }
+}
+
+/**
+ * 登录。nowMs 为服务端当前时间（毫秒，由 handler 的 t 传入），
+ * 用于封号判断——不用 Date.now()，保证测试可注入。
+ * 封号（banned_until 在未来）→ 抛 2003 BANNED，并写 audit_log 留痕（可追溯）。
+ */
+export async function login(input: LoginInput, nowMs: number): Promise<LoginOutput> {
   const openId = resolveOpenId(input.plat, input.code);
 
   const identity = await findIdentity(input.plat, openId);
   if (identity) {
     const player = await findPlayer(identity.player_id);
-    if (player) return { playerId: player.id, region: player.region, isNew: false };
+    if (player) {
+      if (player.banned_until && new Date(player.banned_until).getTime() > nowMs) {
+        await recordAudit(input.plat, 'login_banned', {
+          playerId: player.id,
+          banned_until: player.banned_until,
+        });
+        throw new LoginError(ERR.BANNED, `account banned until ${player.banned_until}`);
+      }
+      return { playerId: player.id, region: player.region, isNew: false };
+    }
   }
 
   const region = await currentRegion();

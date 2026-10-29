@@ -73,3 +73,9 @@ related: [PLAN-V003-02, PLAN-V003-05, EXEC-BRIEF-0003]
 | # | 议题 | 裁决 |
 |---|---|---|
 | **D-52** | 4011 要求的「真机打 20 钩」主控无法执行，怎么办 | **一分为二**：<br>**① 机制侧（可自动回答，已交付 = PD2-04）**：`tools/sample/hook-window.mjs` 复用 `game-core/hook` 的 `powerAt`/`chargeAndCast`（**不重写公式**）逐毫秒扫描，得命中窗口 **348–852 ms（505/1200 = 42.1%）**、下沿力度 **5800 bp**；20 钩**均匀分布零假设**下命中 **12/20 = 60%**。口径 `SIMULATED`（固定种子可复跑），证据在 `evidence/EVD-4011/README.md`。<br>**② 手感侧（只能真人，维持 PD2-01 = BLOCKED-HUMAN）**：真人首钩命中率、前 10 钩命中率、`chargeMs` 分布——取决于提示是否清楚与观察精度，工具无法替代。<br>**红线三条**：SIMULATED 数字**不得**写入 `metrics.md` 当作 4011 验收；**不得**据此宣称 C1「首钩 ≥45%」已达标；**不得**据此调 `target_dist`/`hitRadius`（D-04「等值迁移、不改手感」原则优先）。 |
+
+## H. `currentRegion()` 占位值处置（2026-10-29 主控裁定，P5-02 / D-53）
+
+| # | 议题 | 裁决 |
+|---|---|---|
+| **D-53** | `currentRegion()` 目前返回写死的 `process.env.WDF_DEFAULT_REGION ?? 's1'`（`account/repo.ts:47-49`），而 `regions` 表不存在——又一个占位值问题 | 改为「**先查 `regions WHERE is_current LIMIT 1`；查不到时回落到 `WDF_DEFAULT_REGION ?? 's1'`，并 `console.warn` 一次「regions 表无当前开放区，回落本地默认区 s1」**」。<br>**三条约束**：① 回落值保留，保证 231 测试不变红；② 回落必须**打印告警**，不允许静默；③ `0002_regions.sql` **不种任何区数据**（区名由政府/运营给，测试库用 `region_test`）。 |

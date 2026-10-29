@@ -1,0 +1,14 @@
+[db] 迁移已执行：0001_init.sql
+[db] 迁移已执行：0002_regions.sql
+✔ AT-1401-1 表空时 currentRegion 回落 s1 并打告警（D-53） (1.9732ms)
+✔ AT-1401-2 开新区后 is_current 唯一、新玩家落在当前区 (14.1214ms)
+✔ AT-1401-3 封号后登录返 2003 且 audit_log ≥2 条 (7.3539ms)
+✔ AT-1401-4 突变验证：部分唯一索引是「至多一区 current」的约束来源 (10.4819ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1663.9084

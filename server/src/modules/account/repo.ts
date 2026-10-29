@@ -43,9 +43,28 @@ export async function insertIdentity(platform: string, openId: string, playerId:
   );
 }
 
-/** 当前开放区服。TODO(M-01)：`0002_regions.sql` 落地后改为读 regions 表里 status='open' 的最新一行。 */
+/**
+ * 当前开放区服（D-53，2026-10-29）。
+ * 先查 regions 表里 is_current 的那一行；查不到（表为空或未开放）时
+ * 回落到 `WDF_DEFAULT_REGION ?? 's1'`，并打一次告警——**不允许静默**。
+ * 回落值保留是为了保证 231 个既有测试不变红（D-53 约束①），
+ * 表为空是本地开发常态（区名由运营给定，不种数据，约束③）。
+ */
 export async function currentRegion(): Promise<string> {
-  return process.env.WDF_DEFAULT_REGION ?? 's1';
+  const rows = await q<{ id: string }>('SELECT id FROM regions WHERE is_current LIMIT 1');
+  if (rows[0]) return rows[0].id;
+  const fallback = process.env.WDF_DEFAULT_REGION ?? 's1';
+  console.warn(`[region] regions 表无当前开放区，回落本地默认区 ${fallback}（区名由运营给定，不种数据）`);
+  return fallback;
+}
+
+/** 审计留痕（通用 audit_log 表，actor=操作者）。用于封号拒绝登录等可追溯动作。 */
+export async function recordAudit(actor: string, action: string, detail: Record<string, unknown>, tx?: unknown): Promise<void> {
+  await qx(
+    tx,
+    'INSERT INTO audit_log (actor, action, detail) VALUES ($1, $2, $3)',
+    [actor, action, JSON.stringify(detail)],
+  );
 }
 
 // —— 账号合并（AT-2201）：bind_ticket / identity 改挂 / save_fork 数据准备 ——

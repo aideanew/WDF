@@ -1,0 +1,12 @@
+### open-region CLI 冒烟（:memory:）
+[db] 迁移已执行：0001_init.sql
+[db] 迁移已执行：0002_regions.sql
+✅ 已开新区 s9（九服），并置为当前开放区
+OPEN_EXIT=0
+
+### ban-player CLI 缺参（应退出1）
+封号 CLI
+用法：node --import ./tools/runtime/register.mjs server/src/modules/ops/ban-player.mjs <playerId> <untilIso>
+  例：... ban-player.mjs p_abc123 2026-12-31T00:00:00.000Z
+数据库：:memory:（可用 WDF_DB_DIR 覆盖，测试用 ':memory:'）
+BAN_EXIT=1

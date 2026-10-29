@@ -5,20 +5,26 @@ import type { LoginReq, LoginRes, RefreshRes, BindStartRes, BindConfirmReq, Bind
 import type { Platform } from '@wodefa/contracts';
 import { ERR } from '@wodefa/contracts';
 import { issueToken, refreshClaims } from '../../gateway/auth.ts';
-import { login, bindStart, bindConfirm, BindError } from './service.ts';
+import { login, bindStart, bindConfirm, BindError, LoginError } from './service.ts';
 
 export const accountHandlers = {
   'account.login': (async (req, t) => {
     const p = req.p as LoginReq;
-    const out = await login({ code: p.code, plat: p.plat, anonymousSaveId: p.anonymousSaveId });
-    const res: LoginRes = {
-      token: issueToken({ sub: out.playerId, region: out.region, plat: p.plat }),
-      playerId: out.playerId,
-      region: out.region,
-      isNew: out.isNew,
-      serverTime: t,
-    };
-    return { c: 0, d: res, t };
+    try {
+      const out = await login({ code: p.code, plat: p.plat, anonymousSaveId: p.anonymousSaveId }, t);
+      const res: LoginRes = {
+        token: issueToken({ sub: out.playerId, region: out.region, plat: p.plat }),
+        playerId: out.playerId,
+        region: out.region,
+        isNew: out.isNew,
+        serverTime: t,
+      };
+      return { c: 0, d: res, t };
+    } catch (e) {
+      // 封号（2003 BANNED）：有现成错误码，不新造；信息带截止时间（D-53）。
+      if (e instanceof LoginError) return { c: e.code, msg: e.message, t };
+      throw e;
+    }
   }) as Handler,
 
   /**

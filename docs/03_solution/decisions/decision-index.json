@@ -612,6 +612,31 @@
           "不得据此调 target_dist / hitRadius（D-04 等值迁移）"
         ]
       }
+    },
+    {
+      "id": "D-53",
+      "title": "currentRegion() 占位值处置：先查 regions 表，空表回落到 WDF_DEFAULT_REGION ?? 's1' 并打告警",
+      "status": "DECIDED",
+      "decided_by": "planner",
+      "decided_at": "2026-10-29",
+      "kind": "product",
+      "file": "docs/04_planning/plan-v003/decision-sheet.md",
+      "source": "docs/04_planning/plan-v003/decision-sheet.md#D-53",
+      "applies_to": [
+        "TASK-1401"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "change": "currentRegion() 改为：先查 regions WHERE is_current LIMIT 1；查不到时回落到 WDF_DEFAULT_REGION ?? 's1'，并 console.warn 一次「regions 表无当前开放区，回落本地默认区 s1」",
+        "constraints": [
+          "回落值保留，保证 231 测试不变红",
+          "回落必须打印告警，不允许静默",
+          "0002_regions.sql 不种任何区数据（区名由政府/运营给，测试库用 region_test）"
+        ],
+        "current_code": "server/src/modules/account/repo.ts:47-49（写死 process.env.WDF_DEFAULT_REGION ?? 's1'）"
+      }
     }
   ]
 }
