@@ -12,7 +12,7 @@ const norm = (s) => s.replace(/\r\n/g, '\n').replace(/[ \t]+$/gm, '');
 
 export function rootWhitelist() {
   const files = new Set(['AGENTS.md', 'README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'tsconfig.base.json', '.gitignore', '.gitattributes', '.editorconfig', '.env.example']);
-  const dirs = new Set(['docs', 'game-data', 'packages', 'client', 'server', 'tools', 'tests', 'art-source', '.local', '.git', '.github', '.workbuddy', 'node_modules']);
+  const dirs = new Set(['docs', 'game-data', 'packages', 'client', 'server', 'tools', 'tests', 'art-source', '.local', '.git', '.github', '.workbuddy', '.product-development', 'node_modules']);
   const bad = [];
   for (const n of readdirSync(p('.'), { withFileTypes: true })) {
     if (n.isDirectory() ? !dirs.has(n.name) : !files.has(n.name)) bad.push(`根目录不在白名单：${n.name}`);
