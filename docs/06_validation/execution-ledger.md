@@ -112,7 +112,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
 
-## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-23）
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-31）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
 > 处置拆分见下批派工单 W1~W4。**本节状态以 §9 表格为准**（下方 W5 更正段已覆盖初版口径：
@@ -148,6 +148,11 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-24 | P1 | **PLAN-R1 的 14 张卡（PD0-01~PD4-01）从未进入权威任务索引，也没有卡面**：`task-index.json` 只有 52 张历史卡（`plan_version` 却写 `PLAN-R1`），`pd.mjs status` 报「共 52 张、完成 33」，`pd.mjs next` 把 17 张历史卡当就绪卡派工 → 本轮所有「收口」在 pds 里不存在，只是聊天记录 | `.product-development/task-index.json`；`docs/05_execution/tasks/`（无 PD-*.md） | ✅ PLAN-R2（补 14 条 + 14 份卡面到 `.product-development/tasks/`，`paths.task_cards` 同步改指） |
 | FIX-25 | P1 | **测试台账用了非法枚举**：`result: "PARTIAL-AUTOMATED"` 不在 `RESULT=['PASS','FAIL','UNKNOWN']` 内 → `pd.mjs health` 报错「体检未通过：1 个错误」，即执行侧声称「10 张卡 done、verify EXIT=0」时 health 实际是红的；另有 6 条 `evidence` 写成 `execution-ledger.md#4` 锚点，被当文件路径判「证据文件不存在」 | `docs/06_validation/pd/test-ledger.json`；`pd.mjs:173` | ✅ PLAN-R2（`original_result` 保留原文，`result` 更正为 `PASS` + `scope_limit=automated-only` + `unverified` 三项；6 条 evidence 去锚点 → health 0 错误 52 提醒） |
 | FIX-26 | P2 | **`pd.mjs next` 报 8 张就绪卡，其中 6 张不该开工**：4 张已实现（0103/0106/0108/4020）、1 张已被替代（0202 → 2102）、1 张属 v1.1（1301，`titles` 在 D-50 的 31 张空表内）；成因是历史卡 front matter 的 `status` 从未随交付更新，索引长期失真 | `.product-development/task-index.json`（0103/0106/0108/4020 原 `TODO`、0202 原 `TODO`、1301 原 `TODO`） | ✅ P5-01 `ee25a19→`（4 张 DONE + 1 张 SUPERSEDED + 1 张 BLOCKED，`next` 只剩 TASK-1401/4013；每条 `execution.evidence` 落到文件:符号级） |
+| FIX-27 | P0 | **封号可被 `account.refresh` 完全绕过**：refresh（`handlers.ts:38`）只验签名、从不查 `banned_until`，令牌 TTL 2h 但 refresh 不计次不失效 → 不停 refresh 封号永远不生效（「能力已实现、调用点没接」第 6 次） | `server/src/modules/account/handlers.ts:38-42`；`service.ts:72-78` | ✅ P6-01（抽共享 `activeBanUntil` + 新增 `assertNotBanned`；refresh 在 `issueToken` 前校验，`t` 注入不用 `Date.now()`；突变验证删调用 → AT-1401-5 红 `0!==2003`，复原 7/7 绿） |
+| FIX-28 | P3 | **`docs/00_governance/document-index.md` 未提交**（286 → 288 篇，新增 EVD-1401 与 runbook 两条），verify 前后都脏 → 下一个人 pull 后跑 verify 看到脏树，误判「有人手改生成物」 | `docs/00_governance/document-index.md` | ✅ P6-02（提交该生成物，288 篇） |
+| FIX-29 | P3 | `openRegion` 的 `ON CONFLICT (id) DO UPDATE` 含 `opened_at = now()` → 重开同一区把「首次开区时间」冲成现在；`opened_at` 应为只写一次字段 | `server/src/modules/ops/repo.ts:25` | ✅ P6-02（去掉 `opened_at = now()`，只更新 name/status/is_current；AT-1401-7 验证重开 `opened_at` 不变） |
+| FIX-30 | P3 | 登记（不派工）：ops 用 SQL 直接 `UPDATE player`（注释自陈「SQL 级，非跨模块 import」；守卫只查 import 所以能过）——更干净做法是 account 暴露 `banPlayer` 供 ops 调 | `server/src/modules/ops/repo.ts:31-38` | 📌 登记，后续由 account 暴露 `banPlayer` |
+| FIX-31 | P3 | 登记（不派工）：两个 CLI（open-region/ban-player）无 `--help` 分支；PGlite 单写锁冲突时无「先停 dev:server」友好提示（`hook-hitrate.mjs` 有，可照抄） | `server/src/modules/ops/{open-region,ban-player}.mjs` | 📌 登记 |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 

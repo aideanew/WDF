@@ -187,6 +187,31 @@
       ],
       "tester": "tester",
       "note": "P0 治理阶段体检：pd.mjs health 体检通过（0 错误，52 条提醒均为历史卡 E1 来源缺失，属登记事实非缺陷）。2026-10-29 复跑；补录 PD2-04 后再次通过。"
+    },
+    {
+      "id": "TR-20261029030323-TASK-1401",
+      "at": "2026-10-29T03:03:23Z",
+      "scope": "task",
+      "kind": "integration",
+      "target": "TASK-1401",
+      "result": "PASS",
+      "commit": "7c587cffbe354420e93dd9ca258a2a6129600193",
+      "dirty": true,
+      "covers_paths": [
+        "server/src/modules/account/service.ts",
+        "server/src/modules/account/handlers.ts",
+        "server/src/modules/account/repo.ts",
+        "server/src/modules/ops/service.ts",
+        "server/src/modules/ops/repo.ts",
+        "tests/integration/ops-region.test.mjs",
+        "server/db/migrations/0002_regions.sql"
+      ],
+      "fingerprint": "sha256:d7b6d92b6e120dc8c640bdef63567eee",
+      "commands": [
+        "node --import ./tools/runtime/register.mjs --test tests/integration/ops-region.test.mjs && npm test && npm run verify"
+      ],
+      "evidence": "docs/06_validation/evidence/EVD-1401/README.md",
+      "tester": "tester"
     }
   ]
 }

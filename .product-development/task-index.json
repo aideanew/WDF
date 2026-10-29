@@ -482,7 +482,7 @@
       "title": "开新区 + 封号（脚本 / SQL 级，不做后台）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "DONE",
+      "status": "VERIFIED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -511,7 +511,8 @@
         "evidence": "server/db/migrations/0002_regions.sql；server/src/modules/ops/{open-region.mjs,ban-player.mjs,service.ts,repo.ts}；server/src/modules/account/{service.ts:51-78,handlers.ts:11-28,repo.ts:46-58}；docs/07_release/operations/ops-runbook.md；tests/integration/ops-region.test.mjs（4 例）；EVD-1401/",
         "note": "开区 + 封号 CLI（SQL 级，不做后台）；登录封禁校验 2003 + 审计；currentRegion() 按 D-53 查表回落并告警。验收：node --test 4/4、npm test 235/235、verify EXIT=0、突变验证过。",
         "commits": [
-          "1d34fc69d9d596afa8f9416bb79507ee617de69e"
+          "1d34fc69d9d596afa8f9416bb79507ee617de69e",
+          "7c587cffbe354420e93dd9ca258a2a6129600193"
         ],
         "pushed": true,
         "remote_branch": "origin/HEAD -> origin/master",

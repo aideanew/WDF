@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 286 篇。⚠ 表示活跃文档已过 review 日期。
+共 288 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -231,6 +231,7 @@ review: 2026-11-23
 | EVD-0105 | compliance.check / config.manifest / 客户端版本闸 | accepted | 2026-11-28 | `06_validation/evidence/EVD-0105/README.md` |
 | EVD-0107 | save.pull / save.push 乐观锁与幂等 | accepted | 2026-11-28 | `06_validation/evidence/EVD-0107/README.md` |
 | EVD-0108 | Bundle 分包配置生效（E-01 验收） | accepted | 2026-11-28 | `06_validation/evidence/EVD-0108/README.md` |
+| EVD-1401 | 1401 开新区 + 封号（脚本 / SQL 级，不做后台） | active | 2026-11-29 | `06_validation/evidence/EVD-1401/README.md` |
 | EVD-3001 | 证据 — UX 态契约落地（common/ux.ts） | active | 2026-11-26 | `06_validation/evidence/EVD-3001/README.md` |
 | EVD-3002 | TASK-3002 configVersion 单一来源 验收证据 | active |  | `06_validation/evidence/EVD-3002/README.md` |
 | EVD-3100 | TASK-3100 客户端配置读取服务 验收证据 | active |  | `06_validation/evidence/EVD-3100/README.md` |
@@ -287,6 +288,7 @@ review: 2026-11-23
 | OPS-0004 | 故障处理卡 | active | 2026-11-23 | `07_release/operations/incident-runbook.md` |
 | OPS-0001 | 核心指标 | active | 2026-11-23 | `07_release/operations/kpi.md` |
 | OPS-0002 | 运营节奏 | active | 2026-11-23 | `07_release/operations/live-ops-calendar.md` |
+| OPS-RUNBOOK | 运维操作卡（开区 / 封号 / 回滚） | active | 2026-11-29 | `07_release/operations/ops-runbook.md` |
 | REL-CHK | 发布检查清单 | active | 2026-11-23 | `07_release/release-checklist.md` |
 | KB-0001 | 常见问题 | active | 2026-11-23 | `08_knowledge/faq.md` |
 | KB-0002 | 经验教训 | active | 2026-11-23 | `08_knowledge/lessons-learned.md` |
