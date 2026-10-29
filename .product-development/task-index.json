@@ -2572,6 +2572,180 @@
         "scope": "mechanism-only",
         "caliber": "SIMULATED"
       }
+    },
+    {
+      "id": "PD5-01",
+      "title": "证据与索引对账（FIX-32 证据陈旧 + FIX-33 PUSHED 记录说谎）",
+      "phase": "P5",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 21,
+      "requirements": [],
+      "decisions": [
+        "D-53"
+      ],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD5-01.md",
+      "objective": "TASK-1401 证据与索引的验收数字（7/7、238/238）与 PUSHED 记录（48031e7）与实际一致",
+      "allowed_paths": [
+        "docs/06_validation/evidence/EVD-1401/README.md",
+        "docs/05_execution/tasks/TASK-1401.md",
+        ".product-development/task-index.json",
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "forbidden_paths": [
+        "packages/**",
+        "server/db/migrations/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "EVD-1401 无陈旧数字",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn \"4 例|4/4|235/235\" docs/06_validation/evidence/EVD-1401/",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "health exit 0",
+          "check": {
+            "type": "command",
+            "cmd": "node <skill>/scripts/pd.mjs health ."
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "status 不再报 TASK-1401 未同步",
+          "check": {
+            "type": "command",
+            "cmd": "node <skill>/scripts/pd.mjs status ."
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "grep -rn \"4 例|4/4|235/235\" docs/06_validation/evidence/EVD-1401/",
+          "node <skill>/scripts/pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "source": "FIX-32 + FIX-33"
+    },
+    {
+      "id": "PD5-02",
+      "title": "架构文档与 schema 对账（FIX-34 设计意向写成已建表）",
+      "phase": "P5",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 21,
+      "requirements": [],
+      "decisions": [
+        "D-50"
+      ],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD5-02.md",
+      "objective": "architecture-overview §5.3 的已建表清单与迁移逐字一致；未建 7 张标注为 D-50 v1.1 设计意向",
+      "allowed_paths": [
+        "docs/03_solution/architecture/architecture-overview.md",
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "forbidden_paths": [
+        "server/db/migrations/**",
+        "packages/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "文档已建表清单与迁移逐字一致",
+          "check": {
+            "type": "command",
+            "cmd": "grep -i \"create table\" server/db/migrations/*.sql",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "verify EXIT=0",
+          "check": {
+            "type": "command",
+            "cmd": "npm run verify"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "grep -i \"create table\" server/db/migrations/*.sql"
+        ]
+      },
+      "legacy_ids": [],
+      "source": "FIX-34"
+    },
+    {
+      "id": "PD5-03",
+      "title": "REPLAN 落盘 PLAN-R3（FIX-35 ADR 状态 + 18 项定案）",
+      "phase": "P5",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [],
+      "priority": 21,
+      "requirements": [],
+      "decisions": [
+        "D-50",
+        "D-51"
+      ],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD5-03.md",
+      "objective": "health 不再报待裁决决策；未完成卡降到 8 张（8 张有明确外部 owner）；plan_version→PLAN-R3",
+      "allowed_paths": [
+        "docs/03_solution/decisions/decision-index.json",
+        ".product-development/task-index.json",
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "forbidden_paths": [
+        "packages/**",
+        "server/db/migrations/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "health 不再输出待裁决决策",
+          "check": {
+            "type": "command",
+            "cmd": "node <skill>/scripts/pd.mjs health ."
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "status 未完成卡 8 张",
+          "check": {
+            "type": "command",
+            "cmd": "node <skill>/scripts/pd.mjs status ."
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "verify EXIT=0 + 工作树干净",
+          "check": {
+            "type": "command",
+            "cmd": "npm run verify"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node <skill>/scripts/pd.mjs health .",
+          "node <skill>/scripts/pd.mjs status ."
+        ]
+      },
+      "legacy_ids": [],
+      "source": "FIX-35 + REPLAN 18 项定案"
     }
   ],
   "replans": [
