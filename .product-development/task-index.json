@@ -2579,7 +2579,7 @@
       "title": "证据与索引对账（FIX-32 证据陈旧 + FIX-33 PUSHED 记录说谎）",
       "phase": "P5",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 21,
@@ -2634,7 +2634,15 @@
         ]
       },
       "legacy_ids": [],
-      "source": "FIX-32 + FIX-33"
+      "source": "FIX-32 + FIX-33",
+      "execution": {
+        "commits": [
+          "98e6f31ee0b27219312f66420482cf2251391d6c"
+        ],
+        "pushed": true,
+        "remote_branch": "origin/HEAD -> origin/master",
+        "pushed_head": "98e6f31ee0b27219312f66420482cf2251391d6c"
+      }
     },
     {
       "id": "PD5-02",
