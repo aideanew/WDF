@@ -1,1 +1,4 @@
 id,name,note
+quality_rough,粗糙,"打造工具和熟食的品质档；价值 ×0.7（DS §5.5:459，倍率暂不进表，见 UNKNOWN-TABLES）"
+quality_normal,普通,"打造工具和熟食的品质档；价值 ×1（DS §5.5:459）"
+quality_fine,精良,"打造工具和熟食的品质档；价值 ×1.5（DS §5.5:459）"

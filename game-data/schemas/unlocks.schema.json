@@ -13,7 +13,25 @@
     },
     "note": {
       "type": "string"
+    },
+    "level": {
+      "type": "int",
+      "min": 1,
+      "max": 49,
+      "required": true,
+      "note": "等级段起点（方案 B：unlocks.level 单向引用，PD7-06）"
+    },
+    "kind": {
+      "type": "enum",
+      "values": ["ability", "buildable", "milestone"],
+      "required": true,
+      "note": "ability=新能力/新玩法；buildable=新可建实体；milestone=已定里程碑（20 级）"
+    },
+    "target_id": {
+      "type": "string",
+      "required": true,
+      "note": "无外键（D2 拍板）：buildable 存 items/facilities/buildings id；ability/milestone 存能力名"
     }
   },
-  "todo": "字段待从 v5.5（模块 progression）抽取"
+  "todo": "字段待从 v5.5（模块 progression）抽取；level/kind/target_id 由 PD7-06 按方案 B 补"
 }

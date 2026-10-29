@@ -1,12 +1,83 @@
-id,name,note
-unlock_l01_05,1-5级,"新能力：出钩打捞、钓鱼、划桨；新可建：工作台、桨、鱼竿、简易海水过滤器、雨水收集器、烤架、筏块（Hark 建议）"
-unlock_l06_10,6-10级,"新能力：建房间（可加盖楼层）、救第一个员工、研究图纸；新可建：房间框架、研究台、吊床、种植箱、储水罐（Hark 建议）"
-unlock_l11_15,11-15级,"新能力：甲板开锁、开船看海图、参加每日一海（10 级起）；新可建：货舱、捕鱼笼、养鱼箱、舵、帆、锚、海图桌、打捞网（Hark 建议）"
-unlock_l16_19,16-19级,"新能力：多爪钩、勘测准备；新可建：多爪钩、锯台、勘测杆（Hark 建议）"
-unlock_l20,20级,"已定里程碑：驶出浅海进深海；占岛（送箭塔+一波野人教学）；遇见商人（用户已定 20 级驶出浅海）"
-unlock_l20_24,20-24级,"新能力：岛基地、塔防布阵、熔炼；新可建：灶台、木炭窑、熔炉、厨房、农田、大仓库、兵营、升高地形（Hark 建议）"
-unlock_l25_29,25-29级,"新能力：潜水打捞沉船、采石油、装发动机、抢野人船；新可建：潜水服、潜水工坊、炼油炉、油桶、发动机机位（Hark 建议）"
-unlock_l30_34,30-34级,"新能力：钢材与机械、锁柜防野人、攻城器械；新可建：高炉、锁匠铺、铁锁、铜锁、机械工坊、绞盘、弓弩车、投石机（Hark 建议）"
-unlock_l35_39,35-39级,"新能力：用电；新可建：电工房、电线、电池、发电（太阳能/电鳗/石油）、冰箱、电动过滤器、望远镜（Hark 建议）"
-unlock_l40_44,40-44级,"新能力：深潜、搬家；新可建：高级潜水服、水下探照灯、水下探寻装置、银锁（Hark 建议）"
-unlock_l45_49,45-49级,"新能力：自动打捞（离线收益）；新可建：自动打捞装置、自动捕捞装置、金锁（Hark 建议）"
+id,name,note,level,kind,target_id
+unlock_001,出钩打捞,1-5级 新能力（Hark 建议）,1,ability,出钩打捞
+unlock_002,钓鱼,1-5级 新能力（Hark 建议）,1,ability,钓鱼
+unlock_003,划桨,1-5级 新能力（Hark 建议）,1,ability,划桨
+unlock_004,工作台,1-5级 新可建（Hark 建议）,1,buildable,item_0073
+unlock_005,桨,1-5级 新可建（Hark 建议）,1,buildable,item_0049
+unlock_006,鱼竿,1-5级 新可建（Hark 建议）,1,buildable,item_0048
+unlock_007,简易海水过滤器,1-5级 新可建（Hark 建议）,1,buildable,item_0076
+unlock_008,雨水收集器,1-5级 新可建（Hark 建议）,1,buildable,item_0078
+unlock_009,烤架,1-5级 新可建（Hark 建议）,1,buildable,item_0075
+unlock_010,筏块,1-5级 新可建（Hark 建议）,1,buildable,item_0072
+unlock_011,建房间（可加盖楼层）,6-10级 新能力（Hark 建议）,6,ability,建房间（可加盖楼层）
+unlock_012,救第一个员工,6-10级 新能力（Hark 建议）,6,ability,救第一个员工
+unlock_013,研究图纸,6-10级 新能力（Hark 建议）,6,ability,研究图纸
+unlock_014,研究台,6-10级 新可建（Hark 建议）,6,buildable,item_0074
+unlock_015,吊床,6-10级 新可建（Hark 建议）,6,buildable,item_0081
+unlock_016,种植箱,6-10级 新可建（Hark 建议）,6,buildable,item_0080
+unlock_017,储水罐,6-10级 新可建（Hark 建议）,6,buildable,item_0079
+unlock_018,甲板开锁,11-15级 新能力（Hark 建议）,11,ability,甲板开锁
+unlock_019,开船看海图,11-15级 新能力（Hark 建议）,11,ability,开船看海图
+unlock_020,参加每日一海（10 级起）,11-15级 新能力（Hark 建议）,11,ability,参加每日一海（10 级起）
+unlock_021,货舱,11-15级 新可建（Hark 建议）,11,buildable,cargo_hold
+unlock_022,捕鱼笼,11-15级 新可建（Hark 建议）,11,buildable,item_0084
+unlock_023,养鱼箱,11-15级 新可建（Hark 建议）,11,buildable,item_0083
+unlock_024,舵,11-15级 新可建（Hark 建议）,11,buildable,item_0085
+unlock_025,帆,11-15级 新可建（Hark 建议）,11,buildable,item_0087
+unlock_026,锚,11-15级 新可建（Hark 建议）,11,buildable,item_0086
+unlock_027,海图桌,11-15级 新可建（Hark 建议）,11,buildable,item_0088
+unlock_028,打捞网,11-15级 新可建（Hark 建议）,11,buildable,item_0046
+unlock_029,多爪钩,16-19级 新能力（Hark 建议）,16,ability,多爪钩
+unlock_030,勘测准备,16-19级 新能力（Hark 建议）,16,ability,勘测准备
+unlock_031,多爪钩,16-19级 新可建（Hark 建议）,16,buildable,item_0045
+unlock_032,锯台,16-19级 新可建（Hark 建议）,16,buildable,saw_table
+unlock_033,驶出浅海进深海,20级 已定里程碑（用户已定）,20,milestone,驶出浅海进深海
+unlock_034,占岛（送箭塔+一波野人教学）,20级 已定里程碑（用户已定）,20,milestone,占岛（送箭塔+一波野人教学）
+unlock_035,遇见商人,20级 已定里程碑（用户已定）,20,milestone,遇见商人
+unlock_036,岛基地,20-24级 新能力（Hark 建议）,20,ability,岛基地
+unlock_037,塔防布阵,20-24级 新能力（Hark 建议）,20,ability,塔防布阵
+unlock_038,熔炼,20-24级 新能力（Hark 建议）,20,ability,熔炼
+unlock_039,灶台,20-24级 新可建（Hark 建议）,20,buildable,stove
+unlock_040,木炭窑,20-24级 新可建（Hark 建议）,20,buildable,charcoal_kiln
+unlock_041,熔炉,20-24级 新可建（Hark 建议）,20,buildable,furnace
+unlock_042,厨房,20-24级 新可建（Hark 建议）,20,buildable,kitchen
+unlock_043,农田,20-24级 新可建（Hark 建议）,20,buildable,farm
+unlock_044,大仓库,20-24级 新可建（Hark 建议）,20,buildable,warehouse
+unlock_045,兵营,20-24级 新可建（Hark 建议）,20,buildable,barracks
+unlock_046,潜水打捞沉船,25-29级 新能力（Hark 建议）,25,ability,潜水打捞沉船
+unlock_047,采石油,25-29级 新能力（Hark 建议）,25,ability,采石油
+unlock_048,装发动机,25-29级 新能力（Hark 建议）,25,ability,装发动机
+unlock_049,抢野人船,25-29级 新能力（Hark 建议）,25,ability,抢野人船
+unlock_050,潜水服,25-29级 新可建（Hark 建议）,25,buildable,item_0058
+unlock_051,潜水工坊,25-29级 新可建（Hark 建议）,25,buildable,diving_workshop
+unlock_052,炼油炉,25-29级 新可建（Hark 建议）,25,buildable,oil_refinery
+unlock_053,油桶,25-29级 新可建（Hark 建议）,25,buildable,item_0057
+unlock_054,钢材与机械,30-34级 新能力（Hark 建议）,30,ability,钢材与机械
+unlock_055,锁柜防野人,30-34级 新能力（Hark 建议）,30,ability,锁柜防野人
+unlock_056,攻城器械,30-34级 新能力（Hark 建议）,30,ability,攻城器械
+unlock_057,高炉,30-34级 新可建（Hark 建议）,30,buildable,blast_furnace
+unlock_058,锁匠铺,30-34级 新可建（Hark 建议）,30,buildable,locksmith
+unlock_059,铁锁,30-34级 新可建（Hark 建议）,30,buildable,item_0068
+unlock_060,铜锁,30-34级 新可建（Hark 建议）,30,buildable,item_0069
+unlock_061,机械工坊,30-34级 新可建（Hark 建议）,30,buildable,mechanic_workshop
+unlock_062,绞盘,30-34级 新可建（Hark 建议）,30,buildable,item_0092
+unlock_063,弓弩车,30-34级 新可建（Hark 建议）,30,buildable,item_0093
+unlock_064,用电,35-39级 新能力（Hark 建议）,35,ability,用电
+unlock_065,电线,35-39级 新可建（Hark 建议）,35,buildable,item_0034
+unlock_066,电池,35-39级 新可建（Hark 建议）,35,buildable,item_0035
+unlock_067,太阳能板,35-39级 新可建（发电/太阳能，§6:472，Hark 建议）,35,buildable,item_0090
+unlock_068,鳗鱼发电机,35-39级 新可建（发电/电鳗，§6:473，Hark 建议）,35,buildable,item_0091
+unlock_069,抽油机,35-39级 新可建（发电/石油，§6:474，Hark 建议）,35,buildable,item_0089
+unlock_070,冰箱,35-39级 新可建（Hark 建议）,35,buildable,item_0082
+unlock_071,电动过滤器,35-39级 新可建（Hark 建议）,35,buildable,item_0077
+unlock_072,望远镜,35-39级 新可建（Hark 建议）,35,buildable,item_0062
+unlock_073,深潜,40-44级 新能力（Hark 建议）,40,ability,深潜
+unlock_074,搬家,40-44级 新能力（Hark 建议）,40,ability,搬家
+unlock_075,高级潜水服,40-44级 新可建（Hark 建议）,40,buildable,item_0059
+unlock_076,水下探照灯,40-44级 新可建（Hark 建议）,40,buildable,item_0061
+unlock_077,水下探寻装置,40-44级 新可建（Hark 建议）,40,buildable,item_0096
+unlock_078,银锁,40-44级 新可建（Hark 建议）,40,buildable,item_0070
+unlock_079,自动打捞（离线收益）,45-49级 新能力（Hark 建议）,45,ability,自动打捞（离线收益）
+unlock_080,自动打捞装置,45-49级 新可建（Hark 建议）,45,buildable,item_0094
+unlock_081,自动捕捞装置,45-49级 新可建（Hark 建议）,45,buildable,item_0095
+unlock_082,金锁,45-49级 新可建（Hark 建议）,45,buildable,item_0071
