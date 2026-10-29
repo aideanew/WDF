@@ -7,7 +7,7 @@
     "decision_dir": "docs/03_solution/decisions",
     "master_plan": "docs/04_planning/current-plan.md",
     "task_index": ".product-development/task-index.json",
-    "task_cards": "docs/05_execution/tasks",
+    "task_cards": ".product-development/tasks",
     "test_ledger": "docs/06_validation/pd/test-ledger.json",
     "evidence": "docs/06_validation/evidence",
     "run_logs": ".product-development/runs",

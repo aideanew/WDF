@@ -61,3 +61,9 @@ related: [PLAN-V003-02, PLAN-V003-05, EXEC-BRIEF-0003]
 | # | 议题 | 裁决 |
 |---|---|---|
 | **D-49** | 激励视频三 placement 的 v1.0 效果载体 | **冻结至 v1.1**：`hook_cooldown`（无冷却字段）/ `offline_double`（无离线结算）/ `shop_refresh`（无商店），三个 placement 当前均为"发一个不存在的效果"。v1.0 期间 `ads.claim` 保留发放（日限口径有效），但**只登记不伪装**——服务端不虚构奖励内容。**v1.1 前置依赖三条**：① hook 冷却字段需先落地（game-core/hook 增 cooldown 语义）；② 离线结算模块需先实现（offline 结算 + 双倍倍率）；③ 商店模块需先实现（shop_refresh 刷新位面）。三条任一未落地，对应 placement 维持冻结，禁止写占位奖励。 |
+
+## F. PD2 三项人工依赖的结案口径（2026-10-29 主控裁定，REPLAN PLAN-R2）
+
+| # | 议题 | 裁决 |
+|---|---|---|
+| **D-51** | PD2-01 / PD2-02 / PD2-03（4011 首钩采样、4010 真机录屏、4013 合规资质+FIX-10）的 v1.0 结案方式 | **记为 `BLOCKED-HUMAN`，不记为「延期」**。三项均等外部输入——真机、用户本人操作、平台资质，**没有一项是代码待写**；「延期」的语义是主动放弃时间窗，与事实不符，故不采用。<br>**恢复触发条件（逐条写死）**：<br>① PD2-01：用户真机累计 20 钩 → `node tools/sample/hook-hitrate.mjs --db <绝对路径 .local/pg>` → 三表入 `evidence/EVD-4011/`；<br>② PD2-02：4 个 MP4（四面板 × 六态）落 `evidence/EVD-4010/`；<br>③ PD2-03：微信 `appid` + `appsecret` + 主体资质到位 → `WDF_AUTH_MODE=platform` → `compliance` 去恒真桩。<br>**结案口径**：PD4-01 的 PASS **只覆盖自动化范围**，三项人工项在测试台账标 `UNKNOWN`，**禁止写成「完整 PASS」**。三项不作为 v1.0 发版阻塞项，但也不从待办中消失——索引里维持 `BLOCKED` 且 `blocked_reason` 指向本条。 |

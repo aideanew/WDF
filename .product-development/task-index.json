@@ -1,6 +1,6 @@
 {
-  "plan_version": "PLAN-R1",
-  "baseline_commit": "d35b74e",
+  "plan_version": "PLAN-R2",
+  "baseline_commit": "bf0fe75",
   "tasks": [
     {
       "id": "TASK-0101",
@@ -305,7 +305,7 @@
       "title": "赶海 ops 复算计分（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -330,14 +330,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）"
     },
     {
       "id": "TASK-0803",
       "title": "赶海 21:05 结算与发奖（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -362,14 +363,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：赶海整片 2026-10-27 移入 v1.1（current-plan:113）"
     },
     {
       "id": "TASK-0902",
       "title": "赶海分组榜（v1.1）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -394,14 +396,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块"
     },
     {
       "id": "TASK-0903",
       "title": "排行榜压测（决定是否引入 Redis）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -426,7 +429,8 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：leaderboard 属 D-50 的 13 个 v1.1 模块"
     },
     {
       "id": "TASK-1301",
@@ -497,7 +501,7 @@
       "title": "drops（箱子内容）填数——只转录，不设计",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -522,14 +526,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：drops 属 D-50 的 31 张 v1.1 空表"
     },
     {
       "id": "TASK-1503",
       "title": "34 张占位表补列结构（列由设计文档推导，数字不编）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -554,14 +559,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：34 张占位表补列属 D-50 的 31 张 v1.1 空表"
     },
     {
       "id": "TASK-1601",
       "title": "契约测试自动生成 + 数值表非空断言（登记，暂不实施）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -586,14 +592,15 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "未排期：原卡自述「登记，暂不实施」（proposed）"
     },
     {
       "id": "TASK-1602",
       "title": "密钥扫描守卫（第 10 项 guard，登记，暂不实施）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -618,7 +625,8 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "未排期：原卡自述「登记，暂不实施」（proposed）"
     },
     {
       "id": "TASK-2001",
@@ -1515,7 +1523,7 @@
       "title": "开锁交互（chest+locks 接表）+ chest.open 动作",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -1541,7 +1549,8 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "source_note": "台账 §2：⊘ v1.1 推迟（chest.open 已落地；salvage.claimInfo 维持 todo→v1.1，用户 2026-10-28 拍板）"
+      "source_note": "台账 §2：⊘ v1.1 推迟（chest.open 已落地；salvage.claimInfo 维持 todo→v1.1，用户 2026-10-28 拍板）",
+      "blocked_reason": "范围移出：开锁交互 + salvage.claimInfo 经用户 2026-10-28 拍板推迟 v1.1"
     },
     {
       "id": "TASK-4010",
@@ -1574,7 +1583,7 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "blocked_reason": "缺真机环境（四面板真机录屏 + 6 态走查）"
+      "blocked_reason": "缺真机环境（四面板真机录屏 + 6 态走查）；结案口径见 D-51（BLOCKED-HUMAN，非延期）"
     },
     {
       "id": "TASK-4011",
@@ -1611,7 +1620,7 @@
           "d35b74e"
         ]
       },
-      "blocked_reason": "缺真机用户打 20 钩（脚本已就绪 W7-2，d35b74e）"
+      "blocked_reason": "缺真机用户打 20 钩（脚本已就绪 W7-2，d35b74e）；结案口径见 D-51（BLOCKED-HUMAN，非延期）"
     },
     {
       "id": "TASK-4013",
@@ -1644,7 +1653,8 @@
       },
       "legacy_ids": [],
       "execution": {},
-      "source_note": "台账 §2：⚠ 部分（合规材料清单落 docs/07_release，虚假陈述已删、未接入已登记）"
+      "source_note": "台账 §2：⚠ 部分（合规材料清单落 docs/07_release，虚假陈述已删、未接入已登记）",
+      "blocked_reason": "结案口径见 D-51（BLOCKED-HUMAN，非延期）"
     },
     {
       "id": "TASK-4015",
@@ -1752,6 +1762,756 @@
       "legacy_ids": [],
       "execution": {},
       "source_note": "原索引 draft（RpcClient 自动补齐 rid，未完成）"
+    },
+    {
+      "id": "PD0-01",
+      "title": "BOOTSTRAP：config.json 落盘（13 条路径映射）",
+      "phase": "P0",
+      "role": "planner",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 1,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD0-01.md",
+      "objective": "仓库出现 .product-development/config.json，pd.mjs health 不再报「未找到 config.json」",
+      "allowed_paths": [
+        ".product-development/**"
+      ],
+      "forbidden_paths": [
+        "server/**",
+        "client/**",
+        "tests/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "health 退出码 0 且不再报缺 config",
+          "check": {
+            "type": "command",
+            "cmd": "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health ."
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "de3b89e"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "de3b89e"
+      },
+      "source": "D-BOOTSTRAP-R8/R9（规划者裁决，2026-10-28）"
+    },
+    {
+      "id": "PD0-02",
+      "title": "BOOTSTRAP：唯一决策登记册 decision-index.json（35 条，双 kind）",
+      "phase": "P0",
+      "role": "planner",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 2,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD0-01"
+      ],
+      "card": ".product-development/tasks/PD0-02.md",
+      "objective": "decision-index.json 可解析，architecture(ADR-0001~0015) 与 product(D-01~D-50) 共存，source 指回原文件",
+      "allowed_paths": [
+        "docs/03_solution/decisions/decision-index.json"
+      ],
+      "forbidden_paths": [
+        "docs/03_solution/decisions/ADR-*.md（只读引用，不改）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "JSON 可解析且 decisions.length >= 35",
+          "check": {
+            "type": "command",
+            "cmd": "node -e \"const j=require('./docs/03_solution/decisions/decision-index.json');if(!Array.isArray(j.decisions)||j.decisions.length<35)process.exit(1)\""
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "de3b89e"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "de3b89e"
+      },
+      "source": "R-9：ADR 与 D-xx 索引合一、内容原地不动"
+    },
+    {
+      "id": "PD0-03",
+      "title": "BOOTSTRAP：52 张历史卡映射入权威索引（不搬家不改号）",
+      "phase": "P0",
+      "role": "planner",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 3,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD0-01"
+      ],
+      "card": ".product-development/tasks/PD0-03.md",
+      "objective": "task-index.json 含 52 张 TASK-xxxx 条目，card 指回原路径 docs/05_execution/tasks/",
+      "allowed_paths": [
+        ".product-development/task-index.json"
+      ],
+      "forbidden_paths": [
+        "docs/05_execution/tasks/**（原卡不动）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "条目数 >= 64（52 历史 + 12 PLAN-R1）",
+          "check": {
+            "type": "command",
+            "cmd": "node -e \"const j=require('./.product-development/task-index.json');if(j.tasks.length<64)process.exit(1)\""
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "de3b89e"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "de3b89e"
+      },
+      "source": "SKILL §3：一个任务索引；BOOTSTRAP 只映射现状"
+    },
+    {
+      "id": "PD0-04",
+      "title": "BOOTSTRAP：测试台账 test-ledger.json + P0 阶段体检（health 通过）",
+      "phase": "P0",
+      "role": "tester",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 4,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD0-01",
+        "PD0-02",
+        "PD0-03"
+      ],
+      "card": ".product-development/tasks/PD0-04.md",
+      "objective": "pd.mjs health 退出码 0（允许警告），测试台账含历史 PASS 回溯",
+      "allowed_paths": [
+        "docs/06_validation/pd/test-ledger.json"
+      ],
+      "forbidden_paths": [
+        "tests/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "health 退出码 0",
+          "check": {
+            "type": "command",
+            "cmd": "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health ."
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "de3b89e"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "de3b89e"
+      },
+      "source": "SKILL §6：一个测试台账；台账 §4 四条历史快照回溯"
+    },
+    {
+      "id": "PD1-01",
+      "title": "FIX-19 + FIX-20：命中率脚本认绝对路径、死锁注释改实话",
+      "phase": "P1",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 5,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD1-01.md",
+      "objective": "hook-hitrate.mjs 支持绝对 --from/--db；两处 postmaster.pid 注释与真实行为一致",
+      "allowed_paths": [
+        "tools/sample/hook-hitrate.mjs"
+      ],
+      "forbidden_paths": [
+        "tools/guard/**",
+        "server/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "--help 退出码 0",
+          "check": {
+            "type": "command",
+            "cmd": "node tools/sample/hook-hitrate.mjs --help"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "绝对路径 --from 不报 ENOENT（人工核对注释与代码一致）",
+          "check": {
+            "type": "manual",
+            "evidence": "tools/sample/hook-hitrate.mjs + 提交 c030904"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node tools/sample/hook-hitrate.mjs --help"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "c030904"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "c030904"
+      },
+      "source": "FIX-19；FIX-20"
+    },
+    {
+      "id": "PD1-02",
+      "title": "FIX-21 / R-7：placeholders 升为第 10 项守卫 + baseline 白名单",
+      "phase": "P1",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 6,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD1-02.md",
+      "objective": "run-all.mjs 第 10 项报告占位值；baseline 外的新命中 exit 1；verify 仍绿",
+      "allowed_paths": [
+        "tools/guard/**",
+        "package.json"
+      ],
+      "forbidden_paths": [
+        "server/src/data/**（不得为了变绿改源数据）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "第 10 项守卫输出且退出码 0",
+          "check": {
+            "type": "command",
+            "cmd": "node tools/guard/run-all.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "突变验证（删 baseline 一条 → exit 1）已人工执行并复原",
+          "check": {
+            "type": "manual",
+            "evidence": "提交 c3cc89e 说明 + 台账 FIX-21 行"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node tools/guard/run-all.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "c3cc89e"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "c3cc89e"
+      },
+      "source": "FIX-21；D-50"
+    },
+    {
+      "id": "PD1-03",
+      "title": "FIX-22 + FIX-23：台账补 FIX-17~23 七行 + §4 门禁快照更正",
+      "phase": "P1",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 7,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD1-01",
+        "PD1-02"
+      ],
+      "card": ".product-development/tasks/PD1-03.md",
+      "objective": "execution-ledger.md §9 覆盖 FIX-1~FIX-23；§4 含 231/231 快照",
+      "allowed_paths": [
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "forbidden_paths": [
+        "docs/05_execution/tasks/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "gen:docs 后工作树仍干净（front matter 未破坏）",
+          "check": {
+            "type": "command",
+            "cmd": "npm run gen:docs && git diff --quiet"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "npm run gen:docs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "dd9be1d"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "dd9be1d"
+      },
+      "source": "FIX-22；FIX-23"
+    },
+    {
+      "id": "PD1-04",
+      "title": "FIX-16：time 偏移消费侧口径成文（无业务绕过）",
+      "phase": "P1",
+      "role": "planner",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 8,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD1-04.md",
+      "objective": "查清客户端是否存在绕过 time 偏移的业务时间判定，并给出成文结论",
+      "allowed_paths": [
+        "docs/06_validation/execution-ledger.md",
+        "docs/03_solution/decisions/decision-index.json"
+      ],
+      "forbidden_paths": [
+        "client/**（本轮只查不改）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "结论成文且逐点注明代码坐标",
+          "check": {
+            "type": "manual",
+            "evidence": "execution-ledger.md:140 FIX-16 行"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "（只读走查，无测试）"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "883af6f"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "883af6f"
+      },
+      "source": "FIX-16"
+    },
+    {
+      "id": "PD1-90",
+      "title": "P1 阶段体检（覆盖 PD1-01~04 改动模块）",
+      "phase": "P1",
+      "role": "tester",
+      "status": "VERIFIED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 9,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD1-01",
+        "PD1-02",
+        "PD1-03",
+        "PD1-04"
+      ],
+      "card": ".product-development/tasks/PD1-90.md",
+      "objective": "verify / placeholders / hook-hitrate 三条通过，结果入测试台账",
+      "allowed_paths": [
+        "docs/06_validation/pd/test-ledger.json"
+      ],
+      "forbidden_paths": [
+        "业务代码"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "verify EXIT=0 且 tests 全通过",
+          "check": {
+            "type": "command",
+            "cmd": "npm run verify"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "npm run verify"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "d44d39d"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "d44d39d（台账 PD1-90 PASS）"
+      },
+      "source": "SKILL §6：阶段末尾排 tester 体检卡"
+    },
+    {
+      "id": "PD2-01",
+      "title": "4011 首钩命中率采样：真机打 20 钩",
+      "phase": "P2",
+      "role": "user",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 10,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD1-01"
+      ],
+      "card": ".product-development/tasks/PD2-01.md",
+      "objective": "拿到 ≥20 钩真实采样并出「首钩命中率 / 前 10 钩 / chargeMs」三表",
+      "allowed_paths": [
+        "docs/06_validation/evidence/EVD-4011/**"
+      ],
+      "forbidden_paths": [
+        "伪造采样数据",
+        "改 tools/sample/hook-hitrate.mjs 算法"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "采样记录含 n>=20 且三张表齐备",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/06_validation/evidence/EVD-4011/README.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node tools/sample/hook-hitrate.mjs --db .local/pg"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "null（待用户）"
+      },
+      "source": "D-51；FIX-19（工具已就绪）",
+      "blocked_reason": "缺真机用户打 20 钩（BLOCKED-HUMAN，D-51）"
+    },
+    {
+      "id": "PD2-02",
+      "title": "4010 四面板真机录屏 + 6 态走查",
+      "phase": "P2",
+      "role": "user",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 11,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD2-02.md",
+      "objective": "4 个 MP4 落 EVD-4010 并完成六态（空/加载/错误/无权限/成功/离线）走查",
+      "allowed_paths": [
+        "docs/06_validation/evidence/EVD-4010/**"
+      ],
+      "forbidden_paths": [
+        "用模拟器截图冒充真机录屏"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "4 个 MP4 + 六态走查表存在且可播放",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/06_validation/evidence/EVD-4010/"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "（人工）"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "null（待用户）"
+      },
+      "source": "D-51",
+      "blocked_reason": "缺真机环境（BLOCKED-HUMAN，D-51）"
+    },
+    {
+      "id": "PD2-03",
+      "title": "4013 合规材料清单闭环 + FIX-10 compliance 去桩",
+      "phase": "P2",
+      "role": "user",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 12,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD2-03.md",
+      "objective": "拿到 appid/appsecret/主体资质后 compliance 返回真实 verified/minor",
+      "allowed_paths": [
+        "docs/07_release/compliance/**",
+        "server/src/compliance/**"
+      ],
+      "forbidden_paths": [
+        "把 appsecret 写入任何文件/日志/提交"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "清单 17 项全部有勾选依据；compliance 不再恒真",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/07_release/compliance/review-checklist.md"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "npm test"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "null（待用户）"
+      },
+      "source": "D-51；FIX-10",
+      "blocked_reason": "缺微信 appid/appsecret/主体资质（BLOCKED-HUMAN，D-51）"
+    },
+    {
+      "id": "PD3-01",
+      "title": "v1.1 范围正式登记为决策 D-50（13 模块 + 31 空表）",
+      "phase": "P3",
+      "role": "planner",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [],
+      "priority": 13,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [],
+      "card": ".product-development/tasks/PD3-01.md",
+      "objective": "D-50 写入 decision-sheet 与 decision-index，13 模块与 31 空表逐条可查",
+      "allowed_paths": [
+        "docs/04_planning/plan-v003/decision-sheet.md",
+        "docs/03_solution/decisions/decision-index.json",
+        "docs/04_planning/current-plan.md"
+      ],
+      "forbidden_paths": [
+        "server/generated/**（不改数据）"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "D-50 存在且 detail 含 13 模块 + 31 表",
+          "check": {
+            "type": "command",
+            "cmd": "node -e \"const j=require('./docs/03_solution/decisions/decision-index.json');const d=j.decisions.find(x=>x.id==='D-50');if(!d||d.detail.modules_v11.length!==13||d.detail.empty_tables_31.length!==31)process.exit(1)\""
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health ."
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "9ab3524"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "9ab3524"
+      },
+      "source": "D-50；R-6（用户 2026-10-28 拍板）"
+    },
+    {
+      "id": "PD4-01",
+      "title": "最终回归（自动化范围）——3 项人工项登记为 UNKNOWN",
+      "phase": "P4",
+      "role": "tester",
+      "status": "VERIFIED",
+      "detail": "READY",
+      "areas": [],
+      "priority": 14,
+      "requirements": [],
+      "decisions": [],
+      "depends_on": [
+        "PD1-90",
+        "PD2-01",
+        "PD2-02",
+        "PD2-03"
+      ],
+      "card": ".product-development/tasks/PD4-01.md",
+      "objective": "verify 全绿并把 3 项 BLOCKED-HUMAN 显式列为未验证，禁止写成完整 PASS",
+      "allowed_paths": [
+        "docs/06_validation/pd/test-ledger.json",
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "forbidden_paths": [
+        "把未验证项写成 PASS"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "verify EXIT=0 且 tests 231/231",
+          "check": {
+            "type": "command",
+            "cmd": "npm run verify"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "台账条目明示 3 项 UNKNOWN 与 scope",
+          "check": {
+            "type": "manual",
+            "evidence": "docs/06_validation/pd/test-ledger.json → PD4-01"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "npm run verify"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "commits": [
+          "bf0fe75"
+        ],
+        "evidence": [
+          "docs/06_validation/execution-ledger.md"
+        ],
+        "deliverable": "bf0fe75",
+        "scope": "automated-only",
+        "unverified": [
+          "PD2-01",
+          "PD2-02",
+          "PD2-03"
+        ]
+      },
+      "source": "D-51；SKILL §6 最终回归卡"
+    }
+  ],
+  "replans": [
+    {
+      "at": "2026-10-29",
+      "after_phase": "P1",
+      "reason": "PD2-01/02/03 三项 BLOCKED-HUMAN 无法由执行侧完成；补充 FIX-24（PLAN-R1 12 张卡未入权威索引/无卡面）与 FIX-25（索引内 v1.1 卡被当作就绪，next 会误派工）",
+      "changed": [
+        "新增 12 条 PLAN-R1 条目（PD0-01~PD4-01）",
+        "9 张 v1.1 范围外历史卡改 BLOCKED + blocked_reason",
+        "4010/4011/4013 的 blocked_reason 指向 D-51",
+        "plan_version PLAN-R1 → PLAN-R2，baseline d35b74e → bf0fe75"
+      ]
+    },
+    {
+      "at": "2026-10-29",
+      "after_phase": "P0",
+      "reason": "P0 治理阶段复盘：体检在 PD0-04 完成（health 0 错误）；核对发现原定分角色不合理——PD0-04 写测试台账并跑 health，属 tester 职责，故改 role=planner→tester；同时新卡与历史卡物理分离，paths.task_cards 由 docs/05_execution/tasks 改指 .product-development/tasks（历史卡仍用各自 card 字段指向原路径，未搬家）。",
+      "changed": [
+        "PD0-04 role: planner→tester，并兼作 P0 阶段体检卡",
+        "config.paths.task_cards → .product-development/tasks",
+        "新增 .product-development/tasks/ 14 份卡面"
+      ]
+    },
+    {
+      "at": "2026-10-29",
+      "after_phase": "P3",
+      "reason": "P3 范围登记阶段复盘：本阶段只有 PD3-01 一张记录卡，零业务代码，无可测对象，故不排 role:tester 体检卡（pds 的「缺阶段体检卡」对本阶段是机械误报）；其验收由 D-50 的 JSON 机检承担，已 PASS。",
+      "changed": [
+        "确认 P3 不设 tester 体检卡，理由登记于此",
+        "D-50 的 13 模块 / 31 空表名单 = placeholders.baseline 实测名单"
+      ]
     }
   ]
 }

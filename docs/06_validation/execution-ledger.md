@@ -145,6 +145,8 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-21 | P2 | `placeholders` 不在 `verify` 链内 → 占位值回归永远不红，违反「不在 verify 里就不是闸门」铁律 | `package.json` `verify` vs `placeholders` | ✅ PD1-02 `c3cc89e`（并入 run-all 成为第 10 项守卫 + baseline 白名单；未直接塞 verify shell 链，符合 R-7） |
 | FIX-22 | P2 | 台账 §4 门禁快照停在 `219`，实测 `231`；三份文档互相对不上 | `execution-ledger.md:72` | ✅ 本卡（§4 追加 PLAN-R1 复跑 `231/231` 快照） |
 | FIX-23 | P1 | FIX-17~20 四条缺陷未写入任何权威文件，只存在于提交信息，违反 pds 底线 2「行为留痕」 | 全仓 grep `FIX-17/18/19/20` 在 `docs/` 零命中 | ✅ 本卡（§9 追加 FIX-17~23 七行） |
+| FIX-24 | P1 | **PLAN-R1 的 14 张卡（PD0-01~PD4-01）从未进入权威任务索引，也没有卡面**：`task-index.json` 只有 52 张历史卡（`plan_version` 却写 `PLAN-R1`），`pd.mjs status` 报「共 52 张、完成 33」，`pd.mjs next` 把 17 张历史卡当就绪卡派工 → 本轮所有「收口」在 pds 里不存在，只是聊天记录 | `.product-development/task-index.json`；`docs/05_execution/tasks/`（无 PD-*.md） | ✅ PLAN-R2（补 14 条 + 14 份卡面到 `.product-development/tasks/`，`paths.task_cards` 同步改指） |
+| FIX-25 | P1 | **测试台账用了非法枚举**：`result: "PARTIAL-AUTOMATED"` 不在 `RESULT=['PASS','FAIL','UNKNOWN']` 内 → `pd.mjs health` 报错「体检未通过：1 个错误」，即执行侧声称「10 张卡 done、verify EXIT=0」时 health 实际是红的；另有 6 条 `evidence` 写成 `execution-ledger.md#4` 锚点，被当文件路径判「证据文件不存在」 | `docs/06_validation/pd/test-ledger.json`；`pd.mjs:173` | ✅ PLAN-R2（`original_result` 保留原文，`result` 更正为 `PASS` + `scope_limit=automated-only` + `unverified` 三项；6 条 evidence 去锚点 → health 0 错误 52 提醒） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 
@@ -172,3 +174,32 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | R-4 | 空壳目录处置 | 不删空壳目录；只改 4 个零引用服务的头注释（`audio`/`pool`/`log`/`time`）。 |
 | R-5 | 文档索引规则 | 不改 EVD 文件名；改 `docs-index.mjs` 跳过规则（EVD README 纳入索引，缺 id 显 ⚠缺）。 |
 | R-6 | 代码层 v1.0 = 五环 | 捞→包→做→扩→卖五环（10 模块）；其余 13 个 v1 模块进 v1.1。 |
+
+## 10. PLAN-R2 处置记录（2026-10-29，主控复核执行侧 10 卡报告后）
+
+> 触发：执行侧报告「PD0/PD1/PD3/PD4 共 10 张卡完成，HEAD=`bf0fe75`，verify EXIT=0」，并就 PD2-01/02/03 三项
+> BLOCKED-HUMAN 请规划者裁决。主控未采信自述，逐项复跑后**发现两处账实不符**（FIX-24/FIX-25），
+> 补录后 `pd.mjs health` 由「1 个错误」转为「0 错误 52 提醒」通过。
+
+### 10.1 复跑证据（2026-10-29，HEAD=`bf0fe75`）
+
+| 项 | 命令 | 结果 |
+|---|---|---|
+| 闸门 | `npm run verify` | **EXIT=0**；守卫 **10/10**（新增第 10 项「占位值 baseline 内（旧债不阻断）」）、`tests 231/231`、`tsc` client+server 0 错 |
+| 体检 | `pd.mjs health .` | 补录前 **体检未通过：1 个错误**（FIX-25）→ 补录后 **体检通过（52 个提醒）**、0 错误 |
+| 索引 | `pd.mjs status .` | 补录前「共 52 张、完成 33、就绪 17 张（全是历史卡）」→ 补录后 66 张，PD2-01/02/03 入 `BLOCKED` |
+| 双端 | `git rev-list --left-right --count origin/master...master` | `0 0` |
+
+### 10.2 D-51：PD2 三项的结案口径（登记于 `plan-v003/decision-sheet.md` §F）
+
+三项**记为 `BLOCKED-HUMAN`，不记为「延期」**——延期的语义是主动放弃时间窗，而事实是等外部输入（真机 / 用户操作 / 平台资质），**没有一项是代码待写**。
+恢复触发条件逐条写死（D-51 正文）。PD4-01 的 PASS **只覆盖自动化范围**，3 项人工项在台账标 `UNKNOWN`，
+**禁止读作「完整验收通过」**。三项不作为 v1.0 发版阻塞项，但也不从待办中消失。
+
+### 10.3 索引口径收紧（FIX-25 连带发现）
+
+`pd.mjs next` 补录前把 17 张卡列为「可开工」，其中 9 张已由书面裁决移出 v1.0 范围
+（`TASK-0802/0803` 赶海整片移 v1.1、`TASK-0902/0903` leaderboard 属 D-50、`TASK-1502/1503` 属 31 张空表、
+`TASK-4009` 用户 10-28 拍板推迟、`TASK-1601/1602` 原卡自述「登记，暂不实施」）。
+已按「有书面依据才动」原则改为 `BLOCKED` + `blocked_reason`，**无依据的 7 张（0103/0106/0108/0202/1301/1401/4020）一律不动**，
+留待下一轮核实现状后单独裁决。

@@ -25,6 +25,19 @@ review: 2026-11-23
 **代码层 v1.0 口径（R-6，2026-10-28 用户拍板，W3-2）**：**v1.0 = 捞→包→做→扩→卖五环**（`hook`/`sea`/`chest` → `inventory` → `crafting` → `raft` → `economy`，另含 `account` 登录 / `guide` 引导 / `settings` 设置，共 10 模块）；**其余 13 个 v1 模块进 v1.1**（`compliance`、`salvage`、`fishing`、`crew`、`power`、`island`、`defense`、`leaderboard`、`event`、`social`、`ads`、`telemetry`、`progression`，模块目录 `module-catalog.json` 为权威）。
 **激励视频三效果无载体（R-1/FIX-2）**：`hook_cooldown`/`offline_double`/`shop_refresh` 三 placement 的奖励载体（冷却字段/离线结算/商店）均未落地，v1.0 只发"日限内可领取"的登记、不伪造效果，冻结至 v1.1（D-49）。
 
+## ⚑ PLAN-R2（2026-10-29，pds 治理接入后的第一轮全量规划收口）
+
+| 项 | 状态 |
+|---|---|
+| 规划基线 | `bf0fe75`；`PLAN-R2`（R1 的 14 张卡首版未入索引，R2 补齐，见 FIX-24） |
+| 权威索引 | `.product-development/task-index.json`（66 张：52 历史 + 14 PLAN-R2）；**`docs/05_execution/task-index.md` 是生成视图，不可作为权威**（R-8） |
+| 决策登记册 | `docs/03_solution/decisions/decision-index.json`（36 条，`kind: architecture` = ADR-0001~0015、`kind: product` = D-01~D-51） |
+| 测试台账 | `docs/06_validation/pd/test-ledger.json`（7 条） |
+| 闸门 | `npm run verify` EXIT=0；守卫 **10/10**（第 10 项 = 占位值 baseline）；`tests 231/231`；tsc 0 错 |
+| 体检 | `pd.mjs health` → **通过（52 提醒，0 错误）**；`replan-check` 余 15 项均为**已裁决挂账**（14 项 BLOCKED 见 D-50/D-51，1 项 P3 无被测对象的机械提示） |
+
+> **PD2 三项结案口径（D-51）**：4011 真机 20 钩 / 4010 四面板录屏 / 4013+FIX-10 合规资质，记为 `BLOCKED-HUMAN`（**不是延期**——三项全是等外部输入，无一项是代码待写）。恢复触发条件见 `plan-v003/decision-sheet.md` §F。**PD4-01 的 PASS 只覆盖自动化范围**，3 项人工项在台账标 `UNKNOWN`，不得读作完整验收通过。
+
 ## ⚑ 现行规划指针（2026-10-28 09:30 更新）
 
 > **唯一现行执行规划 = [`plan-v010/00-README.md`](plan-v010/00-README.md)**（9 份，卡片 TASK-7001~7051）。

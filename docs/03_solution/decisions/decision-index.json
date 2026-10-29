@@ -540,6 +540,34 @@
         ],
         "rule": "R-6 代码层 v1.0 = 捞→包→做→扩→卖五环（10 模块）；其余 13 个 v1 模块进 v1.1。空表 31 张记录于 tools/guard/placeholders.baseline.json（PD1-02）。"
       }
+    },
+    {
+      "id": "D-51",
+      "title": "PD2-01/02/03 结案口径：BLOCKED-HUMAN（不是延期），v1.0 以「自动化范围 PASS + 3 项 UNKNOWN」结案",
+      "status": "DECIDED",
+      "decided_by": "planner",
+      "decided_at": "2026-10-29",
+      "kind": "product",
+      "file": "docs/04_planning/plan-v003/decision-sheet.md",
+      "source": "docs/04_planning/plan-v003/decision-sheet.md#D-51",
+      "applies_to": [
+        "PD2-01",
+        "PD2-02",
+        "PD2-03",
+        "PD4-01"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "rule": "三项均等外部输入（真机 / 用户操作 / 平台资质），非代码待写。状态记为 BLOCKED-HUMAN，恢复触发条件逐条写死；不得写成「延期」（延期的语义是主动放弃时间窗，与事实不符）。",
+        "recover_when": {
+          "PD2-01": "用户真机累计 20 钩 → node tools/sample/hook-hitrate.mjs --db <绝对路径 .local/pg> → 三表入 EVD-4011",
+          "PD2-02": "4 个 MP4（四面板 × 六态）落 docs/06_validation/evidence/EVD-4010/",
+          "PD2-03": "wechat appid + appsecret + 主体资质到位 → WDF_AUTH_MODE=platform → compliance 去桩"
+        },
+        "release_scope": "PD4-01 的 PASS 只覆盖自动化范围；3 项人工项标 UNKNOWN，禁止写「完整 PASS」。v1.0 结案以本口径为准。"
+      }
     }
   ]
 }
