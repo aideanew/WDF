@@ -130,3 +130,60 @@ test('AT-1401-4 突变验证：部分唯一索引是「至多一区 current」�
   assert.equal(restored.length, 1, '复原后回到单 current');
   assert.equal(restored[0].id, 'region_test', '复原后当前区仍为 region_test');
 });
+
+test('AT-1401-5 封号后用旧令牌 refresh 必须被拒（FIX-27）', async () => {
+  // 复现探针：login → banUntil 到未来 → 用**旧令牌** refresh → 必须 2003。
+  const code = `refresh-ban-${Date.now()}`;
+  const res = await login(code);
+  assert.equal(res.c, 0, '登录应成功');
+  const oldToken = res.d.token;
+  const playerId = res.d.playerId;
+
+  const until = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
+  const hit = await banUntil(playerId, until, 'ops');
+  assert.equal(hit, 1, '应命中玩家');
+
+  // 关键断言：拿封号前的旧令牌 refresh → 2003（封号对已登录会话生效）
+  const refreshed = await call('account.refresh', {}, { token: oldToken });
+  assert.equal(refreshed.c, 2003, '封号后用旧令牌 refresh 必须返 2003 BANNED');
+  assert.match(refreshed.msg, /banned until/, '错误信息应带截止时间');
+});
+
+test('AT-1401-6 未封号 refresh 仍正常签发新令牌（防过度拦截）', async () => {
+  const code = `refresh-ok-${Date.now()}`;
+  const res = await login(code);
+  assert.equal(res.c, 0, '登录应成功');
+
+  const refreshed = await call('account.refresh', {}, { token: res.d.token });
+  assert.equal(refreshed.c, 0, '未封号 refresh 应成功');
+  assert.match(refreshed.d.token, /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/, '应拿到新令牌');
+  assert.notEqual(refreshed.d.token, res.d.token, '新令牌必须不同于旧令牌');
+});
+
+test('AT-1401-7 同区重开两次 opened_at 不变、is_current 仍唯一（FIX-29）', async () => {
+  // 用独立区 id（避免与 AT-1401-2 的 region_test 相互影响）
+  const reg = `region_reopen_${Date.now()}`;
+  await openNewRegion(reg, '一服', 'ops');
+  const first = await q('SELECT opened_at FROM regions WHERE id = $1', [reg]);
+  assert.equal(first.length, 1, '应存在该区');
+
+  // 重开同一区（改名、再置 current）
+  await new Promise((r) => setTimeout(r, 30)); // 让时间有可观察差异（PGlite now() 精度秒级）
+  await openNewRegion(reg, '一服·改', 'ops');
+
+  const after = await q('SELECT opened_at, name, is_current FROM regions WHERE id = $1', [reg]);
+  assert.equal(after.length, 1, '重开后仍是同一行（未产生第二行）');
+  // opened_at 是 Date 对象：按时间值比较（不同实例 === 会误报），核心断言是「时间未被重写」
+  assert.equal(
+    new Date(after[0].opened_at).getTime(),
+    new Date(first[0].opened_at).getTime(),
+    'FIX-29：重开不重写首次开区时间',
+  );
+  assert.equal(after[0].name, '一服·改', '改名应生效');
+  assert.equal(after[0].is_current, true, '重开后仍为当前区');
+
+  // is_current 仍唯一
+  const currents = await q('SELECT id FROM regions WHERE is_current');
+  assert.equal(currents.length, 1, '重开后全表仍至多一行 current');
+  assert.equal(currents[0].id, reg, '当前区应为刚重开的区');
+});

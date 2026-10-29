@@ -5,7 +5,7 @@ import type { LoginReq, LoginRes, RefreshRes, BindStartRes, BindConfirmReq, Bind
 import type { Platform } from '@wodefa/contracts';
 import { ERR } from '@wodefa/contracts';
 import { issueToken, refreshClaims } from '../../gateway/auth.ts';
-import { login, bindStart, bindConfirm, BindError, LoginError } from './service.ts';
+import { login, assertNotBanned, bindStart, bindConfirm, BindError, LoginError } from './service.ts';
 
 export const accountHandlers = {
   'account.login': (async (req, t) => {
@@ -31,11 +31,20 @@ export const accountHandlers = {
    * 刷新会话：
    *  - 标 auth:false（网关不预先验令牌），由本 handler 用 refreshClaims 自校验签名；
    *  - 签名有效即重签发新令牌（沿用原 sub/region/plat），即便原令牌已过期；
+   *  - 重签发前先做封号校验（FIX-27）：被封玩家拿旧令牌也换不到新令牌 → 2003，
+   *    保证"封号"对已登录会话真正生效，不停 refresh 也打不穿；
    *  - 签名无效 → 2002，客户端退回登录流程。
    */
   'account.refresh': (async (_req, t, ctx) => {
     const claims = refreshClaims(ctx.token);
     if (!claims) return { c: ERR.SESSION_EXPIRED, msg: 'cannot refresh token', t };
+    try {
+      await assertNotBanned(claims.sub, claims.plat as Platform, t);
+    } catch (e) {
+      // 封号（2003 BANNED）：与 login 同一映射写法，不新造错误码。
+      if (e instanceof LoginError) return { c: e.code, msg: e.message, t };
+      throw e;
+    }
     const token = issueToken({ sub: claims.sub, region: claims.region, plat: claims.plat as Platform });
     const res: RefreshRes = { token, serverTime: t };
     return { c: 0, d: res, t };

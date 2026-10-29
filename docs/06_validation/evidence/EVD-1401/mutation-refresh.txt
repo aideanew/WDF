@@ -1,0 +1,21 @@
+=== FIX-27 突变验证：删除 assertNotBanned 调用后 ===
+命令：node --import ./tools/runtime/register.mjs --test tests/integration/ops-region.test.mjs
+日期：2026-10-29T02:55:08Z
+
+✖ AT-1401-5 封号后用旧令牌 refresh 必须被拒（FIX-27） (3.7575ms)
+✔ AT-1401-6 未封号 refresh 仍正常签发新令牌（防过度拦截） (1.8464ms)
+ℹ tests 6
+--
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+--
+✖ AT-1401-5 封号后用旧令牌 refresh 必须被拒（FIX-27） (3.7575ms)
+  AssertionError [ERR_ASSERTION]: 封号后用旧令牌 refresh 必须返 2003 BANNED
+  
+  0 !== 2003
+  
+      at TestContext.<anonymous> (file:///E:/Demo/WDF/tests/integration/ops-region.test.mjs:148:10)
+
+结论：删除 assertNotBanned 后 AT-1401-5 红（0 !== 2003）→ 证明该调用是封号生效的 load-bearing 约束

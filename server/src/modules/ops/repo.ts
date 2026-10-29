@@ -15,6 +15,8 @@ async function qx<T>(tx: unknown, sql: string, params: unknown[] = []): Promise<
  * 开新区并置为当前开放区。
  * 事务内先把现有 current 全部置 false，再插入/置为新区 —— 保证全表至多一行 is_current=true。
  * 部分唯一索引兜底：若某实现误把两区都置 current，第二笔违反唯一约束报错（不是靠代码自觉）。
+ * FIX-29：重开同一区（ON CONFLICT DO UPDATE）**不重写 opened_at**——开区时间只写一次，
+ * 改名/改状态可以，但「首次开区时间」不该被冲成现在。
  */
 export async function openRegion(id: string, name: string, tx?: unknown): Promise<void> {
   await qx(tx, 'UPDATE regions SET is_current = false WHERE is_current', []);
@@ -22,7 +24,7 @@ export async function openRegion(id: string, name: string, tx?: unknown): Promis
     tx,
     `INSERT INTO regions (id, name, status, is_current) VALUES ($1, $2, 'open', true)
      ON CONFLICT (id) DO UPDATE
-       SET name = EXCLUDED.name, status = 'open', opened_at = now(), is_current = true`,
+       SET name = EXCLUDED.name, status = 'open', is_current = true`,
     [id, name],
   );
 }

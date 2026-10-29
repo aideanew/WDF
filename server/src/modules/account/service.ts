@@ -58,6 +58,31 @@ export class LoginError extends Error {
 }
 
 /**
+ * 玩家当前是否处于封禁期（banned_until 在未来）。
+ * 供 login / assertNotBanned 共用**同一段判断**，不复制第二份（FIX-27）。
+ * 未封禁、玩家不存在、或已过截止 → null；否则返回截止时间。
+ */
+async function activeBanUntil(playerId: string, nowMs: number): Promise<Date | null> {
+  const player = await findPlayer(playerId);
+  if (!player?.banned_until) return null;
+  const until = new Date(player.banned_until);
+  return until.getTime() > nowMs ? until : null;
+}
+
+/**
+ * 封号校验：玩家处于封禁期 → 写 audit_log(actor=plat, action='refresh_banned') 并抛 2003 BANNED。
+ * 供会话刷新（account.refresh）在重签发令牌前调用，保证封号对"已登录会话"也生效（FIX-27）。
+ * nowMs 为服务端时间（handler 的 t 注入），不用 Date.now()。
+ */
+export async function assertNotBanned(playerId: string, plat: Platform, nowMs: number): Promise<void> {
+  const until = await activeBanUntil(playerId, nowMs);
+  if (until) {
+    await recordAudit(plat, 'refresh_banned', { playerId, banned_until: until.toISOString() });
+    throw new LoginError(ERR.BANNED, `account banned until ${until.toISOString()}`);
+  }
+}
+
+/**
  * 登录。nowMs 为服务端当前时间（毫秒，由 handler 的 t 传入），
  * 用于封号判断——不用 Date.now()，保证测试可注入。
  * 封号（banned_until 在未来）→ 抛 2003 BANNED，并写 audit_log 留痕（可追溯）。
@@ -69,12 +94,13 @@ export async function login(input: LoginInput, nowMs: number): Promise<LoginOutp
   if (identity) {
     const player = await findPlayer(identity.player_id);
     if (player) {
-      if (player.banned_until && new Date(player.banned_until).getTime() > nowMs) {
+      const until = await activeBanUntil(player.id, nowMs);
+      if (until) {
         await recordAudit(input.plat, 'login_banned', {
           playerId: player.id,
-          banned_until: player.banned_until,
+          banned_until: until.toISOString(),
         });
-        throw new LoginError(ERR.BANNED, `account banned until ${player.banned_until}`);
+        throw new LoginError(ERR.BANNED, `account banned until ${until.toISOString()}`);
       }
       return { playerId: player.id, region: player.region, isNew: false };
     }
