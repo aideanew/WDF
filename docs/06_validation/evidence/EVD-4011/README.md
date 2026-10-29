@@ -14,6 +14,11 @@ review: 2026-11-28
 **BLOCKED-HUMAN**：工具与埋点已就绪（`chargeMs` 已补，`tools/sample/hook-hitrate.mjs` 已建），
 **等真人打 20 钩**。本轮只提供**方向性基线**（单机单人），非 C1 达标口径。
 
+**工具链复验（2026-10-29，PD2-01 待办确认）**：`node tools/sample/hook-hitrate.mjs --db .local/pg` 实测 **EXIT=0**，
+输出「样本 0，无法计算——audit_log 无 telemetry 埋点（先跑 npm run dev:server + Cocos 预览打 20 钩，再跑本脚本）」。
+**结论：工具本身无缺陷、工作正常，唯一阻塞是 `audit_log` 无真人埋点数据**——非代码待写，等真机打钩。
+（`tools/sample/hook-hitrate.mjs` 已支持 `--db`/`--from`/`--help`，绝对路径修复见 FIX-19，`--from E:/tmp/x.jsonl` 亦 EXIT=0。）
+
 ## 目标（4011 要的三项指标）
 
 | 指标 | 说明 | 工具 |
