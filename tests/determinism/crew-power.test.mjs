@@ -46,8 +46,9 @@ test('cp 2 A3 外键：每个 job 的 produces 产出物 id 都在 items 存在'
 test('cp 3 有源产出物仅铁匠/机械师（§5.3:437），其余留空（产出物不固定）', () => {
   const smith = jobs.find((r) => r.id === 'smith');
   const mechanic = jobs.find((r) => r.id === 'mechanic');
-  assert.ok(smith.produces.includes('item_0031') && smith.produces.includes('item_0033'), '铁匠应产钢材/金锭');
-  assert.ok(mechanic.produces.includes('item_0034') && mechanic.produces.includes('item_0037'), '机械师应产电线/钢缆');
+  // 全集合精确断言（review 强化）：铁匠产钢材/银锭/金锭，机械师产齿轮/钢缆/电线/电池（DS §5.3:437 逐项）
+  assert.deepEqual(smith.produces.split(';').sort(), ['item_0031', 'item_0032', 'item_0033'], '铁匠应恰产钢材/银锭/金锭');
+  assert.deepEqual(mechanic.produces.split(';').sort(), ['item_0034', 'item_0035', 'item_0036', 'item_0037'], '机械师应恰产齿轮/钢缆/电线/电池');
   // 士兵/厨师/木匠/研究员/工人：产出物不固定（§5.3:422-430 职责描述）→ 留空
   for (const id of ['soldier', 'cook', 'carpenter', 'researcher', 'worker']) {
     assert.equal((jobs.find((r) => r.id === id).produces ?? ''), '', `${id} 产出物应留空（不固定）`);
