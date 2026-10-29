@@ -2787,7 +2787,7 @@
       "title": "浮力口径落账与船体数据补全",
       "phase": "P7",
       "role": "planner",
-      "status": "BLOCKED",
+      "status": "TODO",
       "detail": "READY",
       "areas": [
         "data",
@@ -2798,7 +2798,8 @@
         "mvp-scope.md#C2(§1)"
       ],
       "decisions": [
-        "D-07"
+        "D-07",
+        "D-54"
       ],
       "depends_on": [],
       "card": "docs/04_planning/plan-v011/stage-a-v10-close/00-stage.md",
@@ -2856,8 +2857,7 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {},
-      "blocked_reason": "D-54 待用户裁决（扩筏归属 Q1 / 浮力口径 Q2）；数据改动步骤须先有裁决，否则只能做非数据部分"
+      "execution": {}
     },
     {
       "id": "PD7-02",
@@ -3482,7 +3482,8 @@
         "mvp-scope.md#§2表第3行"
       ],
       "decisions": [
-        "D-50"
+        "D-50",
+        "D-56"
       ],
       "depends_on": [
         "PD7-06"
@@ -3552,7 +3553,8 @@
       ],
       "decisions": [
         "D-49",
-        "ADR-0012"
+        "ADR-0012",
+        "D-56"
       ],
       "depends_on": [
         "PD7-07"
@@ -3784,7 +3786,8 @@
         "mvp-scope.md#§5 v1.1第2条"
       ],
       "decisions": [
-        "D-50"
+        "D-50",
+        "D-56"
       ],
       "depends_on": [
         "PD7-09"
@@ -3853,7 +3856,8 @@
         "mvp-scope.md:52(允许降级)"
       ],
       "decisions": [
-        "D-50"
+        "D-50",
+        "D-56"
       ],
       "depends_on": [
         "PD7-06",
@@ -3923,7 +3927,8 @@
         "mvp-scope.md#§5 v1.1第3条"
       ],
       "decisions": [
-        "D-50"
+        "D-50",
+        "D-56"
       ],
       "depends_on": [
         "PD7-09"

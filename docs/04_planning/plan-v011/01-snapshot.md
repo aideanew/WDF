@@ -64,7 +64,7 @@ snapshot:
 
 | # | 对象 | 结果 | 处置 |
 |---|---|---|---|
-| F-1 | 远端实时状态（`git fetch origin`） | **失败**：`fatal: could not read Username for 'https://github.com': terminal prompts disabled` | 三条探测结论：`nevermeetagain/WDF` 匿名不可读、给定 PAT 也 `Repository not found`；`aideanew/WDF` 公开且可写。**本次已推送至 `aideanew/WDF` master（`4e572fa..79b0930`，远端回读一致）**，`origin` 指向未改 → 详见 `10 §D-55` |
+| F-1 | 远端实时状态（`git fetch origin`） | **已解除（2026-10-29）**：`origin` 已重指 `https://github.com/aideanew/WDF.git`，**匿名** `git fetch --prune origin` → `4e572fa..182e441 master -> origin/master`，`rev-list --left-right --count origin/master...HEAD` = `0 0` | 四条探测：`nevermeetagain/WDF` 匿名不可读、给定 PAT 也 `Repository not found`；`aideanew/WDF` 公开且可写 → 已推 `182e441` 并回读一致。**token 轮换完成前暂停推送** → 详见 `10 §D-55` |
 | F-2 | Cocos Creator 运行时 | **不可执行**（编辑器未启动，`getPlatform()` 不可注入） | 所有 UI 类卡片的人工验收标准写成"可截图/可录屏的可见现象"，不写"自动化断言" |
 | F-3 | 真机（微信/安卓） | **不可访问** | 3 项真机相关沿用 D-51 的 `BLOCKED-HUMAN`，本规划**不新增**真机任务 |
 | F-4 | `docs/02_requirements/features/` 下的 REQ-F 文档 | **不存在**（该目录只有 `README.md`） | 需求追溯改锚到 `mvp-scope.md` 条款号 + 设计源 v5.5 章节 + 决策 ID，见 `03 §2.1` |

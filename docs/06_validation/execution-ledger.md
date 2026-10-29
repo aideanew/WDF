@@ -237,3 +237,44 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 且角度 15° 的垂直偏移仅 ±1（`armLength=1`）对 60 的命中半径无实质影响，**命中实际只由蓄力时长决定**。
 不能说——真人命中率；那取决于力度条是否看得清、提示是否明确，只能真机实测。
 **红线三条**（D-52）：SIMULATED 不得当 4011 验收、不得宣称 C1 已达标、不得据此调 `target_dist`/`hitRadius`。
+
+## 11. PLAN-R4 三条裁决落账（2026-10-29，主控）
+
+`plan-v011` 提交时留了 3 条待裁决（D-54 / D-55 / D-56），用户当日全部拍板。本节是落账凭据。
+
+### 11.1 裁决内容与落账位置
+
+| 裁决 | 用户结论 | `decision-index.json` | 受影响卡片 |
+|---|---|---|---|
+| **D-54** | `Q1=B`（v1.0 出货**含**扩筏 UI）+ `Q2=A`（**浮力 = Σ `raft_tiles.capacity` − (船体地块自重 + 货重)**；`items.capacity` 一律归 0） | `status=DECIDED`、`decided_by=user`、`decided_at=2026-10-29`、`immediate_consequences` 4 条 | PD7-01（`BLOCKED`→`TODO`，`decisions` +`D-54`）、PD7-03（+`D-54`） |
+| **D-55** | `origin` 重指 `https://github.com/aideanew/WDF.git`；**token 吊销 + 凭据就位由用户执行，主控不生成/不接收/不落盘任何 PAT** | 同上；`token_policy` + `superseded_practice` 两字段 | 推送链路（无卡号） |
+| **D-56** | `B` —— 13 模块**不改** `hook` 参数（`target_dist`/`angle_deg`/`max_power_bp` 与 D-04 等值迁移值一律冻结），C 阶段据此解绑 C1 手感闸门 | 同上；`hard_condition` 字段写死冻结项 | PD7-10/11/14/15/16（各 +`D-56`） |
+
+### 11.2 复跑证据（每条命令都给输出要点）
+
+```bash
+# ① origin 已重指，且匿名可读（不带任何令牌）
+git remote get-url origin
+# → https://github.com/aideanew/WDF.git
+git fetch --prune origin
+# →    4e572fa..182e441  master     -> origin/master
+git rev-list --left-right --count origin/master...HEAD
+# → 0	0
+git ls-remote origin refs/heads/master
+# → 182e441392678379e3b4da4fd78477c5ca7c6671	refs/heads/master
+
+# ② 索引与治理体检
+node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health .
+# → 体检通过（0 错误）
+# ③ 令牌零落盘
+grep -rl "github_pat_" .git/config .product-development
+# → 无命中
+```
+
+### 11.3 这次没做的（明确记账，不当已完成）
+
+| 未做 | 原因 | 完成条件 |
+|---|---|---|
+| `git push` | 用户明令「在你吊销/换凭证前，我不推送、不落盘任何 token」 | 用户吊销 3 个 token 并把新 token 经非对话渠道写入 `~/.git-pat`（600）后告知"就绪" |
+| `npm run verify` / `guard` / `test` 全量 | 本轮只改 `docs/**` + `.product-development/task-index.json` + `decision-index.json`，未触被这三者覆盖的 `.ts`/`.csv`/`.sql`；按用户"单卡只跑它改到的测试、全量只在阶段出口"的原则不跑 | A 阶段出口时跑一次全量 |
+| PD7-01 的实际执行 | 属执行侧；本轮只做"解阻塞 + 卡面具体化" | 用户按卡开工 |

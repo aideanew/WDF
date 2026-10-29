@@ -179,7 +179,7 @@ review: 2026-11-23
 | PLAN-V011-07 | plan-v011 · 07 依赖 DAG 与所有权矩阵（含重叠处置） | active | 2026-11-12 | `04_planning/plan-v011/07-dag-ownership.md` |
 | PLAN-V011-08 | plan-v011 · 08 档位分配、成本预算与阶段体检协议 | active | 2026-11-12 | `04_planning/plan-v011/08-budget.md` |
 | PLAN-V011-09 | plan-v011 · 09 基线指标（含首次测量值与"尚无基线"清单） | active | 2026-11-12 | `04_planning/plan-v011/09-baseline-metrics.md` |
-| PLAN-V011-10 | plan-v011 · 10 风险 / 未决 / 待裁决（D-54~D-56） | active | 2026-11-12 | `04_planning/plan-v011/10-risks-pending.md` |
+| PLAN-V011-10 | plan-v011 · 10 风险 / 未决 / 已裁决（D-54~D-56） | active | 2026-11-12 | `04_planning/plan-v011/10-risks-pending.md` |
 | PLAN-V011-11 | plan-v011 · 11 落盘清单、自检结果、局限、第一刀 | active | 2026-11-12 | `04_planning/plan-v011/11-selfcheck.md` |
 | PLAN-V011-A | plan-v011 · 阶段 A（v1.0 合口）· 5 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-a-v10-close/00-stage.md` |
 | PLAN-V011-B | plan-v011 · 阶段 B（v1.1 数据解锁）· 4 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-b-v11-data/00-stage.md` |

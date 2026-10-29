@@ -39,7 +39,7 @@ related: [PLAN-V011-00, PLAN-V011-10]
 | 路径 | 改动 | 为什么必须改 |
 |---|---|---|
 | `.product-development/task-index.json` | +17 条任务、`plan_version` → `PLAN-R4`、`baseline_commit` → `4e572fa`、`replans[]` +1 条 | **R-8 已定 `.product-development/task-index.json` 是唯一权威索引**；FIX-24 的历史缺陷就是"卡没入索引" |
-| `docs/03_solution/decisions/decision-index.json` | +D-54 / D-55 / D-56（status `PROPOSED`） | 三条待裁决必须可被机器读到；`pd.mjs status` 现在会如实列出"待裁决决策：D-54；D-55；D-56" |
+| `docs/03_solution/decisions/decision-index.json` | +D-54 / D-55 / D-56，**已于 2026-10-29 全部转 `DECIDED`（`decided_by: "user"`、`decided_at: "2026-10-29"`）** | 三条待裁决必须可被机器读到；落账后 `pd.mjs status` 不再列出这三条 → 实测"无待裁决决策" |
 | `docs/04_planning/current-plan.md` | 现行规划指针改指 `plan-v011/00-README.md` | 否则它仍写着 "plan-v010 唯一现行"，与事实冲突（I-05 同类） |
 
 ### 13.3 刻意**没有**写的东西（以及不写的理由）
@@ -59,8 +59,8 @@ related: [PLAN-V011-00, PLAN-V011-10]
 | 检查项 | 结论 | 依据 |
 |---|---|---|
 | 每条 MUST 都能改写成一句可验证的话 | ✅ | `03 §2.1` 的 M-1~M-10 每条都给了"可验证改写"列 |
-| 冲突已全部列出，没有静默替用户决定 | ✅ | `03 §3` C-1~C-6；C-1/C-4 标 BLOCKING 交 D-54/D-56 |
-| BLOCKING 项已列出并给出条件方案，未擅自假设 | ✅ | `03 §4.1` B-1~B-5，每条都有 A/B 条件方案 |
+| 冲突已全部列出，没有静默替用户决定 | ✅ | `03 §3` C-1~C-6；C-1/C-4 原为 BLOCKING，**已由 D-54/D-56 裁决并回填结论**；C-2/C-3 已裁（D-50） |
+| BLOCKING 项已列出并给出条件方案，未擅自假设 | ✅ | `03 §4.1` B-1~B-5；B-1/B-2/B-5 **已裁**（D-54/D-55），B-3/B-4 仍开放且各有条件方案 |
 | 未为凑数伪造需求或方案 | ✅ | 4.4 的 MUST 全是已成立项，**没有转成任务卡**（`03 §2.1` 注） |
 
 ### 契约
@@ -105,7 +105,7 @@ related: [PLAN-V011-00, PLAN-V011-10]
 | 每个任务都标注建议档位与理由 | ✅ | `08 §2` 17 行 |
 | 成本预算表已给出 | ✅ | `08 §3`；含"券额度不够 → 拆批次而不是放宽额度" |
 | 基线指标有首次测量值，或明确标注"尚无基线" | ✅ | `09 §3.1` 9 项有数 / `09 §3.2` 6 项明确写"尚无基线" |
-| 风险/未决/待裁决已分开列出 | ✅ | `10 §1`（待裁决 D-54~56）/ `§2`（风险 R-1~R-8）/ `§3`（未决 U-1~U-5） |
+| 风险/未决/待裁决已分开列出 | ✅ | `10 §1`（已裁决 D-54~56 原文留痕）/ `§1.4`（12 条后果）/ `§2`（风险 R-1~R-8）/ `§3`（未决 U-1~U-5） |
 
 ### 纪律
 
@@ -132,6 +132,20 @@ git push                       # → 4e572fa..79b0930 HEAD -> master（aideanew/
 **未跑的检查（如实说明）**：`npm run verify`（用户明确"拒绝全量回归/门禁"）、`npm run test`、
 `npm run guard`。本版**未改任何被它们覆盖的文件**（无 `.ts`/`.csv`/`.sql` 改动），因此不跑是有依据的，不是省略。
 
+### 14.2 裁决落账后的复测（2026-10-29，替代 §14.1 中已过期的两条）
+
+```bash
+pd.mjs health .                              # → 体检通过（0 错误）
+pd.mjs status .                              # → 无待裁决决策（D-54/55/56 已 DECIDED，不再列出）
+git remote get-url origin                    # → https://github.com/aideanew/WDF.git
+git fetch --prune origin                     # → 4e572fa..182e441  master -> origin/master（全程无令牌）
+git rev-list --left-right --count origin/master...HEAD   # → 0	0
+git ls-remote origin refs/heads/master       # → 182e4413…（远端实时回读）
+```
+
+**未做且明知未做**：`git push`。原因是你明令"在你吊销/换凭证前，我不推送、不落盘任何 token"，
+本轮改动**只落本地 commit，不推送**。这是唯一一处"交付未完成"，且完成条件在你手上。
+
 ## §15 本次规划的前提与局限
 
 ### 15.1 前提（不成立则结论需重算）
@@ -150,40 +164,50 @@ git push                       # → 4e572fa..79b0930 HEAD -> master（aideanew/
 | L-3 | 无真机 → 6 项性能指标无基线 | `09 §4 M-1`：因此不排优化任务 |
 | L-4 | 契约第 4 项自检为否 | 见 §14 契约表的诚实说明 |
 | L-5 | B 阶段不能"演示给玩家看" | `06 §5` |
-| L-6 | 本次**已推送**到 `aideanew/WDF`（`79b0930`），但 `origin` 仍指向不可达的 `nevermeetagain/WDF` | `10 §D-55`：本地 `origin/master` 引用已过期，接手者若以它为"双端一致"依据会被误导 |
+| L-6 | ~~本次已推送到 `aideanew/WDF`，但 `origin` 仍指向不可达的 `nevermeetagain/WDF`~~ **已消除（2026-10-29）** | `origin` 已重指 `aideanew/WDF`，匿名 `fetch` 自证 `4e572fa..182e441` / `0	0`。**残余**：token 轮换未完成前不推送 → `10 §D-55` |
 
 ## §16 建议的第一刀与启动顺序
 
 ### 16.1 第一刀
 
-> **PD7-02（raft 规则接线与存档投影）** —— 不是 PD7-01。
+> **PD7-01（浮力口径落账与船体数据补全）** —— 与你宣布的执行起点一致。
 
-为什么跳过编号最小的卡：**PD7-01 卡在 D-54 裁决上**，而 PD7-02 的 80% 与浮力口径无关
-（存档 `modules.raft` 扩展、`canBuild/applyBuild` 的纯函数骨架、三条测试）。
-先做它可以让 A 阶段在等裁决期间也前进，且它不产生任何"需要推翻"的东西：
+> **口径变更（2026-10-29）**：本文件初稿建议"跳过 PD7-01 先做 PD7-02"，理由是"PD7-01 卡在 D-54 裁决上"。
+> **D-54 已裁（Q1=B / Q2=A），该理由失效**，且反过来成立：PD7-01 是 A 阶段唯一"改数据口径"的卡，
+> 它不定案，PD7-02 的 `canBuild(tiles, gold, price, capacity, weight)` 签名就是在猜。
+> **故第一刀改回 PD7-01**，PD7-02 紧随其后。
 
 ```bash
-# 第一刀的可执行序列（PD7-02）
-1. 读 packages/game-core/src/save/schema.ts + migrations.ts   （10 分钟）
-2. 写 canBuild / applyBuild 三个纯函数                         （2 小时）
-3. schema 加 modules.raft?: { tiles: number }；迁移补默认值    （30 分钟）
-4. 写 tests/determinism/raft.test.mjs 三条用例                 （1 小时）
-5. node --import ./tools/runtime/register.mjs --test tests/determinism/raft.test.mjs
-6. npm run typecheck:client
+# 第一刀的可执行序列（PD7-01）
+1. 读 decision-index.json 的 D-54.detail.q1/q2（裁决原文，别读 10 号的推理）   （10 分钟）
+2. 口径句原样抄进 docs/03_solution/data/config-tables.md                       （10 分钟）
+3. items.csv capacity 全列置 0（不删列）+ UNKNOWN-TABLES.md 写依据             （20 分钟）
+4. grep -rn "\.capacity" client/assets/scripts server/src packages/game-core/src  （10 分钟）
+   → 确认没有代码把 items.capacity 当浮力用；有命中就记录、不改代码
+5. raft_tiles.csv 补到 ≥2 种地块（第 2 种的数值必须找到出处，找不到就停）       （30 分钟）
+6. npm run gen                                                                 （2 分钟）
+7. raft-tiles.test.mjs 加两条断言（正算 + items.capacity 反证）                 （40 分钟）
+8. node tools/guard/placeholders.mjs → 更新 baseline（单独 git add + 单独 commit）
+9. node --import ./tools/runtime/register.mjs --test tests/determinism/raft-tiles.test.mjs
 ```
 
 ### 16.2 启动顺序（第一批 3 个写入者，符合"最多 3 个"）
 
 | 位 | 卡片 | Agent | 理由 |
 |---|---|---|---|
-| 1 | PD7-02 | Agent-Core | 不等裁决，A 段唯一可立即推进的实质工作 |
-| 2 | PD7-06 | Agent-Data | 成长簇是 C 段全部模块的参数根，越早越好；与 PD7-02 文件不相交 |
-| 3 | PD7-07 | Agent-Data | 与 06 同为数据但 CSV 不相交（`07 §3.2`），可并行 |
+| 1 | **PD7-01** | Agent-Data | **已解除阻塞**，A 段口径地基；不先定它，PD7-02 的签名靠猜 |
+| 2 | PD7-02 | Agent-Core | 纯函数 + 存档扩展，与 PD7-01 的 CSV 不相交；`raft/index.ts` 有 `crafting` 范式可抄 |
+| 3 | PD7-06 | Agent-Data | 成长簇是 C 段全部模块的参数根；CSV 与 PD7-01 不相交（`07 §3.2`） |
 
 **PD7-05**（海域）留作填充位：若上面任一张 `BLOCKED`，立刻换成它（它与任何卡都不重叠）。
+**PD7-03**（raft 建造面板）是主控独占卡，必须等 PD7-02 落地后才开，且**不进并行批**。
 
-### 16.3 需要用户先做的三件事（按紧急度）
+### 16.3 需要用户先做的三件事（**2026-10-29 更新：1 与 2 已完成**）
 
-1. **今天（10-29）**：软著提交（`lifecycle.md:33` 硬期限 ≤10-30）—— 代码侧无法验证，但它是微信提审的前置。
-2. **裁 D-54**（扩筏归属 + 浮力口径）—— 它卡住 PD7-01，进而卡住 PD7-03/04（A 段 3 张卡）。
-3. **给 D-55 的答案**（写权限 PAT 或"输出 zip"）—— 决定本次规划能否真正推送双端一致。
+| # | 事项 | 状态 |
+|---|---|---|
+| 1 | 软著提交（`lifecycle.md:33` 硬期限 ≤10-30） | **用户侧，仍开放**（`10 §U-5`），代码侧无法验证 |
+| 2 | ~~裁 D-54~~ | **✅ 已裁** Q1=B / Q2=A，PD7-01 可直接开工 |
+| 3 | ~~给 D-55 答案~~ | **✅ 目标已定**（`origin` 重指 `aideanew/WDF`，已执行并自证）；**残余只差一步**：吊销 3 个 token + 凭据就位后告知"就绪" |
+
+> **除此之外没有需要用户先做的事项。** A 阶段 5 张卡在本机可全速推进，只差"推送"这一个动作要等凭据。

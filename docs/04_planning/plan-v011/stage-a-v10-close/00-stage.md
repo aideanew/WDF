@@ -26,17 +26,22 @@ related: [PLAN-V011-06, PLAN-V011-07]
 - [ ] 3 张人工截图入 `docs/06_validation/evidence/EVD-7103/`（筏 Tab / 建成 / 拒绝态）
 - [ ] 本阶段改动的注释已同步（`BootController.ts:12`、`panel-types.ts:13`）
 
-## 3. 前置裁决
+## 3. 前置裁决（**2026-10-29 已全部裁完，本阶段无阻塞**）
 
-PD7-01 的 Q1/Q2 必须由 **D-54** 裁决后才能执行"数据改动"步骤；
-**但 PD7-02 可以不等待**（存档结构扩展与浮力口径无关），这是本阶段的解耦点。
+| 裁决 | 结果 | 对本阶段的影响 |
+|---|---|---|
+| **D-54** | `Q1=B`（v1.0 含扩筏 UI）+ `Q2=A`（浮力只看 `raft_tiles.capacity`） | PD7-01 **可以开工**；PD7-03 必须加第 7 个 Tab |
+| **D-56** | `B`（13 模块不改 `hook` 参数，C 阶段解绑 C1 闸门） | 对本阶段无影响（A 阶段本来就不受闸门约束） |
+| **D-55** | `origin` 已重指 `aideanew/WDF`；token 轮换由用户执行 | 用户告知"就绪"前**不推送**；不影响本地开工 |
+
+原设计里"PD7-02 可以不等待 D-54"这条解耦点**已失去意义**（D-54 已裁），PD7-01 与 PD7-02 均可直接开工。
 
 ---
 
 # PD7-01 浮力口径落账与船体数据补全
 
 - 阶段 / 角色 / 规划版本：A / planner+executor / PLAN-R4
-- 来源（E1）：`mvp-scope.md:16`（C2 核心工作）+ `glossary.md:41`（五环含扩）+ **D-54（待裁决）**
+- 来源（E1）：`mvp-scope.md:16`（C2 核心工作）+ `glossary.md:41`（五环含扩）+ **D-54（已于 2026-10-29 裁决：Q1=B / Q2=A）**
 
 ## 归属
 - 所属切片：SA-1（第一刀的前半步）
@@ -46,43 +51,51 @@ PD7-01 的 Q1/Q2 必须由 **D-54** 裁决后才能执行"数据改动"步骤；
 ## 目标
 `raft_tiles` 与 `items.capacity` 的语义有一句话的定论，且该定论被一条测试锁定。
 
+**裁决给出的定论（原样执行，不许改写）**：
+
+> 浮力 = Σ `raft_tiles.capacity` − (Σ 船体地块自重 + 货重)；`items.capacity` 一律归 0。
+
 ## 输入
-- 文档：`docs/04_planning/plan-v011/10-risks-pending.md §D-54`（裁决结果）
+- 文档：`10-risks-pending.md §D-54`（原选项与推理）+ `decision-index.json` 的 `D-54.detail.q1/q2`（**裁决原文，以此为准**）
 - 契约：无（纯数值 + 纯规则，不触 `packages/contracts/**`）
-- 前置任务：无（但"数据改动"步骤需 D-54 已裁）
+- 前置任务：无（D-54 已裁）
 - 前置状态：`npm run gen` 可跑通
 
 ## 输出
-- `game-data/source/raft_tiles.csv`（按裁决补地块种类；若 Q2=A 则只补"建一格"的原料映射）
-- `game-data/source/items.csv`（**仅 `capacity` 列**；Q2=A 时全部置 0 或删列）
-- `game-data/UNKNOWN-TABLES.md`（登记 capacity 语义的裁决出处）
+- `game-data/source/raft_tiles.csv`（补到**至少 2 种地块**，见步骤 4）
+- `game-data/source/items.csv`（**仅 `capacity` 列** → 全部置 `0`）
+- `game-data/UNKNOWN-TABLES.md`（登记 capacity 语义的裁决出处 = D-54）
 - `docs/03_solution/data/config-tables.md`（一行口径说明）
-- `tests/determinism/raft-tiles.test.mjs`（**已存在**，补一条断言）
+- `tests/determinism/raft-tiles.test.mjs`（**已存在**，补断言）
+- `tools/guard/placeholders.baseline.json`（**单独一个提交**，见步骤 7）
 
 ## Execution Steps
-1. [ ] 读 D-54 裁决原文，抄进 `config-tables.md` 的口径段落（**不写自己的解释**）
-2. [ ] 若 Q2=A：`items.capacity` 全列置 `0`，并在 `UNKNOWN-TABLES.md` 写"该列不参与浮力，保留列位以免破坏 schema"
-3. [ ] 若 Q2=B：**停止**，回到用户要 17 类物项的容量值（不许自编）
-4. [ ] 按裁决补 `raft_tiles` 行（若 Q1=B 且需要多种地块）
+1. [ ] 读 `decision-index.json` 的 `D-54.detail.q2` 原文，抄进 `config-tables.md` 的口径段落（**不写自己的解释、不改措辞**）
+2. [ ] `items.capacity` 全列置 `0`（**不删列**，保 schema 稳定），并在 `UNKNOWN-TABLES.md` 写一句：「该列不参与浮力（D-54 Q2=A），保留列位以免破坏 schema 与 gen 流程」
+3. [ ] `grep -rn "capacity" client/assets/scripts server/src packages/game-core/src` → 逐条确认**没有**任何代码把 `items.capacity` 当浮力用；有命中就先记进卡片 `review`，**改代码留给 PD7-02/03**
+4. [ ] 补 `raft_tiles.csv`：至少 2 种地块，第 2 种的 `capacity` 与建造成本**必须能在 D-54 或设计源里找到出处**；找不到 → **停**，写进 `UNKNOWN-TABLES.md` 并回上裁决（不许自编数值）
 5. [ ] `npm run gen`
-6. [ ] 在 `raft-tiles.test.mjs` 加断言：「给定 1 个 `raft_block`，`remainingBuoyancy()` 返回 `50 - 10 - cargoWeight`」
-7. [ ] 跑定向测试
+6. [ ] 在 `raft-tiles.test.mjs` 加断言：「给定 1 个 `raft_block`（capacity 50 / weight 10），`remainingBuoyancy()` 返回 `50 - 10 - cargoWeight`」；并加一条**反证断言**：把某个 `items` 的 `capacity` 设成 100，`remainingBuoyancy()` 结果**不变**
+7. [ ] `node tools/guard/placeholders.mjs` → 预期**新增同值命中**（`capacity` 从"部分非零"变"全 0"）→ 更新 baseline，**单独 `git add` + 单独 commit**
+8. [ ] 跑定向测试
 
 ## 验收标准
 - [ ] A1 `command`：`npm run gen && node --import ./tools/runtime/register.mjs --test tests/determinism/raft-tiles.test.mjs` → 全 PASS
-- [ ] A2 `command`：`node tools/guard/placeholders.mjs` → **无 baseline 外新增命中**（若 `items.capacity` 从"部分非零"变为"全 0"，会**新增**同值命中 → 必须同步更新 baseline 并单独提交）
+- [ ] A2 `command`：`node tools/guard/placeholders.mjs` → **无 baseline 外新增命中**（步骤 7 已更新 baseline 且单独提交）
 - [ ] A3 `file`：`docs/03_solution/data/config-tables.md` 里能搜到"浮力 = "开头的唯一口径句
 - [ ] A4 `review`：`raft_tiles.csv` 每一行都能在 D-54 或设计源里找到出处
+- [ ] A5 `command`：`grep -rn "\.capacity" client/assets/scripts packages/game-core/src` → 命中全部与 `raft_tiles` 有关，**无** `items.capacity`（对应 `10 §R-1'`）
 
 ## 验证命令
 ```bash
 npm run gen
 node --import ./tools/runtime/register.mjs --test tests/determinism/raft-tiles.test.mjs
 node tools/guard/placeholders.mjs
+grep -rn "\.capacity" client/assets/scripts packages/game-core/src
 ```
 
 ## 证据路径
-`docs/06_validation/evidence/EVD-7101/`（D-54 原文摘录 + gen 输出 + 测试输出 + placeholders 前后对比）
+`docs/06_validation/evidence/EVD-7101/`（D-54 原文摘录 + gen 输出 + 测试输出 + placeholders 前后对比 + A5 的 grep 输出）
 
 ## 允许修改
 - `game-data/source/raft_tiles.csv`、`game-data/source/items.csv`（**仅 capacity 列**）
@@ -95,15 +108,15 @@ node tools/guard/placeholders.mjs
 - 任何 `.ts` 业务代码
 
 ## 依赖与阻塞
-- Depends on：**D-54 裁决**（BLOCKING）
+- Depends on：无（**D-54 已裁**）
 - Blocks：PD7-02、PD7-03、PD7-04
-- 阻塞条件：D-54 未裁 → 只做步骤 1、4（不改数据），其余停下
+- 残余阻塞：仅步骤 4 若"第 2 种地块的数值找不到出处"→ 局部 `BLOCKED`，其余步骤照常完成
 
 ## 建议执行档位
 `opus`　理由：改的是语义口径不是代码，错一次全链返工。
 
 ## 升级条件
-D-54 选 Q2=B（需逐类给容量）→ 升 `fable`，由用户逐类裁决。
+~~D-54 选 Q2=B~~ **已排除**（Q2=A）。若步骤 4 发现设计源对"第 2 种地块"完全无描述 → 升 `fable` 由用户给值。
 
 ## 预估规模
 小（半天）
@@ -171,7 +184,9 @@ node tools/guard/run-all.mjs        # 只关心 game-core 纯度与 generated �
 ## 依赖与阻塞
 - Depends on：PD7-01
 - Blocks：PD7-03、PD7-04
-- 阻塞条件：`canBuild` 需要"建一格的原料/价格"，若 D-54 未定 → 用 `prices` 里 `item_0072` 的 `base_price`（NB-1 假设），并在卡面注明假设
+- 阻塞条件：无。D-54 已裁（Q2=A → 浮力只看 `raft_tiles.capacity`），`canBuild` 的签名直接用
+  `(tiles, gold, price, capacity, weight)`；建一格的价格取 `prices` 表 `item_0072` 的 `base_price`
+  （NB-1 假设，尚未被裁决覆盖 → **在卡面与 `UNKNOWN-TABLES.md` 同时注明这是假设**，见 `10 §U-1`）
 
 ## 建议执行档位
 `sonnect`　理由：纯函数 + 存档扩展，`raft/index.ts` 与 `crafting` 都有范式可抄。
@@ -188,6 +203,7 @@ node tools/guard/run-all.mjs        # 只关心 game-core 纯度与 generated �
 
 - 阶段 / 角色 / 规划版本：A / planner（主控本人）/ PLAN-R4
 - 来源（E1）：`mvp-scope.md:16`（C2）+ `MainView.ts:27-34`（6 Tab 无筏体）
+- **D-54 已裁 Q1=B**：v1.0 出货**含**扩筏 UI → 本卡不是可选项，是 A 段出口的必要条件
 
 ## 归属
 - 所属切片：SA-1（收口刀）

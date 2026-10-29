@@ -646,10 +646,10 @@
     },
     {
       "id": "D-54",
-      "title": "扩筏归属与浮力口径：v1.0 出货是否含扩筏 UI + items.capacity 是否参与浮力（待用户裁决）",
-      "status": "PROPOSED",
-      "decided_by": null,
-      "decided_at": null,
+      "title": "扩筏归属与浮力口径：v1.0 含扩筏（Q1=B）；浮力只看 raft_tiles.capacity（Q2=A）",
+      "status": "DECIDED",
+      "decided_by": "user",
+      "decided_at": "2026-10-29",
       "kind": "product",
       "file": "docs/04_planning/plan-v011/10-risks-pending.md",
       "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-54",
@@ -661,18 +661,25 @@
       "supersedes": null,
       "superseded_by": null,
       "detail": {
-        "blocking": true,
-        "question_1": "v1.0 含不含扩筏 UI：A 不含（五环改四环，A 阶段降级 v1.1）/ B 含（本规划默认）",
-        "question_2": "浮力怎么算：A 只看 raft_tiles.capacity / B = items.capacity 之和 + raft_tiles 加成（需补 36 类物项容量，无源）/ C 只把 chest 的 20/40/60 归 0",
-        "evidence": "glossary.md:41 定义五环含扩；decision-index D-50.detail.modules_v11 无 raft；client/assets/scripts/features/raft 共 18 行；MainView.ts:27-34 六 Tab 无筏体；items.csv capacity=0 共 103 行、非零 3 行全为 chest"
+        "q1": "B —— v1.0 出货含扩筏 UI。理由：mvp-scope.md:16 把 C2（捞—做—扩）定为「必须最先证明」的核心工作，删掉「扩」等于删掉核心工作的一环；且 glossary.md:41 的五环口径本已含扩。",
+        "q2": "A —— 浮力 = Σ raft_tiles.capacity − (Σ 船体地块自重 + 货重)；items.capacity 一律归 0，语义改为「保留列位、不参与浮力计算」。",
+        "q2_why": "唯一不需要补任何新数值即可自洽的口径（items 的 17 类 facility / 19 类 material 在设计源里没有容量值，Q2=B 必须逐类补值；Q2=C 只修 chest 却回答不了「箱子凭什么给浮力」）。",
+        "immediate_consequences": [
+          "items.csv capacity 3 行非零（chest 20/40/60）判定为误填，PD7-01 一并归 0",
+          "items.capacity 归 0 后会产生一条 baseline 外的同值命中 → PD7-01 必须同步更新 placeholders.baseline.json 并单独提交",
+          "raft/index.ts 的 remainingBuoyancy() 签名不变（仍是 hull[]+cargoWeight），但 hull 的入参只来自 raft_tiles 投影，不再混入 items",
+          "glossary.md:41 的五环口径维持不变（无需改），project-structure 与 config-tables 各补一句口径说明"
+        ],
+        "registered_new_code": false,
+        "evidence": "glossary.md:41；decision-index D-50.detail.modules_v11 无 raft；client/assets/scripts/features/raft 共 18 行；MainView.ts:27-34 六 Tab 无筏体；items.csv capacity 103×0 + 3×(20/40/60) 全为 chest 类；raft_tiles 1 行 capacity=50 weight=10"
       }
     },
     {
       "id": "D-55",
-      "title": "本版推送目标与凭据：nevermeetagain/WDF 的写权限 PAT（本次 git fetch 缺凭据失败）",
-      "status": "PROPOSED",
-      "decided_by": null,
-      "decided_at": null,
+      "title": "推送目标定为 aideanew/WDF，origin 重指；token 轮换由用户执行，主控不持有任何 token",
+      "status": "DECIDED",
+      "decided_by": "user",
+      "decided_at": "2026-10-29",
       "kind": "product",
       "file": "docs/04_planning/plan-v011/10-risks-pending.md",
       "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-55",
@@ -681,27 +688,24 @@
       "supersedes": null,
       "superseded_by": null,
       "detail": {
-        "blocking": false,
-        "need": "对 nevermeetagain/WDF 有写权限的 fine-grained PAT，或确认凭据管理器已可用",
-        "fallback": "按用户指令输出 zip 规划包并说明未推送",
-        "evidence": "git fetch origin → fatal: could not read Username for 'https://github.com'；origin/master HEAD = 4e572fa 与本地同 SHA",
+        "ruling": "origin 重指 https://github.com/aideanew/WDF.git（公开、可写、可匿名 ls-remote 校验）；nevermeetagain/WDF 判定不可用，不作为目标。",
+        "token_policy": "主控不生成、不接收、不落盘任何 PAT。轮换由用户在 GitHub 侧吊销并重建；新 token 若需落盘，由用户自己写入 ~/.git-pat（600），主控只在用户告知「就绪」后读取使用。",
+        "why": "① PAT 无法由主控创建或吊销（GitHub 侧动作）；② 令牌落在对话或仓库里都属泄露面；③ origin 重指与凭据无关，可先行完成并以匿名 ls-remote 自证。",
+        "verification": "git remote get-url origin → aideanew/WDF；git fetch --prune origin（匿名）→ origin/master 与远端一致；git rev-list --left-right --count origin/master...HEAD → 0 0",
         "investigation": {
-          "at": "2026-10-29",
           "nevermeetagain_anon": "fatal: could not read Username（非公开）",
-          "nevermeetagain_with_pat": "remote: Repository not found（给定 PAT 看不到）",
-          "aideanew_public": "ls-remote 返回 4e572fa…（公开且可写）",
-          "pushed_to": "aideanew/WDF master 4e572fa..79b0930，远端回读 = 79b0930",
-          "origin_url_unchanged": "origin 仍指 nevermeetagain/WDF；本地 origin/master 引用（4e572fa）已过期",
-          "token_persisted": "否（grep .git/config .product-development → 0 命中）"
-        }
+          "nevermeetagain_with_pat": "remote: Repository not found",
+          "aideanew_anon": "ls-remote 返回 182e441（公开可写）"
+        },
+        "superseded_practice": "此前用命令行内联 token 推送（未落盘）的做法在轮换完成前暂停"
       }
     },
     {
       "id": "D-56",
-      "title": "C 阶段是否解绑 C1 手感闸门（mvp-scope:19「C1 未达标前不扩展新系统」）",
-      "status": "PROPOSED",
-      "decided_by": null,
-      "decided_at": null,
+      "title": "C 阶段解绑 C1 手感闸门（方案 B）：13 个模块均不改 hook 手感参数，闸门以「不新增钩/捞玩法」的形式继续有效",
+      "status": "DECIDED",
+      "decided_by": "user",
+      "decided_at": "2026-10-29",
       "kind": "product",
       "file": "docs/04_planning/plan-v011/10-risks-pending.md",
       "source": "docs/04_planning/plan-v011/10-risks-pending.md#D-56",
@@ -716,13 +720,11 @@
       "supersedes": null,
       "superseded_by": null,
       "detail": {
-        "blocking": true,
-        "options": [
-          "A 严格守闸门（C 阶段停摆等真机）",
-          "B 只解绑数据类与不改手感参数的模块（建议；13 个模块均不改 hook 参数）",
-          "C 完全解绑（闸门作废）"
-        ],
-        "evidence": "mvp-scope.md:15/19 要求真机真人命中率；D-52.red_lines 禁止用 SIMULATED 60% 冒充"
+        "ruling": "B —— 允许 PD7-10~PD7-16 在 B 阶段数据就绪后开工，前提是这些卡不修改 hook 的出钩手感参数。",
+        "hard_condition": "hook 的 target_dist / angle_deg / max_power_bp 与 D-04 等值迁移值一律冻结；任何一张 C 阶段卡若需要改这三项，该卡立即停止并回到闸门讨论（等同于闸门触发）。",
+        "why": "mvp-scope.md:19 的闸门原意是「手感没调好之前不堆系统」；C 阶段 13 个模块没有一个改动 hook 参数（achievement 系统、员工、电力、广告载体、榜单维度、赶海、塔防、轻玩法均不触碰出钩物理），因此技术上与闸门不冲突。",
+        "gate_still_open": "C1 真机命中率仍无数据（D-52 禁止用 SIMULATED 60% 冒充），闸门对「新增钩/捞玩法」依然生效，对「不改手感的系统补齐」解绑。",
+        "evidence": "mvp-scope.md:15/19；D-52.red_lines 第 2 条；game-data/source/hooks.csv 单行 hook_default 全程不改"
       }
     }
   ]
