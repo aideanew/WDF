@@ -25,7 +25,7 @@ review: 2026-11-29
 
 ## 验收（可复跑）
 
-**① 集成测试（4 例，内存库）**——完整输出见 `ops-region-test.txt`，`node --import ./tools/runtime/register.mjs --test tests/integration/ops-region.test.mjs`：
+**① 集成测试（7 例，内存库）**——完整输出见 `ops-region-test.txt`，`node --import ./tools/runtime/register.mjs --test tests/integration/ops-region.test.mjs`。原 P5 时点覆盖 AT-1401-1~4；P6-01 新增 **AT-1401-5/6/7**（FIX-27 / FIX-29）：
 
 | 例 | 断言 | 结果 |
 |---|---|---|

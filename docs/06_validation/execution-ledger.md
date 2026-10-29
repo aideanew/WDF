@@ -112,7 +112,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
    - **本次不擅自改名**：改名会违反 plan-v005 的证据命名规范，且 plan-v005/v005 文档里的 `ls` 判据全是按 `README.md` 写的。
    - **建议**：把 `docs-index.mjs` 的跳过条件从"文件名等于 README.md"收窄为"目录下无其他 md 的落地页"，或给 EVD 目录开白名单。属工具改动，需单独一次提交 + 突变验证，不混在本批。
 
-## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-31）
+## 9. 2026-10-28 二轮体检：缺陷台账（FIX-1~FIX-33）
 
 > 来源：主控按"规划者"角色对全仓做的实证盘查（非功能缺口，全部是**可验证的缺陷**）。
 > 处置拆分见下批派工单 W1~W4。**本节状态以 §9 表格为准**（下方 W5 更正段已覆盖初版口径：
@@ -153,6 +153,8 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-29 | P3 | `openRegion` 的 `ON CONFLICT (id) DO UPDATE` 含 `opened_at = now()` → 重开同一区把「首次开区时间」冲成现在；`opened_at` 应为只写一次字段 | `server/src/modules/ops/repo.ts:25` | ✅ P6-02（去掉 `opened_at = now()`，只更新 name/status/is_current；AT-1401-7 验证重开 `opened_at` 不变） |
 | FIX-30 | P3 | 登记（不派工）：ops 用 SQL 直接 `UPDATE player`（注释自陈「SQL 级，非跨模块 import」；守卫只查 import 所以能过）——更干净做法是 account 暴露 `banPlayer` 供 ops 调 | `server/src/modules/ops/repo.ts:31-38` | 📌 登记，后续由 account 暴露 `banPlayer` |
 | FIX-31 | P3 | 登记（不派工）：两个 CLI（open-region/ban-player）无 `--help` 分支；PGlite 单写锁冲突时无「先停 dev:server」友好提示（`hook-hitrate.mjs` 有，可照抄） | `server/src/modules/ops/{open-region,ban-player}.mjs` | 📌 登记 |
+| FIX-32 | P2 | **证据陈旧**（病症⑤用证据固化 bug）：`EVD-1401/README.md:28` 标题写「4 例」（表格实际 7 行）；`TASK-1401.md:85` 验收写「4/4、235/235」；`task-index.json` 的 `TASK-1401.execution.evidence` 写「（4 例）」、`note` 写「4/4、235/235」——证据数字比实际**少**，按证据对账会以为只覆盖 4 例 | `EVD-1401/README.md:28`；`TASK-1401.md:85`；`task-index.json` TASK-1401 | ✅ PD5-01（订正为 7/7、238/238；TASK-1401.md 保留 P5 时点原文，文末补 P6 补验节） |
+| FIX-33 | P2 | **PUSHED 记录说谎**：`TASK-1401.execution.pushed_head = 1d34fc6`，而 `commits[]` 已含 `7c587cf`、HEAD 已 `48031e7`；`pushed:true` 让 `pd.mjs status` 不报「未同步」——记录不是缺失，是**停在旧 commit**，比缺失更难发现 | `task-index.json` TASK-1401 | ✅ PD5-01（pushed_head → `48031e7` 全哈希，commits 补 `48031e7`） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 
