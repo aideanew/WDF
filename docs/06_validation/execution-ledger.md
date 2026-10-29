@@ -137,7 +137,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-13 | P1 | **启动页标题写的是另一个项目的名字**：`'奖励一颗麻籽'`。全仓仅这一处代码命中，且 `EVD-3101` 把这个错误写成了"验收预期" | `BootController.ts:30`；`EVD-3101/README.md:25` | ✅ 本批修正 |
 | FIX-14 | P1 | 两处 UI 注释仍描述 W2-2 之前的旧行为（"ERR.SYSTEM 造错、code 可能 undefined"），实际已是 `NET_CODE_OFFLINE=-1`、code 恒 number | `LeaderboardModel.ts:84-85`、`SaveSyncModel.ts:224` | ✅ W5-4 `a1b662c` |
 | FIX-15 | P2 | W2-1 收窄 README 跳过规则后，evidence 目录自己的落地页 `evidence/README.md`（无 front matter id）被纳入索引并显 ⚠缺 | `docs-index.mjs:12` | ✅ W5-1 `4fecfd9`（精确排除） |
-| FIX-16 | P2 | `time` 时间源：客户端经 `RpcClient` 每次真实响应 `syncFromResponse` 校准服务器偏移（`RpcClient.ts:2,109`），但时间消费侧是否统一走该偏移的**口径未成文**，登记追踪 | `client/assets/scripts/services/time/`；`RpcClient.ts:2,109` | 📋 已登记（W5-5，未关闭） |
+| FIX-16 | P2 | `time` 时间源：客户端经 `RpcClient` 每次真实响应 `syncFromResponse` 校准服务器偏移（`RpcClient.ts:2,109`），但时间消费侧是否统一走该偏移的**口径未成文**，登记追踪 | `client/assets/scripts/services/time/`；`RpcClient.ts:2,109` | ✅ 已收口（PD1-04，2026-10-29）：口径已成文——当前所有客户端业务时间判定均为**本地相对计时**（Hook 蓄力/飞行手感、Leaderboard 3000ms 本地节流）或**存档时间戳**（服务端 `serverNow` 覆盖，`save.service.ts:70,86`），**无需与服务器时钟对齐**；`time.now()` 偏移机制已就绪（`RpcClient.ts:109` 校准），待未来出现需与服务器时间对齐的业务（冷却/活动）时接入 |
 | FIX-17 | P1 | W5-5 的 docs-index 突变测试直接写仓库（动态建/删 EVD-TMP），违反测试纯净性 | `tests/contract/docs-index.test.mjs` | ✅ W6-1 `8524298`（改纯函数测试，测试不再写仓库） |
 | FIX-18 | P2 | 台账 §9 自相矛盾：正文称「FIX-9 未派工」，表格又给「已收口」；标题 FIX-1~FIX-16 与实收口数不符 | `execution-ledger.md` §9 | ✅ W6-2 `09eb30d`（矛盾行改历史注记并作废，标题更正） |
 | FIX-19 | P2 | `hook-hitrate.mjs` `resolve2` 用 `join(ROOT, p)`，绝对路径被拆坏 | `tools/sample/hook-hitrate.mjs:46` | ✅ PD1-01 `c030904`（改 `isAbsolute ? p : resolve(ROOT, p)`，实测 `--from E:/tmp/s.jsonl` EXIT=0） |
