@@ -55,6 +55,35 @@
       ],
       "evidence": "docs/06_validation/execution-ledger.md#4",
       "note": "4016 收官+4004 补测：guard 9/9，tests 219/219，tsc 0（determinism 128/契约 27/集成 63/e2e 1）"
+    },
+    {
+      "id": "TR-20261029001701-PD1-90",
+      "at": "2026-10-29T00:17:01Z",
+      "scope": "phase",
+      "kind": "stage-review",
+      "target": "PD1-90",
+      "result": "PASS",
+      "commit": "883af6f17c93f8693b1c1f025468e7884890f026",
+      "dirty": false,
+      "covers_paths": [
+        "tools/guard/placeholders.mjs",
+        "tools/guard/placeholders.baseline.json",
+        "tools/guard/run-all.mjs",
+        "tools/sample/hook-hitrate.mjs",
+        "docs/06_validation/execution-ledger.md"
+      ],
+      "fingerprint": "sha256:722da5008af0c484bd35450fb1b730dd",
+      "commands": [
+        "npm run verify && node tools/guard/placeholders.mjs && node tools/sample/hook-hitrate.mjs --help"
+      ],
+      "evidence": "docs/06_validation/execution-ledger.md",
+      "covers_tasks": [
+        "PD1-01",
+        "PD1-02",
+        "PD1-03",
+        "PD1-04"
+      ],
+      "tester": "tester"
     }
   ]
 }
