@@ -123,8 +123,11 @@ related: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0005, ADR-0006]
 | ops（内部） | 开关、配置发布、封禁、回滚 | — |
 
 ### 5.3 数据库（ADR-0004，accepted：PostgreSQL 单库，Redis 暂不上）
+> 本节描述**目标态**；**已建表以 `server/db/migrations/` 为唯一事实源**（实测 `0001_init.sql` 建 13 张 + `0002_regions.sql` 建 1 张 = 14 张）。未建 7 张属 **D-50**（v1.1 延期范围）的设计意向，本 v1.0 尚未建表。
+
 - 事务、唯一约束、行锁天然适合“物资流水 + 幂等 + 赛季结算”；`jsonb` 存存档快照；分区表存收益事件。
-- 主要表：`player`、`identity`、`bind_ticket`、`save_snapshot`、`save_fork`、`ledger_entry`、`idempotency`、`income_event`（按日分区）、`income_daily`、`season`、`leaderboard_snapshot`、`title_award`、`event_session`、`event_result`、`daily_quota`、`chat_message`（TTL）、`report`、`ban`、`config_release`、`audit_log`。
+- **已建（14 张，0001+0002）**：`player`、`identity`、`bind_ticket`、`save_snapshot`、`save_fork`、`idempotency`、`ledger_entry`、`daily_quota`、`income_daily`、`leaderboard_snapshot`、`event_session`、`config_release`、`audit_log`、`regions`。
+- **未建（7 张，设计意向，D-50 v1.1 范围）**：`income_event`（按日分区）、`season`、`title_award`、`event_result`、`chat_message`（TTL）、`report`、`ban`。
 - 排行读快照表（定时生成），不在线排序；Redis 暂不上（ADR-0004），压测不达标再加 ZSET，不改接口。
 
 ### 5.4 定时任务
