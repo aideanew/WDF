@@ -147,6 +147,7 @@ related: [EVD-4002, EVD-4012, PLAN-V003-00, PLAN-V010-00, EXEC-BRIEF-0003]
 | FIX-23 | P1 | FIX-17~20 四条缺陷未写入任何权威文件，只存在于提交信息，违反 pds 底线 2「行为留痕」 | 全仓 grep `FIX-17/18/19/20` 在 `docs/` 零命中 | ✅ 本卡（§9 追加 FIX-17~23 七行） |
 | FIX-24 | P1 | **PLAN-R1 的 14 张卡（PD0-01~PD4-01）从未进入权威任务索引，也没有卡面**：`task-index.json` 只有 52 张历史卡（`plan_version` 却写 `PLAN-R1`），`pd.mjs status` 报「共 52 张、完成 33」，`pd.mjs next` 把 17 张历史卡当就绪卡派工 → 本轮所有「收口」在 pds 里不存在，只是聊天记录 | `.product-development/task-index.json`；`docs/05_execution/tasks/`（无 PD-*.md） | ✅ PLAN-R2（补 14 条 + 14 份卡面到 `.product-development/tasks/`，`paths.task_cards` 同步改指） |
 | FIX-25 | P1 | **测试台账用了非法枚举**：`result: "PARTIAL-AUTOMATED"` 不在 `RESULT=['PASS','FAIL','UNKNOWN']` 内 → `pd.mjs health` 报错「体检未通过：1 个错误」，即执行侧声称「10 张卡 done、verify EXIT=0」时 health 实际是红的；另有 6 条 `evidence` 写成 `execution-ledger.md#4` 锚点，被当文件路径判「证据文件不存在」 | `docs/06_validation/pd/test-ledger.json`；`pd.mjs:173` | ✅ PLAN-R2（`original_result` 保留原文，`result` 更正为 `PASS` + `scope_limit=automated-only` + `unverified` 三项；6 条 evidence 去锚点 → health 0 错误 52 提醒） |
+| FIX-26 | P2 | **`pd.mjs next` 报 8 张就绪卡，其中 6 张不该开工**：4 张已实现（0103/0106/0108/4020）、1 张已被替代（0202 → 2102）、1 张属 v1.1（1301，`titles` 在 D-50 的 31 张空表内）；成因是历史卡 front matter 的 `status` 从未随交付更新，索引长期失真 | `.product-development/task-index.json`（0103/0106/0108/4020 原 `TODO`、0202 原 `TODO`、1301 原 `TODO`） | ✅ P5-01 `ee25a19→`（4 张 DONE + 1 张 SUPERSEDED + 1 张 BLOCKED，`next` 只剩 TASK-1401/4013；每条 `execution.evidence` 落到文件:符号级） |
 
 ### FIX-13 详情（2026-10-28 用户提问触发）
 

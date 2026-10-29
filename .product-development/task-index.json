@@ -41,7 +41,7 @@
       "title": "契约类型补缺（G-06 / G-07 / 命名核对）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -66,7 +66,10 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "evidence": "packages/contracts/src/index.ts:8,9（export * as event/social；event 6 类型、social 4 类型）",
+        "no_change_reason": "P5-01 回顾收口（2026-10-29）：实际已交付，仅补正索引 status；提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
     },
     {
       "id": "TASK-0104",
@@ -141,7 +144,7 @@
       "title": "本地存档读写与校验（杀进程可恢复）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -166,7 +169,10 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "evidence": "client/assets/scripts/services/save/LocalSave.ts:34,60,74（revision/seal/checksum + 三平台 storage）",
+        "no_change_reason": "P5-01 回顾收口（2026-10-29）：实际已交付，仅补正索引 status；提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
     },
     {
       "id": "TASK-0107",
@@ -207,7 +213,7 @@
       "title": "Boot 场景控制器 + 统一 RPC 客户端 + 错误展示",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -232,7 +238,10 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "evidence": "client/assets/scripts/app/BootController.ts:36,61,64（compliance→login→MainView 已串）",
+        "no_change_reason": "P5-01 回顾收口（2026-10-29）：实际已交付，仅补正索引 status；提交见 git log（消息含卡号），本索引不逐一回溯"
+      }
     },
     {
       "id": "TASK-0201",
@@ -273,7 +282,7 @@
       "title": "HookView 表现层（力度条 / 飞行 / 回手 / 命中反馈）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "SUPERSEDED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -298,7 +307,10 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "evidence": "原卡验收由 TASK-2102 交付（2026-10-29 回顾收口）"
+      },
+      "superseded_by": "TASK-2102"
     },
     {
       "id": "TASK-0802",
@@ -437,7 +449,7 @@
       "title": "称号展示（榜单位 + 个人信息区）",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "BLOCKED",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -462,7 +474,8 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {},
+      "blocked_reason": "范围移出：titles/title_award 属 D-50 的 31 张 v1.1 空表（2026-10-29 规划者裁决）"
     },
     {
       "id": "TASK-1401",
@@ -1735,7 +1748,7 @@
       "title": "RpcClient 自动补齐 rid",
       "phase": "LEGACY",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [],
       "priority": 99,
@@ -1760,7 +1773,10 @@
         "targeted": []
       },
       "legacy_ids": [],
-      "execution": {},
+      "execution": {
+        "evidence": "client/assets/scripts/services/net/RpcClient.ts:88-91（act.idempotent && !finalRid → finalRid = uuid()）",
+        "no_change_reason": "P5-01 回顾收口（2026-10-29）：实际已交付，仅补正索引 status；提交见 git log（消息含卡号），本索引不逐一回溯"
+      },
       "source_note": "原索引 draft（RpcClient 自动补齐 rid，未完成）"
     },
     {
