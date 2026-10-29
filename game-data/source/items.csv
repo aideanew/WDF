@@ -63,9 +63,9 @@ item_0061,水下探照灯,tool,850,3,0,99,true,0
 item_0062,望远镜,tool,456,3,0,99,true,0
 item_0063,烟雾罐,tool,65,3,0,99,true,0
 item_0064,火罐,tool,254,3,0,99,true,0
-item_0065,木箱,chest,60,3,20,99,true,0
-item_0066,铜箱,chest,864,3,40,99,true,0
-item_0067,铁箱,chest,518,3,60,99,true,0
+item_0065,木箱,chest,60,3,0,99,true,0
+item_0066,铜箱,chest,864,3,0,99,true,0
+item_0067,铁箱,chest,518,3,0,99,true,0
 item_0068,铁锁,lock,259,3,0,99,true,0
 item_0069,铜锁,lock,712,3,0,99,true,0
 item_0070,银锁,lock,3440,3,0,99,true,0

@@ -65,3 +65,22 @@ test('raft-t 6 rooms 为设计源室内房间类型注册表', () => {
   for (const r of rooms) assert.ok(r.name && r.name.trim().length > 0, `${r.id} name 非空`);
   for (const r of rooms) assert.ok(/DS /.test(r.note ?? ''), `${r.id} note 应含设计源引用`);
 });
+
+// ── PD7-01（D-54 Q2=A）追加：把「浮力口径」锁进公式，防日后有人把 items.capacity 当浮力 ──
+test('raft-t 7 正算：1 块筏块（capacity50/weight10）→ 剩余浮力 = 50−10−货重（D-54 Q2=A 口径）', () => {
+  // D-54 Q2=A：浮力 = Σ raft_tiles.capacity − (Σ 船体地块自重 + 货重)。1 块筏块载 30 货重：
+  const hull = [{ capacity: 50, weight: 10 }];
+  assert.equal(remainingBuoyancy(hull, 30), 50 - 10 - 30);
+});
+
+test('raft-t 8 反证：remainingBuoyancy 不读 items.capacity（D-54 Q2=A，只认 Load[] 入参）', () => {
+  // 用内存构造的 Load[]，不读 items.csv（坑二：读 items.csv 测的是数据文件不是公式）。
+  // D-54 Q2=A 判 items.capacity「不参与浮力」。若公式日后被改成查 items.capacity，则它要么
+  // import items（违反 game-core 纯度），要么改签名——两者本测试都会暴露。此处显式断言：
+  // 结果只由传入 Load[] 决定，与 items 表无关：把 Load.capacity 从 50 换成 100，结果按
+  // Load.capacity 线性变化（50−10−40 → 100−10−40），证明读的是 Load.capacity 而非外部表。
+  const base = [{ capacity: 50, weight: 10 }];
+  assert.equal(remainingBuoyancy(base, 40), 50 - 10 - 40);
+  const inflated = [{ capacity: 100, weight: 10 }]; // 模拟「把 items.capacity 设成 100」
+  assert.equal(remainingBuoyancy(inflated, 40), 100 - 10 - 40);
+});
