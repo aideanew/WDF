@@ -3273,7 +3273,7 @@
       "title": "生产簇数据（jobs/foods/crew_traits/generators/consumers + facilities）",
       "phase": "P7",
       "role": "executor",
-      "status": "TODO",
+      "status": "DONE",
       "detail": "READY",
       "areas": [
         "data"
@@ -3336,7 +3336,12 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "status": "DONE",
+        "completed_at": "2026-10-29",
+        "note": "PD7-07 生产簇数据落账：jobs 7 岗位（§5.3:421-430，produces 有源仅铁匠/机械师 §5.3:437，其余留空）；foods 6 食物项（§5.2:413）；crew_traits 幸福感 4 项（§5.3:460-464，max_value=25/step=5 设计同值）；generators 3 种发电（§6:471-474,481，output_ratio 1:3:10）；consumers 5 耗电设备（§6:470,478,479，power_draw 无源留空）。schema 增列 4 处（draft，随 c0c3c35）。无源字段登记 UNKNOWN-TABLES.md 三之三（B-L5）。crew-power 测试 7/7 PASS（含 A3 外键）。placeholders EXIT=0（空表 31→25；crew_traits.max_value/step 为设计同值误报待 PD7-09，baseline 未动遵守 forbidden_paths）。gen configVersion=07d5051fe14cb68d（46 表/497 行）。未推送（token 轮换待用户，就绪前不推）。",
+        "evidence": "docs/06_validation/evidence/EVD-7107/"
+      }
     },
     {
       "id": "PD7-08",
