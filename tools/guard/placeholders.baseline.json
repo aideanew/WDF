@@ -1,20 +1,20 @@
 {
-  "comment": "占位值/空表基线（FIX-21/R-7，2026-10-28 PD1-02；2026-10-29 PD7-01 更新）。记录 v1.0 当前实测债务：6 项同值 + 31 张空表。规则：命中在 baseline 内只报告不阻断；出现 baseline 外的新命中即红（exit 1）。改动本文件需单独提交并附实测依据。PD7-01 将 items.capacity 归 0（D-54 Q2=A：该列不参与浮力，保留列位），故新增该同值条目。",
-  "recorded_at": "2026-10-29",
+  "comment": "占位值/空表基线（FIX-21/R-7，2026-10-28 PD1-02；2026-10-29 PD7-01 更新；2026-10-30 PD7-09 收口更新）。记录 v1.0 当前实测债务：10 项同值 + 6 张设计空表。规则：命中在 baseline 内只报告不阻断；出现 baseline 外的新命中即红（exit 1）。改动本文件需单独提交并附实测依据。PD7-09 收口：empty_tables 只减不增（31→6，移出 PD7-06/07/08/09 已填的 25 张）；same_value_hits 增补 5 项设计真实值（crew_traits.max_value/step、islands.has_reef_cliff、spawns.zone、event_drops.event_id——均设计同值非占位）并移除 locks.zone_bp（PD7-09 已补命中区值 2000/1500/1000/500，不再同值 0）。",
+  "recorded_at": "2026-10-30",
   "captured_by": "node tools/guard/placeholders.mjs（实测输出）",
   "same_value_hits": [
+    { "table": "crew_traits", "field": "max_value", "value": "25", "rows": 4, "note": "设计真实值（DS §5.3 幸福感每项 max=25）" },
+    { "table": "crew_traits", "field": "step", "value": "5", "rows": 4, "note": "设计真实值（DS §5.3 每项 step=5）" },
+    { "table": "event_drops", "field": "event_id", "value": "event_daily_sea", "rows": 9, "note": "设计真实值（DS §10.2 仅每日一海有锁档/箱大小分布数值）" },
     { "table": "facilities", "field": "effect_bp", "value": "10000", "rows": 9 },
+    { "table": "islands", "field": "has_reef_cliff", "value": "礁石+悬崖", "rows": 4, "note": "设计真实值（DS §7.2:530 每岛固定礁石/悬崖）" },
     { "table": "items", "field": "capacity", "value": "0", "rows": 106 },
     { "table": "items", "field": "stack", "value": "99", "rows": 106 },
     { "table": "items", "field": "unlock_level", "value": "0", "rows": 106 },
-    { "table": "locks", "field": "zone_bp", "value": "0", "rows": 5 },
-    { "table": "recipes", "field": "unlock_level", "value": "0", "rows": 80 }
+    { "table": "recipes", "field": "unlock_level", "value": "0", "rows": 80 },
+    { "table": "spawns", "field": "zone", "value": "zone_shallow", "rows": 8, "note": "设计真实值（DS §3.1:126 漂浮物在浅海）" }
   ],
   "empty_tables": [
-    "bait", "blueprints", "consumers", "crew_traits", "defenses", "drops", "events",
-    "event_drops", "explore", "fish", "foods", "generators", "islands", "jobs",
-    "limits", "lines", "lockpick_tools", "oil", "phrases", "protection_cards",
-    "quality", "regions", "seasons", "shipwrecks", "spawns", "throwables", "tides",
-    "titles", "units", "waves", "zones"
+    "drops", "explore", "limits", "phrases", "regions", "waves"
   ]
 }
