@@ -1,37 +1,130 @@
 // 配置表注册与读取引擎（TASK-3100）。
+// **46 张表全部可读**；`_manifest` / `_placeholder` 不是表，不在此列。
 // **不 import cc**：行类型取自生成物，I/O 走可注入 loader —— 这样缓存、在途去重、
 // 行只读三件事能在 Node 下直接测。Cocos 侧的 loader 由 ./index.ts 注入。
 import type {
   AdPlacementsRow,
+  BaitRow,
+  BlueprintsRow,
   BuildingsRow,
   ChestsRow,
+  ConsumersRow,
+  CrewTraitsRow,
+  DefensesRow,
+  DropsRow,
+  EventDropsRow,
+  EventsRow,
+  ExploreRow,
   FacilitiesRow,
+  FishRow,
+  FoodsRow,
+  GeneratorsRow,
   GuideStepsRow,
   HooksRow,
+  IslandsRow,
   ItemsRow,
+  JobsRow,
+  LevelsRow,
+  LimitsRow,
+  LinesRow,
+  LockpickToolsRow,
   LocksRow,
   MerchantsRow,
+  OilRow,
+  PhrasesRow,
   PricesRow,
+  ProtectionCardsRow,
+  QualityRow,
+  RaftTilesRow,
   RecipesRow,
+  RegionsRow,
+  RoomsRow,
+  SeasonsRow,
+  ShipwrecksRow,
+  SpawnsRow,
+  ThrowablesRow,
+  TidesRow,
+  TitlesRow,
+  UnitsRow,
+  UnlocksRow,
+  WavesRow,
+  ZonesRow,
 } from '../../generated/game-core/generated/config-types';
 
 export type TableName =
-  | 'items' | 'recipes' | 'prices' | 'locks' | 'chests'
-  | 'merchants' | 'facilities' | 'buildings' | 'hooks' | 'guide_steps' | 'ad_placements';
+  | 'ad_placements' | 'bait' | 'blueprints' | 'buildings' | 'chests' | 'consumers'
+  | 'crew_traits' | 'defenses' | 'drops' | 'event_drops' | 'events' | 'explore'
+  | 'facilities' | 'fish' | 'foods' | 'generators' | 'guide_steps' | 'hooks'
+  | 'islands' | 'items' | 'jobs' | 'levels' | 'limits' | 'lines' | 'lockpick_tools'
+  | 'locks' | 'merchants' | 'oil' | 'phrases' | 'prices' | 'protection_cards'
+  | 'quality' | 'raft_tiles' | 'recipes' | 'regions' | 'rooms' | 'seasons'
+  | 'shipwrecks' | 'spawns' | 'throwables' | 'tides' | 'titles' | 'units'
+  | 'unlocks' | 'waves' | 'zones';
+
+/**
+ * 全部 46 张表名（供批量预加载/测试逐表断言用）。
+ * 46 = 40 张非空表 + 6 张设计语义空表（drops/explore/limits/phrases/regions/waves）。
+ * `_manifest` / `_placeholder` 不是表，不在此列。
+ */
+export const TABLE_NAMES = [
+  'ad_placements', 'bait', 'blueprints', 'buildings', 'chests', 'consumers',
+  'crew_traits', 'defenses', 'drops', 'event_drops', 'events', 'explore',
+  'facilities', 'fish', 'foods', 'generators', 'guide_steps', 'hooks',
+  'islands', 'items', 'jobs', 'levels', 'limits', 'lines', 'lockpick_tools',
+  'locks', 'merchants', 'oil', 'phrases', 'prices', 'protection_cards',
+  'quality', 'raft_tiles', 'recipes', 'regions', 'rooms', 'seasons',
+  'shipwrecks', 'spawns', 'throwables', 'tides', 'titles', 'units',
+  'unlocks', 'waves', 'zones',
+] as const satisfies readonly TableName[];
 
 /** 表名 → 行类型。行类型从生成物取，禁止在此复制字段定义。 */
 export interface TableRowMap {
-  items: ItemsRow;
-  recipes: RecipesRow;
-  prices: PricesRow;
-  locks: LocksRow;
-  chests: ChestsRow;
-  merchants: MerchantsRow;
-  facilities: FacilitiesRow;
-  buildings: BuildingsRow;
-  hooks: HooksRow;
-  guide_steps: GuideStepsRow;
   ad_placements: AdPlacementsRow;
+  bait: BaitRow;
+  blueprints: BlueprintsRow;
+  buildings: BuildingsRow;
+  chests: ChestsRow;
+  consumers: ConsumersRow;
+  crew_traits: CrewTraitsRow;
+  defenses: DefensesRow;
+  drops: DropsRow;
+  event_drops: EventDropsRow;
+  events: EventsRow;
+  explore: ExploreRow;
+  facilities: FacilitiesRow;
+  fish: FishRow;
+  foods: FoodsRow;
+  generators: GeneratorsRow;
+  guide_steps: GuideStepsRow;
+  hooks: HooksRow;
+  islands: IslandsRow;
+  items: ItemsRow;
+  jobs: JobsRow;
+  levels: LevelsRow;
+  limits: LimitsRow;
+  lines: LinesRow;
+  lockpick_tools: LockpickToolsRow;
+  locks: LocksRow;
+  merchants: MerchantsRow;
+  oil: OilRow;
+  phrases: PhrasesRow;
+  prices: PricesRow;
+  protection_cards: ProtectionCardsRow;
+  quality: QualityRow;
+  raft_tiles: RaftTilesRow;
+  recipes: RecipesRow;
+  regions: RegionsRow;
+  rooms: RoomsRow;
+  seasons: SeasonsRow;
+  shipwrecks: ShipwrecksRow;
+  spawns: SpawnsRow;
+  throwables: ThrowablesRow;
+  tides: TidesRow;
+  titles: TitlesRow;
+  units: UnitsRow;
+  unlocks: UnlocksRow;
+  waves: WavesRow;
+  zones: ZonesRow;
 }
 
 export type TableRow<K extends TableName> = TableRowMap[K];
