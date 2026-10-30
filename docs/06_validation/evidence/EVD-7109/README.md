@@ -114,9 +114,14 @@ tests 13 / pass 13 / fail 0
 
 - ✅ 未动 `packages/game-core/src/**`（手写）、`packages/contracts/**`、`server/db/migrations/**`
 - ✅ 未动 `items.csv`/`recipes.csv`/`levels.csv` 等 PD7-06/07/08 表
-- ⚠ `config-types.ts` 由 gen 重生成（非手写）
+- ⚠ `config-types.ts` 由 gen 重生成（非手写，AUTO-GENERATED）
 - ⚠ 2 项既有测试失败（items-w 3/6，D-54 归 0 债务，与 PD7-09 无关，stash 验证预先存在）
+- ⚠ 未推送（本地 `main` 领先 `origin/master` 11 提交；等 `~/.git-pat` 就绪 + 用户确认后推送）
 
 ## 提交
 
-> 提交在审查通过后补充。baseline.json 单独提交（只减不增，附实测输出）。
+- `e6136e1` — baseline 收口（单独提交，只减不增，附实测输出：placeholders EXIT=0 空表 6 张/同值 10 项无新增红、play-loop 13/13、gen 46 表/568 行）
+- `3cd7628` — PD7-09 核心（19 表 + locks/chests 补全 + play-loop 测试 + EVD-7109 证据，58 files/+950/-143）
+- `84be0e0` — task-index 留痕（status→BLOCKED，detail 6 张设计空表）
+
+> 推送推迟：`~/.git-pat` 已存在但权限 644（非安全铁律要求的 600），且用户未确认「就绪」；与 PD7-07/08 一致标注「未推送」。
