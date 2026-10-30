@@ -4189,7 +4189,8 @@
       "legacy_ids": [],
       "execution": {
         "status": "IN_PROGRESS",
-        "note": "步骤 1-5 完成：health 5→0 错误；detail=READY+blocked_reason；baseline_commit=11c7427；plan_version=PLAN-R5。步骤 6b gen:docs 转绿。步骤 6 登记进行中。"
+        "note": "步骤 1-6 完成：health 5→0 错误；登记 18 张卡；document-index 转绿。三卡已提交：PD8-06(a8b7ac9)/PD8-18(39efe36)/PD8-01(7b476c0)。步骤 7-9 推送失败：~/.git-pat 两行凭据均 403（nevermeetagain 无权推 aideanew/WDF）；GCM 标准 push 触发弹窗被取消（无缓存凭据）。按卡停止条件不硬试。本地 HEAD 7b476c0 领先远端 master 11c7427 3 提交，双端不一致。已输出 zip 兜底包 EVD-8101/plan-v012-pd8-未推送-7b476c0.zip。待用户处理：吊销重签 PAT 或提供有效凭据。",
+        "evidence": "docs/06_validation/evidence/EVD-8101/"
       }
     },
     {
