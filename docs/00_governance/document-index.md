@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 329 篇。⚠ 表示活跃文档已过 review 日期。
+共 338 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -201,6 +201,15 @@ review: 2026-11-23
 | PLAN-V012-B | plan-v012 · 阶段 B（v1.1 数据可达 + 打捞产出）· 2 张原子任务卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-b-wiring/00-stage.md` |
 | PLAN-V012-C | plan-v012 · 阶段 C（v1.1 模块实现）· 9 张原子任务卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-c-modules/00-stage.md` |
 | PLAN-V012-D | plan-v012 · 阶段 D（运营收口）· 1 张卡，BLOCKED-HUMAN | active | 2026-11-13 | `04_planning/plan-v012/stage-d-ops/00-stage.md` |
+| PLAN-V013-01 | plan-v013 · 规划快照与仓库身份核对 | active | 2026-11-13 | `04_planning/plan-v013/01-snapshot.md` |
+| PLAN-V013-02 | plan-v013 · 事实基线（全部实测，命令可复跑） | active | 2026-11-13 | `04_planning/plan-v013/02-fact-baseline.md` |
+| PLAN-V013-03 | plan-v013 · 四产物一致性审计（本版核心） | active | 2026-11-13 | `04_planning/plan-v013/03-consistency-audit.md` |
+| PLAN-V013-04 | plan-v013 · 需求基线复核（MUST / SHOULD / COULD / MUST NOT + 冲突 + 未知登记册） | active | 2026-11-13 | `04_planning/plan-v013/04-requirement-baseline.md` |
+| PLAN-V013-05 | plan-v013 · 垂直切片 S1~S5 与排序理由 | active | 2026-11-13 | `04_planning/plan-v013/05-slices.md` |
+| PLAN-V013-06 | plan-v013 · 原子任务卡 PD9-01~10（19 字段全集） | active | 2026-11-13 | `04_planning/plan-v013/06-cards.md` |
+| PLAN-V013-07 | plan-v013 · 依赖 DAG、所有权矩阵、并行机械判定、档位与成本预算 | active | 2026-11-13 | `04_planning/plan-v013/07-dag-ownership-budget.md` |
+| PLAN-V013-08 | plan-v013 · 基线指标、风险、未决、待裁决（D-57~D-63） | active | 2026-11-13 | `04_planning/plan-v013/08-metrics-risks.md` |
+| PLAN-V013-09 | plan-v013 · 自检结果（逐条对照指令，含未通过项） | active | 2026-11-13 | `04_planning/plan-v013/09-selfcheck.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -310,10 +319,10 @@ review: 2026-11-23
 | EVD-7107 | PD7-07 生产簇数据（jobs/foods/crew_traits/generators/consumers） | active | 2026-11-29 | `06_validation/evidence/EVD-7107/README.md` |
 | EVD-7107-SRC | PD7-07 来源清单（B-L1：每个字段「取自哪份文档哪一节/哪一行」） | active |  | `06_validation/evidence/EVD-7107/source-list.md` |
 | EVD-7108 | PD7-08 战斗簇数据（units/waves/defenses/throwables/islands/protection_cards/buildings） | blocked | 2026-11-30 | `06_validation/evidence/EVD-7108/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/source-list.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/units.md` |
+| EVD-7108-L1 | PD7-08 战斗簇数据 · 来源清单（B-L1） | active | 2026-11-30 | `06_validation/evidence/EVD-7108/source-list.md` |
+| EVD-7108-A2 | PD7-08 · A2 证据 · units 3 兵种 | active | 2026-11-30 | `06_validation/evidence/EVD-7108/units.md` |
 | EVD-7109 | PD7-09 玩法簇数据（19 张表 + locks/chests 补全 + baseline 收口） | blocked | 2026-11-30 | `06_validation/evidence/EVD-7109/README.md` |
-| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7109/source-list.md` |
+| EVD-7109-L1 | PD7-09 玩法簇数据 · 来源清单 | active | 2026-11-30 | `06_validation/evidence/EVD-7109/source-list.md` |
 | EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |
