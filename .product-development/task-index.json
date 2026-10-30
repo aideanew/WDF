@@ -1,6 +1,6 @@
 {
-  "plan_version": "PLAN-R4",
-  "baseline_commit": "4e572fa",
+  "plan_version": "PLAN-R5",
+  "baseline_commit": "11c7427",
   "tasks": [
     {
       "id": "TASK-0101",
@@ -3339,6 +3339,9 @@
       "execution": {
         "status": "DONE",
         "completed_at": "2026-10-29",
+        "commits": [
+          "973e5b6"
+        ],
         "note": "PD7-07 生产簇数据落账：jobs 7 岗位（§5.3:421-430，produces 有源仅铁匠/机械师 §5.3:437，其余留空）；foods 6 食物项（§5.2:413）；crew_traits 幸福感 4 项（§5.3:460-464，max_value=25/step=5 设计同值）；generators 3 种发电（§6:471-474,481，output_ratio 1:3:10）；consumers 5 耗电设备（§6:470,478,479，power_draw 无源留空）。schema 增列 4 处（draft，随 c0c3c35）。无源字段登记 UNKNOWN-TABLES.md 三之三（B-L5）。crew-power 测试 7/7 PASS（含 A3 外键）。placeholders EXIT=0（空表 31→25；crew_traits.max_value/step 为设计同值误报待 PD7-09，baseline 未动遵守 forbidden_paths）。gen configVersion=07d5051fe14cb68d（46 表/497 行）。未推送（token 轮换待用户，就绪前不推）。",
         "evidence": "docs/06_validation/evidence/EVD-7107/"
       }
@@ -3349,7 +3352,8 @@
       "phase": "P7",
       "role": "executor",
       "status": "BLOCKED",
-      "detail": "waves 无源（设计源无波次数值），卡预判 BLOCKED；结构表已转录，待设计源补波次后回填",
+      "detail": "READY",
+      "blocked_reason": "waves 无源（设计源无波次数值），卡预判 BLOCKED；结构表已转录，待设计源补波次后回填",
       "areas": [
         "data"
       ],
@@ -3432,7 +3436,8 @@
       "phase": "P7",
       "role": "executor",
       "status": "BLOCKED",
-      "detail": "6 张设计空表（waves/drops/explore/limits/phrases/regions），A1 无法满足",
+      "detail": "READY",
+      "blocked_reason": "6 张设计空表（waves/drops/explore/limits/phrases/regions），A1 无法满足",
       "areas": [
         "data"
       ],
@@ -4093,6 +4098,1418 @@
       "execution": {},
       "blocked_reason": "需微信 appid + appsecret + 主体资质（D-51 BLOCKED-HUMAN）；资质未到位不得用 mock 冒充",
       "source_note": "D-45=B（合规真实化推迟 v1.1）见 docs/04_planning/current-plan.md:21；该决策未登记在 decision-index（I-04 治理缺口），故不入 decisions[]"
+    },
+    {
+      "id": "PD8-01",
+      "title": "治理元数据修复与双端同步",
+      "phase": "P8",
+      "role": "planner",
+      "status": "IN_PROGRESS",
+      "detail": "READY",
+      "areas": [
+        "governance"
+      ],
+      "priority": 1,
+      "requirements": [
+        "02-fact-baseline.md#§6",
+        "01-snapshot.md#§1"
+      ],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-0-governance/00-stage.md",
+      "objective": "pd.mjs health 从 5 错误回到 0，且本地 HEAD 与 origin/master 的 SHA 相同",
+      "allowed_paths": [
+        ".product-development/task-index.json",
+        ".product-development/runs/**",
+        "docs/06_validation/execution-ledger.md",
+        "docs/06_validation/evidence/EVD-8101/**",
+        "~/.git-pat(仅权限位)"
+      ],
+      "forbidden_paths": [
+        "**/*.ts",
+        "**/*.csv",
+        "**/*.sql",
+        "packages/contracts/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "pd.mjs health 含体检通过且错误为 0",
+          "check": {
+            "type": "command",
+            "cmd": "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs health . | grep -c 错误"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "status 无「阻塞 PD7-08：undefined」",
+          "check": {
+            "type": "command",
+            "cmd": "node C:/Users/EDY/.claude/skills/product-development/scripts/pd.mjs status . | grep -c \"阻塞 PD7-08：undefined\""
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "origin/master..HEAD 提交数为 0",
+          "check": {
+            "type": "command",
+            "cmd": "test \"$(git rev-list --count origin/master..HEAD)\" = \"0\""
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "远端 master SHA == 本地 HEAD",
+          "check": {
+            "type": "command",
+            "cmd": "test \"$(git ls-remote origin refs/heads/master | cut -f1)\" = \"$(git rev-parse HEAD)\""
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "令牌未入库且无完整 github_pat_ 匹配",
+          "check": {
+            "type": "command",
+            "cmd": "git ls-files | grep -c git-pat"
+          }
+        },
+        {
+          "id": "A6",
+          "desc": "零业务代码改动",
+          "check": {
+            "type": "manual",
+            "evidence": "git diff --stat -- *.ts *.csv *.sql 为空"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/contract/docs-index.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "IN_PROGRESS",
+        "note": "步骤 1-5 完成：health 5→0 错误；detail=READY+blocked_reason；baseline_commit=11c7427；plan_version=PLAN-R5。步骤 6b gen:docs 转绿。步骤 6 登记进行中。"
+      }
+    },
+    {
+      "id": "PD8-02",
+      "title": "raft 规则层：canBuild / applyBuild + 存档投影",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 2,
+      "requirements": [
+        "mvp-scope.md#§2C2",
+        "05-data-model-baseline.md#§5"
+      ],
+      "decisions": [
+        "D-54"
+      ],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-a-v10-close/00-stage.md",
+      "objective": "game-core/raft 从两个孤立纯函数变成有调用方的用例层：能算建一格后是否可行、能写进存档、重启后读回",
+      "allowed_paths": [
+        "packages/game-core/src/raft/**",
+        "packages/game-core/src/save/**",
+        "tests/determinism/raft.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "client/assets/scripts/**",
+        "packages/game-core/src/hook/**",
+        "game-data/source/*.csv"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "raft.test.mjs 全 PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/raft.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "typecheck:client 0 错",
+          "check": {
+            "type": "command",
+            "cmd": "npm run typecheck:client"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "applyBuild 对 Object.freeze 入参调用不抛",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/raft.test.mjs"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "modules.raft 缺失时补 {tiles:0} 且 SAVE_SCHEMA_VERSION 未变",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/raft.test.mjs"
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "raft/index.ts 满足 game-core 纯度",
+          "check": {
+            "type": "manual",
+            "evidence": "raft/index.ts 满足 game-core 纯度（审查）→ docs/06_validation/evidence/EVD-8102/"
+          }
+        },
+        {
+          "id": "A6",
+          "desc": "remainingBuoyancy 函数体未被修改",
+          "check": {
+            "type": "manual",
+            "evidence": "remainingBuoyancy 函数体未被修改（审查）→ docs/06_validation/evidence/EVD-8102/"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/raft.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "阻塞条件 D-57 未裁：步骤 2 只写拒绝分支与 tilesAfter，扣减项留 TODO(D-57)"
+      }
+    },
+    {
+      "id": "PD8-03",
+      "title": "raft 建造面板（主控独占，高难度 UI）",
+      "phase": "P8",
+      "role": "planner",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "client"
+      ],
+      "priority": 3,
+      "requirements": [
+        "mvp-scope.md#§2C2"
+      ],
+      "decisions": [
+        "D-54"
+      ],
+      "depends_on": [
+        "PD8-02"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-a-v10-close/00-stage.md",
+      "objective": "玩家能在主界面点到筏 Tab，看到地块数与剩余浮力，点建一格后三个数字同时变化",
+      "allowed_paths": [
+        "client/assets/scripts/features/raft/**",
+        "client/assets/scripts/app/panel-types.ts",
+        "client/assets/scripts/app/MainView.ts",
+        "client/assets/scripts/app/BootController.ts(仅第12行注释)"
+      ],
+      "forbidden_paths": [
+        "packages/game-core/**",
+        "packages/contracts/**",
+        "client/assets/scripts/services/config/tables.ts",
+        "app/nav.ts"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "主界面底栏 7 个可点项第 5 个是筏",
+          "check": {
+            "type": "manual",
+            "evidence": "截图"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "点建一格后 N→N+1、剩余浮力+40",
+          "check": {
+            "type": "manual",
+            "evidence": "截图含数字"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "杀进程重进地块数仍 N+1",
+          "check": {
+            "type": "manual",
+            "evidence": "截图"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "typecheck:client 0 错",
+          "check": {
+            "type": "command",
+            "cmd": "npm run typecheck:client"
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "RaftPanel 不直接 import MainView",
+          "check": {
+            "type": "manual",
+            "evidence": "RaftPanel 不直接 import MainView（审查）→ docs/06_validation/evidence/EVD-8103/"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": []
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "阻塞条件：需 Cocos 编辑器生成 .meta，本机无编辑器 → BLOCKED-HUMAN，不许手写 .meta"
+      }
+    },
+    {
+      "id": "PD8-04",
+      "title": "浮力/承重拒绝的六态落地",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "client"
+      ],
+      "priority": 4,
+      "requirements": [
+        "04-contract-freeze.md#G-2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-03"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-a-v10-close/00-stage.md",
+      "objective": "浮力不足时玩家看到「还差 N（业务拒绝）」，不是「服务暂时不可用，请重试」",
+      "allowed_paths": [
+        "client/assets/scripts/app/ux-hint.ts",
+        "client/assets/scripts/features/raft/view/RaftPanel.ts",
+        "tests/determinism/ux-hint.test.mjs"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "packages/game-core/src/raft/index.ts",
+        "app/BootController.ts"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "ux-hint.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/ux-hint.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "git diff --stat packages/contracts/ 为空（零契约改动）",
+          "check": {
+            "type": "command",
+            "cmd": "git diff --stat packages/contracts/"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "拒绝态截图不出现「服务暂时不可用」",
+          "check": {
+            "type": "manual",
+            "evidence": "截图"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "拒绝后不自动重试（点一次只发一次请求）",
+          "check": {
+            "type": "manual",
+            "evidence": "看日志"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/ux-hint.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "红线：不改 packages/contracts/src/common/ux.ts（契约源）；若必须改 → 停，改走 ADR（v1.1）"
+      }
+    },
+    {
+      "id": "PD8-05",
+      "title": "海域潮汐窗口可见",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "client"
+      ],
+      "priority": 5,
+      "requirements": [
+        "glossary.md",
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-a-v10-close/00-stage.md",
+      "objective": "打捞面板上出现「潮汐：未开始/进行中（剩 X 分）」，随服务器时间推进，不读 tides 表",
+      "allowed_paths": [
+        "client/assets/scripts/services/time/**",
+        "client/assets/scripts/features/sea/**",
+        "client/assets/scripts/features/hook/view/HookPanel.ts(仅顶部一行)",
+        "client/assets/scripts/app/BootController.ts(仅加1行+第12行注释)",
+        "tests/determinism/sea-tide.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/game-core/src/sea/index.ts",
+        "game-data/source/tides.csv",
+        "client/assets/scripts/features/hook/view/HookView.ts",
+        "client/assets/scripts/features/hook/model/HookModel.ts"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "sea-tide.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/sea-tide.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "grep -c MODULE_ID services/time → 0（不再返回 mock）",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c MODULE_ID client/assets/scripts/services/time/index.ts"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "打捞面板顶部出现潮汐行",
+          "check": {
+            "type": "manual",
+            "evidence": "截图"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "grep setInterval 无新增",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn setInterval client/assets/scripts"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/sea-tide.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "若 tideState 的 nextStartMs 在 active=true 时算错 → 登记缺陷不改"
+      }
+    },
+    {
+      "id": "PD8-06",
+      "title": "客户端配置表可达性：TableName 11→46",
+      "phase": "P8",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [
+        "client",
+        "config"
+      ],
+      "priority": 6,
+      "requirements": [
+        "02-fact-baseline.md#§10"
+      ],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-b-wiring/00-stage.md",
+      "objective": "tables.ts 的 TableName 从 11 扩到 46，46 张表全部可读（含 6 张设计空表）",
+      "allowed_paths": [
+        "client/assets/scripts/services/config/tables.ts",
+        "tests/determinism/config-tables.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "packages/game-core/**",
+        "game-data/**",
+        "client/assets/scripts/generated/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "config-tables.test.mjs 全 PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/config-tables.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "table() 对 46 表逐表返回且空表返回 []",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/config-tables.test.mjs"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/config-tables.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "DONE",
+        "commits": [
+          "a8b7ac9"
+        ],
+        "note": "实现+测试 5/5 PASS，审查 7 项 100% PASS，已提交 a8b7ac9"
+      }
+    },
+    {
+      "id": "PD8-07",
+      "title": "打捞产出表驱动（read drops/shipwrecks + createRng）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "client",
+        "game-core"
+      ],
+      "priority": 7,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-b-wiring/00-stage.md",
+      "objective": "打捞面板的掉落由 drops/shipwrecks 表驱动，复用 createRng（业务零调用缺口），不再硬编码",
+      "allowed_paths": [
+        "client/assets/scripts/features/hook/**",
+        "packages/game-core/src/random/**",
+        "tests/determinism/hook-drops.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "client/assets/scripts/services/config/tables.ts",
+        "game-data/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "hook-drops.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/hook-drops.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "drops 表驱动掉落（不再硬编码掉落表）",
+          "check": {
+            "type": "manual",
+            "evidence": "review 表驱动"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/hook-drops.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "必须复用 createRng（02 §10 业务零调用缺口）；drops 为设计空表（D-27 无规则）"
+      }
+    },
+    {
+      "id": "PD8-08",
+      "title": "进度与解锁闸门（levels/unlocks 四路解析 + elapsed）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 8,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [
+        "D-59"
+      ],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "levels/unlocks 真实驱动进度，unlocks.target_id 异构外键四路解析（40 items+8 facilities+6 buildings），复用 elapsed",
+      "allowed_paths": [
+        "packages/game-core/src/progression/**",
+        "tests/determinism/progression.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "progression.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/progression.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "四路解析 47 条 1 级可用配方、40/80 受闸门影响",
+          "check": {
+            "type": "manual",
+            "evidence": "review 四路解析"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/progression.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "闸门必须四路解析；实测 1 级可用配方 47 条、受闸门影响 40/80"
+      }
+    },
+    {
+      "id": "PD8-09",
+      "title": "船员与战力（crew_traits 驱动 + elapsed）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 9,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [
+        "D-59"
+      ],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "crew_traits 真实驱动船员招募/派遣/战力，复用 elapsed（02 §10 缺口）",
+      "allowed_paths": [
+        "packages/game-core/src/crew/**",
+        "tests/determinism/crew-power.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "crew-power.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/crew-power.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "crew_traits 驱动（不硬编码）",
+          "check": {
+            "type": "manual",
+            "evidence": "review 表驱动"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/crew-power.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "复用 elapsed（02 §10）"
+      }
+    },
+    {
+      "id": "PD8-10",
+      "title": "电力（power）：consumers 驱动 + 无兜底",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 10,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "power 由 consumers 表驱动，不存在把 power_draw 兜成 0 的写法，无耗电值时显示待定而非充足",
+      "allowed_paths": [
+        "packages/game-core/src/power/**",
+        "tests/determinism/power.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/source/consumers.csv",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "power.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/power.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "git diff --stat game-data/source/consumers.csv 空（未自编耗电值）",
+          "check": {
+            "type": "command",
+            "cmd": "git diff --stat game-data/source/consumers.csv"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "consumers.json 里 power_draw != null 的行数（实测 0/5）",
+          "check": {
+            "type": "measure",
+            "method": "consumers.json 里 power_draw != null 的行数（实测 0/5）",
+            "threshold": 0
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "power/index.ts 无 power_draw ?? 0 兜底",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c \"power_draw ?? 0\" packages/game-core/src/power/index.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "面板在无耗电值时显示待定而非充足",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/power.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "A3 实测 0/5：本卡只能交付结构并标 BLOCKED-DESIGN（若为 0）"
+      }
+    },
+    {
+      "id": "PD8-11",
+      "title": "房间与设施（raft 上层）：rooms/recipes 驱动",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 11,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-02",
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "raft 上层由 rooms/recipes 驱动，不把 effect_bp 占位值当逻辑，无 station 工位判定覆盖多少配方如实记录",
+      "allowed_paths": [
+        "packages/game-core/src/raft/**",
+        "packages/game-core/src/rooms/**",
+        "tests/determinism/raft-rooms.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "raft-rooms.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/raft-rooms.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "raft.test.mjs（PD8-02 产出）仍 PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/raft.test.mjs"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "grep effect_bp packages/game-core/src 0 命中",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn effect_bp packages/game-core/src/",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "recipes 里有 station 的行数（实测写 EVD）",
+          "check": {
+            "type": "measure",
+            "method": "recipes 里有 station 的行数（实测写 EVD）",
+            "threshold": 0
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "合成分区需要熔炉的配方在无熔炉时灰显",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/raft-rooms.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": ""
+      }
+    },
+    {
+      "id": "PD8-12",
+      "title": "钓鱼（fishing）：真实实现 + 权重抽取复用",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 12,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "fishing 从 3 行空壳变真实实现，权重抽取走 common/drop.ts 的 pickWeighted 不重复实现",
+      "allowed_paths": [
+        "packages/game-core/src/fishing/**",
+        "packages/game-core/src/common/drop.ts",
+        "tests/determinism/fishing.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "fishing.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/fishing.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "grep -c MODULE_ID fishing/index.ts → 0（空壳标记被替换）",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c MODULE_ID packages/game-core/src/fishing/index.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "权重抽取走 common/drop.ts 的 pickWeighted",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c pickWeighted packages/game-core/src/fishing/index.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "钓一次得到 3 种鱼之一",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/fishing.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "鱼由 fish 表（3 行）驱动"
+      }
+    },
+    {
+      "id": "PD8-13",
+      "title": "深海沉船与石油（salvage）：shipwrecks 驱动",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core",
+        "server"
+      ],
+      "priority": 13,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "salvage 由 shipwrecks 表驱动，落地 claimInfo（handlers todo 7→6），零契约改动",
+      "allowed_paths": [
+        "packages/game-core/src/salvage/**",
+        "server/src/gateway/handlers.ts",
+        "tests/determinism/salvage.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "salvage.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/salvage.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "grep -c todo handlers.ts → 6（salvage.claimInfo 落地）",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c todo server/src/gateway/handlers.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "git diff --stat packages/contracts/ 空（零契约改动）",
+          "check": {
+            "type": "command",
+            "cmd": "git diff --stat packages/contracts/"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "explore 表行数 = 0（如实记录，探索玩法本版不做）",
+          "check": {
+            "type": "measure",
+            "method": "explore 表行数 = 0（如实记录，探索玩法本版不做）",
+            "threshold": 0
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "客户端拿到沉船信息并显示档位与份数",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/salvage.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": ""
+      }
+    },
+    {
+      "id": "PD8-14",
+      "title": "占岛与防御（island + defense）：D-58 A′",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core"
+      ],
+      "priority": 14,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [
+        "D-58"
+      ],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "占领一座岛、建一座箭塔、看到材料被扣；RaidOutcome.verdict 只可能是 unknown（D-58 A′）",
+      "allowed_paths": [
+        "packages/game-core/src/island/**",
+        "packages/game-core/src/defense/**",
+        "tests/determinism/island.test.mjs(新建)",
+        "tests/determinism/defense-build.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "island.test.mjs + defense-build.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/island.test.mjs tests/determinism/defense-build.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "defense/index.ts 的 distanceField/allEntrancesReachable 无改动",
+          "check": {
+            "type": "command",
+            "cmd": "git diff packages/game-core/src/defense/index.ts"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "defenses 3 条 recipe 解析成功率 3/3",
+          "check": {
+            "type": "measure",
+            "method": "defenses 3 条 recipe 解析成功率 3/3",
+            "threshold": 3
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "RaidOutcome.verdict 只可能是 unknown",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn \"win\\|lose\" packages/game-core/src/defense/index.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "占领一座岛、建一座箭塔、看到材料被扣",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/island.test.mjs",
+          "tests/determinism/defense-build.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "D-58 已收敛为 A′：占岛/建防御/布局校验/保护期真做，袭击胜负返 verdict unknown（units/defenses 数值全缺、waves 0 行）"
+      }
+    },
+    {
+      "id": "PD8-15",
+      "title": "每日一海与称号（event + leaderboard）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "game-core",
+        "server"
+      ],
+      "priority": 15,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "每日一海由 events 表驱动，称号由 titles 驱动，档案页出现称号与加成数字",
+      "allowed_paths": [
+        "packages/game-core/src/event/**",
+        "packages/game-core/src/leaderboard/**",
+        "server/src/gateway/handlers.ts",
+        "tests/determinism/event.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "game-data/**",
+        "client/**"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "event.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/event.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "grep -c todo handlers.ts → 3",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c todo server/src/gateway/handlers.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "typecheck:server 0 错",
+          "check": {
+            "type": "command",
+            "cmd": "npm run typecheck:server"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "event/index.ts 无 Date.now()（时间全由入参）",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c Date.now packages/game-core/src/event/index.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "档案页出现称号与加成数字",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/event.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": ""
+      }
+    },
+    {
+      "id": "PD8-16",
+      "title": "聊天 + 合规 UI + 广告 UI（social / compliance / ads）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "TODO",
+      "detail": "READY",
+      "areas": [
+        "client",
+        "server"
+      ],
+      "priority": 16,
+      "requirements": [
+        "mvp-scope.md#§2"
+      ],
+      "decisions": [],
+      "depends_on": [
+        "PD8-06"
+      ],
+      "card": "docs/04_planning/plan-v012/stage-c-modules/00-stage.md",
+      "objective": "聊天面板能发出并看到一条；compliance/ads 两个 feature 只有渲染无判定逻辑（R-6 不在本卡修）",
+      "allowed_paths": [
+        "client/assets/scripts/features/social/**",
+        "client/assets/scripts/features/compliance/**",
+        "client/assets/scripts/features/ads/**",
+        "server/src/gateway/handlers.ts",
+        "tests/determinism/social.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "packages/contracts/**",
+        "client/assets/scripts/services/net/RpcClient.ts(R-6 不在本卡)"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "social.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/social.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "git diff --stat client/assets/scripts/services/net/RpcClient.ts 空",
+          "check": {
+            "type": "command",
+            "cmd": "git diff --stat client/assets/scripts/services/net/RpcClient.ts"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "grep -c todo handlers.ts → 1",
+          "check": {
+            "type": "command",
+            "cmd": "grep -c todo server/src/gateway/handlers.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "compliance/ads 两个 feature 无判定逻辑只有渲染",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn \"verified\\|adRequest\" client/assets/scripts/features/compliance/ client/assets/scripts/features/ads/",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A5",
+          "desc": "聊天面板能发出并看到一条",
+          "check": {
+            "type": "manual",
+            "evidence": "截图（无编辑器记 UNKNOWN）"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/social.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "TODO",
+        "note": "R-6 合规去桩属 PD8-17，不在本卡修"
+      }
+    },
+    {
+      "id": "PD8-17",
+      "title": "合规去桩（真实实名/防沉迷链路）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "BLOCKED",
+      "detail": "READY",
+      "areas": [
+        "client",
+        "server"
+      ],
+      "priority": 17,
+      "requirements": [
+        "R-6"
+      ],
+      "decisions": [],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-d-ops/00-stage.md",
+      "objective": "compliance.check 在生产构建不再恒真；未实名/未成年时长限制由服务端真实判定",
+      "allowed_paths": [
+        "server/src/modules/compliance/**",
+        "client/assets/scripts/features/compliance/**",
+        "client/assets/scripts/services/net/RpcClient.ts",
+        "packages/contracts/**",
+        "tests/determinism/compliance.test.mjs(新建)"
+      ],
+      "forbidden_paths": [
+        "其他任何 feature",
+        "MOCK_HANDLERS 除 compliance 外的条目"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "grep -c \"verified: true\" RpcClient.ts → 0",
+          "check": {
+            "type": "command",
+            "cmd": "grep -rn \"verified: true\" client/assets/scripts/services/net/RpcClient.ts",
+            "allow_grep": true
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "compliance/service.ts 三条失败路径都有独立错误码（用已有 14 码）",
+          "check": {
+            "type": "manual",
+            "evidence": "review 错误码 → EVD-8117"
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "未实名账号进游戏被拦",
+          "check": {
+            "type": "manual",
+            "evidence": "真机截图"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "compliance.test.mjs PASS",
+          "check": {
+            "type": "command",
+            "cmd": "node --test tests/determinism/compliance.test.mjs"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/compliance.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "BLOCKED",
+        "note": "阻塞：appid+主体资质未到位 → BLOCKED-HUMAN，本版不执行。唯一允许解冻契约的卡（需先提交 ADR）"
+      },
+      "blocked_reason": "BLOCKED-HUMAN：appid + 主体资质未到位，本版不执行（需用户侧交付）"
+    },
+    {
+      "id": "PD8-18",
+      "title": "测试口径对齐 D-54（校验收尾）",
+      "phase": "P8",
+      "role": "executor",
+      "status": "DONE",
+      "detail": "READY",
+      "areas": [
+        "test"
+      ],
+      "priority": 18,
+      "requirements": [
+        "01-snapshot.md#§4"
+      ],
+      "decisions": [
+        "D-54"
+      ],
+      "depends_on": [],
+      "card": "docs/04_planning/plan-v012/stage-0-governance/00-stage.md",
+      "objective": "items-weights.test.mjs 的 6 条断言与 D-54 后数据一致 → npm run test 回 270/270。只改测试不改数据实现",
+      "allowed_paths": [
+        "tests/determinism/items-weights.test.mjs"
+      ],
+      "forbidden_paths": [
+        "game-data/source/items.csv",
+        "packages/game-core/src/**",
+        "client/**",
+        "其他任何测试文件"
+      ],
+      "acceptance": [
+        {
+          "id": "A1",
+          "desc": "items-weights.test.mjs fail 0",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test tests/determinism/items-weights.test.mjs"
+          }
+        },
+        {
+          "id": "A2",
+          "desc": "全量 pass 270/fail 0",
+          "check": {
+            "type": "command",
+            "cmd": "node --import ./tools/runtime/register.mjs --test \"tests/**/*.test.mjs\""
+          }
+        },
+        {
+          "id": "A3",
+          "desc": "git diff --stat game-data/ packages/ 空",
+          "check": {
+            "type": "command",
+            "cmd": "git diff --stat game-data/ packages/"
+          }
+        },
+        {
+          "id": "A4",
+          "desc": "items-w 3 新断言断言的是现状（全 0），突变验证会红",
+          "check": {
+            "type": "manual",
+            "evidence": "review 突变验证 → EVD-8118"
+          }
+        }
+      ],
+      "tests": {
+        "targeted": [
+          "tests/determinism/items-weights.test.mjs"
+        ]
+      },
+      "legacy_ids": [],
+      "execution": {
+        "status": "DONE",
+        "commits": [
+          "39efe36"
+        ],
+        "note": "w3 现状断言+w6 删，全量 274/274 PASS，审查 100%（7 项），已提交 39efe36"
+      }
     }
   ],
   "replans": [

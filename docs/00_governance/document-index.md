@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 312 篇。⚠ 表示活跃文档已过 review 日期。
+共 329 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -185,6 +185,22 @@ review: 2026-11-23
 | PLAN-V011-B | plan-v011 · 阶段 B（v1.1 数据解锁）· 4 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-b-v11-data/00-stage.md` |
 | PLAN-V011-C | plan-v011 · 阶段 C（v1.1 模块）· 7 张原子任务卡 | active | 2026-11-12 | `04_planning/plan-v011/stage-c-v11-modules/00-stage.md` |
 | PLAN-V011-D | plan-v011 · 阶段 D（v1.2 运营）· 1 张原子任务卡 + 二版登记 | active | 2026-11-12 | `04_planning/plan-v011/stage-d-v12-registry/00-stage.md` |
+| PLAN-V012-01 | plan-v012 · 规划快照（钉在 8fbb57b） | active | 2026-11-13 | `04_planning/plan-v012/01-snapshot.md` |
+| PLAN-V012-02 | plan-v012 · 事实基线（钉在 8fbb57b，逐条可复跑） | active | 2026-11-13 | `04_planning/plan-v012/02-fact-baseline.md` |
+| PLAN-V012-03 | plan-v012 · 需求基线复核（含 v1.0 两套完成判据） | active | 2026-11-13 | `04_planning/plan-v012/03-requirement-baseline.md` |
+| PLAN-V012-04 | plan-v012 · 契约冻结包（六份，含完整性自检） | active | 2026-11-13 | `04_planning/plan-v012/04-contract-freeze.md` |
+| PLAN-V012-05 | plan-v012 · 数据模型基线（14 张 PG 表 + 迁移编排） | active | 2026-11-13 | `04_planning/plan-v012/05-data-model-baseline.md` |
+| PLAN-V012-06 | plan-v012 · 垂直切片（16 刀，排序 + 并行标注） | active | 2026-11-13 | `04_planning/plan-v012/06-slices.md` |
+| PLAN-V012-07 | plan-v012 · 依赖 DAG 与所有权矩阵（含 6 处重叠的消除） | active | 2026-11-13 | `04_planning/plan-v012/07-dag-ownership.md` |
+| PLAN-V012-08 | plan-v012 · 档位分配与成本预算（18 卡） | active | 2026-11-13 | `04_planning/plan-v012/08-budget.md` |
+| PLAN-V012-09 | plan-v012 · 基线指标（资格判定 + 首次测量） | active | 2026-11-13 | `04_planning/plan-v012/09-baseline-metrics.md` |
+| PLAN-V012-10 | plan-v012 · 风险 / 未决 / 待裁决 | active | 2026-11-13 | `04_planning/plan-v012/10-risks-pending.md` |
+| PLAN-V012-11 | plan-v012 · 落盘清单 / 自检 / 前提与局限 / 建议第一刀 | active | 2026-11-13 | `04_planning/plan-v012/11-selfcheck.md` |
+| PLAN-V012-S0 | plan-v012 · 阶段 0（治理收口）· 2 张卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-0-governance/00-stage.md` |
+| PLAN-V012-A | plan-v012 · 阶段 A（v1.0 收口）· 4 张原子任务卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-a-v10-close/00-stage.md` |
+| PLAN-V012-B | plan-v012 · 阶段 B（v1.1 数据可达 + 打捞产出）· 2 张原子任务卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-b-wiring/00-stage.md` |
+| PLAN-V012-C | plan-v012 · 阶段 C（v1.1 模块实现）· 9 张原子任务卡 | active | 2026-11-13 | `04_planning/plan-v012/stage-c-modules/00-stage.md` |
+| PLAN-V012-D | plan-v012 · 阶段 D（运营收口）· 1 张卡，BLOCKED-HUMAN | active | 2026-11-13 | `04_planning/plan-v012/stage-d-ops/00-stage.md` |
 | PLAN-0001 | 路线图 | active | 2026-11-23 | `04_planning/roadmap.md` |
 | EXEC-BRIEF-0002 | 助手派工指令 v3（六级大纲：基线 → 前置门禁 → 批次 → 任务 → 原子步骤 → 验证断言 → 证据） | active | 2026-11-26 | `05_execution/ASSISTANT-BRIEF.md` |
 | EXEC-BRIEF-0003 | v1.0 冲刺派工指令（TASK-4001~4016，三助手独立执行） | active |  | `05_execution/EXEC-BRIEF-0003.md` |
@@ -296,6 +312,7 @@ review: 2026-11-23
 | EVD-7108 | PD7-08 战斗簇数据（units/waves/defenses/throwables/islands/protection_cards/buildings） | blocked | 2026-11-30 | `06_validation/evidence/EVD-7108/README.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/source-list.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/units.md` |
+| EVD-7109 | PD7-09 玩法簇数据（19 张表 + locks/chests 补全 + baseline 收口） | blocked | 2026-11-30 | `06_validation/evidence/EVD-7109/README.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7109/source-list.md` |
 | EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |

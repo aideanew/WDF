@@ -80,9 +80,9 @@ related: [PLAN-V012-01, PLAN-V012-07]
        直接用 `$(cat ~/.git-pat)/<owner>/<repo>.git` 拼 URL，**不要**再套 `oauth2:<token>@`
 8. [ ] **逐文件** `git add`（严禁 `git add -A`；本仓已两次事故），提交
 9. [ ] 推送：`PAT=$(tr -d '\r\n' < ~/.git-pat)`
-       **本机该文件存的是完整凭据 URL**（形如 `https://<user>:<pat>@github.com`），
-       因此 URL = `"$PAT/aideanew/WDF.git"`；**不要**再拼 `https://oauth2:${PAT}@github.com/...`
-       —— 本轮第一次尝试正是这么拼的，拼出 `https://oauth2:https://...@github.com@github.com/...`
+       **本机该文件存的是完整凭据 URL**（`https://<user>/<repo>.git` 形式，用户段已含 PAT），
+       因此 URL = `"$PAT/aideanew/WDF.git"`；**不要**再套 `oauth2:` 前缀拼 token 进 URL
+       —— 本轮第一次尝试正是这么拼的，拼出 `https://oauth2:https://...` 嵌套 URL，
        报 `Port number was not a decimal number between 0 and 65535`（RC=128）
        首次失败可加 `-c http.version=HTTP/1.1` 再试一次；输出**先重定向到文件**，屏蔽 token 后再展示
 10. [ ] 回读验证：`git ls-remote origin refs/heads/master` == `git rev-parse HEAD`
