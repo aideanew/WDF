@@ -19,12 +19,22 @@ snapshot:
   采集时刻: 16:56–17:20 (GMT+8)
   项目: WDF（奖励一颗麻籽 / wdf-my-raft）
 
-  git:
+  git（落盘前快照）:
     本地分支: main
-    本地 HEAD: 45111c3   # 完整 SHA 见 `git rev-parse HEAD`
+    本地 HEAD: 45111c3   # 落盘前；已含 4 个未推送提交
     origin URL: https://github.com/aideanew/WDF.git
-    origin/master: 11c7427   # 本地领先 4 个提交（45111c3 / 7b476c0 / 39efe36 / a8b7ac9），未推送
+    origin/master: 11c7427
     工作区: 仅两项未跟踪 —— docs/04_planning/plan-v013/（本规划）、docs/06_validation/evidence/EVD-8101/（兜底 zip）
+
+  git（落盘并推送后，2026-10-30 收尾）:
+    本地 HEAD: d5ae1e7
+    origin/master: d5ae1e7      # 与本地完全一致
+    ls-remote 首列: d5ae1e7     # 远端确认
+    ahead/behind: 0 / 0
+    本地分支数/远端分支数: 1 / 1   # 未新建任何分支
+    远端 plan-v013 文件数: 10
+    凭据泄漏扫描: 入索引 0 / 全历史 0 / 工作树 0
+    ⚠ 推送目标是 aideanew/WDF；用户本轮指定的是 nevermeetagain/WDF（仍 Repository not found）→ D-61 待确认
 
   目标远端（用户本轮指定）:
     仓库: https://github.com/nevermeetagain/WDF.git
