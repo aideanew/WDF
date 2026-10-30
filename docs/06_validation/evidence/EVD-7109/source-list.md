@@ -1,3 +1,12 @@
+---
+id: EVD-7109-L1
+title: PD7-09 玩法簇数据 · 来源清单
+status: active
+owner: hark
+created: 2026-10-30
+review: 2026-11-30
+---
+
 # EVD-7109 · B-L1 来源清单 · PD7-09 玩法簇 19 表 + locks/chests
 
 > 铁律 B-L1：第一步是交来源清单，不是填数字。B-L5：设计源没有的数值一律不编、留空登记。

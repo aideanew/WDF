@@ -1,3 +1,12 @@
+---
+id: EVD-7108-A2
+title: PD7-08 · A2 证据 · units 3 兵种
+status: active
+owner: hark
+created: 2026-10-30
+review: 2026-11-30
+---
+
 # EVD-7108 · A2 证据 · units 3 兵种
 
 ## 结论
