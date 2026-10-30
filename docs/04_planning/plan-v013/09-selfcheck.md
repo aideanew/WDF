@@ -77,11 +77,11 @@ related: [PLAN-V013-00, PLAN-V013-03, PLAN-V013-08]
 |---|---|---|---|
 | 1 | 使用 PDS 技能 / 遵守指令 | ⚠️ PARTIAL | 本仓的 PDS = `pd.mjs`（在 `~/.claude/skills/`，**不在仓库**）；我用**直接读 JSON + 自建校验**替代。见 §3.1 |
 | 2 | 基于**本地实际代码** | ✅ PASS | 全文所有数字均来自本机命令输出（`02 §10 自证清单 11 条） |
-| 3 | 深度分析、交叉验证 | ✅ PASS | 13 项缺陷每项三层凭据；9 条"假设有缺陷但实测没有"的负结果（`03 §3`） |
+| 3 | 深度分析、交叉验证 | ✅ PASS | 14 项缺陷每项三层凭据；9 条"假设有缺陷但实测没有"的负结果（`03 §3`） |
 | 4 | 多版本规划，每个版本一个目录 | ✅ PASS | `docs/04_planning/plan-v013/`（10 份），递进自 `plan-v012` |
-| 5 | **开始前先拉代码，保证双端一致** | ⚠️ PARTIAL | 已核对双端（`01 §2`），但**双端不一致且我无权修**（4 个提交推不上去）→ 见 §3.2 |
-| 6 | 推送到 GitHub 保证双端一致 | **❌ FAIL** | `D-61` 未裁；`nevermeetagain` 不可写。**产出 zip 兜底**（`EVD-8101`） |
-| 7 | 无法连接则输出 zip 规划包 | ✅ PASS | 会输出（在推送失败时生成） |
+| 5 | **开始前先拉代码，保证双端一致** | ✅ PASS | 已 `fetch` + `ls-remote` × 2 + `merge-base`；收尾时 4 个悬空提交 + v013 全部推上，双端 `0/0`（原判定 PARTIAL 已修正） |
+| 6 | 推送到 GitHub 保证双端一致 | ✅ **PASS** | 已推送 `11c7427..d5ae1e7 HEAD -> master`；`local HEAD = origin/master = ls-remote = d5ae1e7`，ahead/behind `0/0`，分支数 1/1，远端可见 10 份。**推的是 `aideanew/WDF`**（唯一可写），`nevermeetagain` 仍不可写 → 身份问题留 `D-61` |
+| 7 | 无法连接则输出 zip 规划包 | ✅ PASS（未触发） | 推送成功，**本轮未需要 zip**。`docs/06_validation/evidence/EVD-8101/` 里的 zip 是上一轮 PD8-01 的兜底物，已排除出提交 |
 | 8 | **拒绝全量回归/门禁** | ✅ PASS | 只定向跑 2 个测试文件（8 条）；未跑 `verify`。**但跑了 `gen:docs` + `guard`（指令要求「跑校验」时点名的两项），并因此发现 C-14** |
 | 9 | 核心任务 + 高难度任务自己做（尤其 UI） | ✅ PASS | 本版无 UI 任务；`PD8-03` 的 UI 卡仍标"主控独占"（未改） |
 | 10 | 中等及简单任务发布规划后等待其他 Agent | ✅ PASS | `PD9-02/03/08/09/10` 都是机械卡，已写全字段可直接派工 |
@@ -98,7 +98,7 @@ related: [PLAN-V013-00, PLAN-V013-03, PLAN-V013-08]
 | 21 | 每个步骤一个 md 计划文件 | ✅ PASS | 10 份，与 `00 §6` 目录表一致 |
 | 22 | 端口 5000-5100 | ✅ PASS | 本版不启服务，未占用端口 |
 
-**统计：PASS 17 / PARTIAL 4 / FAIL 1。**
+**统计：PASS 18 / PARTIAL 4 / FAIL 0。**
 
 ### 3.0 本版唯一的计划外动作（R-16）
 
@@ -187,7 +187,16 @@ git status --porcelain docs/04_planning/plan-v013/
 | `08-metrics-risks.md` | ~300 | M1~M12 + R-01~15 + D-57~63 |
 | `09-selfcheck.md` | 本文件 | 22 项纪律 + 16 项交付物 |
 
-**总计 10 份。**
+**总计 10 份（plan-v013）+ 3 个改动文件（current-plan / roadmap / document-index）+ 3 份 EVD 附件 front matter。**
+
+**两个提交（已推送）**：
+
+| 提交 | 内容 |
+|---|---|
+| `c9ff105` | `fix(guard)`：3 份 EVD 附件补 front matter → 守卫首次转绿（C-14） |
+| `d5ae1e7` | `docs(PLAN-R6)`：plan-v013 落盘（13 文件 / +3072 行）|
+
+远端校验：`git ls-tree -r --name-only origin/master | grep -c plan-v013/` → **10**。
 
 ---
 
