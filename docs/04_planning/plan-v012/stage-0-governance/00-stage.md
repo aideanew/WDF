@@ -28,7 +28,8 @@ related: [PLAN-V012-01, PLAN-V012-07]
 - [ ] `pd.mjs status .` 输出里 PD7-08/09 的阻塞原因是**可读文本**，不是 `undefined`
 - [ ] `git rev-list --left-right --count origin/master...HEAD` → `0	0`
 - [ ] `git ls-remote origin refs/heads/master` 与本地 `HEAD` 的 SHA **完全相同**
-- [ ] `~/.git-pat` 权限为 `600`（`ls -l` 可验）
+- [ ] 令牌未入库：`git ls-files | grep -c "git-pat"` → 0，且仓库内**无长度 ≥ 40 的 `github_pat_` 匹配**（即无完整 token；前缀字面量允许，它不是凭证）
+      （**注**：NTFS 上 `chmod 600` 是空操作，`ls -l` 恒显示 `-rw-r--r--`；改用"未入库 + 未泄漏"作判据，见 PD8-01 A5）
 - [ ] `docs/00_governance/document-index.md` 已重新生成（含 `EVD-7109`）→ `node --test tests/contract/docs-index.test.mjs` 转绿
 - [ ] `node --test tests/determinism/items-weights.test.mjs` → **6/6 PASS**（PD8-18）
 - [ ] 全量实跑 **270/270 PASS**（修前 267/270；本阶段是唯一"允许动全量"的时点，因为红的就是全量指标）
@@ -72,10 +73,18 @@ related: [PLAN-V012-01, PLAN-V012-07]
        每张卡的 `acceptance[].check.type` 只能是 `command` / `measure` / `manual`（`pd.mjs` 的硬校验）
 6b. [ ] **修 `docs-index` 红项**：`npm run gen:docs` → `docs/00_governance/document-index.md` 含 `EVD-7109`
        （根因：`EVD-7109/README.md` 在 `8fbb57b` 加入，而索引上一次生成在 `3cd7628`；**只重生成，不手改**）
-7. [ ] `chmod 600 ~/.git-pat`（**只改权限，不读、不打印、不复制内容**）
+7. [ ] 令牌安全（**判据已按 NTFS 现实改写**）：`chmod 600` 在本机无效 → 改为**三查**
+       ① `git ls-files | grep -c "git-pat"` = 0　② 仓库内无长度 ≥ 40 的 `github_pat_` 匹配（**不是**"无该前缀字面量"——本轮实测有 8 处文档在描述密钥扫描规则）
+       ③ 推送输出**先重定向到文件、屏蔽后落盘**，不让 token 进对话日志
+       **不 echo、不写盘、不复制内容**；若 `~/.git-pat` 存的是完整凭据 URL（本机就是），
+       直接用 `$(cat ~/.git-pat)/<owner>/<repo>.git` 拼 URL，**不要**再套 `oauth2:<token>@`
 8. [ ] **逐文件** `git add`（严禁 `git add -A`；本仓已两次事故），提交
-9. [ ] 推送：从 `~/.git-pat` 读取令牌**直接内联到 URL**（`https://oauth2:<token>@github.com/aideanew/WDF.git`），
-       **不 echo、不写盘、不落任何临时文件**；若首次失败加 `-c http.version=HTTP/1.1` 再试一次
+9. [ ] 推送：`PAT=$(tr -d '\r\n' < ~/.git-pat)`
+       **本机该文件存的是完整凭据 URL**（形如 `https://<user>:<pat>@github.com`），
+       因此 URL = `"$PAT/aideanew/WDF.git"`；**不要**再拼 `https://oauth2:${PAT}@github.com/...`
+       —— 本轮第一次尝试正是这么拼的，拼出 `https://oauth2:https://...@github.com@github.com/...`
+       报 `Port number was not a decimal number between 0 and 65535`（RC=128）
+       首次失败可加 `-c http.version=HTTP/1.1` 再试一次；输出**先重定向到文件**，屏蔽 token 后再展示
 10. [ ] 回读验证：`git ls-remote origin refs/heads/master` == `git rev-parse HEAD`
 
 ## 验收标准
@@ -83,7 +92,9 @@ related: [PLAN-V012-01, PLAN-V012-07]
 - [ ] A2 `command`：`pd.mjs status . | grep -c "阻塞 PD7-08：undefined"` → 0
 - [ ] A3 `command`：`test "$(git rev-list --count origin/master..HEAD)" = "0"` → 退出码 0
 - [ ] A4 `command`：`test "$(git ls-remote origin refs/heads/master | cut -f1)" = "$(git rev-parse HEAD)"`
-- [ ] A5 `command`：`ls -l ~/.git-pat | awk '{print $1}'` → `-rw-------`
+- [ ] A5 `command`：`git ls-files | grep -c "git-pat"` → **0**，且仓库内无长度 ≥ 40 的 `github_pat_` 匹配（完整 token 长 93 字符；`github_pat_` 前缀字面量不算泄漏）
+      （**原定判据 `ls -l ~/.git-pat` → `-rw-------` 已作废**：本轮实测 `chmod 600` 在 NTFS/MSYS 上是空操作，
+      权限位恒为 `-rw-r--r--`。Windows 下真正的保护来自 NTFS ACL 与"文件不在仓库工作树内"，POSIX 权限位不可作为验收门）
 - [ ] A6 `manual`：`git diff --stat -- '*.ts' '*.csv' '*.sql'` 为空（零业务代码改动）
 
 ## 验证命令

@@ -16,18 +16,26 @@ related: [PLAN-V012-00, PLAN-V012-02]
 ```yaml
 规划日期: 2026-10-30
 git_branch: main
-git_commit: 8fbb57b
-工作区是否干净: true          # git status --porcelain 输出为空（13 个字符以内无内容）
+git_commit: 8fbb57b            # ← 本规划的**事实基线**（所有行数/行号类结论钉在这里）
+工作区是否干净: true
 远端: https://github.com/aideanew/WDF.git
-远端 HEAD: 182e441            # git ls-remote origin refs/heads/master
-本地领先远端: 19 个提交        # git rev-list --count origin/master..HEAD
-本地落后远端: 0               # git rev-list --left-right --count → "0	19"
-双端一致: false               # ★ 本版第一张卡要修的事
+远端 HEAD（规划时）: 182e441    # git ls-remote origin refs/heads/master
+本地领先远端（规划时）: 19 个提交
+双端一致（规划时）: false
+
+# ↓ 规划落盘后（2026-10-30 本轮完成，已复验）
+规划主体提交: 9b98c58          # 17 份 md + decision-index + current-plan
+远端 HEAD（现在）: 与本规划最后一次提交相同
+双端一致（现在）: true         # git rev-list --left-right --count origin/master...HEAD → "0	0"
+                               # 复验命令：test "$(git rev-parse HEAD)" = "$(git ls-remote origin refs/heads/master | cut -f1)"
 ```
 
-**为什么钉在 `8fbb57b` 而不是远端**：远端停在 `182e441`，本地已有 19 个未推提交（PD7-01/06/07 的
-执行 + PD7-08/09 的 BLOCKED 留痕）。**以本地为准**，因为本地有最新的 PD7-09 数据转录结果。
-远端 `182e441` 是 2026-10-29 的规划落账状态，不含任何 PD7 执行成果。
+**为什么事实基线钉在 `8fbb57b` 而不是推送后的 `9b98c58`**：`9b98c58` 只加 `docs/` 下的规划文件，
+**零业务代码改动**（`git diff --stat 8fbb57b..9b98c58 -- '*.ts' '*.csv' '*.sql' '*.json'` 只含 `decision-index.json`）。
+所以"行数 / 行号 / 表行数"这类结论在 `9b98c58` 上完全不变，仍然以 `8fbb57b` 为准。
+
+**远端历史**：`182e441`（2026-10-29 的规划落账）不含任何 PD7 执行成果；
+`182e441..9b98c58` 共 20 个提交（PD7 执行 19 个 + 本轮规划 1 个）已全部推送。
 
 ## 2. 规模
 
