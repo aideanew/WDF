@@ -1,1 +1,1 @@
-[]
+[{"id":"lockpick_normal","item":"item_0098","max_lock":"copper","price":300},{"id":"lockpick_fine","item":"item_0100","max_lock":"silver","price":2000},{"id":"lockpick_advanced","item":"item_0103","max_lock":"gold","price":12000,"daily_region_quota":3}]

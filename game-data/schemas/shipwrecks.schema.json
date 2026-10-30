@@ -2,18 +2,75 @@
   "table": "shipwrecks",
   "module": "salvage",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "tier": {
+      "type": "enum",
+      "values": ["normal", "advanced", "exclusive"],
+      "required": true,
+      "note": "普通/高级/独家（DS §3.3:148-153）"
+    },
+    "quota": {
+      "type": "int",
+      "min": 0,
+      "note": "每人份数 100/10/3（DS §3.3:148-153，Hark代定每人各刷各的 §3.3:154）"
+    },
+    "valid_days": {
+      "type": "int",
+      "min": 0,
+      "note": "有效期 1/3/7 天（DS §3.3:148-153）"
+    },
+    "item_min": {
+      "type": "int",
+      "min": 0,
+      "note": "物品数下限 20/30/50（DS §3.3:180-184）"
+    },
+    "item_max": {
+      "type": "int",
+      "min": 0,
+      "note": "物品数上限 40/60/100（DS §3.3:180-184）"
+    },
+    "unlocked_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "不上锁物品比例万分比（DS §3.3:180-184）"
+    },
+    "iron_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "铁锁比例万分比（DS §3.3:180-184）"
+    },
+    "copper_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "铜锁比例万分比（DS §3.3:180-184）"
+    },
+    "silver_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "银锁比例万分比（DS §3.3:180-184）"
+    },
+    "gold_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "金锁比例万分比（DS §3.3:180-184）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 salvage）抽取"
+  "todo": "DS §3.3:143-230；潜水带出概率表（§3.3:190-196）为潜水员等级相关，另表处理（未建表）；潜水时间/搜索次数留待"
 }

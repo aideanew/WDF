@@ -2,18 +2,53 @@
   "table": "events",
   "module": "event",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enum",
+      "values": ["daily_sea", "ruins", "monthly"],
+      "required": true,
+      "note": "每日一海/科研废墟/月活动（DS §10.2）"
+    },
+    "daily_start_hour": {
+      "type": "int",
+      "min": 0,
+      "max": 23,
+      "note": "每日开始时刻（北京）：每日一海 20、科研废墟 20（DS §10.2:683,679）"
+    },
+    "daily_end_hour": {
+      "type": "int",
+      "min": 0,
+      "max": 23,
+      "note": "每日结束时刻：每日一海 21、科研废墟 22（DS §10.2:683,679）"
+    },
+    "duration_min": {
+      "type": "int",
+      "min": 0,
+      "note": "单人时长：每日一海 3 分钟（DS §10.2:683）"
+    },
+    "entry_limit": {
+      "type": "int",
+      "min": 0,
+      "note": "每人次数：每日一海 1 次（DS §10.2:683）"
+    },
+    "settle_minute": {
+      "type": "int",
+      "min": 0,
+      "max": 1439,
+      "note": "结算时刻：每日一海 21:05（DS §10.2:683）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 event）抽取"
+  "todo": "DS §10.2:673-711；活动注册（时间/时长/限次）；活动掉落分布见 event_drops"
 }

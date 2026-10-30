@@ -2,18 +2,30 @@
   "table": "blueprints",
   "module": "crafting",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "ref": "items.id",
+      "required": true,
+      "note": "需图纸解锁的物品（DS §13.3 高级/精密材料）"
+    },
+    "blueprint_item": {
+      "type": "string",
+      "ref": "items.id",
+      "note": "对应图纸物品（基础/高级图纸）【对应待定】DS §5.4 未区分基础/高级图纸对应 → 留空"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 crafting）抽取"
+  "todo": "DS §13.3:971-984 高级/精密材料需图纸+等级+员工（§5.4:441）；图纸↔物品对应待定留空（B-L5）"
 }

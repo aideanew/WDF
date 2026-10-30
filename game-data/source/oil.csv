@@ -1,1 +1,2 @@
-id,name,note
+id,name,item,zone,yield_rate,note
+oil_crude,石油,item_0009,zone_deep,,"只在深海/远洋开采(DS 3.4:233);炼成燃油石油x2->燃油"

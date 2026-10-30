@@ -1,1 +1,10 @@
-id,name,note
+id,name,event_id,dimension,value,weight_bp,note
+edaily_lock_none,每日一海无锁,event_daily_sea,lock,无锁,5000,"DS 10.2:688"
+edaily_lock_iron,每日一海铁锁,event_daily_sea,lock,铁,2500,"DS 10.2:688"
+edaily_lock_copper,每日一海铜锁,event_daily_sea,lock,铜,1500,"DS 10.2:688"
+edaily_lock_silver,每日一海银锁,event_daily_sea,lock,银,980,"DS 10.2:688"
+edaily_lock_gold,每日一海金锁,event_daily_sea,lock,金,20,"DS 10.2:687 金锁箱0.2%"
+edaily_size_small,每日一海小箱,event_daily_sea,size,小,4000,"DS 10.2:701"
+edaily_size_mid,每日一海中箱,event_daily_sea,size,中,3000,"DS 10.2:701"
+edaily_size_large,每日一海大箱,event_daily_sea,size,大,2000,"DS 10.2:701"
+edaily_size_huge,每日一海巨箱,event_daily_sea,size,巨,1000,"DS 10.2:701"

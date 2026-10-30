@@ -2,18 +2,33 @@
   "table": "spawns",
   "module": "sea",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
-    "name": {
-      "type": "string"
+    "item": {
+      "type": "string",
+      "ref": "items.id",
+      "required": true,
+      "note": "漂浮物对应物品（DS §3.1:126）"
+    },
+    "zone": {
+      "type": "string",
+      "ref": "zones.id",
+      "required": true,
+      "note": "出没海域（浅海/深海/远洋）"
+    },
+    "rate_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "note": "刷出率万分比【待定】DS §3.1 未给各漂浮物刷出率 → 留空"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 sea）抽取"
+  "todo": "DS §3.1:126 漂浮物清单（按物品总表）；刷出率待定留空（B-L5）"
 }

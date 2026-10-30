@@ -1,1 +1,1 @@
-[]
+[{"id":"event_daily_sea","name":"每日一海","type":"daily_sea","daily_start_hour":20,"daily_end_hour":21,"duration_min":3,"entry_limit":1,"settle_minute":1265,"note":"赶海多捞哦:20:00-21:00每人1次3分钟,21:05结算(DS 10.2:683)"},{"id":"event_ruins","name":"科研废墟","type":"ruins","daily_start_hour":20,"daily_end_hour":22},{"id":"event_monthly","name":"月活动","type":"monthly","note":"月活动赠7天保护卡(DS 10.2:677);周期/内容待定"}]

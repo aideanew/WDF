@@ -2,18 +2,46 @@
   "table": "zones",
   "module": "sea",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "position": {
+      "type": "enum",
+      "values": ["inner", "middle", "outer"],
+      "required": true,
+      "note": "内圈浅海/中圈深海/外圈远洋（DS §2.1:90）"
+    },
+    "floating": {
+      "type": "string",
+      "note": "漂浮物多寡（多/少很多/没有，DS §2.1:90）"
+    },
+    "island_danger": {
+      "type": "string",
+      "note": "岛与野人（无/有岛有野人/—，DS §2.1:90）"
+    },
+    "safety": {
+      "type": "string",
+      "note": "安全性（DS §2.1:90）"
+    },
+    "features": {
+      "type": "string",
+      "note": "主要玩法（DS §2.1:90）"
+    },
+    "size_km": {
+      "type": "int",
+      "min": 0,
+      "note": "尺寸 km；深海 800×800 有源（DS §2.1:96），浅海/远洋【待定】留空"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 sea）抽取"
+  "todo": "DS §2.1:88-99 三圈海域；size_km 仅深海有源（800），浅海/远洋尺寸待定留空"
 }

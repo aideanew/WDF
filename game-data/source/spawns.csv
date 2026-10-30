@@ -1,1 +1,9 @@
-id,name,note
+id,item,zone,rate_bp,note
+spawn_driftwood,item_0001,zone_shallow,,漂流木(DS 3.1:126)
+spawn_cloth,item_0003,zone_shallow,,布(DS 3.1:126)
+spawn_plastic,item_0004,zone_shallow,,塑料(DS 3.1:126)
+spawn_scrap_iron,item_0005,zone_shallow,,废铁(DS 3.1:126)
+spawn_scrap_copper,item_0006,zone_shallow,,废铜(DS 3.1:126)
+spawn_seed,item_0097,zone_shallow,,种子(DS 3.1:126)
+spawn_nail,item_0029,zone_shallow,,铁钉(DS 3.1:126)
+spawn_iron_ingot,item_0027,zone_shallow,,少量铁锭(DS 3.1:126,浅海无岛阶段金属来源)

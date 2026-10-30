@@ -2,18 +2,29 @@
   "table": "explore",
   "module": "salvage",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enum",
+      "values": ["island", "key_area"],
+      "required": true,
+      "note": "无人小岛/关键区域（DS §3.5:238）"
+    },
+    "reward": {
+      "type": "string",
+      "note": "珍稀道具/珍稀图纸（DS §3.5:238）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 salvage）抽取"
+  "todo": "DS §3.5:237-240；探索发现率/区域内容待定留空（B-L5）"
 }

@@ -1,1 +1,4 @@
-id,name,note
+id,name,type,daily_start_hour,daily_end_hour,duration_min,entry_limit,settle_minute,note
+event_daily_sea,每日一海,daily_sea,20,21,3,1,1265,"赶海多捞哦:20:00-21:00每人1次3分钟,21:05结算(DS 10.2:683)"
+event_ruins,科研废墟,ruins,20,22,,,,,"晚8点科研废墟电力失效漂发电装置(DS 10.2:674,679);数值待定"
+event_monthly,月活动,monthly,,,,,,"月活动赠7天保护卡(DS 10.2:677);周期/内容待定"

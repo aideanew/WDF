@@ -2,18 +2,36 @@
   "table": "oil",
   "module": "salvage",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "ref": "items.id",
+      "required": true,
+      "note": "石油对应物品（DS §3.4:233）"
+    },
+    "zone": {
+      "type": "string",
+      "ref": "zones.id",
+      "required": true,
+      "note": "开采海域 深海/远洋（DS §3.4:233）"
+    },
+    "yield_rate": {
+      "type": "int",
+      "min": 0,
+      "note": "产量【待定】DS §3.4 未给产量数值 → 留空"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 salvage）抽取"
+  "todo": "DS §3.4:232-235；抽油机=钢材x4+齿轮x2、石油x2->燃油（§3.4:233，属 recipes）；产量待定留空（B-L5）"
 }

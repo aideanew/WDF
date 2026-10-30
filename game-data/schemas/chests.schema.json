@@ -25,7 +25,7 @@
     "smashable": {
       "type": "bool",
       "required": false,
-      "note": "D-09 裁决值：全 3 行 true"
+      "note": "材质决定（PD7-09 修正 D-09 全 true）：wood=true/copper=false/iron=false（§3.6:250 木箱可砸、§3.6:260 铜/铁箱砸不开只能开锁）"
     },
     "size": {
       "type": "int",

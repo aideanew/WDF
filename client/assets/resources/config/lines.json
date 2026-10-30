@@ -1,1 +1,1 @@
-[]
+[{"id":"line_thin","name":"细绳","tier":1,"note":"承重递增(DS 3.1:130)"},{"id":"line_rope","name":"粗绳","tier":2,"note":"承重递增(DS 3.1:130)"},{"id":"line_cable","name":"钢缆","tier":3,"note":"承重递增(DS 3.1:130)"}]

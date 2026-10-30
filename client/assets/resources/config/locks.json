@@ -1,1 +1,1 @@
-[{"id":"none","hits_required":0,"zone_bp":0},{"id":"iron","hits_required":3,"zone_bp":0},{"id":"copper","hits_required":5,"zone_bp":0},{"id":"silver","hits_required":8,"zone_bp":0},{"id":"gold","hits_required":12,"zone_bp":0}]
+[{"id":"none","hits_required":0,"zone_bp":0},{"id":"iron","hits_required":3,"zone_bp":2000},{"id":"copper","hits_required":5,"zone_bp":1500},{"id":"silver","hits_required":8,"zone_bp":1000},{"id":"gold","hits_required":12,"zone_bp":500}]

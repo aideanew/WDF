@@ -1,1 +1,4 @@
-id,name,note
+id,name,position,floating,island_danger,safety,features,size_km,note
+zone_shallow,浅海,inner,多,无,新手保护:只有玩家自己一个人安全,打捞/潮汐/钓鱼/扩筏,,"出生点最内圈;尺寸原型期按航行时间调(待定,DS 2.1:97)"
+zone_deep,深海,middle,少很多,有岛有野人,筏不会被攻击;只能掠夺野人的船/木筏,五项玩法+占岛,800,"深海地图800x800km(DS 2.1:96)"
+zone_ocean,远洋,outer,没有,—,第二版起可发生船对船掠夺,五项玩法+船对船PVP,,,"最外圈;首版按10个深海总面积约2500x2500km(待定,DS 2.1:97);首版不开远洋"

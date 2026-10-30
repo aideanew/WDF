@@ -1,1 +1,4 @@
-id,name,note
+id,name,tier,quota,valid_days,item_min,item_max,unlocked_bp,iron_bp,copper_bp,silver_bp,gold_bp,note
+wreck_normal,普通沉船,normal,100,1,20,40,7000,2000,800,200,0,"沉船信息普通级(DS 3.3:148,180-184)"
+wreck_advanced,高级沉船,advanced,10,3,30,60,5000,2500,1500,800,200,"沉船信息高级级(DS 3.3:150,180-184)"
+wreck_exclusive,独家沉船,exclusive,3,7,50,100,3000,2500,2000,1700,800,"沉船信息独家级(DS 3.3:152,180-184);每周补3份"

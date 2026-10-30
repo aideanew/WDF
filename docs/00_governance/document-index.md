@@ -9,7 +9,7 @@ review: 2026-11-23
 
 # 文档索引（由 tools/gen/docs-index.mjs 生成，勿手改）
 
-共 309 篇。⚠ 表示活跃文档已过 review 日期。
+共 312 篇。⚠ 表示活跃文档已过 review 日期。
 
 | ID | 标题 | 状态 | 复审 | 路径 |
 |---|---|---|---|---|
@@ -293,7 +293,10 @@ review: 2026-11-23
 | EVD-7106-SRC | PD7-06 来源清单（B-L1：每个字段「取自哪份文档哪一节/哪一行」） | active |  | `06_validation/evidence/EVD-7106/source-list.md` |
 | EVD-7107 | PD7-07 生产簇数据（jobs/foods/crew_traits/generators/consumers） | active | 2026-11-29 | `06_validation/evidence/EVD-7107/README.md` |
 | EVD-7107-SRC | PD7-07 来源清单（B-L1：每个字段「取自哪份文档哪一节/哪一行」） | active |  | `06_validation/evidence/EVD-7107/source-list.md` |
+| EVD-7108 | PD7-08 战斗簇数据（units/waves/defenses/throwables/islands/protection_cards/buildings） | blocked | 2026-11-30 | `06_validation/evidence/EVD-7108/README.md` |
 | ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/source-list.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7108/units.md` |
+| ⚠缺 |  |  |  | `06_validation/evidence/EVD-7109/source-list.md` |
 | EVD-FIX-01 | W1~W4 缺陷收口 验收证据（FIX-1~FIX-13，2026-10-28） | active |  | `06_validation/evidence/EVD-FIX-2026-10-28/README.md` |
 | EVD-LEDGER | 执行台账（提交 ↔ 任务卡 ↔ 证据 全链对照） | active | 2026-11-27 | `06_validation/execution-ledger.md` |
 | VAL-0003 | 目录体系多维度验证记录 | active | 2026-11-23 | `06_validation/structure-verification.md` |

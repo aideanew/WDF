@@ -1,1 +1,4 @@
-id,name,note
+id,name,item,purpose,note
+fish_normal,鱼,item_0010,供粮,"基础鱼(DS 3.2:139)"
+fish_eel,电鳗,item_0011,发电,"喂电鳗发电(DS 3.2:138,139)"
+fish_lantern,灯笼鱼,item_0012,做灯,"做诱鱼灯/水下探照灯(DS 3.2:139)"

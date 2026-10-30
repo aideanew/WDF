@@ -1,4 +1,4 @@
 id,material,lock,smashable,size,item_id
 chest_wood,wood,none,true,1,item_0065
-chest_copper,copper,none,true,1,item_0066
-chest_iron,iron,none,true,1,item_0067
+chest_copper,copper,none,false,1,item_0066
+chest_iron,iron,none,false,1,item_0067

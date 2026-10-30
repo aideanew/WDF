@@ -2,18 +2,24 @@
   "table": "seasons",
   "module": "leaderboard",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "duration_days": {
+      "type": "int",
+      "min": 0,
+      "note": "赛季时长【待定】DS §10.1:665 只给每赛季结算，未给时长 → 留空"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 leaderboard）抽取"
+  "todo": "DS §10.1:663-671；赛季榜结算奖励；时长/奖励待定留空（B-L5）"
 }

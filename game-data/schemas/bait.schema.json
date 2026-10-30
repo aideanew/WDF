@@ -2,18 +2,25 @@
   "table": "bait",
   "module": "fishing",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "ref": "items.id",
+      "required": true,
+      "note": "饵料对应物品（DS §13.12:999 鱼饵）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 fishing）抽取"
+  "todo": "DS §13.12:999 鱼饵；饵料吸引效果待定留空（B-L5）"
 }

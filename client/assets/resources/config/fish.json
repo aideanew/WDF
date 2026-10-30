@@ -1,1 +1,1 @@
-[]
+[{"id":"fish_normal","name":"鱼","item":"item_0010","purpose":"供粮","note":"基础鱼(DS 3.2:139)"},{"id":"fish_eel","name":"电鳗","item":"item_0011","purpose":"发电","note":"喂电鳗发电(DS 3.2:138,139)"},{"id":"fish_lantern","name":"灯笼鱼","item":"item_0012","purpose":"做灯","note":"做诱鱼灯/水下探照灯(DS 3.2:139)"}]

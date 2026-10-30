@@ -1,1 +1,2 @@
-id,name,note
+id,name,item,note
+bait_fish,鱼饵,item_0043,"饵料(DS 13.12:999 鱼饵x3->鱼);吸引效果待定"

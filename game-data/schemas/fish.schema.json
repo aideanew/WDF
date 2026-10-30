@@ -2,18 +2,29 @@
   "table": "fish",
   "module": "fishing",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "item": {
+      "type": "string",
+      "ref": "items.id",
+      "required": true,
+      "note": "鱼对应物品（DS §3.2:139）"
+    },
+    "purpose": {
+      "type": "string",
+      "note": "用途：供粮/发电/做灯（DS §3.2:138-139）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 fishing）抽取"
+  "todo": "DS §3.2:138-141 鱼种；食用价值/稀有度待定留空（B-L5）"
 }

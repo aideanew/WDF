@@ -1,1 +1,1 @@
-[]
+[{"id":"zone_shallow","name":"浅海","position":"inner","floating":"多","island_danger":"无","safety":"新手保护:只有玩家自己一个人安全","features":"打捞/潮汐/钓鱼/扩筏","note":"出生点最内圈;尺寸原型期按航行时间调(待定,DS 2.1:97)"},{"id":"zone_deep","name":"深海","position":"middle","floating":"少很多","island_danger":"有岛有野人","safety":"筏不会被攻击;只能掠夺野人的船/木筏","features":"五项玩法+占岛","size_km":800,"note":"深海地图800x800km(DS 2.1:96)"},{"id":"zone_ocean","name":"远洋","position":"outer","floating":"没有","island_danger":"—","safety":"第二版起可发生船对船掠夺","features":"五项玩法+船对船PVP"}]

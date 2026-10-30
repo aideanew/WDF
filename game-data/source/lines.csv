@@ -1,1 +1,4 @@
-id,name,note
+id,name,tier,capacity_kg,note
+line_thin,细绳,1,,"承重递增(DS 3.1:130)"
+line_rope,粗绳,2,,"承重递增(DS 3.1:130)"
+line_cable,钢缆,3,,"承重递增(DS 3.1:130)"

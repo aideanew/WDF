@@ -2,18 +2,33 @@
   "table": "titles",
   "module": "leaderboard",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "rank": {
+      "type": "int",
+      "min": 1,
+      "max": 10,
+      "required": true,
+      "note": "本省名次 1-10（DS §10.3:724）"
+    },
+    "bonus_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "required": true,
+      "note": "加成万分比：+25%~+1%（DS §10.3:724-726）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 leaderboard）抽取"
+  "todo": "DS §10.3:713-731；称号名动态（{地域}第N{兵种}，§10.3:714 示例），本表存加成档位；兵种对应见 units（PD7-08）"
 }

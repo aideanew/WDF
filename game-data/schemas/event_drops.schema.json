@@ -2,18 +2,43 @@
   "table": "event_drops",
   "module": "event",
   "primaryKey": "id",
-  "status": "draft",
+  "status": "active",
   "fields": {
     "id": {
       "type": "string",
       "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "event_id": {
+      "type": "string",
+      "ref": "events.id",
+      "required": true,
+      "note": "所属活动（DS §10.2）"
+    },
+    "dimension": {
+      "type": "enum",
+      "values": ["lock", "size"],
+      "required": true,
+      "note": "分布维度：锁档或箱大小（DS §10.2:688,701）"
+    },
+    "value": {
+      "type": "string",
+      "required": true,
+      "note": "维度值：lock=无锁/铁/铜/银/金；size=小/中/大/巨"
+    },
+    "weight_bp": {
+      "type": "int",
+      "min": 0,
+      "max": 10000,
+      "required": true,
+      "note": "占比万分比（DS §10.2:688,701）"
     },
     "note": {
       "type": "string"
     }
   },
-  "todo": "字段待从 v5.5（模块 event）抽取"
+  "todo": "DS §10.2:687-701；锁档分布（50/25/15/9.8/0.2%）+箱大小分布（40/30/20/10%）；物品内容（§10.2:702 各品阶）待定留空"
 }

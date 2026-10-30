@@ -1,1 +1,4 @@
 id,item,max_lock,price,daily_region_quota
+lockpick_normal,item_0098,copper,300,
+lockpick_fine,item_0100,silver,2000,
+lockpick_advanced,item_0103,gold,12000,3
