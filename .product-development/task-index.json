@@ -3431,8 +3431,8 @@
       "title": "玩法簇数据（19 张表 + locks/chests 补全 + baseline 收口）",
       "phase": "P7",
       "role": "executor",
-      "status": "TODO",
-      "detail": "READY",
+      "status": "BLOCKED",
+      "detail": "6 张设计空表（waves/drops/explore/limits/phrases/regions），A1 无法满足",
       "areas": [
         "data"
       ],
@@ -3495,7 +3495,12 @@
         ]
       },
       "legacy_ids": [],
-      "execution": {}
+      "execution": {
+        "status": "BLOCKED",
+        "completed_at": "2026-10-30",
+        "note": "PD7-09 玩法簇：19 张表转录——zones(3)/tides(1)/spawns(8)/fish(3)/bait(1)/shipwrecks(3)/oil(1)/explore(0 设计语义)/seasons(1)/titles(10)/events(3)/event_drops(9)/lines(3)/lockpick_tools(3)/blueprints(7) 14 张有源；drops/explore/limits/phrases/regions 5 张设计语义留空（D-27 掉落无规则、§3.5 无探索点、limits 无独立锚点 D-01、§9.4 无短语文案、D-53 区名运营给定）。locks.zone_bp 补命中区（§8.4:583-588 铁20%/铜15%/银10%/金5%）；chests.smashable 材质决定（§3.6:250,260，修正 D-09 全 true）；D-08 hits_required(3/5/8/12) 与 §8.4(1/2/3/4) 冲突待用户裁决。baseline 收口 empty_tables 31→6（只减不增）+same_value_hits 增补 5 设计真实值。play-loop 测试 13/13 PASS。gen configVersion=b957a92f71db5157（46 表/568 行）。本卡 **BLOCKED**：6 张设计空表（waves 无源 PD7-08 + 5 张设计语义），A1 无法满足；2 项既有测试失败（items-w 3/6，D-54 归 0 债务，非本卡引入）。未推送。",
+        "evidence": "docs/06_validation/evidence/EVD-7109/"
+      }
     },
     {
       "id": "PD7-10",
