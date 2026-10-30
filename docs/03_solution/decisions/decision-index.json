@@ -738,7 +738,9 @@
       "source": "docs/04_planning/plan-v011/10-risks-pending.md#U-1",
       "applies_to": [
         "PD7-02",
-        "PD7-03"
+        "PD7-03",
+        "PD8-02",
+        "PD8-03"
       ],
       "legacy_ids": [],
       "supersedes": null,
@@ -757,6 +759,95 @@
         "recommendation": "A。理由：它是唯一不需要新增任何数值、且能让三条既有数据（raft_tiles.item / recipe_0056 / craftable=true）同时成立的口径；B 会让其中两条变死数据，C 需要自编建造费。",
         "impact_if_not_decided": "PD7-02 的 canBuild 签名与测试用例无法定稿。PD7-01 不受影响（本卡不碰经济链路）。",
         "answer_needed_by": "PD7-02 步骤 2 之前（即 PD7-01 执行期间任何时候）"
+      }
+    },
+    {
+      "id": "D-58",
+      "title": "6 张设计空表是否阻塞 / 塔防怎么写：收敛为 A′（可算的算，不可算的返 unknown）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v012/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v012/10-risks-pending.md#D-58",
+      "applies_to": [
+        "PD8-14",
+        "PD7-08"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "why_this_exists": "PD7-08 因 waves 表 0 行被判 BLOCKED，但\"空表是否等于阻塞\"从未裁决。plan-v012 复核后发现更硬的事实：waves 与 rooms 的 schema 是 draft，只有 id/name/note 三列，结构上无法表达波次。",
+        "evidence_table": "waves 0 行且 schema draft（3 列）；drops 0 行但 schema active（6 列，weight_bp 带 sumTo 10000）；explore 0 行（§3.5 只有定性）；limits 0 行（merchants.daily_limit 已表达，冗余表）；phrases 0 行（§9.4 无文案）；regions 0 行（D-53 区名运营给定）",
+        "evidence_defense": "units.csv 3 行：category 有值，hp/speed/attack/range/unlock_level 全缺；defenses.csv 3 行：recipe 有文本，damage/range/hp/level_max 全缺 → 文字结算的\"胜/负\"仍无判据",
+        "option_aprime": "A′（建议）：占岛（islands 4 模板 + landing_zones 真值）、建防御（defenses.recipe 3/3 可解析成 item id，实测）、布局校验（distanceField 已实现）、保护期（protection_cards.duration_hours 24/168/720）全部真做；袭击胜负返回 verdict:\"unknown\" + reason:\"units-stats-missing\"，不假装能算",
+        "option_a": "A（原方案，已否决）：文字结算 {胜/负, 剩余兵力, 损失建筑, 掠夺资源} —— 实测不可行：胜负无任何数值可用",
+        "option_b": "B：严守 BLOCKED，等设计源补 waves/units/defenses 数值 —— defense 与 island 全部停摆，停摆原因在设计侧",
+        "option_c": "C：自编波次/兵种数值 —— 违反 N-4（设计源没有的数值一律不编）",
+        "recommendation": "A′。mvp-scope.md §5 原文已授权\"第 3 周末不稳就临时改成文字结算\"，但\"文字结算\"本身仍吃数值，这条被实测推翻，故收敛为\"可算的算、不可算的 unknown\"。",
+        "impact_if_not_decided": "PD8-14 无法定稿（交付边界不清）；PD7-08 的 BLOCKED 状态无解除依据",
+        "answer_needed_by": "PD8-14 开工前"
+      }
+    },
+    {
+      "id": "D-59",
+      "title": "v1.0 完成判据取哪套：D-50（13 模块延期 v1.1）还是 mvp-scope.md §5（v1.0 必须含 16 项）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v012/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v012/10-risks-pending.md#D-59",
+      "applies_to": [
+        "PD8-08",
+        "PD8-09",
+        "PD8-10",
+        "PD8-11",
+        "PD8-12",
+        "PD8-13",
+        "PD8-14",
+        "PD8-15",
+        "PD8-16"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "why_this_exists": "两套口径互相覆盖且都是 active：D-50 于 2026-10-28 由用户拍板把 13 个模块延期 v1.1；mvp-scope.md §5（PRD-0004，status: active）要求 v1.0 含塔防/3 兵种/岛屿/7 员工/等级 49/每日一海/称号/榜单。",
+        "evidence": "两套口径算出的完成度几乎相同（37.5% vs 34.8%，见 plan-v012/03 §3.1）→ 它们描述同一批欠账，只是切法不同。current-plan.md 的\"代码层 v1.0 口径（R-6，2026-10-28 用户拍板）\"已按 D-50 口径写成\"五环 10 模块\"，说明该口径已被实际执行。",
+        "option_a": "A（建议）：以 D-50 为准 —— v1.0 = 捞→包→做→扩→卖五环 + 商人/箱子/榜单/联网；其余 13 模块 v1.1。可以先上线。代价：mvp-scope §5 需标注\"被 D-50 部分覆盖\"（该文件在 docs/01_product/，不在本版写入白名单，只能在 current-plan.md 记录）。",
+        "option_b": "B：以 mvp-scope §5 为准 —— v1.0 必须含 16 项，上线推迟到 C 阶段全部完成（约 +4 天）。",
+        "option_c": "C：两阶段都叫 v1.0（先发 v1.0-a，再发 v1.0-b）—— 与 mvp-scope 的上线顺序声明冲突。",
+        "recommendation": "A。它不改变工作量（两套口径是同一批欠账），只改变\"什么时候能说 v1.0 完成\"。",
+        "impact_if_not_decided": "不卡任何卡；只卡\"能不能宣布 v1.0 完成\"这个口径",
+        "answer_needed_by": "任意时间（不阻塞开工）"
+      }
+    },
+    {
+      "id": "D-60",
+      "title": "经验值取什么：expGain = 产出物品的 items.base_price（1:1）",
+      "status": "PROPOSED",
+      "decided_by": null,
+      "decided_at": null,
+      "kind": "product",
+      "file": "docs/04_planning/plan-v012/10-risks-pending.md",
+      "source": "docs/04_planning/plan-v012/10-risks-pending.md#D-60",
+      "applies_to": [
+        "PD8-08"
+      ],
+      "legacy_ids": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "detail": {
+        "why_this_exists": "levels 表有 49 级曲线（exp_to_next 100→1060，累计 28,420），但\"一次打捞/一次建设给多少经验\"设计源没给 —— §1.4:69 只写「经验来自打捞 + 建设（例如每升级解锁一件新装备涨经验）」，\"例如\"说明未定值。",
+        "evidence": "design-source/我的筏-深度设计方案-v5.5.md:69；items.csv 无 exp 列（id,name,category,base_price,weight,capacity,stack,craftable,unlock_level）；items.base_price 106 行有真值（min 0 / median 108 / max 30000），item_0001 漂流木 = 10",
+        "option_a": "A（建议）：expGain = 产出物品的 base_price（1:1）。打漂流木 10 次升到 2 级（100/10）；零新增数值，全部来自已有列。",
+        "option_b": "B：固定值（打捞 1 / 建设 5）—— 升到 2 级需打 100 次，节奏不成立。",
+        "option_c": "C：等设计源补数值 —— PD8-08 的\"升级\"永远不发生，只交付闸门不交付升级。",
+        "recommendation": "A。唯一的公式常量是一处 expGainFor(basePrice)，裁定后改一行即可，不波及闸门逻辑。",
+        "impact_if_not_decided": "PD8-08 步骤 3 写 TODO(D-60) 并暂按 A 实现",
+        "answer_needed_by": "PD8-08 开工前（可先按 A 实现，裁定后改一行）"
       }
     }
   ]
